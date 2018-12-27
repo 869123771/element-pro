@@ -1,112 +1,166 @@
-import {
-  getBreadCrumbList,
-  setTagNavListInLocalstorage,
-  getMenuByRouter,
-  getTagNavListFromLocalstorage,
-  getHomeRoute,
-  getNextRoute,
-  routeHasExist,
-  routeEqual,
-  getRouteTitleHandled,
-  localSave,
-  localRead
-} from '@/assets/js/utils/utils'
-import beforeClose from '@/router/before-close'
-
-import router from '@/router'
-import {routers} from '@/router/router'
-import config from '@/assets/js/config'
-const { homeName } = config
-
-const closePage = (state, route) => {
-  const nextRoute = getNextRoute(state.tagNavList, route)
-  state.tagNavList = state.tagNavList.filter(item => {
-    return !routeEqual(item, route)
-  })
-  router.push(nextRoute)
-}
-
 export default {
   state: {
-    breadCrumbList: [],
-    tagNavList: [],
-    homeRoute: {},
-    local: localRead('local'),
-    errorList: [],
-    hasReadErrorPage: false
+    menuProps: {
+      collapse: false,
+      activeName: '',
+      openNames: [],
+      navMenus: [{
+          title: '首页',
+          name: 'home',
+          icon: 'icon-home',
+          path: '/home',
+          children: []
+        },
+        {
+          title: 'API设计',
+          name: 'apiDesign',
+          icon: 'icon-api-design',
+          path: '/api_design',
+          children: []
+        },
+        {
+          title: 'API开发',
+          name: 'apiDev',
+          icon: 'icon-api-dev',
+          path: '/api_dev',
+          children: []
+        },
+        {
+          title: 'API测试',
+          name: 'apiTest',
+          icon: 'icon-api-test',
+          path: '/api_test',
+          children: []
+        },
+        {
+          title: 'API部署',
+          name: 'apiDeploy',
+          icon: 'icon-api-deploy',
+          path: '/api_deploy',
+          children: []
+        },
+        {
+          title: 'API分析',
+          name: 'apiAnalyze',
+          icon: 'icon-api-analyze',
+          path: '/api_analyze',
+          children: [{
+            title: '日志检索',
+            name: 'logSearch',
+            icon: 'icon-log-search',
+            path: '/log_search',
+            children: []
+          }]
+        },
+        {
+          title: '应用管理',
+          name: 'appMgr',
+          icon: 'icon-app-mgr',
+          path: '/app_mgr',
+          children: []
+        },
+        {
+          title: '资源管理',
+          name: 'resourceMgr',
+          icon: 'icon-resource-mgr',
+          path: '/resource_mgr',
+          children: [{
+              title: 'API组管理',
+              name: 'apiGroupMgr',
+              icon: 'icon-group-mgr',
+              path: '/api_group_mgr',
+              children: []
+            },
+            {
+              title: '数据源管理',
+              name: 'dataSourceMgr',
+              icon: 'icon-datasource-mgr',
+              path: '/data_source_mgr',
+              children: []
+            },
+            {
+              title: '任务管理',
+              name: 'taskMgr',
+              icon: 'icon-task-mgr',
+              path: '/task_mgr',
+              children: []
+            },
+          ]
+        },
+        {
+          title: '集群管理',
+          name: 'clusterMgr',
+          icon: 'icon-cluster-mgr',
+          path: '/cluster_mgr',
+          children: [{
+              title: '域管理',
+              name: 'domainMgr',
+              icon: 'icon-domain-mgr',
+              path: '/domain_mgr',
+              children: []
+            },
+            {
+              title: '集群管理',
+              name: 'clusterMgr',
+              icon: 'icon-cluster-mgr',
+              path: '/cluster_mgr',
+              children: []
+            },
+            {
+              title: '节点管理',
+              name: 'nodeMgr',
+              icon: 'icon-node-mgr',
+              path: '/mode_mgr',
+              children: []
+            },
+          ]
+        },
+        {
+          title: '系统管理',
+          name: 'sysMgr',
+          icon: 'icon-sys-mgr',
+          path: '/sys_mgr',
+          children: [{
+              title: '操作日志',
+              name: 'operLog',
+              icon: 'icon-operate-log',
+              path: '/oper_log',
+              children: []
+            },
+            {
+              title: '字典管理',
+              name: 'dictMgr',
+              icon: 'icon-dict-mgr',
+              path: '/dict_mgr',
+              children: []
+            },
+            {
+              title: '用户管理',
+              name: 'userMgr',
+              icon: 'icon-user-mgr',
+              path: '/user_mgr',
+              children: []
+            },
+            {
+              title: '用户组管理',
+              name: 'userGroupMgr',
+              icon: 'icon-user-group-mgr',
+              path: '/user_group_mgr',
+              children: []
+            },
+          ]
+        },
+      ]
+    }
+
   },
   getters: {
-    menuList: (state, getters, rootState) => getMenuByRouter(routers, rootState.user.access),
-    errorCount: state => state.errorList.length
+
   },
   mutations: {
-    setBreadCrumb (state, route) {
-      state.breadCrumbList = getBreadCrumbList(route, state.homeRoute)
-    },
-    setHomeRoute (state, routes) {
-      state.homeRoute = getHomeRoute(routes, homeName)
-    },
-    setTagNavList (state, list) {
-      let tagList = []
-      if (list) {
-        tagList = [...list]
-      } else tagList = getTagNavListFromLocalstorage() || []
-      if (tagList[0] && tagList[0].name !== homeName) tagList.shift()
-      let homeTagIndex = tagList.findIndex(item => item.name === homeName)
-      if (homeTagIndex > 0) {
-        let homeTag = tagList.splice(homeTagIndex, 1)[0]
-        tagList.unshift(homeTag)
-      }
-      state.tagNavList = tagList
-      setTagNavListInLocalstorage([...tagList])
-    },
-    closeTag (state, route) {
-      let tag = state.tagNavList.filter(item => routeEqual(item, route))
-      route = tag[0] ? tag[0] : null
-      if (!route) return
-      if (route.meta && route.meta.beforeCloseName && route.meta.beforeCloseName in beforeClose) {
-        new Promise(beforeClose[route.meta.beforeCloseName]).then(close => {
-          if (close) {
-            closePage(state, route)
-          }
-        })
-      } else {
-        closePage(state, route)
-      }
-    },
-    addTag (state, { route, type = 'unshift' }) {
-      let router = getRouteTitleHandled(route)
-      if (!routeHasExist(state.tagNavList, router)) {
-        if (type === 'push') state.tagNavList.push(router)
-        else {
-          if (router.name === homeName) state.tagNavList.unshift(router)
-          else state.tagNavList.splice(1, 0, router)
-        }
-        setTagNavListInLocalstorage([...state.tagNavList])
-      }
-    },
-    setLocal (state, lang) {
-      localSave('local', lang)
-      state.local = lang
-    },
-    addError (state, error) {
-      state.errorList.push(error)
-    },
-    setHasReadErrorLoggerStatus (state, status = true) {
-      state.hasReadErrorPage = status
-    }
+
   },
   actions: {
-    addErrorLog ({ commit, rootState }, info) {
-      if (!window.location.href.includes('error_logger_page')) commit('setHasReadErrorLoggerStatus', false)
-      const { user: { token, userId, userName } } = rootState
-      let data = {
-        ...info,
-        time: Date.parse(new Date()),
-        token,
-        userId,
-        userName
-      }
-    }
+
   }
 }

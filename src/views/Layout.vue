@@ -1,63 +1,70 @@
 <template>
-  <div id="layout">
-    <!-- <Row>
-      <Col :xs="{span : 4}" :sm="{span : 4}" class="left">
+  <div class="layout h-100">
+      <div class="layout-sidebar">
         <side-menu
-          accordion
           ref="sideMenu"
-          :active-name="$route.name"
-          :collapsed="menu.collapsed"
           @on-select="turnToPage"
-          :menu-list="menuList"
+          :menu-props="menuProps"
         >
         </side-menu>
-      </Col>
-      <Col :xs="{span : 20}" :sm="{span:20}" class="right">
-        <Row class="py-2 px-3 headBg">
-          <Head></Head>
+      </div>
+      <div class="layout-main">
+        <Row class="">
+            <level-bar></level-bar>
         </Row>
         <Row class="px-3">
           <router-view></router-view>
         </Row>
-      </Col>
-    </Row> -->
+      </div>
   </div>
 </template>
 <script>
-/* import slideMenu from "@/components/side-menu";
-import Head from "./common/head"; */
-import {mapGetters} from 'vuex'
+import SideMenu from "@/components/menu/SideMenu";
+import LevelBar from "@/components/head/LevelBar"
+import {mapGetters,mapState} from 'vuex'
 export default {
   name: "layout",
   data() {
     return {
-      menu: {
-        collapsed: false
-      }
+      
     };
   },
- /*  components: {
-    slideMenu,
-    Head
+   components: {
+    SideMenu,LevelBar
   },
   computed: {
       ...mapGetters([
-          'menuList'
+          'menuList',
+          'menuProps'
       ])
-  }, */
+  },
+  watch : {
+    
+  },
   methods: {
-   
+    turnToPage(menuItem){
+      debugger
+    }
   },
   created() {},
-  mounted() {}
+  mounted() {
+    debugger;
+  }
 };
 </script>
-<style scoped>
-.left {
-  width: 15%;
-}
-.right {
-  width: 85%;
+<style scoped lang = "less">
+.layout{
+  &-sidebar{
+    width: 12%;
+    float: left;
+    transition : width 0.28 ease-out;
+    position : fixed;
+    height:100%;
+  }
+  &-main{
+    margin-left: 12%;
+    width: 88%;
+  }
 }
 .headBg {
   background-color: #fff;

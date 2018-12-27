@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import { routers} from './router'
 import {LoadingBar,Message,Spin} from 'iview'
+import {store} from '@/store'
+console.log(store)
 
 Vue.use(Router)
 
@@ -12,6 +14,16 @@ const router = new Router({
 
 
 router.beforeEach((to, from, next) => {
+  debugger;
+  let {path} = to
+  store.getters = {
+    ...store.getters,
+    menuProps : {
+      ...store.getters.menuProps,
+      activeName : path
+    }
+  }
+  
   Spin.show()
   next();
 });

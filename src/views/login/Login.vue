@@ -33,12 +33,10 @@
 <script>
     import CollapseCard from '@/components/CollapseCard'
     import {http,constant,apiList} from "@/assets/js/common";
-    import {Row,Col,Input,Select,Form,FormItem,Button,Icon} from 'iview'
     export default {
         name: "login",
         components : {
             CollapseCard,
-            Row,Col,Input,Select,Form,FormItem,Button,Icon
         },
         data() {
             return {

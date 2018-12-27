@@ -5,15 +5,17 @@
 </template>
 <script>
 import "@/assets/iconfont/iconfont.css";
+import "font-awesome/less/font-awesome.less";
 import "bootstrap-scss/bootstrap.scss";
-import '@/assets/css/custom.css';
+import "@/assets/css/custom.css";
 export default {
-  name: "App",
+  name: "App"
 };
 </script>
 <style lang="less">
-
-body {
-  background: #f5f6f8;
+html,
+body,
+#app {
+  height: 100%;
 }
 </style>
