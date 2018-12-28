@@ -1,5 +1,15 @@
+import Vue from 'vue'
 export default {
   state: {
+    layout: {
+      sidebarWidth: {
+        width: '12%'
+      },
+      mainWidth: {
+        width: '88%',
+        'margin-left': '12%'
+      }
+    },
     menuProps: {
       collapse: false,
       activeName: '',
@@ -67,7 +77,7 @@ export default {
           children: [{
               title: 'API组管理',
               name: 'apiGroupMgr',
-              icon: 'icon-group-mgr',
+              icon: 'icon-api-mgr',
               path: '/api_group_mgr',
               children: []
             },
@@ -158,7 +168,54 @@ export default {
 
   },
   mutations: {
-
+    shrinkMenu(state) {
+      let {
+        menuProps,
+        menuProps: {
+          collapse
+        },
+        layout
+      } = state
+      if (collapse) {
+        state.layout = {
+          sidebarWidth: {
+            width: '12%'
+          },
+          mainWidth: {
+            width: '88%',
+            'margin-left': '12%'
+          }
+        }
+      } else {
+        state.layout = {
+          sidebarWidth: {
+            width: '64px'
+          },
+          mainWidth: {
+            'margin-left': '64px',
+            width: 'auto',
+          }
+        }
+      }
+      state.menuProps = {
+        ...menuProps,
+        collapse: !collapse,
+      }
+    },
+    activeMenu(state, {
+      path
+    }) {
+      let {
+        menuProps,
+        menuProps: {
+          collapse
+        }
+      } = state
+      state.menuProps = {
+        ...menuProps,
+        activeName: path,
+      }
+    }
   },
   actions: {
 

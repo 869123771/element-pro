@@ -1,14 +1,13 @@
 <template>
   <div class="layout h-100">
-      <div class="layout-sidebar">
+      <div class="layout-sidebar" :style = "layout.sidebarWidth">
         <side-menu
           ref="sideMenu"
-          @on-select="turnToPage"
-          :menu-props="menuProps"
+          
         >
         </side-menu>
       </div>
-      <div class="layout-main">
+      <div class="layout-main" :style = "layout.mainWidth">
         <Row class="">
             <level-bar></level-bar>
         </Row>
@@ -26,7 +25,7 @@ export default {
   name: "layout",
   data() {
     return {
-      
+        
     };
   },
    components: {
@@ -34,17 +33,14 @@ export default {
   },
   computed: {
       ...mapGetters([
-          'menuList',
-          'menuProps'
+        'layout'
       ])
   },
   watch : {
     
   },
   methods: {
-    turnToPage(menuItem){
-      debugger
-    }
+    
   },
   created() {},
   mounted() {
@@ -55,15 +51,15 @@ export default {
 <style scoped lang = "less">
 .layout{
   &-sidebar{
-    width: 12%;
+    /* width: 12%; */
     float: left;
     transition : width 0.28 ease-out;
     position : fixed;
     height:100%;
   }
   &-main{
-    margin-left: 12%;
-    width: 88%;
+    /* margin-left: 12%;
+    width: 88%; */
   }
 }
 .headBg {

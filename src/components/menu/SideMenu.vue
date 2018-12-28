@@ -1,11 +1,21 @@
 <template>
   <div class="sideMenu h-100">
     <Row>
-      <div class="text-center sideMenu-title">LiveData</div>
+      <div class="sideMenu-title px-20" v-if = "!menuProps.collapse">
+        <i class = "iconfont icon-livedata"></i><span>LiveData</span>
+        </div>
+      <div class = "sideMenu-title-icon px-20" v-else>
+        <i class = "iconfont icon-livedata"></i>
+      </div>
     </Row>
-    <Menu :default-active="menu.activeName" :router = "true" :collapse = "menu.collapse">
+    <Menu 
+      unique-opened
+      :default-active="menuProps.activeName" 
+      :router = "true" 
+      :collapse = "menuProps.collapse"
+      >
       <!-- :default-openeds = "menu.openNames"  -->
-      <nav-menu :nav-menus="menu.navMenus"></nav-menu>
+      <nav-menu :nav-menus="menuProps.navMenus"></nav-menu>
     </Menu>
   </div>
 </template>
@@ -13,6 +23,7 @@
 <script>
 import { Menu } from "element-ui";
 import NavMenu from "./NavMenu";
+import {mapGetters,mapState} from 'vuex'
 export default {
   name: "SideMenu",
   components: {
@@ -21,13 +32,13 @@ export default {
   },
   data() {
     return {
-      menu: this.menuProps
+      
     };
   },
-  props: {
-    menuProps: {
-      type: Object
-    }
+  computed:{
+    ...mapGetters([
+          'menuProps'
+      ])
   },
   watch: {
     
@@ -41,11 +52,21 @@ export default {
     font-size: 24px;
     background: #ccc;
     height:56px;
+    &-icon{
+      height:56px;
+      width: 64px;
+    }
+  }
+  .px-20{
+    padding: 0 20px
   }
 }
 </style>
 <style scoped>
     .el-menu{
         height:100%;
+    }
+    >>> .el-menu--collapse span{
+        display: none;
     }
 </style>

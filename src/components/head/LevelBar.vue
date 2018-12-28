@@ -4,6 +4,7 @@
     </div>
 </template>
 <script>
+import {mapMutations} from 'vuex'
     export default {
         name : 'Levelbar',
         data(){
@@ -12,8 +13,12 @@
             }
         },
         methods : {
+            ...mapMutations([
+                'shrinkMenu'
+            ]),
             shrink(){
                 this.barShrink = !this.barShrink
+                this.shrinkMenu()
             }
         },
     }

@@ -16,13 +16,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   debugger;
   let {path} = to
-  store.getters = {
-    ...store.getters,
-    menuProps : {
-      ...store.getters.menuProps,
-      activeName : path
-    }
-  }
+  store.commit('activeMenu',{path})
   
   Spin.show()
   next();

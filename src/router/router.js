@@ -36,6 +36,14 @@ export const layout = [{
         title : '首頁'
       },
       component: ()=>import('@/views/Home'),
+    },
+    {
+      path: '/api_design',
+      name: 'apiDesign',
+      meta: {
+        title : 'API設計'
+      },
+      component: ()=>import('@/views/apiDesign/ApiDesign'),
     }
   ]
 }]

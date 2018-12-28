@@ -1,14 +1,14 @@
 <template>
     <div class = "navMenu">
         <template v-for = "navMenu in navMenus">
-            <Submenu v-if = "navMenu.children.length" :index = "navMenu.name">
+            <Submenu v-if = "navMenu.children.length" :index = "navMenu.path">
                 <template slot = "title">
                     <i class = "iconfont pr-1" :class = "navMenu.icon"></i>
                     <span slot = "title">{{navMenu.title}}</span>
                 </template>
                 <nav-menu :navMenus = "navMenu.children"></nav-menu>
             </Submenu>
-            <MenuItem v-else :index = "navMenu.name" :router = "navMenu.path">
+            <MenuItem v-else :index = "navMenu.path">
                 <i class = "iconfont pr-1" :class = "navMenu.icon"></i>
                 <span>{{navMenu.title}}</span>
             </MenuItem>

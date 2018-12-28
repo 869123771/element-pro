@@ -1,4 +1,4 @@
 export default {
-    menuList : state => state.app.menuList,
+    layout : state => state.app.layout,
     menuProps : state => state.app.menuProps
 }
