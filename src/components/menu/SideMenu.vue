@@ -1,15 +1,16 @@
 <template>
   <div class="sideMenu h-100">
     <Row>
-      <div class="sideMenu-title px-20" v-if = "!menuProps.collapse">
+      <div class="sideMenu-title px-20" v-show = "!menuProps.collapse">
         <i class = "iconfont icon-livedata"></i><span>LiveData</span>
         </div>
-      <div class = "sideMenu-title-icon px-20" v-else>
+      <div class = "sideMenu-title-icon px-20" v-show = "menuProps.collapse">
         <i class = "iconfont icon-livedata"></i>
       </div>
     </Row>
     <Menu 
       unique-opened
+      :collapse-transition = "false"
       :default-active="menuProps.activeName" 
       :router = "true" 
       :collapse = "menuProps.collapse"
@@ -52,9 +53,15 @@ export default {
     font-size: 24px;
     background: #ccc;
     height:56px;
+    border-right: solid 1px #e6e6e6;
+    cursor: pointer;
     &-icon{
       height:56px;
       width: 64px;
+      border-right: solid 1px #e6e6e6;
+      list-style: none;
+      line-height: 56px;
+      cursor: pointer;
     }
   }
   .px-20{
@@ -66,7 +73,7 @@ export default {
     .el-menu{
         height:100%;
     }
-    >>> .el-menu--collapse span{
+    .el-menu--collapse >>> span{
         display: none;
     }
 </style>

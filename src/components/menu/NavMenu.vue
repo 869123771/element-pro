@@ -8,6 +8,11 @@
                 </template>
                 <nav-menu :navMenus = "navMenu.children"></nav-menu>
             </Submenu>
+             <MenuItem v-else-if = "menuProps.collapse" :index = "navMenu.path">
+                <Tooltip :content = "navMenu.title">
+                    <i class = "iconfont pr-1" :class = "navMenu.icon"></i>
+                </Tooltip>
+            </MenuItem>
             <MenuItem v-else :index = "navMenu.path">
                 <i class = "iconfont pr-1" :class = "navMenu.icon"></i>
                 <span>{{navMenu.title}}</span>
@@ -18,6 +23,7 @@
 
 <script>
     import {Submenu,MenuItem,Tooltip} from 'element-ui'
+    import {mapGetters,mapState} from 'vuex'
     export default {
         name : 'NavMenu',
         components : {
@@ -27,7 +33,12 @@
             navMenus : {
                 type : Array
             }
-        }
+        },
+        computed:{
+            ...mapGetters([
+                'menuProps'
+            ])
+        },
     }
 </script>
 <style scoped>
