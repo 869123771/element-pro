@@ -8,6 +8,17 @@ import 'iview/dist/styles/iview.css';
 import 'element-ui/lib/theme-chalk/index.css';
 import './iview'
 
+import vuescroll from 'vuescroll'
+import 'vuescroll/dist/vuescroll.css';
+
+Vue.use(vuescroll,{
+  ops : {
+    bar : {
+        background: 'rgba(204, 204, 204, 0.72)',
+    }
+  }
+})
+
 new Vue({
   router,
   store,

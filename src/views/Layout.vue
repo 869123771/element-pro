@@ -1,14 +1,10 @@
 <template>
   <div class="layout h-100">
       <div class="layout-sidebar" :style = "layout.sidebarWidth">
-        <side-menu
-          ref="sideMenu"
-          
-        >
-        </side-menu>
+        <side-menu></side-menu>
       </div>
       <div class="layout-main" :style = "layout.mainWidth">
-        <Row class="">
+        <Row>
             <level-bar></level-bar>
         </Row>
         <Row class="px-3">
@@ -25,7 +21,7 @@ export default {
   name: "layout",
   data() {
     return {
-        
+
     };
   },
    components: {
@@ -37,14 +33,13 @@ export default {
       ])
   },
   watch : {
-    
+
   },
   methods: {
-    
+
   },
   created() {},
   mounted() {
-    debugger;
   }
 };
 </script>

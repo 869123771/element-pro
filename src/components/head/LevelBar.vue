@@ -1,12 +1,21 @@
 <template>
     <div class = "levelbar">
-        <i class = "iconfont icon-shrink levelbar-shrink" :class="{barShrink}" @click = "shrink"></i>
+        <div class = "d-flex align-items-center">
+            <i class = "iconfont icon-shrink levelbar-shrink" :class="{barShrink}" @click = "shrink"></i>
+            <bread-crumb></bread-crumb>
+            <nav-tag></nav-tag>
+        </div>
     </div>
 </template>
 <script>
 import {mapMutations} from 'vuex'
+import BreadCrumb from './BreadCrumb'
+import NavTag from './NavTag'
     export default {
         name : 'Levelbar',
+        components : {
+            BreadCrumb,NavTag
+        },
         data(){
             return {
                 barShrink : false
@@ -25,17 +34,29 @@ import {mapMutations} from 'vuex'
 </script>
 <style scoped lang = "less">
     .levelbar{
-        line-height: 3.5rem;
-        height:56px;
+        background-color: #f5f7fa;
+        border-bottom: solid 1px #e6e6e6;
         &-shrink{
-            font-size: 26px;
-            padding: 0 1.25rem;
+            height: 56px;
+            width: 56px;
+            text-align: center;
+            line-height: 56px;
+            font-size: 24px;
             cursor:pointer;
             display: inline-block;
             transition: all 0.6s ease 0s;
         }
+        &-shrink:hover{
+            /*background-color: #ecf5ff;*/
+        }
         .barShrink{
             transform: rotate(90deg);
         }
+    }
+</style>
+<style scoped>
+    >>> .breadcrumb{
+        margin-bottom: 0px;
+        background-color: inherit;
     }
 </style>

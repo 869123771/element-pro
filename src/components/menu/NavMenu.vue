@@ -1,40 +1,42 @@
 <template>
-    <div class = "navMenu">
-        <template v-for = "navMenu in navMenus">
-            <Submenu v-if = "navMenu.children.length" :index = "navMenu.path">
-                <template slot = "title">
-                    <i class = "iconfont pr-1" :class = "navMenu.icon"></i>
-                    <span slot = "title">{{navMenu.title}}</span>
+    <div class="navMenu">
+        <template v-for="navMenu in navMenus">
+            <Submenu v-if="navMenu.children.length" :index="navMenu.path">
+                <template slot="title">
+                    <i class="iconfont pr-1" :class="navMenu.icon"></i>
+                    <span slot="title" class="menu-item-title">{{navMenu.title}}</span>
                 </template>
-                <nav-menu :navMenus = "navMenu.children"></nav-menu>
+                <nav-menu :navMenus="navMenu.children"></nav-menu>
             </Submenu>
-             <MenuItem v-else-if = "menuProps.collapse" :index = "navMenu.path">
-                <Tooltip :content = "navMenu.title">
-                    <i class = "iconfont pr-1" :class = "navMenu.icon"></i>
-                </Tooltip>
-            </MenuItem>
-            <MenuItem v-else :index = "navMenu.path">
-                <i class = "iconfont pr-1" :class = "navMenu.icon"></i>
-                <span>{{navMenu.title}}</span>
+            <Tooltip v-else-if="menuProps.collapse" :content="navMenu.title" placement="right">
+                <MenuItem :index="navMenu.path">
+                    <i class="iconfont pr-1" :class="navMenu.icon"></i>
+                    <span class="menu-item-title">{{navMenu.title}}</span>
+                </MenuItem>
+            </Tooltip>
+            <MenuItem v-else :index="navMenu.path">
+                <i class="iconfont pr-1" :class="navMenu.icon"></i>
+                <span class="menu-item-title">{{navMenu.title}}</span>
             </MenuItem>
         </template>
     </div>
 </template>
 
 <script>
-    import {Submenu,MenuItem,Tooltip} from 'element-ui'
-    import {mapGetters,mapState} from 'vuex'
+    import {Submenu, MenuItem, Tooltip} from 'element-ui'
+    import {mapGetters, mapState} from 'vuex'
+
     export default {
-        name : 'NavMenu',
-        components : {
-            Submenu,MenuItem,Tooltip
+        name: 'NavMenu',
+        components: {
+            Submenu, MenuItem, Tooltip
         },
-        props : {
-            navMenus : {
-                type : Array
+        props: {
+            navMenus: {
+                type: Array
             }
         },
-        computed:{
+        computed: {
             ...mapGetters([
                 'menuProps'
             ])

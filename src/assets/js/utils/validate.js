@@ -22,7 +22,6 @@ export const userName = (rule, value, callback) => {
     }
 };
 export const password = (rule, value, callback) => {
-    debugger;
     if (!passwordPattern.test(value)) {
         return callback(new Error(passwordTip));
     } else {

@@ -117,6 +117,7 @@ module.exports = {
     });
 
     // 添加别名
+
     config.resolve.alias
       .set("@", resolve("src"))
       .set("assets", resolve("src/assets"))
@@ -190,8 +191,8 @@ module.exports = {
     //   errors: true
     // },
     open: IS_PROD,
-    host: "0.0.0.0",
-    port: 8080,
+    host: "localhost",
+    port: 8088,
     https: false,
     hotOnly: true,
     proxy: {
