@@ -1,5 +1,5 @@
 <template>
-  <div id="phoneSelect">
+  <div class="phoneSelect">
     <Row>
       <Select size="large" value="+86">
         <Option
@@ -24,10 +24,8 @@
 </template>
 
 <script>
-import { Row, Col, FormItem, Select, Option, Input, Icon } from "iview";
 export default {
   name: "phoneSelect",
-  components: { Row, Col, FormItem, Select, Option, Input, Icon },
   props: {
     phoneSelectProps: {
       type: Object
@@ -62,7 +60,7 @@ export default {
 </script>
 
 <style lang="less">
-#phoneSelect {
+.phoneSelect {
   .ivu-select {
     position: absolute;
     z-index: 1000;

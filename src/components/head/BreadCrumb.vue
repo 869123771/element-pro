@@ -3,11 +3,11 @@
         <Breadcrumb>
             <template v-for = "(item,index) in breadcrumbList">
                 <BreadcrumbItem v-if = "item.link === false || index === breadcrumbList.length -1">
-                    <i class = "iconfont" :class = "item.icon"></i>
+                    <i class = "iconfont breadcrum-icon" :class = "item.icon"></i>
                     <span>{{item.title}}</span>
                 </BreadcrumbItem>
                 <BreadcrumbItem :to="item.path" v-else>
-                    <i class = "iconfont" :class = "item.icon"></i>
+                    <i class = "iconfont breadcrum-icon" :class = "item.icon"></i>
                     <span>{{item.title}}</span>
                 </BreadcrumbItem>
             </template>
@@ -27,6 +27,10 @@
     }
 </script>
 
-<style scoped>
-
+<style scoped lang = "less">
+    .breadcrum{
+        &-icon{
+            padding-right: 2px;
+        }
+    }
 </style>

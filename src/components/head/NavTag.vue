@@ -3,9 +3,12 @@
         <template v-for = "item in navTagList">
             <Tag
                     type="dot"
+                    size = "small"
                     :closable = "item.closable"
                     :color="item.current ? 'primary': 'default'"
-                    @click.native = "routeTo(item.path)">
+                    @click.native = "routeTo(item.path)"
+                    @on-close = "removeNavTag(item)"
+            >
                 {{item.title}}
             </Tag>
         </template>
@@ -13,7 +16,7 @@
 </template>
 
 <script>
-    import {mapGetters} from 'vuex'
+    import {mapGetters,mapMutations} from 'vuex'
     export default {
         name: "NavTag",
         computed : {
@@ -22,6 +25,7 @@
             ])
         },
         methods : {
+            ...mapMutations(['removeNavTag']),
             routeTo(path){
                 this.$router.push(path)
             }

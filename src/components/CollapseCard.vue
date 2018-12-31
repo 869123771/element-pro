@@ -1,16 +1,15 @@
 <template>
-    <Card :class="{collapseCard}">
-        <span slot="title" class="slotTitle" v-if="cardProps.linkTitle" @click="loginOrReg">
-            {{cardProps.title}}
-        </span>
-        <span slot="title" v-else>
-            {{cardProps.title}}
-        </span>
-        <span slot="extra" class="extraIcon" @click="slide">
-            <Icon type="ios-arrow-down"></Icon>
-        </span>
-        <slot></slot>
-    </Card>
+    <Collapse v-model="collapse">
+        <Panel name="content">
+            <span class="slotTitle" v-if="cardProps.linkTitle" @click="loginOrReg">
+                {{cardProps.title}}
+            </span>
+            <span v-else>{{cardProps.title}}</span>
+            <div slot="content">
+                <slot></slot>
+            </div>
+        </Panel>
+    </Collapse>
 </template>
 
 <script>
@@ -18,9 +17,6 @@
     import {Card,Icon} from 'iview'
     export default {
         name: "collapseCard",
-        components : {
-            Card,Icon
-        },
         model: {
             prop: 'cardProps',
             event: ''
@@ -32,14 +28,14 @@
         },
         data() {
             return {
-                collapseCard: false
+                collapse: 'content'
             }
         },
         methods: {
-            slide() {
+            /*slide() {
                 this.collapseCard = !this.collapseCard
                 document.querySelector('.ivu-card-body').slideToggle()
-            },
+            },*/
             loginOrReg() {
                 if (this.$route.name === 'login') {
                     this.$router.push('/regist')
@@ -51,32 +47,17 @@
     }
 </script>
 
-<style lang="less">
-    .ivu-card-extra {
-        top: 8px !important;
-    }
-
-    .ivu-card-head{
-        padding : 18px 12px;
-    }
-
+<style lang="less" scoped>
     .slotTitle {
         cursor: pointer;
         color: #007bff !important;
         font-weight: bold;
     }
-
-    .extraIcon {
-        font-size: 20px;
-        cursor: pointer;
-    }
-
-    .collapseCard .extraIcon > i {
-        transform: rotate(-90deg);
-    }
-
-    .collapseCard .extraIcon > i,
-    .extraIcon > i {
-        transition: all 0.6s ease 0s;
+</style>
+<style scoped>
+    >>> .ivu-icon-ios-arrow-forward{
+        position: absolute;
+        right: 0;
+        top: 12px;
     }
 </style>

@@ -4,6 +4,15 @@
             <i class = "iconfont icon-shrink levelbar-shrink" :class="{barShrink}" @click = "shrink"></i>
             <bread-crumb></bread-crumb>
             <nav-tag></nav-tag>
+            <Dropdown class = "levelbar-user">
+                <a href="javascript:void(0)">
+                    13631594090
+                    <Icon type="ios-arrow-down"></Icon>
+                </a>
+                <DropdownMenu slot="list">
+                    <DropdownItem>退出</DropdownItem>
+                </DropdownMenu>
+            </Dropdown>
         </div>
     </div>
 </template>
@@ -34,7 +43,7 @@ import NavTag from './NavTag'
 </script>
 <style scoped lang = "less">
     .levelbar{
-        background-color: #f5f7fa;
+        background-color: #f7f7f7;
         border-bottom: solid 1px #e6e6e6;
         &-shrink{
             height: 56px;
@@ -48,6 +57,11 @@ import NavTag from './NavTag'
         }
         &-shrink:hover{
             /*background-color: #ecf5ff;*/
+        }
+        &-user{
+            position: absolute;
+            right: 0;
+            padding: 1rem;
         }
         .barShrink{
             transform: rotate(90deg);

@@ -1,5 +1,4 @@
 import Vue from 'vue'
-
 export default {
     state: {
         layout: {
@@ -275,6 +274,9 @@ export default {
             if(navTagList.length){
                 navTagList.forEach(item=>{
                     if(!navTagList.map(item=>item.path).includes(path) && !addTagList.map(item=>item.path).includes(path)){
+                        if(navTagList.length >= 5){
+                            navTagList.splice(1,1)
+                        }
                         addTagList.push({path,title,current:true,closable : true})
                     }else{
                         if(item.path === path){
@@ -296,6 +298,22 @@ export default {
                 navTagList = defaultTagList
             }
             state.navTagList = [...navTagList,...addTagList]
+        },
+        removeNavTag(state,tagProps){
+            debugger;
+            let {path,current} = tagProps
+            let {navTagList} = state
+            let newTagList = navTagList
+            navTagList.forEach((item,index)=>{
+                if(item.path === path){
+                    if(current){
+                        newTagList[index-1].current = true;
+                        location.href = location.origin + '#' + newTagList[index-1].path
+                    }
+                    newTagList.splice(index,1)
+                }
+            })
+            state.navTagList = newTagList
         }
     },
     actions: {}

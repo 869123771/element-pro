@@ -55,6 +55,51 @@ export const layout = [
         ]
     },
     {
+        path : '',
+        component: Layout,
+        children : [
+            {
+                path: '/api_dev',
+                name: 'apiDev',
+                meta: {
+                    title: 'API开发',
+                    icon: 'icon-api-dev',
+                },
+                component: () => import('@/views/apiDev/ApiDev'),
+            },
+        ]
+    },
+    {
+        path : '',
+        component: Layout,
+        children : [
+            {
+                path: '/api_test',
+                name: 'apiTest',
+                meta: {
+                    title: 'API测试',
+                    icon: 'icon-api-test',
+                },
+                component: () => import('@/views/apiTest/ApiTest'),
+            },
+        ]
+    },
+    {
+        path : '',
+        component: Layout,
+        children : [
+            {
+                path: '/api_deploy',
+                name: 'apiDeploy',
+                meta: {
+                    title: 'API部署',
+                    icon: 'icon-api-deploy',
+                },
+                component: () => import('@/views/apiDeploy/ApiDeploy'),
+            },
+        ]
+    },
+    {
         path: 'api_analyze',
         name: 'apiAnalyze',
         component: Layout,

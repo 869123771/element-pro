@@ -68,7 +68,6 @@
 </style>
 <style scoped>
     .el-menu {
-        /*height: 100%;*/
         border:none;
     }
 
@@ -79,4 +78,12 @@
     >>> .el-submenu .el-menu-item {
         min-width: auto !important;
     }
+    >>> .el-menu-item:focus,
+    >>> .el-menu-item:hover,
+    >>> .el-submenu__title:hover,
+    >>> .el-submenu__title:focus
+    {
+        background-color: #f7f7f7;
+    }
+
 </style>
