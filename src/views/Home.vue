@@ -1,3 +1,4 @@
+<!--
 <template>
     <div class="home">
         <Row class="py-3">
@@ -144,3 +145,4 @@
         height: 400px;
     }
 </style>
+-->

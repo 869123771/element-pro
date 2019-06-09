@@ -1,22 +1,16 @@
 <template>
     <div class="navMenu">
         <template v-for="navMenu in navMenus">
-            <Submenu v-if="navMenu.children.length" :index="navMenu.path">
+            <Submenu v-if="navMenu.children && navMenu.children.length" :index="navMenu.path">
                 <template slot="title">
-                    <i class="iconfont pr-1" :class="navMenu.icon"></i>
-                    <span slot="title" class="menu-item-title">{{navMenu.title}}</span>
+                    <i class="iconfont pr-1" :class="navMenu.meta.icon"></i>
+                    <span slot="title" class="menu-item-title">{{navMenu.meta.title}}</span>
                 </template>
                 <nav-menu :navMenus="navMenu.children"></nav-menu>
             </Submenu>
-            <Tooltip v-else-if="menuProps.collapse" :content="navMenu.title" placement="right">
-                <MenuItem :index="navMenu.path">
-                    <i class="iconfont pr-1" :class="navMenu.icon"></i>
-                    <span class="menu-item-title">{{navMenu.title}}</span>
-                </MenuItem>
-            </Tooltip>
             <MenuItem v-else :index="navMenu.path">
-                <i class="iconfont pr-1" :class="navMenu.icon"></i>
-                <span class="menu-item-title">{{navMenu.title}}</span>
+                <i class="iconfont pr-1" :class="navMenu.meta.icon"></i>
+                <span class="menu-item-title">{{navMenu.meta.title}}</span>
             </MenuItem>
         </template>
     </div>

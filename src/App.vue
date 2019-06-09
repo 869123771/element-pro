@@ -1,23 +1,19 @@
 <template>
     <div id="app">
-        <vue-scroll>
+        <el-scrollbar class = "h-full">
             <router-view/>
-        </vue-scroll>
+        </el-scrollbar>
     </div>
 </template>
 <script>
     import "@/assets/iconfont/iconfont.css";
-    import "font-awesome/less/font-awesome.less";
-    import "bootstrap-scss/bootstrap.scss";
-    //import "@/assets/css/custom.css";
+    //import "font-awesome/less/font-awesome.less";
+    import "tailwindcss/tailwind.css";
+    import '@/assets/less/index.less'
     export default {
         name: "App",
     };
 </script>
 <style lang="less">
-    html,
-    body,
-    #app {
-        height: 100%;
-    }
+
 </style>
