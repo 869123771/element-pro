@@ -1,7 +1,7 @@
 import Swal from 'sweetalert2'
 
 const modelConf = {
-    width: '25%',
+    width: '25rem',
     heightAuto: false,
 }
 export default {

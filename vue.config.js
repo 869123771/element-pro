@@ -196,7 +196,8 @@ module.exports = {
         hotOnly: true,
         proxy: {
             '/jeecg-boot': {
-                target: process.env.VUE_APP_BASE_API || 'http://localhost:8080',
+                //target: process.env.VUE_APP_BASE_API || 'http://localhost:8080',
+                target: process.env.VUE_APP_BASE_API || 'http://boot.jeecg.org',
                 ws: false,
                 changeOrigin: true
             },

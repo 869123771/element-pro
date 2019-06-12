@@ -57,6 +57,20 @@
                 </el-row>
             </el-form>
         </el-row>
+        <el-row class = "my-3">
+            <el-button plain icon="iconfont icon-upload">导入</el-button>
+            <el-button plain icon="iconfont icon-download">导出</el-button>
+            <el-dropdown placement="bottom" class = "dropdown" v-show = "show.batch">
+                <el-button plain>
+                    批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item><i class = "el-icon-delete"></i>删除</el-dropdown-item>
+                    <el-dropdown-item><i class = "el-icon-lock"></i>冻结</el-dropdown-item>
+                    <el-dropdown-item><i class = "el-icon-unlock"></i>解冻</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+        </el-row>
         <el-row>
             <lb-table
                     border
@@ -101,7 +115,8 @@
                     status : ''
                 },
                 show : {
-                    collapse : false
+                    collapse : false,
+                    batch : false,
                 },
                 table : {
                     column : [
@@ -133,6 +148,7 @@
                         {label : '状态',prop : 'status_dictText',width : '70'},
                     ],
                     data : [],
+                    selection : [],
                     loading : false
                 },
                 page : {
@@ -171,7 +187,21 @@
                this.$refs.form.resetFields()
             },
             checked(selection){
-
+                if(selection.length){
+                    this.show = {
+                        ...this.show,
+                        batch : true
+                    }
+                }else{
+                    this.show = {
+                        ...this.show,
+                        batch : false
+                    }
+                }
+                this.table = {
+                    ...this.table,
+                    selection
+                }
             },
             handleCurrentChange(currentPage){
                 this.page = {
@@ -220,6 +250,10 @@
     }
 </script>
 
-<style scoped>
-
+<style scoped lang = "less">
+    .user{
+        .dropdown{
+            padding : 0 10px;
+        }
+    }
 </style>

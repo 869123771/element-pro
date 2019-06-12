@@ -1,7 +1,7 @@
 <template>
     <div class = "login" @keydown.enter="handleSubmit">
-        <el-row type="flex" justify="center">
-            <el-col :span = "6">
+        <el-row type="flex" justify="center" class = "px-3">
+            <el-col :md = "5" :xs = "24" :sm = "24">
                 <el-card>
                     <div class = "login-logo">
                         <i class = "el-icon-eleme"></i>
@@ -19,7 +19,7 @@
                         </el-form-item>
                         <idenfiry-code :form = "form" ref = "identifyCode"></idenfiry-code>
                         <el-form-item>
-                            <el-button type = "primary" size = "large" class = "w-full" @click = "handleSubmit">登录</el-button>
+                            <el-button type = "primary" size = "large" class = "w-full" @click = "handleSubmit" :loading="loading">登录</el-button>
                         </el-form-item>
                     </el-form>
                 </el-card>
@@ -55,6 +55,7 @@
                     password: '123456',
                     code : ''
                 },
+                loading : false,
                 rules: {
                     username: [
                         {required: true, message: '账号不能为空', trigger: 'change'}
@@ -81,6 +82,7 @@
                 })
             },
             async login() {
+                this.loading = true
                 let params = {
                     ...this.form
                 }
@@ -89,7 +91,7 @@
                     this.handleLogin(result)
                     this.$router.push({ name: "dashboard" })
                 }
-
+                this.loading = false
             }
         },
         mounted() {
@@ -102,6 +104,11 @@
     .login{
         &-logo{
             font-size : 4rem;
+        }
+        /deep/ .el-input.el-input--large{
+            i{
+                font-size: 20px;
+            }
         }
     }
 </style>
