@@ -93,6 +93,10 @@
                     @selection-change="checked"
             ></lb-table>
         </el-row>
+        <avue-drawer show-close :title="drawer.title" :width="drawer.width" v-model="drawer.show"
+                     :close-on-click-modal="false">
+            <avue-detail :option="detail.option" v-model="detail.form"></avue-detail>
+        </avue-drawer>
     </div>
 </template>
 
@@ -119,6 +123,29 @@
                     collapse: false,
                     batch: false,
                 },
+                drawer: {
+                    show: false,
+                    title: '详情',
+                    width: 400
+                },
+                detail: {
+                    option: {
+                        column: [{
+                            label: '用户账号',
+                            prop: 'username',
+                            span: 24
+                        }, {
+                            label: '用户名字',
+                            prop: 'realname',
+                            span: 24
+                        }, {
+                            label: '角色分配',
+                            prop: 'roleName',
+                            span: 24
+                        }]
+                    },
+                    form: {}
+                },
                 table: {
                     column: [
                         {type: 'selection', fixed: true},
@@ -128,19 +155,28 @@
                             width: '100',
                             render: (h, props) => {
                                 let {row} = props
+                                let dropdownItem = [
+                                    {label: '详情', icon: '', action: 'handleDetail'},
+                                    {label: '密码', icon: '', action: 'handlePwd'},
+                                    {label: '删除', icon: '', action: 'handleDetail'},
+                                    {label: '冻结', icon: '', action: 'handleDetail'},
+                                    {label: '代理人', icon: '', action: 'handleDetail'},
+                                ]
                                 return (
                                     <el-dropdown placement="bottom" className="dropdown">
                                       <span class="text-blue-500">
                                           更多<i class="el-icon-arrow-down el-icon--right"></i>
                                       </span>
                                         <el-dropdown-menu slot="dropdown">
-                                            <el-dropdown-item nativeOnClick={() => this.handleDetail(row)}>详情
-                                            </el-dropdown-item>
-                                            <el-dropdown-item nativeOnClick={() => this.handlePwd(row)}>密码
-                                            </el-dropdown-item>
-                                            <el-dropdown-item>删除</el-dropdown-item>
-                                            <el-dropdown-item>冻结</el-dropdown-item>
-                                            <el-dropdown-item>代理人</el-dropdown-item>
+                                            {
+                                                dropdownItem.map(({label, icon, action}) => {
+                                                    return (
+                                                        <el-dropdown-item nativeOnClick={() => this[action](row)}>
+                                                            {label}
+                                                        </el-dropdown-item>
+                                                    )
+                                                })
+                                            }
                                         </el-dropdown-menu>
                                     </el-dropdown>
                                 )
@@ -186,13 +222,15 @@
         computed: {
             ...mapState({
                 sex: ({dict}) => dict.sex,
-                userStatus: ({dict}) => dict.userStatus
+                userStatus: ({dict}) => dict.userStatus,
+                roles: ({system}) => system.roles
             })
         },
         methods: {
             ...mapActions({
                 getSex: 'GET_SEX',
                 getUserStatus: 'GET_USER_STATUS',
+                getAllRoles: 'GET_ALL_ROLES'
             }),
             arrowClick() {
                 let {collapse} = this.show
@@ -201,8 +239,23 @@
                     collapse: !collapse
                 }
             },
-            handleDetail(row) {
-                debugger;
+            async handleDetail(row) {
+                let {id: userid} = row
+                this.drawer = {
+                    ...this.drawer,
+                    show: true
+                }
+                let {success, result} = await http.get(apiList.sys_role_query_user_role, {userid})
+                if (success) {
+                    let roleName = this.roles.filter(item => result.includes(item.id)).map(item => item.roleName).join(',')
+                    this.detail = {
+                        ...this.detail,
+                        form: {
+                            ...row,
+                            roleName
+                        }
+                    }
+                }
             },
             handlePwd(row) {
                 debugger;
@@ -277,6 +330,7 @@
             this.queryList()
             this.getSex()
             this.getUserStatus()
+            this.getAllRoles()
         }
     }
 </script>

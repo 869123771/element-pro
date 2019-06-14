@@ -7,12 +7,13 @@ import './permission'
 Vue.config.productionTip = false
 import Element from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
-import formCreate from 'form-create/element'
+import Avue from '@smallwei/avue';
+import '@smallwei/avue/lib/index.css';
 //import './element'
 
 
 Vue.use(Element, { size: 'small', zIndex: 3000 });
-Vue.use(formCreate)
+Vue.use(Avue)
 
 new Vue({
   router,
