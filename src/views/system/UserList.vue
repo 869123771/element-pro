@@ -95,7 +95,8 @@
         </el-row>
         <avue-drawer show-close :title="drawer.title" :width="drawer.width" v-model="drawer.show"
                      :close-on-click-modal="false">
-            <avue-detail :option="detail.option" v-model="detail.form"></avue-detail>
+            <avue-detail :option="detail.option" v-model="detail.model"></avue-detail>
+            <avue-form :option="aForm.option" v-model="aForm.model"></avue-form>
         </avue-drawer>
     </div>
 </template>
@@ -126,25 +127,91 @@
                 drawer: {
                     show: false,
                     title: '详情',
-                    width: 400
+                    width: 400,
                 },
-                detail: {
+                detail : {
                     option: {
-                        column: [{
-                            label: '用户账号',
-                            prop: 'username',
-                            span: 24
-                        }, {
-                            label: '用户名字',
-                            prop: 'realname',
-                            span: 24
-                        }, {
-                            label: '角色分配',
-                            prop: 'roleName',
-                            span: 24
-                        }]
+                        column: [
+                            {
+                                label: '用户账号',
+                                prop: 'username',
+                                type: 'text',
+                                span: 24
+                            },
+                            {
+                                label: '用户名字',
+                                prop: 'realname',
+                                span: 24
+                            },
+                            {
+                                label: '角色分配',
+                                prop: 'roleName',
+                                span: 24
+                            },
+                            {
+                                label: '生日',
+                                prop: 'birthday',
+                                span: 24
+                            },
+                            {
+                                label: '性别',
+                                prop: 'sex_dictText',
+                                span: 24
+                            },
+                            {
+                                label: '邮箱',
+                                prop: 'email',
+                                span: 24
+                            },
+                            {
+                                label: '手机号码',
+                                prop: 'phone',
+                                span: 24
+                            },
+                            {
+                                label: '工作流引擎',
+                                prop: 'activitiSync',
+                                span: 24
+                            }
+                        ]
                     },
-                    form: {}
+                    model: {}
+                },
+                aForm : {
+                   option : {
+                       mock:true,
+                       submitBtn :false,
+                       emptyBtn : false,
+                       menuBtn : false,
+                       column : [
+                           {
+                               label: '头像',
+                               prop: 'avatar',
+                               type : 'input',
+                               span: 24
+                           },
+                           {
+                               label: '部门分配',
+                               prop: 'dept',
+                               type : 'input',
+                               span: 24
+                           },
+                           /*{
+                               label: '工作流引擎',
+                               prop: 'activitiSync',
+                               type : 'radio',
+                               dicData : this.activitiSync
+                               span: 24,
+                               props:{
+                                   value : 'itemValue',
+                                   label : 'itemLabel'
+                               },
+                           },*/
+                       ]
+                   },
+                    model : {
+
+                    }
                 },
                 table: {
                     column: [
@@ -223,14 +290,18 @@
             ...mapState({
                 sex: ({dict}) => dict.sex,
                 userStatus: ({dict}) => dict.userStatus,
-                roles: ({system}) => system.roles
+                roles: ({system}) => system.roles,
+                depts: ({system}) => system.depts,
+                activitiSync : ({dict}) => dict.activitiSync
             })
         },
         methods: {
             ...mapActions({
                 getSex: 'GET_SEX',
                 getUserStatus: 'GET_USER_STATUS',
-                getAllRoles: 'GET_ALL_ROLES'
+                getAllRoles: 'GET_ALL_ROLES',
+                getAllDepts: 'GET_ALL_DEPTS',
+                getActivitiSync : 'GET_ACTIVIYI_SYNC',
             }),
             arrowClick() {
                 let {collapse} = this.show
@@ -239,22 +310,45 @@
                     collapse: !collapse
                 }
             },
-            async handleDetail(row) {
-                let {id: userid} = row
+            handleDetail(row) {
                 this.drawer = {
                     ...this.drawer,
                     show: true
                 }
+                this.getUserRole(row)
+                //this.getUserDept(row)
+
+            },
+            async getUserRole(row) {
+                let {id: userid,activitiSync} = row
                 let {success, result} = await http.get(apiList.sys_role_query_user_role, {userid})
                 if (success) {
                     let roleName = this.roles.filter(item => result.includes(item.id)).map(item => item.roleName).join(',')
+                    console.log(this.activitiSync)
+                    debugger;
+                    activitiSync = this.activitiSync.filter(item => item.itemValue === activitiSync).map(item => item.itemText).join(',')
+                    this.detail = {
+                        ...this.detail,
+                        model: {
+                            ...row,
+                            roleName,
+                            activitiSync
+                        }
+                    }
+                }
+            },
+            async getUserDept(row) {
+                let {id: userid} = row
+                let {success, result} = await http.get(apiList.sys_dept_query_by_user, {userid})
+                if (success) {
+                    /*let roleName = this.depts.filter(item => result.includes(item.id)).map(item => item.roleName).join(',')
                     this.detail = {
                         ...this.detail,
                         form: {
                             ...row,
                             roleName
                         }
-                    }
+                    }*/
                 }
             },
             handlePwd(row) {
@@ -331,6 +425,8 @@
             this.getSex()
             this.getUserStatus()
             this.getAllRoles()
+            this.getAllDepts()
+            this.getActivitiSync()
         }
     }
 </script>
