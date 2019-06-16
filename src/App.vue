@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <el-scrollbar class = "h-full">
+        <el-scrollbar class="h-full">
             <router-view/>
         </el-scrollbar>
     </div>
@@ -10,6 +10,7 @@
     //import "font-awesome/less/font-awesome.less";
     import "tailwindcss/tailwind.css";
     import '@/assets/less/index.less'
+
     export default {
         name: "App",
     };

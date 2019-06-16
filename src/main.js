@@ -10,7 +10,11 @@ import 'element-ui/lib/theme-chalk/index.css';
 import Avue from '@smallwei/avue';
 import '@smallwei/avue/lib/index.css';
 //import './element'
-
+import {constant} from '@/utils'
+let {config:{baseUrl:{domianURL,imgDomainURL,pdfDomainURL}}} = constant
+window._CONFIG = {
+    domianURL,imgDomainURL,pdfDomainURL
+};
 
 Vue.use(Element, { size: 'small', zIndex: 3000 });
 Vue.use(Avue)
