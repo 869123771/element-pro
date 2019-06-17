@@ -99,20 +99,26 @@
             <!-- <avue-detail :option="detail.option" v-model="detail.model"></avue-detail>-->
             <component :is="component.type" :data="component.data"></component>
         </avue-drawer>
+        <drag-dialog :visible = "dialog.visible" :title="dialog.title" :width = "dialog.width">
+            <reset-pwd v-if = "show.resetPwd"></reset-pwd>
+        </drag-dialog>
     </div>
 </template>
 
 <script>
+    import DragDialog from '@/components/dragDialog'
     import {mapState, mapActions} from 'vuex'
     import {http, apiList, constant} from '@/utils'
     import lbTable from '@/components/lb-table/lb-table'
     import Read from './userList/Read'
     import Modify from './userList/Modify'
-
+    import ResetPwd from './userList/ResetPwd'
     export default {
         name: "UserList",
         components: {
-            lbTable
+            DragDialog,
+            lbTable,
+            ResetPwd
         },
         data() {
             return {
@@ -126,11 +132,17 @@
                 show: {
                     collapse: false,
                     batch: false,
+                    resetPwd : false,
                 },
                 drawer: {
                     show: false,
                     title: '详情',
                     width: 400,
+                },
+                dialog : {
+                    visible : false,
+                    width : '20%',
+                    title : '重设密码'
                 },
                 component: {
                     type: Read,
@@ -265,6 +277,14 @@
             },
             handlePwd(row) {
                 debugger;
+                this.dialog = {
+                    ...this.dialog,
+                    visible : true
+                }
+                this.show = {
+                    ...this.show,
+                    resetPwd : true
+                }
             },
             search() {
                 this.page = {
