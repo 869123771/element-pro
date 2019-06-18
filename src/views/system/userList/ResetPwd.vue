@@ -11,7 +11,7 @@
             return {
                 form: {
                     option: {
-                        labelWidth: 100,
+                        labelWidth: 70,
                         column: [
                             {
                                 label: '用户账号',

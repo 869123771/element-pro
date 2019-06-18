@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-el-drag-dialog
+    <el-dialog v-draggable="options"
                v-bind="$attrs"
                v-on="$listeners"
                :visible.sync="visible"
@@ -17,7 +17,6 @@
 </template>
 
 <script>
-    import elDragDialog from '@/directive/el-drag-dialog'
     export default {
         name: "DragDialog",
         props : {
@@ -34,7 +33,16 @@
             }
         },
         directives : {
-            elDragDialog
+
+        },
+        data(){
+          return {
+                option : {
+                    trigger: '.ivu-modal-body',
+                    body: '.ivu-modal',
+                    recover: true
+                }
+           }
         },
         methods : {
             full(){
