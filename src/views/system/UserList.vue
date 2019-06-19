@@ -98,8 +98,8 @@
                      :close-on-click-modal="false">
             <component :is="component.type" :data="component.data"></component>
         </avue-drawer>
-        <drag-dialog :visible = "dialog.visible" :title="dialog.title" :width = "dialog.width">
-            <reset-pwd v-if = "show.resetPwd" :reset-pwd = "props.resetPwd"></reset-pwd>
+        <drag-dialog :drag-dialog = "dialog">
+            <reset-pwd v-if = "show.resetPwd" :reset-pwd = "props.resetPwd" @change-pwd-ok = "changePwdOk"></reset-pwd>
         </drag-dialog>
     </div>
 </template>
@@ -140,7 +140,7 @@
                 },
                 dialog : {
                     visible : false,
-                    width : '20%',
+                    width : '24%',
                     title : '重设密码'
                 },
                 component: {
@@ -157,14 +157,13 @@
                             label: '操作',
                             prop: 'oper',
                             width: '100',
-                            render: (h, props) => {
-                                let {row} = props
+                            render: (h, scope) => {
                                 let dropdownItem = [
                                     {label: '详情', icon: '', action: 'handleDetail'},
                                     {label: '密码', icon: '', action: 'handlePwd'},
-                                    {label: '删除', icon: '', action: 'handleDetail'},
-                                    {label: '冻结', icon: '', action: 'handleDetail'},
-                                    {label: '代理人', icon: '', action: 'handleDetail'},
+                                    {label: '删除', icon: '', action: ''},
+                                    {label: '冻结', icon: '', action: ''},
+                                    {label: '代理人', icon: '', action: ''},
                                 ]
                                 return (
                                     <el-dropdown placement="bottom" className="dropdown">
@@ -175,7 +174,7 @@
                                             {
                                                 dropdownItem.map(({label, icon, action}) => {
                                                     return (
-                                                        <el-dropdown-item nativeOnClick={() => this[action](row)}>
+                                                        <el-dropdown-item nativeOnClick={() => this[action](scope)}>
                                                             {label}
                                                         </el-dropdown-item>
                                                     )
@@ -239,11 +238,11 @@
                 return `${imgDomainURL}/${avatar}`
             },
             openPreview(index){
-                debugger;
                 let {data} = this.table
+                let {config:{baseUrl:{imgDomainURL}}} = constant
                 data[index] = {
                     ...data[index],
-                    url : `${this.url.imgserver}/${data[index].avatar}`
+                    url : `${imgDomainURL}/${data[index].avatar}`
                 }
                 this.$ImagePreview(data, index);
             },
@@ -252,6 +251,26 @@
                 this.show = {
                     ...this.show,
                     collapse: !collapse
+                }
+            },
+            changePwdOk(row){
+                debugger;
+                let {resetPwd:{index}} = this.props
+                let {data} = this.table
+                data[index] = {
+                    ...row
+                }
+                this.table = {
+                    ...this.table,
+                    data
+                }
+                this.dialog = {
+                    ...this.dialog,
+                    visible : false
+                }
+                this.show = {
+                    ...this.show,
+                    resetPwd : false
                 }
             },
             addUser() {
@@ -266,7 +285,7 @@
                     data: {}
                 }
             },
-            handleDetail(row) {
+            handleDetail({row}) {
                 this.drawer = {
                     ...this.drawer,
                     show: true
@@ -276,8 +295,7 @@
                     data: row
                 }
             },
-            handlePwd(row) {
-                debugger;
+            handlePwd({row,$index:index}) {
                 this.dialog = {
                     ...this.dialog,
                     visible : true
@@ -288,7 +306,10 @@
                 }
                 this.props = {
                     ...this.props,
-                    resetPwd : row
+                    resetPwd : {
+                        index,
+                        ...row
+                    }
                 }
             },
             search() {

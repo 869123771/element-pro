@@ -31,17 +31,16 @@ export const isURL =  (s) => {
 }
 
 
-export const pwdCheck = (rule, value, callback,form)=>{
-    debugger;
-    let {model:{confirmpassword}} = form
+export const pwdCheck = (rule, value, callback,_this)=>{
+    let {model:{confirmpassword}} = _this.form
     if (confirmpassword) {
-        this.$refs.ruleForm.validateField('checkPass');
+        _this.$refs.resetPwd.validateField('confirmpassword');
     }
     callback();
 }
 
-export const confirmPwdCheck = (rule, value, callback,form) => {
-    let {model:{password}} = form
+export const confirmPwdCheck = (rule, value, callback,_this) => {
+    let {model:{password}} = _this.form
     if (value === '') {
         callback(new Error('请再次输入密码'));
     } else if (value !== password) {

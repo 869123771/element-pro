@@ -1,6 +1,8 @@
 import user from './user'
+import defaultProps from './defaultProps'
 export default {
     ...user,
+    ...defaultProps,
     SUCCESS: 200,
     tablePageInfo : {
         datas : [],

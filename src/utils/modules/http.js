@@ -97,6 +97,25 @@ const checkCode = (res) => {
 }
 
 export default {
+    put(url, data) {
+        return ajax({
+            method: 'put',
+            url,
+            data: JSON.stringify(data),
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/json; charset=UTF-8'
+            }
+        }).then(
+            (response) => {
+                return checkStatus(response)
+            }
+        ).then(
+            (res) => {
+                return checkCode(res)
+            }
+        )
+    },
     post(url, data) {
         return ajax({
             method: 'post',

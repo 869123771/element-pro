@@ -1,16 +1,18 @@
 <template>
-    <el-dialog v-draggable="options"
-               v-bind="$attrs"
-               v-on="$listeners"
-               :visible.sync ="dialog.visible"
-               :fullscreen.sync="dialog.fullscreen"
-               :close-on-click-modal = "dialog.closeOnClickModal"
+    <el-dialog
+            ref="dragDialog"
+            v-draggable="options"
+            :close-on-click-modal="dialog.closeOnClickModal"
+            :visible.async="dialog.visible"
+            :fullscreen="dialog.fullscreen"
+            :width="dialog.width"
+            @close="close"
     >
         <div slot="title">
             <span>{{dialog.title}}</span>
             <span class="arrow">
-                <i class="fa fa-fw fa-arrows-alt" v-if="!dialog.fullscreen" @click="full"></i>
-                <i class="fa fa-fw fa-arrows" v-else @click="exit"></i>
+                <i class="iconfont icon-expend" v-if="!dialog.fullscreen" @click="full"></i>
+                <i class="iconfont icon-compress" v-else @click="exit"></i>
             </span>
         </div>
         <slot></slot>
@@ -18,44 +20,46 @@
 </template>
 
 <script>
+    import {constant} from '@/utils'
+
     export default {
         name: "DragDialog",
         props: {
-
-        },
-        watch: {
-            $attrs : {
-                handler(props){
-                    debugger;
-                    let {fullscreen,visible,closeOnClickModal} = props
-                    if(!fullscreen){
-                        fullscreen = false
-                    }
-                    if(!visible){
-                        visible = false
-                    }
-                    if(!closeOnClickModal){
-                        closeOnClickModal = false
-                    }
-                    this.dialog = {
-                        ...this.dialog,
-                        ...props,
-                        fullscreen,
-                        visible,
-                        closeOnClickModal
-                    }
-                },
-                immediate : true
+            dragDialog: {
+                type: Object
+            },
+            visible: {
+                type: Boolean,
+                default: false
+            },
+            closeOnClickModal: {
+                type: Boolean,
+                default: false
             },
         },
+        watch: {
+            dragDialog: {
+                handler(props) {
+                    this.dialog = {
+                        ...this.dialog,
+                        ...props
+                    }
+                },
+                immediate: true
+            }
+
+        },
         data() {
+            let {dialog} = constant
             return {
                 options: {
                     trigger: '.el-dialog__header',
                     body: '.el-dialog',
                     recover: true
                 },
-                dialog : {}
+                dialog: {
+                    ...dialog
+                }
             }
         }
         ,
@@ -63,22 +67,21 @@
             full() {
                 this.dialog = {
                     ...this.dialog,
-                    fullscreen : true
+                    fullscreen: true
                 }
-            }
-            ,
+            },
             exit() {
                 this.dialog = {
                     ...this.dialog,
-                    fullscreen : false
+                    fullscreen: false
                 }
             },
-            /*closeDialog(){
+            close() {
                 this.dialog = {
                     ...this.dialog,
-                    visible: false
+                    visible : false
                 }
-            }*/
+            }
         }
     }
 </script>

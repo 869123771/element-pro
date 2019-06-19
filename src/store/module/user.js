@@ -49,7 +49,8 @@ export default {
             commit('SET_TOKEN', '')
             commit('SET_PERMISSIONLIST', [])
             setToken('')
-            await http.post(apiList.login_out,logoutToken)
+            //await http.post(apiList.login_out,logoutToken)
+            location.href = "/"
         },
     }
 }
