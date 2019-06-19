@@ -29,3 +29,24 @@ export const isPhone = (s) => {
 export const isURL =  (s) => {
     return /^http[s]?:\/\/.*/.test(s)
 }
+
+
+export const pwdCheck = (rule, value, callback,form)=>{
+    debugger;
+    let {model:{confirmpassword}} = form
+    if (confirmpassword) {
+        this.$refs.ruleForm.validateField('checkPass');
+    }
+    callback();
+}
+
+export const confirmPwdCheck = (rule, value, callback,form) => {
+    let {model:{password}} = form
+    if (value === '') {
+        callback(new Error('请再次输入密码'));
+    } else if (value !== password) {
+        callback(new Error('两次输入密码不一致!'));
+    } else {
+        callback();
+    }
+};

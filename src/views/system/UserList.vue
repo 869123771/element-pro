@@ -96,11 +96,10 @@
         </el-row>
         <avue-drawer show-close :title="drawer.title" :width="drawer.width" v-model="drawer.show"
                      :close-on-click-modal="false">
-            <!-- <avue-detail :option="detail.option" v-model="detail.model"></avue-detail>-->
             <component :is="component.type" :data="component.data"></component>
         </avue-drawer>
         <drag-dialog :visible = "dialog.visible" :title="dialog.title" :width = "dialog.width">
-            <reset-pwd v-if = "show.resetPwd"></reset-pwd>
+            <reset-pwd v-if = "show.resetPwd" :reset-pwd = "props.resetPwd"></reset-pwd>
         </drag-dialog>
     </div>
 </template>
@@ -148,7 +147,9 @@
                     type: Read,
                     data: {}
                 },
-
+                props : {
+                    resetPwd : {}
+                },
                 table: {
                     column: [
                         {type: 'selection', fixed: true},
@@ -284,6 +285,10 @@
                 this.show = {
                     ...this.show,
                     resetPwd : true
+                }
+                this.props = {
+                    ...this.props,
+                    resetPwd : row
                 }
             },
             search() {
