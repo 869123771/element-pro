@@ -24,14 +24,16 @@ window._CONFIG = {
  */
 importDirective(Vue)
 
-Vue.use(Element, {size: 'small', zIndex: 3000});
+Vue.use(Element, {size: 'small', zIndex: 2000});
 Vue.use(Avue)
 Vue.use(VModal, {
-        dialog: true,
-        dynamic: true,
-        injectModalsContainer: true,
-        dynamicDefaults: { clickToClose: false }
-    })
+    dialog: true,
+    dynamic: true,
+    injectModalsContainer: true,
+    dynamicDefaults: {
+        clickToClose: false
+    }
+})
 
 new Vue({
     router,

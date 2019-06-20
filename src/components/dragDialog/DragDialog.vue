@@ -1,28 +1,23 @@
 <template>
-    <v-dialog
-            draggable
-            resizable
+    <modal name="modal"
+           class="modal"
+           draggable=".modal-header"
+           transition="nice-modal-fade"
+           :adaptive="true"
+           width="25%"
+           :min-width="300"
+           :min-height="300"
+           :delay="100"
+           :resizable="true"
     >
-        <!--<div slot="title">
-            <span>{{dialog.title}}</span>
-            <span class="arrow">
-                <i class="iconfont icon-expend" v-if="!dialog.fullscreen" @click="full"></i>
-                <i class="iconfont icon-compress" v-else @click="exit"></i>
-            </span>
-        </div>-->
-        hello world
+        <div class="modal-header">
+            <div class="modal-header-title">新增用户</div>
+            <div class="modal-header-close el-icon-close" @click="$modal.hide('modal')"></div>
+        </div>
+
         <slot></slot>
-    </v-dialog>
+    </modal>
 </template>
-<!--v-draggable="options"-->
-<!--
- ref="dragDialog"
-:close-on-click-modal="dialog.closeOnClickModal"
-:visible.async="dialog.visible"
-:fullscreen="dialog.fullscreen"
-:width="dialog.width"
- :clickToClose = "dialog.closeOnClickModal"
-@close="close"-->
 <script>
     import {constant} from '@/utils'
 
@@ -83,7 +78,7 @@
             close() {
                 this.dialog = {
                     ...this.dialog,
-                    visible : false
+                    visible: false
                 }
             }
         }
@@ -91,19 +86,30 @@
 </script>
 
 <style scoped lang="less">
-    .arrow {
-        display: inline-block;
-        float: right;
-        padding-right: 1.25rem;
-        color: #909399;
-        speak: none;
-        font-style: normal;
-        font-weight: 400;
-        font-variant: normal;
-        text-transform: none;
-        vertical-align: baseline;
-        -webkit-font-smoothing: antialiased;
-        font-size: 16px;
-        cursor: pointer;
+    .modal {
+        &-header {
+            height: 56px;
+            padding: 0 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: move;
+            &-title {
+
+            }
+            &-close {
+                display: inline-block;
+                color: #909399;
+                speak: none;
+                font-style: normal;
+                font-weight: 400;
+                font-variant: normal;
+                text-transform: none;
+                vertical-align: baseline;
+                -webkit-font-smoothing: antialiased;
+                font-size: 16px;
+                cursor: pointer;
+            }
+        }
     }
 </style>
