@@ -1,24 +1,28 @@
 <template>
-    <el-dialog
-            ref="dragDialog"
-            v-draggable="options"
-            :close-on-click-modal="dialog.closeOnClickModal"
-            :visible.async="dialog.visible"
-            :fullscreen="dialog.fullscreen"
-            :width="dialog.width"
-            @close="close"
+    <v-dialog
+            draggable
+            resizable
     >
-        <div slot="title">
+        <!--<div slot="title">
             <span>{{dialog.title}}</span>
             <span class="arrow">
                 <i class="iconfont icon-expend" v-if="!dialog.fullscreen" @click="full"></i>
                 <i class="iconfont icon-compress" v-else @click="exit"></i>
             </span>
-        </div>
+        </div>-->
+        hello world
         <slot></slot>
-    </el-dialog>
+    </v-dialog>
 </template>
-
+<!--v-draggable="options"-->
+<!--
+ ref="dragDialog"
+:close-on-click-modal="dialog.closeOnClickModal"
+:visible.async="dialog.visible"
+:fullscreen="dialog.fullscreen"
+:width="dialog.width"
+ :clickToClose = "dialog.closeOnClickModal"
+@close="close"-->
 <script>
     import {constant} from '@/utils'
 

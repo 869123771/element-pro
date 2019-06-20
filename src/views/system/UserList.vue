@@ -296,6 +296,12 @@
                 }
             },
             handlePwd({row,$index:index}) {
+                this.$modal.show(DragDialog,{
+                    text: 'This text is passed as a property'
+                }, {
+                    draggable: true,
+                    resizable : true
+                })
                 this.dialog = {
                     ...this.dialog,
                     visible : true

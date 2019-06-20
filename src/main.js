@@ -10,12 +10,13 @@ import 'element-ui/lib/theme-chalk/index.css';
 import Avue from '@smallwei/avue';
 import '@smallwei/avue/lib/index.css';
 import importDirective from '@/directive'
+import VModal from 'vue-js-modal'
 //import './element'
 import {constant} from '@/utils'
 
-let {config:{baseUrl:{domianURL,imgDomainURL,pdfDomainURL}}} = constant
+let {config: {baseUrl: {domianURL, imgDomainURL, pdfDomainURL}}} = constant
 window._CONFIG = {
-    domianURL,imgDomainURL,pdfDomainURL
+    domianURL, imgDomainURL, pdfDomainURL
 };
 
 /**
@@ -23,11 +24,17 @@ window._CONFIG = {
  */
 importDirective(Vue)
 
-Vue.use(Element, { size: 'small', zIndex: 3000 });
+Vue.use(Element, {size: 'small', zIndex: 3000});
 Vue.use(Avue)
+Vue.use(VModal, {
+        dialog: true,
+        dynamic: true,
+        injectModalsContainer: true,
+        dynamicDefaults: { clickToClose: false }
+    })
 
 new Vue({
-  router,
-  store,
-  render: h => h(App)
+    router,
+    store,
+    render: h => h(App)
 }).$mount('#app')
