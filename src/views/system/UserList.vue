@@ -139,8 +139,7 @@
                     width: 400,
                 },
                 dialog : {
-                    visible : false,
-                    width : '24%',
+                    width : '22%',
                     title : '重设密码'
                 },
                 component: {
@@ -296,9 +295,7 @@
                 }
             },
             handlePwd({row,$index:index}) {
-                this.$modal.show('modal', {
-                    title : 'I am a tiny dialog box.<br/>And I render <b>HTML!</b>'
-                })
+                this.$modal.show('modal')
 
                 this.dialog = {
                     ...this.dialog,
