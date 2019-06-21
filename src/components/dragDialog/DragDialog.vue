@@ -1,24 +1,26 @@
 <template>
-    <modal name="modal"
+    <modal
+            ref = "modal"
+            name="modal"
            class="modal"
            draggable=".modal-header"
            transition="nice-modal-fade"
            :adaptive="true"
-           :scrollable = "true"
+           :scrollable="true"
            :min-width="300"
            :min-height="300"
            :delay="100"
-           :clickToClose = "dialog.clickToClose"
+           :clickToClose="dialog.clickToClose"
            :width="dialog.width"
-           :height = "dialog.height"
+           :height="dialog.height"
            :resizable="dialog.resizable"
     >
         <div class="modal-header">
             <div class="modal-header-title">{{dialog.title}}</div>
-            <div class = "modal-header-control">
+            <div class="modal-header-control">
                 <div class="modal-header-control-screen">
-                    <div class = "iconfont icon-compress handle-icon" v-if="dialog.fullScreen" @click = "exit"></div>
-                    <div class = "iconfont icon-expend handle-icon px-1" v-else @click = "full"></div>
+                    <div class="iconfont icon-compress handle-icon px-1" v-if="dialog.fullScreen" @click="exit"></div>
+                    <div class="iconfont icon-expend handle-icon px-1" v-else @click="full"></div>
                 </div>
                 <div class="modal-header-control-close el-icon-close handle-icon" @click="$modal.hide('modal')"></div>
             </div>
@@ -33,8 +35,8 @@
     export default {
         name: "DragDialog",
         props: {
-            dragDialog : {
-                type : Object
+            dragDialog: {
+                type: Object
             }
         },
         watch: {
@@ -53,11 +55,6 @@
         data() {
             let {dialog} = constant
             return {
-                options: {
-                    trigger: '.el-dialog__header',
-                    body: '.el-dialog',
-                    recover: true
-                },
                 dialog: {
                     ...dialog
                 }
@@ -67,17 +64,31 @@
         methods: {
             full() {
                 debugger;
+                this.$children[0].modal = {
+                    ...this.$children[0].modal,
+                    width : 100,
+                    height : 100,
+                    heightType : '%',
+                    widthType : '%'
+                }
                 this.dialog = {
                     ...this.dialog,
-                    width : '100%',
-                    height : '100%'
+                    fullScreen: true
                 }
             },
             exit() {
+                debugger;
+                let {width,height} = this.dialog
+                this.$children[0].modal = {
+                    ...this.$children[0].modal,
+                    width,
+                    height,
+                    widthType : '%',
+                    heightType : 'px',
+                }
                 this.dialog = {
                     ...this.dialog,
-                    width : 'inherit',
-                    height : 'inherit'
+                    fullScreen: false
                 }
             },
             close() {
@@ -102,11 +113,11 @@
             &-title {
 
             }
-            &-control{
+            &-control {
                 position: absolute;
-                right : 1rem;
-                display : flex;
-                align-items : center;
+                right: 1rem;
+                display: flex;
+                align-items: center;
                 .handle-icon {
                     display: inline-block;
                     color: #909399;

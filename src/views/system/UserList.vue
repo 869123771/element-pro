@@ -139,7 +139,7 @@
                     width: 400,
                 },
                 dialog : {
-                    width : '22%',
+                    width : '22',
                     title : '重设密码'
                 },
                 component: {
@@ -263,10 +263,7 @@
                     ...this.table,
                     data
                 }
-                this.dialog = {
-                    ...this.dialog,
-                    visible : false
-                }
+                this.$modal.hide('modal')
                 this.show = {
                     ...this.show,
                     resetPwd : false
