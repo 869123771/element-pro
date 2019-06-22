@@ -66,9 +66,9 @@
                     批量操作<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item><i class="el-icon-delete"></i>删除</el-dropdown-item>
-                    <el-dropdown-item><i class="el-icon-lock"></i>冻结</el-dropdown-item>
-                    <el-dropdown-item><i class="el-icon-unlock"></i>解冻</el-dropdown-item>
+                    <el-dropdown-item @click.native="batchDel"><i class="el-icon-delete"></i>删除</el-dropdown-item>
+                    <el-dropdown-item><i class="el-icon-lock" @click.native="frozen"></i>冻结</el-dropdown-item>
+                    <el-dropdown-item><i class="el-icon-unlock" @click.native="frozen(1)"></i>解冻</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
         </el-row>
@@ -98,8 +98,8 @@
                      :close-on-click-modal="false">
             <component :is="component.type" :data="component.data"></component>
         </avue-drawer>
-        <drag-dialog :drag-dialog = "dialog">
-            <reset-pwd v-if = "show.resetPwd" :reset-pwd = "props.resetPwd" @change-pwd-ok = "changePwdOk"></reset-pwd>
+        <drag-dialog :drag-dialog="dialog">
+            <reset-pwd v-if="show.resetPwd" :reset-pwd="props.resetPwd" @change-pwd-ok="changePwdOk"></reset-pwd>
         </drag-dialog>
     </div>
 </template>
@@ -112,6 +112,8 @@
     import Read from './userList/Read'
     import Modify from './userList/Modify'
     import ResetPwd from './userList/ResetPwd'
+    import sweetAlert from "../../utils/modules/sweetAlert";
+
     export default {
         name: "UserList",
         components: {
@@ -131,24 +133,69 @@
                 show: {
                     collapse: false,
                     batch: false,
-                    resetPwd : false,
+                    resetPwd: false,
                 },
                 drawer: {
                     show: false,
                     title: '详情',
                     width: 400,
                 },
-                dialog : {
-                    width : '22',
-                    title : '重设密码'
+                dialog: {
+                    width: '22',
+                    title: '重设密码'
                 },
                 component: {
                     type: Read,
                     data: {}
                 },
-                props : {
-                    resetPwd : {}
+                props: {
+                    resetPwd: {}
                 },
+                popover: {
+                    visible: false
+                },
+                dropDownItem: [
+                    {
+                        label: '详情',
+                        icon: '',
+                        action: 'handleDetail',
+                        popover: false,
+                        visible: false,
+                        popText: ''
+                    },
+                    {
+                        label: '密码',
+                        icon: '',
+                        action: 'handlePwd',
+                        popover: false,
+                        visible: false,
+                        popText: ''
+                    },
+                    {
+                        label: '删除',
+                        icon: '',
+                        action: 'handleDel',
+                        popover: true,
+                        visible: false,
+                        popText: '确定删除吗'
+                    },
+                    {
+                        label: '冻结',
+                        icon: '',
+                        action: 'frozen',
+                        popover: true,
+                        visible: false,
+                        popText: '确定冻结吗'
+                    },
+                    {
+                        label: '代理人',
+                        icon: '',
+                        action: '',
+                        popover: false,
+                        visible: '',
+                        popText: ''
+                    },
+                ],
                 table: {
                     column: [
                         {type: 'selection', fixed: true},
@@ -157,13 +204,6 @@
                             prop: 'oper',
                             width: '100',
                             render: (h, scope) => {
-                                let dropdownItem = [
-                                    {label: '详情', icon: '', action: 'handleDetail'},
-                                    {label: '密码', icon: '', action: 'handlePwd'},
-                                    {label: '删除', icon: '', action: ''},
-                                    {label: '冻结', icon: '', action: ''},
-                                    {label: '代理人', icon: '', action: ''},
-                                ]
                                 return (
                                     <el-dropdown placement="bottom" className="dropdown">
                                       <span class="text-blue-500">
@@ -171,11 +211,30 @@
                                       </span>
                                         <el-dropdown-menu slot="dropdown">
                                             {
-                                                dropdownItem.map(({label, icon, action}) => {
+                                                this.dropDownItem.map(({popover, popText, visible, label, icon, action}, index) => {
                                                     return (
-                                                        <el-dropdown-item nativeOnClick={() => this[action](scope)}>
-                                                            {label}
-                                                        </el-dropdown-item>
+                                                        popover ? <el-popover
+                                                                placement="top"
+                                                                width="160"
+                                                                value={visible}
+                                                            >
+                                                                <p class="pb-3">{popText}</p>
+                                                                <div class="text-right">
+                                                                    <el-button size="mini" type="text"
+                                                                               nativeOnClick={() => this.handleCancel(index)}>取消
+                                                                    </el-button>
+                                                                    <el-button type="primary" size="mini"
+                                                                               nativeOnClick={() => this[action](scope)}>确定
+                                                                    </el-button>
+                                                                </div>
+                                                                <el-dropdown-item slot="reference">
+                                                                    {label}
+                                                                </el-dropdown-item>
+                                                            </el-popover> :
+                                                            <el-dropdown-item nativeOnClick={() => this[action](scope)}>
+                                                                {label}
+                                                            </el-dropdown-item>
+
                                                     )
                                                 })
                                             }
@@ -193,7 +252,8 @@
                             render: (h, scope) => {
                                 let imgPath = this.getAvatarView(scope)
                                 return (
-                                    <avue-avatar src = {imgPath} nativeOnClick = {()=>this.openPreview(scope.$index)}></avue-avatar>
+                                    <avue-avatar src={imgPath}
+                                                 nativeOnClick={() => this.openPreview(scope.$index)}></avue-avatar>
                                 )
                             }
                         },
@@ -202,10 +262,10 @@
                             prop: 'sex_dictText',
                             width: '70'
                         },
-                        {label: '生日', prop: 'birthday'},
+                        {label: '生日', prop: 'birthday', showOverflowTooltip: true},
                         {label: '手机号码', prop: 'phone', showOverflowTooltip: true},
-                        {label: '邮箱', prop: 'email'},
-                        {label: '状态', prop: 'status_dictText', width: '70'},
+                        {label: '邮箱', prop: 'email', showOverflowTooltip: true},
+                        {label: '状态', prop: 'status_dictText', width: '70', showOverflowTooltip: true},
                     ],
                     data: [],
                     selection: [],
@@ -233,15 +293,15 @@
                 getActivitiSync: 'GET_ACTIVIYI_SYNC',
             }),
             getAvatarView({row: {avatar}}) {
-                let {config:{baseUrl:{imgDomainURL}}} = constant
+                let {config: {baseUrl: {imgDomainURL}}} = constant
                 return `${imgDomainURL}/${avatar}`
             },
-            openPreview(index){
+            openPreview(index) {
                 let {data} = this.table
-                let {config:{baseUrl:{imgDomainURL}}} = constant
+                let {config: {baseUrl: {imgDomainURL}}} = constant
                 data[index] = {
                     ...data[index],
-                    url : `${imgDomainURL}/${data[index].avatar}`
+                    url: `${imgDomainURL}/${data[index].avatar}`
                 }
                 this.$ImagePreview(data, index);
             },
@@ -252,9 +312,9 @@
                     collapse: !collapse
                 }
             },
-            changePwdOk(row){
+            changePwdOk(row) {
                 debugger;
-                let {resetPwd:{index}} = this.props
+                let {resetPwd: {index}} = this.props
                 let {data} = this.table
                 data[index] = {
                     ...row
@@ -266,7 +326,7 @@
                 this.$modal.hide('modal')
                 this.show = {
                     ...this.show,
-                    resetPwd : false
+                    resetPwd: false
                 }
             },
             addUser() {
@@ -281,6 +341,55 @@
                     data: {}
                 }
             },
+            async batchDel() {
+                let {selection} = this.table
+                let ids = selection.map(item => item.id).join(',')
+                let {success, message, result} = await http.delete(apiList.sys_user_deleteBatch, {ids})
+                if (success) {
+                    sweetAlert.successWithTimer('删除成功'),
+                        this.queryList()
+                } else {
+                    sweetAlert.error(message)
+                }
+            },
+            async frozen(scope) {
+                debugger;
+                let params = {}
+                let {selection} = this.table
+                if (scope) {
+                    if (Number.isInteger(scope)) {
+                        let ids = selection.map(item => item.id).join(',')
+                        params = {
+                            ...params,
+                            ids,
+                            status: 1                                                              //解冻
+                        }
+                    } else {
+                        let {row: {id: ids, status}} = scope                                        //冻结单个
+                        params = {
+                            ...params,
+                            ids,
+                            status: 2
+                        }
+                    }
+
+                } else {
+                    let ids = selection.map(item => item.id).join(',')                                //冻结批量
+                    params = {
+                        ...params,
+                        ids,
+                        status: 2
+                    }
+                }
+                let {success, message} = await http.put(apiList.sys_user_frozenBatch, params)
+                if (success) {
+                    sweetAlert.successWithTimer('冻结成功'),
+                        this.queryList()
+                } else {
+                    sweetAlert.error(message)
+                }
+
+            },
             handleDetail({row}) {
                 this.drawer = {
                     ...this.drawer,
@@ -290,36 +399,59 @@
                     ...this.component,
                     data: row
                 }
-            },
-            handlePwd({row,$index:index}) {
+            }
+            ,
+            handlePwd({row, $index: index}) {
                 this.$modal.show('modal')
 
                 this.dialog = {
                     ...this.dialog,
-                    visible : true
+                    visible: true
                 }
                 this.show = {
                     ...this.show,
-                    resetPwd : true
+                    resetPwd: true
                 }
                 this.props = {
                     ...this.props,
-                    resetPwd : {
+                    resetPwd: {
                         index,
                         ...row
                     }
                 }
-            },
+            }
+            ,
+            handleCancel(index) {
+                this.$set(this.dropDownItem, index, {...this.dropDownItem[index], visible: true})
+                this.$nextTick(() => {
+                    this.$set(this.dropDownItem, index, {...this.dropDownItem[index], visible: false})
+                })
+            }
+            ,
+            async handleDel(scope) {
+                debugger;
+                let {row: {id}} = scope
+                let {success, message, result} = await http.delete(apiList.sys_user_delete, {id})
+                if (success) {
+                    sweetAlert.successWithTimer('删除成功'),
+                        this.queryList()
+                } else {
+                    sweetAlert.error(message)
+                }
+            }
+            ,
             search() {
                 this.page = {
                     ...this.page,
                     currentPage: 1
                 }
                 this.queryList()
-            },
+            }
+            ,
             reset() {
                 this.$refs.form.resetFields()
-            },
+            }
+            ,
             checked(selection) {
                 if (selection.length) {
                     this.show = {
@@ -336,21 +468,24 @@
                     ...this.table,
                     selection
                 }
-            },
+            }
+            ,
             handleCurrentChange(currentPage) {
                 this.page = {
                     ...this.page,
                     currentPage
                 }
                 this.queryList()
-            },
+            }
+            ,
             handleSizeChange(pageSize) {
                 this.page = {
                     ...this.page,
                     pageSize
                 }
                 this.queryList()
-            },
+            }
+            ,
             async queryList() {
                 this.table = {
                     ...this.table,

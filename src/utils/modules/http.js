@@ -13,11 +13,11 @@ ajax.interceptors.request.use(config => {
     // loading
     const token = getToken()
     if (token) {
-        config.headers[ 'X-Access-Token' ] = token // 让每个请求携带自定义 token 请根据实际情况自行修改
+        config.headers['X-Access-Token'] = token // 让每个请求携带自定义 token 请根据实际情况自行修改
     }
-    if(config.method=='get'){
+    if (config.method == 'get') {
         config.params = {
-            _t: Date.parse(new Date())/1000,
+            _t: Date.parse(new Date()) / 1000,
             ...config.params
         }
     }
@@ -33,7 +33,7 @@ ajax.interceptors.response.use(response => {
 })
 
 const checkStatus = (response) => {
-    let {status: httpStatus, data: {message, code, success,result}} = response
+    let {status: httpStatus, data: {message, code, success, result}} = response
     let httpStatusList = [200, 304, 400]
     let httpMsg
     switch (httpStatus) {
@@ -79,7 +79,7 @@ const checkStatus = (response) => {
     // loading
     // 如果http状态码正常，则直接返回数据
     if (response && httpStatusList.includes(httpStatus)) {
-        return {code, message,success, result}
+        return {code, message, success, result}
     }
     // 异常状态下，把错误信息返回去
     return {
@@ -89,14 +89,33 @@ const checkStatus = (response) => {
 }
 
 const checkCode = (res) => {
-    let {code, message, success,result} = res
+    let {code, message, success, result} = res
     if (res && !success) {
         sweetAlert.error(message ? message : result)
     }
-    return {code, message,success, result}
+    return {code, message, success, result}
 }
 
 export default {
+    delete(url, params) {
+        return ajax({
+            method: 'delete',
+            url,
+            params,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/json; charset=UTF-8'
+            }
+        }).then(
+            (response) => {
+                return checkStatus(response)
+            }
+        ).then(
+            (res) => {
+                return checkCode(res)
+            }
+        )
+    },
     put(url, data) {
         return ajax({
             method: 'put',
