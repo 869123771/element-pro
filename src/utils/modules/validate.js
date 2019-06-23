@@ -1,3 +1,4 @@
+import {http,apiList} from '@/utils'
 /**
  * 邮箱
  * @param {*} s
@@ -31,10 +32,10 @@ export const isURL =  (s) => {
 }
 
 
-export const pwdCheck = (rule, value, callback,_this)=>{
+export const pwdCheck = (rule, value, callback,_this,ref)=>{
     let {model:{confirmpassword}} = _this.form
     if (confirmpassword) {
-        _this.$refs.resetPwd.validateField('confirmpassword');
+        _this.$refs[ref].validateField('confirmpassword');
     }
     callback();
 }
@@ -47,5 +48,14 @@ export const confirmPwdCheck = (rule, value, callback,_this) => {
         callback(new Error('两次输入密码不一致!'));
     } else {
         callback();
+    }
+};
+
+export const uniqueUserCheck = async (rule, username, callback) => {
+    let {success,message} = await http.get(apiList.sys_user_unique_user_check,{username})
+    if(success){
+        callback();
+    }else{
+        callback(new Error(message));
     }
 };

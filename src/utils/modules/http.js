@@ -33,7 +33,7 @@ ajax.interceptors.response.use(response => {
 })
 
 const checkStatus = (response) => {
-    let {status: httpStatus, data: {message, code, success, result}} = response
+    let {status: httpStatus, data: {message, success, result}} = response
     let httpStatusList = [200, 304, 400]
     let httpMsg
     switch (httpStatus) {
@@ -56,7 +56,7 @@ const checkStatus = (response) => {
             httpMsg = '请求超时'
             break;
         case 500:
-            httpMsg = '服务器端出错'
+            httpMsg = message || '服务器端出错'
             break;
         case 501:
             httpMsg = '网络未实现'
@@ -79,21 +79,21 @@ const checkStatus = (response) => {
     // loading
     // 如果http状态码正常，则直接返回数据
     if (response && httpStatusList.includes(httpStatus)) {
-        return {code, message, success, result}
+        return {httpStatus, message, success, result}
     }
     // 异常状态下，把错误信息返回去
     return {
-        status: httpStatus,
+        httpStatus,
         message: httpMsg
     }
 }
 
 const checkCode = (res) => {
-    let {code, message, success, result} = res
-    if (res && !success) {
+    let {httpStatus, message, success, result} = res
+    if (res && httpStatus !== constant.SUCCESS) {
         sweetAlert.error(message ? message : result)
     }
-    return {code, message, success, result}
+    return {message, success, result}
 }
 
 export default {

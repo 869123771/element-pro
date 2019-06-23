@@ -86,8 +86,8 @@
                 let params = {
                     ...this.form
                 }
-                let {code,result} = await http.post(apiList.login, params)
-                if (code === constant.SUCCESS) {
+                let {success,result} = await http.post(apiList.login, params)
+                if (success) {
                     this.handleLogin(result)
                     this.$router.push({ name: "dashboard" })
                 }

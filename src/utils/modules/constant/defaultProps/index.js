@@ -1,6 +1,9 @@
 export default {
     dialog : {
         title : '',
+        name : 'modal',
+        showFooter : false,
+        loading : false,
         clickToClose : false,
         fullScreen : false,
         visible : false,

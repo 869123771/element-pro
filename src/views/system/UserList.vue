@@ -67,8 +67,8 @@
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item @click.native="batchDel"><i class="el-icon-delete"></i>删除</el-dropdown-item>
-                    <el-dropdown-item><i class="el-icon-lock" @click.native="frozen"></i>冻结</el-dropdown-item>
-                    <el-dropdown-item><i class="el-icon-unlock" @click.native="frozen(1)"></i>解冻</el-dropdown-item>
+                    <el-dropdown-item @click.native="frozen()"><i class="el-icon-lock"></i>冻结</el-dropdown-item>
+                    <el-dropdown-item @click.native="frozen(1)"><i class="el-icon-unlock"></i>解冻</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
         </el-row>
@@ -142,6 +142,7 @@
                 },
                 dialog: {
                     width: '22',
+                    name : 'resetPwd',
                     title: '重设密码'
                 },
                 component: {
@@ -323,7 +324,7 @@
                     ...this.table,
                     data
                 }
-                this.$modal.hide('modal')
+                this.$modal.hide('resetPwd')
                 this.show = {
                     ...this.show,
                     resetPwd: false
@@ -333,6 +334,7 @@
                 this.drawer = {
                     ...this.drawer,
                     title: '添加用户',
+                    width : 500,
                     show: true
                 }
                 this.component = {
@@ -383,7 +385,7 @@
                 }
                 let {success, message} = await http.put(apiList.sys_user_frozenBatch, params)
                 if (success) {
-                    sweetAlert.successWithTimer('冻结成功'),
+                    sweetAlert.successWithTimer(message),
                         this.queryList()
                 } else {
                     sweetAlert.error(message)
@@ -393,16 +395,18 @@
             handleDetail({row}) {
                 this.drawer = {
                     ...this.drawer,
-                    show: true
+                    show: true,
+
                 }
                 this.component = {
                     ...this.component,
+                    type : Read,
                     data: row
                 }
             }
             ,
             handlePwd({row, $index: index}) {
-                this.$modal.show('modal')
+                this.$modal.show('resetPwd')
 
                 this.dialog = {
                     ...this.dialog,

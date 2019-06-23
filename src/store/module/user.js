@@ -30,9 +30,9 @@ export default {
         // 获取用户信息
         async GET_PERMISSION_LIST({commit}) {
             let token = getToken()
-            let {SUCCESS, USER_AUTH, SYS_BUTTON_AUTH} = constant
-            let {code, result} = await http.get(apiList.permission_menu, {token})
-            if (code === SUCCESS) {
+            let {USER_AUTH, SYS_BUTTON_AUTH} = constant
+            let {success, result} = await http.get(apiList.permission_menu, {token})
+            if (success) {
                 let {menu: menuData, auth: authData, allAuth: allAuthData} = result
                 localSave(USER_AUTH, authData)
                 localSave(SYS_BUTTON_AUTH, allAuthData)

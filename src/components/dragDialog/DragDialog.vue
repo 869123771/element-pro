@@ -1,19 +1,19 @@
 <template>
     <modal
-            ref = "modal"
-            name="modal"
-           class="modal"
-           draggable=".modal-header"
-           transition="nice-modal-fade"
-           :adaptive="true"
-           :scrollable="true"
-           :min-width="300"
-           :min-height="300"
-           :delay="100"
-           :clickToClose="dialog.clickToClose"
-           :width="dialog.width"
-           :height="dialog.height"
-           :resizable="dialog.resizable"
+            ref="modal"
+            :name="dialog.name"
+            class="modal"
+            draggable=".modal-header"
+            transition="nice-modal-fade"
+            :adaptive="true"
+            :scrollable="true"
+            :min-width="300"
+            :min-height="300"
+            :delay="100"
+            :clickToClose="dialog.clickToClose"
+            :width="dialog.width"
+            :height="dialog.height"
+            :resizable="dialog.resizable"
     >
         <div class="modal-header">
             <div class="modal-header-title">{{dialog.title}}</div>
@@ -22,11 +22,16 @@
                     <div class="iconfont icon-compress handle-icon px-1" v-if="dialog.fullScreen" @click="exit"></div>
                     <div class="iconfont icon-expend handle-icon px-1" v-else @click="full"></div>
                 </div>
-                <div class="modal-header-control-close el-icon-close handle-icon" @click="$modal.hide('modal')"></div>
+                <div class="modal-header-control-close el-icon-close handle-icon" @click="close"></div>
             </div>
         </div>
-
-        <slot></slot>
+        <div class="modal-body">
+            <slot></slot>
+        </div>
+        <div class="modal-footer text-center" v-if="dialog.showFooter">
+            <el-button plain @click="close">关闭</el-button>
+            <el-button type="primary" :loading="dialog.loading" @click="confirm">确认</el-button>
+        </div>
     </modal>
 </template>
 <script>
@@ -57,7 +62,7 @@
             return {
                 dialog: {
                     ...dialog
-                }
+                },
             }
         }
         ,
@@ -66,10 +71,10 @@
                 debugger;
                 this.$children[0].modal = {
                     ...this.$children[0].modal,
-                    width : 100,
-                    height : 100,
-                    heightType : '%',
-                    widthType : '%'
+                    width: 100,
+                    height: 100,
+                    heightType: '%',
+                    widthType: '%'
                 }
                 this.dialog = {
                     ...this.dialog,
@@ -78,13 +83,13 @@
             },
             exit() {
                 debugger;
-                let {width,height} = this.dialog
+                let {width, height} = this.dialog
                 this.$children[0].modal = {
                     ...this.$children[0].modal,
                     width,
                     height,
-                    widthType : '%',
-                    heightType : 'px',
+                    widthType: '%',
+                    heightType: 'px',
                 }
                 this.dialog = {
                     ...this.dialog,
@@ -92,10 +97,14 @@
                 }
             },
             close() {
+                this.$modal.hide(this.dialog.name)
+            },
+            confirm() {
                 this.dialog = {
                     ...this.dialog,
-                    visible: false
+                    loading: true
                 }
+                this.$emit('confirm')
             }
         }
     }
@@ -103,6 +112,7 @@
 
 <style scoped lang="less">
     .modal {
+        z-index: 1200;
         &-header {
             height: 56px;
             padding: 0 1rem;
@@ -133,6 +143,13 @@
                 }
             }
 
+        }
+        &-footer {
+            position: absolute;
+            bottom: 1rem;
+            width: 100%;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 1rem;
         }
     }
 </style>

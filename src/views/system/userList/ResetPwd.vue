@@ -64,7 +64,7 @@
                                         trigger: "change"
                                     },
                                     {
-                                        validator: (rule, value, callback) => pwdCheck(rule, value, callback, this)
+                                        validator: (rule, value, callback) => pwdCheck(rule, value, callback, this,'resetPwd')
                                     }
                                 ],
                             },
