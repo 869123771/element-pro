@@ -1,17 +1,18 @@
 <template>
     <div class="modify">
-        <avue-form :option="form.option" v-model="form.model" ref="modify">
+        <avue-form :option="form.option" v-model="form.model" ref="modify" @submit="submit">
             <template slot="avatar" slot-scope="scope">
                 <el-upload
+                        class="avatar-uploader"
                         :action="upload.action"
                         :headers="upload.headers"
                         list-type="picture-card"
                         :show-file-list="false"
                         :data="{isup: 1}"
-                        :file-list="upload.fileList"
                         :on-change="handleChange"
                 >
-                    <i class="el-icon-plus"></i>
+                    <img v-if="upload.imageUrl" :src="upload.imageUrl" class="avatar">
+                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
             </template>
         </avue-form>
@@ -25,9 +26,10 @@
     import {mapState} from 'vuex'
     import {http, apiList, constant} from '@/utils'
     import {getToken} from '@/utils/modules/tools'
-    import {uniqueUserCheck, pwdCheck, confirmPwdCheck} from '@/utils/modules/validate'
+    import {uniqueUserCheck, pwdCheck, confirmPwdCheck, emailCheck, phoneCheck} from '@/utils/modules/validate'
     import dragDialog from '@/components/dragDialog'
     import DeptSearch from './DeptSearch'
+    import sweetAlert from "../../../utils/modules/sweetAlert";
 
     let customParams = {}
     const uploadAction = () => {
@@ -45,6 +47,10 @@
                 form: {
                     option: {
                         labelWidth: 100,
+                        props: {
+                            value: 'itemValue',
+                            label: 'itemText'
+                        },
                         column: [
                             {
                                 label: '用户账号',
@@ -121,10 +127,10 @@
                                 clearable: false,
                                 readonly: true,
                                 click: () => {
-                                    let {checkedNodeId} = customParams;
+                                    let {checkedNodeIds} = customParams;
                                     debugger;
-                                    if (checkedNodeId) {
-                                        this.deptCheckedIds = checkedNodeId.split(',')
+                                    if (checkedNodeIds) {
+                                        this.deptCheckedIds = checkedNodeIds
                                     }
                                     this.$modal.show('deptSearch')
                                 }
@@ -134,40 +140,39 @@
                                 prop: 'avatar',
                                 type: 'upload',
                                 formslot: true,
-                                /*listType: 'picture-card',
-                                tip: '只能上传jpg/png文件，且不超过500kb',
-                                data: {
-                                    isup: 1
-                                },
-                                propsHttp: {
-                                    res: 'data.0'
-                                },
-                                action: this.uploadAction,
-                                span: 24,*/
                             },
                             {
                                 label: '生日',
                                 prop: 'birthday',
+                                type: 'date',
                                 span: 24
                             },
                             {
                                 label: '性别',
                                 prop: 'sex_dictText',
+                                type: 'select',
                                 span: 24
                             },
                             {
                                 label: '邮箱',
                                 prop: 'email',
-                                span: 24
+                                span: 24,
+                                rules: [
+                                    {validator: emailCheck, trigger: 'change'}
+                                ]
                             },
                             {
                                 label: '手机号码',
                                 prop: 'phone',
-                                span: 24
+                                span: 24,
+                                rules: [
+                                    {validator: phoneCheck, trigger: 'change'}
+                                ]
                             },
                             {
                                 label: '工作流引擎',
                                 prop: 'activitiSync',
+                                type: 'radio',
                                 span: 24
                             },
                         ]
@@ -180,6 +185,7 @@
                     headers: {
                         'X-Access-Token': getToken(),
                     },
+                    imageUrl: '',
                     fileList: []
                 },
                 dialog: {
@@ -193,6 +199,7 @@
         },
         computed: {
             ...mapState({
+                sex: ({dict}) => dict.sex,
                 roles: ({system}) => system.roles,
                 activitiSync: ({dict}) => dict.activitiSync,
                 depts: ({system}) => system.depts,
@@ -202,13 +209,34 @@
             setRoles() {
                 this.$refs.modify.updateDic('selectedroles', this.roles)
             },
+            setSex() {
+                this.$refs.modify.updateDic('sex_dictText', this.sex)
+            },
+            setActivitiSync() {
+                this.$refs.modify.updateDic('activitiSync', this.activitiSync)
+            },
+            async generateuserId() {
+                let {success, result: userId} = await http.get(apiList.sys_user_generate_user_id)
+                if (success) {
+                    customParams = {
+                        ...customParams,
+                        userId
+                    }
+                }
+                return {userId}
+            },
+            async addUserDeptIds(departIdList) {
+                let {userId} = await this.generateuserId()
+                let {success} = await http.post(apiList.sys_user_add_user_dept_ids, {departIdList, userId})
+            },
             confirm() {
                 debugger;
                 let {model} = this.form
                 let checkedNode = this.$refs.deptSearch.$refs.tree.getCheckedNodes()
+                let checkedNodeIds = checkedNode.map(({id}) => id)
                 customParams = {
                     ...customParams,
-                    checkedNodeId: checkedNode.map(({id}) => id).join(',')
+                    checkedNodeIds
                 }
 
                 this.form = {
@@ -223,6 +251,31 @@
                     loading: false
                 }
                 this.$modal.hide('deptSearch')
+                this.addUserDeptIds(checkedNodeIds)
+            },
+            submit() {
+                this.$refs.modify.validate(validate => {
+                    if (validate) {
+                        this.commitData()
+                    }
+                })
+            },
+            async commitData() {
+                let {selectedroles} = this.form.model
+                let {userId: id, avatar} = customParams
+                let params = {
+                    ...this.form.model,
+                    id,
+                    avatar,
+                    selectedroles: selectedroles.join(',')
+                }
+                let {success, message} = await http.post(apiList.sys_user_add, params)
+                if (success) {
+                    sweetAlert.successWithTimer(message)
+                    this.$emit('closeFlush')
+                } else {
+                    sweetAlert.error(message)
+                }
             },
             handleChange(file, fileList) {
                 debugger;
@@ -237,17 +290,48 @@
                                 ...fileItem,
                                 url: `${imgDomainURL}/${message}`
                             }
-                        ]
+                        ],
+                        imageUrl: `${imgDomainURL}/${message}`
+                    }
+                    customParams = {
+                        ...customParams,
+                        avatar: message
                     }
                 }
             }
         },
         mounted() {
             this.setRoles()
+            this.setSex()
+            this.setActivitiSync()
         }
     }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+    .modify {
+        .avatar-uploader .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .avatar-uploader .el-upload:hover {
+            border-color: #409EFF;
+        }
+        .avatar-uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 148px;
+            height: 148px;
+            line-height: 148px;
+            text-align: center;
+        }
+        .avatar {
+            width: 148px;
+            height: 148px;
+            display: block;
+        }
+    }
 </style>

@@ -94,9 +94,13 @@
                     @selection-change="checked"
             ></lb-table>
         </el-row>
-        <avue-drawer show-close :title="drawer.title" :width="drawer.width" v-model="drawer.show"
-                     :close-on-click-modal="false">
-            <component :is="component.type" :data="component.data"></component>
+        <avue-drawer show-close
+                     :title="drawer.title"
+                     :width="drawer.width"
+                     v-model="drawer.show"
+                     :close-on-click-modal="false"
+        >
+            <component :is="component.type" :data="component.data" @closeFlush="closeFlush"></component>
         </avue-drawer>
         <drag-dialog :drag-dialog="dialog">
             <reset-pwd v-if="show.resetPwd" :reset-pwd="props.resetPwd" @change-pwd-ok="changePwdOk"></reset-pwd>
@@ -142,7 +146,7 @@
                 },
                 dialog: {
                     width: '22',
-                    name : 'resetPwd',
+                    name: 'resetPwd',
                     title: '重设密码'
                 },
                 component: {
@@ -293,6 +297,13 @@
                 getAllDepts: 'GET_ALL_DEPTS',
                 getActivitiSync: 'GET_ACTIVIYI_SYNC',
             }),
+            closeFlush() {
+                this.drawer = {
+                    ...this.drawer,
+                    show: false,
+                }
+                this.queryList()
+            },
             getAvatarView({row: {avatar}}) {
                 let {config: {baseUrl: {imgDomainURL}}} = constant
                 return `${imgDomainURL}/${avatar}`
@@ -334,7 +345,7 @@
                 this.drawer = {
                     ...this.drawer,
                     title: '添加用户',
-                    width : 500,
+                    width: 500,
                     show: true
                 }
                 this.component = {
@@ -400,7 +411,7 @@
                 }
                 this.component = {
                     ...this.component,
-                    type : Read,
+                    type: Read,
                     data: row
                 }
             }

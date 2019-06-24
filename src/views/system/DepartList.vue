@@ -1,24 +1,27 @@
 <template>
     <div class="dept">
+        <el-row>
+            <el-col span="12">
+                <el-card>
+                    <div class = "my-3">
+                        <el-input v-model = "tree.filterDept"></el-input>
+                    </div>
+                    <el-tree
+                            ref="tree"
+                            show-checkbox
+                            default-expand-all
+                            check-strictly
+                            node-key="id"
+                            :data="tree.data"
+                            :props="tree.defaultProps"
+                    ></el-tree>
+                </el-card>
+            </el-col>
+        </el-row>
         <avue-form :option="form.option" v-model="form.model">
-            <el-row>
-                <el-col span = "12">
-                    <template slot="treeFilter" slot-scope="{value}">
-                        <el-input v-model = "form.model.treeFilter"></el-input>
-                    </template>
-                    <template slot="tree" slot-scope="{value}">
-                        <el-tree
-                                ref="tree"
-                                show-checkbox
-                                default-expand-all
-                                check-strictly
-                                node-key="id"
-                                :data="value.data"
-                                :props="value.defaultProps"
-                        ></el-tree>
-                    </template>
-                </el-col>
-            </el-row>
+            <template slot="tree" slot-scope="{value}">
+
+            </template>
         </avue-form>
     </div>
 </template>
@@ -31,6 +34,14 @@
         name: "DepartList",
         data() {
             return {
+                tree: {
+                    filterDept: '',
+                    data: [],
+                    defaultProps: {
+                        children: 'children',
+                        label: 'departName'
+                    },
+                },
                 form: {
                     option: {
                         menuBtn: false,
@@ -50,16 +61,7 @@
                             },
                         ]
                     },
-                    model: {
-                        tree: {
-                            filterDept: '',
-                            data: [],
-                            defaultProps: {
-                                children: 'children',
-                                label: 'departName'
-                            },
-                        }
-                    }
+                    model: {}
                 }
             }
         },
@@ -71,18 +73,10 @@
         watch: {
             depts: {
                 handler(props) {
-                    debugger;
-                    let {model, model: {tree}} = this.form
-                    this.form = {
-                        ...this.form,
-                        model: {
-                            ...model,
-                            tree: {
-                                ...tree,
-                                data: props,
-                                defaultCheckedkeys: []
-                            }
-                        }
+                    this.tree = {
+                        ...this.tree,
+                        data: props,
+                        defaultCheckedkeys: []
                     }
                 },
                 immediate: true
