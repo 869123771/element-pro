@@ -31,7 +31,7 @@
 <script>
     import {mapActions} from 'vuex'
     import IdenfiryCode from './component/IdentifyCode'
-    import {http,constant,apiList} from "@/utils";
+    import {http,constant,apiList,sweetAlert} from "@/utils";
     export default {
         name: "login",
         components : {
@@ -86,10 +86,12 @@
                 let params = {
                     ...this.form
                 }
-                let {success,result} = await http.post(apiList.login, params)
+                let {success,message,result} = await http.post(apiList.login, params)
                 if (success) {
                     this.handleLogin(result)
                     this.$router.push({ name: "dashboard" })
+                }else{
+                    sweetAlert.error(message)
                 }
                 this.loading = false
             }
