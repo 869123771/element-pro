@@ -52,6 +52,9 @@
                         ...this.dialog,
                         ...props
                     }
+                    this.$nextTick(()=>{
+                        this.exit()
+                    })
                 },
                 immediate: true
             }
@@ -73,8 +76,8 @@
                     ...this.$children[0].modal,
                     width: 100,
                     height: 100,
-                    heightType: '%',
-                    widthType: '%'
+                    widthType : '%',
+                    heightType : '%'
                 }
                 this.dialog = {
                     ...this.dialog,
@@ -88,8 +91,8 @@
                     ...this.$children[0].modal,
                     width,
                     height,
-                    widthType: '%',
-                    heightType: 'px',
+                    widthType: Number(width) > 100 ? 'px' : '%',
+                    heightType:  Number(height) > 100 ? 'px' : '%',
                 }
                 this.dialog = {
                     ...this.dialog,
@@ -145,8 +148,8 @@
 
         }
         &-footer {
-            position: absolute;
-            bottom: 1rem;
+            /*position: absolute;
+            bottom: 1rem;*/
             width: 100%;
             border-top: 1px solid #e2e8f0;
             padding-top: 1rem;

@@ -43,6 +43,10 @@
         }
         &-header{
             line-height : 60px;
+            padding : 0 1rem;
+        }
+        &-main{
+            padding : 1rem;
         }
     }
 </style>
