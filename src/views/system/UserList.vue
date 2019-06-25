@@ -210,41 +210,47 @@
                             width: '100',
                             render: (h, scope) => {
                                 return (
-                                    <el-dropdown placement="bottom" className="dropdown">
-                                      <span class="text-blue-500">
-                                          更多<i class="el-icon-arrow-down el-icon--right"></i>
-                                      </span>
-                                        <el-dropdown-menu slot="dropdown">
-                                            {
-                                                this.dropDownItem.map(({popover, popText, visible, label, icon, action}, index) => {
-                                                    return (
-                                                        popover ? <el-popover
-                                                                placement="top"
-                                                                width="160"
-                                                                value={visible}
-                                                            >
-                                                                <p class="pb-3">{popText}</p>
-                                                                <div class="text-right">
-                                                                    <el-button size="mini" type="text"
-                                                                               nativeOnClick={() => this.handleCancel(index)}>取消
-                                                                    </el-button>
-                                                                    <el-button type="primary" size="mini"
-                                                                               nativeOnClick={() => this[action](scope)}>确定
-                                                                    </el-button>
-                                                                </div>
-                                                                <el-dropdown-item slot="reference">
+                                    <div>
+                                        <span class="text-blue-500 text-base cursor-pointer">
+                                            <i class="fa fa-fw fa-pencil" onClick = {()=>this.edit(scope)}></i>
+                                        </span>
+                                        <el-dropdown placement="bottom" className="dropdown">
+                                              <span class="text-blue-500 text-base">
+                                                  <i class="fa fa-fw fa-ellipsis-h"></i>
+                                              </span>
+                                            <el-dropdown-menu slot="dropdown">
+                                                {
+                                                    this.dropDownItem.map(({popover, popText, visible, label, icon, action}, index) => {
+                                                        return (
+                                                            popover ? <el-popover
+                                                                    placement="top"
+                                                                    width="160"
+                                                                    value={visible}
+                                                                >
+                                                                    <p class="pb-3">{popText}</p>
+                                                                    <div class="text-right">
+                                                                        <el-button size="mini" type="text"
+                                                                                   nativeOnClick={() => this.handleCancel(index)}>取消
+                                                                        </el-button>
+                                                                        <el-button type="primary" size="mini"
+                                                                                   nativeOnClick={() => this[action](scope)}>确定
+                                                                        </el-button>
+                                                                    </div>
+                                                                    <el-dropdown-item slot="reference">
+                                                                        {label}
+                                                                    </el-dropdown-item>
+                                                                </el-popover> :
+                                                                <el-dropdown-item
+                                                                    nativeOnClick={() => this[action](scope)}>
                                                                     {label}
                                                                 </el-dropdown-item>
-                                                            </el-popover> :
-                                                            <el-dropdown-item nativeOnClick={() => this[action](scope)}>
-                                                                {label}
-                                                            </el-dropdown-item>
 
-                                                    )
-                                                })
-                                            }
-                                        </el-dropdown-menu>
-                                    </el-dropdown>
+                                                        )
+                                                    })
+                                                }
+                                            </el-dropdown-menu>
+                                        </el-dropdown>
+                                    </div>
                                 )
                             },
                         },
@@ -352,6 +358,19 @@
                     ...this.component,
                     type: Modify,
                     data: {}
+                }
+            },
+            edit({row}){
+                this.drawer = {
+                    ...this.drawer,
+                    title: '修改用户',
+                    width: 500,
+                    show: true
+                }
+                this.component = {
+                    ...this.component,
+                    type: Modify,
+                    data: row
                 }
             },
             async batchDel() {

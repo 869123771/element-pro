@@ -8,6 +8,7 @@ export default {
     sys_user_generate_user_id : '/sys/user/generateUserId',
     sys_user_add_user_dept_ids : '/sys/user/addUDepartIds',
     sys_user_add : '/sys/user/add',
+    sys_user_edit : '/sys/user/edit',
     sys_common_dict : '/sys/dictItem/list',
     sys_common_upload : '/sys/common/upload',
     sys_role_query_all: '/sys/role/queryall',

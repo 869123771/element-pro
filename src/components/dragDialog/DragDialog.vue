@@ -152,7 +152,9 @@
             bottom: 1rem;*/
             width: 100%;
             border-top: 1px solid #e2e8f0;
-            padding-top: 1rem;
+            height: 60px;
+            line-height: 60px;
+            min-height: 60px;
         }
     }
 </style>

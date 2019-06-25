@@ -42,7 +42,50 @@
             dragDialog,
             DeptSearch
         },
+        props: {
+            data: {
+                type: Object
+            }
+        },
         data() {
+            debugger;
+            let {id} = this.data
+            let ps = id ? [] : [
+                {
+                    label: '登陆密码',
+                    prop: 'password',
+                    type: 'password',
+                    span: 24,
+                    rules: [
+                        {
+                            required: true,
+                            message: "必填",
+                            trigger: "change"
+                        },
+                        {
+                            validator: (rule, value, callback) => pwdCheck(rule, value, callback, this, 'modify')
+                        }
+                    ],
+                },
+                {
+                    label: '确认密码',
+                    prop: 'confirmpassword',
+                    type: 'password',
+                    span: 24,
+                    rules: [
+                        {
+                            required: true,
+                            message: "必填",
+                            trigger: "change"
+                        },
+                        {
+                            validator: (rule, value, callback) => confirmPwdCheck(rule, value, callback, this)
+                        }
+                    ],
+                },
+            ]
+            let isUserUniqueCheck = id ? {} : {validator: uniqueUserCheck}
+
             return {
                 form: {
                     option: {
@@ -62,41 +105,10 @@
                                         message: "必填",
                                         trigger: "change"
                                     },
-                                    {validator: uniqueUserCheck}
+                                    {...isUserUniqueCheck}
                                 ],
                             },
-                            {
-                                label: '登陆密码',
-                                prop: 'password',
-                                type: 'password',
-                                span: 24,
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: "必填",
-                                        trigger: "change"
-                                    },
-                                    {
-                                        validator: (rule, value, callback) => pwdCheck(rule, value, callback, this, 'modify')
-                                    }
-                                ],
-                            },
-                            {
-                                label: '确认密码',
-                                prop: 'confirmpassword',
-                                type: 'password',
-                                span: 24,
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: "必填",
-                                        trigger: "change"
-                                    },
-                                    {
-                                        validator: (rule, value, callback) => confirmPwdCheck(rule, value, callback, this)
-                                    }
-                                ],
-                            },
+                            ...ps,
                             {
                                 label: '用户名字',
                                 prop: 'realname',
@@ -149,8 +161,9 @@
                             },
                             {
                                 label: '性别',
-                                prop: 'sex_dictText',
+                                prop: 'sex',
                                 type: 'select',
+                                dataType: 'string',
                                 span: 24
                             },
                             {
@@ -205,15 +218,73 @@
                 depts: ({system}) => system.depts,
             }),
         },
+        watch: {
+            data: {
+                handler(props) {
+                    debugger;
+                    if (!this.validatenull(props)) {
+                        let {config: {baseUrl: {imgDomainURL}}} = constant
+                        let {model} = this.form
+                        let {id, sex, avatar} = props
+                        this.form = {
+                            ...this.form,
+                            model: {
+                                ...model,
+                                ...props,
+                                sex: sex ? sex.toString() : '',
+                            }
+                        }
+                        this.upload = {
+                            ...this.upload,
+                            imageUrl: `${imgDomainURL}/${avatar}`
+                        }
+                        this.getUserRole(id)
+                        this.getUserDept(id)
+                    }
+                },
+                immediate: true
+            },
+        },
         methods: {
             setRoles() {
                 this.$refs.modify.updateDic('selectedroles', this.roles)
             },
             setSex() {
-                this.$refs.modify.updateDic('sex_dictText', this.sex)
+                this.$refs.modify.updateDic('sex', this.sex)
             },
             setActivitiSync() {
                 this.$refs.modify.updateDic('activitiSync', this.activitiSync)
+            },
+            async getUserRole(userid) {
+                let {success, result} = await http.get(apiList.sys_role_query_user_role, {userid})
+                if (success) {
+                    let {model} = this.form
+                    this.form = {
+                        ...this.form,
+                        model: {
+                            ...model,
+                            selectedroles: result
+                        }
+                    }
+                }
+            },
+            async getUserDept(userId) {
+                let {success, result} = await http.get(apiList.sys_dept_query_by_user, {userId})
+                if (success) {
+                    let checkedNodeIds = result.map(item => item.value)
+                    let {model} = this.form
+                    this.form = {
+                        ...this.form,
+                        model: {
+                            ...model,
+                            id: result.map(item => item.title).join(',')
+                        }
+                    }
+                    customParams = {
+                        ...customParams,
+                        checkedNodeIds
+                    }
+                }
             },
             async generateuserId() {
                 let {success, result: userId} = await http.get(apiList.sys_user_generate_user_id)
@@ -263,13 +334,21 @@
             async commitData() {
                 let {selectedroles} = this.form.model
                 let {userId: id, avatar} = customParams
+                let {id: isEdit} = this.data || {}
                 let params = {
                     ...this.form.model,
-                    id,
+                    id : isEdit ? isEdit : id ,             //新增取userId, 编辑去带过来的id
                     avatar,
-                    selectedroles: selectedroles.join(',')
+                    selectedroles: selectedroles.join(','),
                 }
-                let {success, message} = await http.post(apiList.sys_user_add, params)
+                //
+                let res
+                if (isEdit) {
+                    res = await http.put(apiList.sys_user_edit, params)
+                } else {
+                    res = await http.post(apiList.sys_user_add, params)
+                }
+                let {success, message} = res
                 if (success) {
                     sweetAlert.successWithTimer(message)
                     this.$emit('closeFlush')
