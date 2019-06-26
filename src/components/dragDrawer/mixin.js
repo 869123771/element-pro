@@ -1,7 +1,7 @@
 export default {
   data () {
     return {
-      prefix: 'dragDrawer'
+      prefix: 'drag-drawer'
     }
   }
 }

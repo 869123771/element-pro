@@ -4,8 +4,8 @@
                  @input="handleInput"
                  :width="width"
                  :class="outerClasses"
-                 :closable="closable"
-                 :hideClose="hideClose"
+                 :close-on-click-modal = "false"
+                 :show-close="showClose"
                  v-bind="$attrs"
                  v-on="$listeners">
         <!-- 所有插槽内容显示在这里 ↓ -->
@@ -84,7 +84,7 @@
                 default: false
             },
             //是否隐藏关闭
-            hideClose: {
+            showClose: {
                 type: Boolean,
                 default: true
             }

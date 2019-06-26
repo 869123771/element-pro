@@ -94,21 +94,16 @@
                     @selection-change="checked"
             ></lb-table>
         </el-row>
-        <!--<avue-drawer show-close
-                     :title="drawer.title"
-                     :width="drawer.width"
-                     v-model="drawer.show"
-                     :close-on-click-modal="false"
-        >
-            <component :is="component.type" :data="component.data" @closeFlush="closeFlush"></component>
-        </avue-drawer>-->
+
         <drag-drawer v-model="drawer.show"
                      :draggable="drawer.draggable"
                      :title="drawer.title"
-                     :width = "drawer.width"
+                     :width.sync="drawer.width"
                      :placement="drawer.placement"
                      :scrollable="true"
-        ></drag-drawer>
+        >
+            <component :is="component.type" :data="component.data" @closeFlush="closeFlush"></component>
+        </drag-drawer>
         <drag-dialog :drag-dialog="dialog">
             <reset-pwd v-if="show.resetPwd" :reset-pwd="props.resetPwd" @change-pwd-ok="changePwdOk"></reset-pwd>
         </drag-dialog>
@@ -119,7 +114,7 @@
     import DragDrawer from '@/components/dragDrawer'
     import DragDialog from '@/components/dragDialog'
     import {mapState, mapActions} from 'vuex'
-    import {http, apiList, constant,sweetAlert} from '@/utils'
+    import {http, apiList, constant, sweetAlert} from '@/utils'
     import {downloadFile} from '@/utils/modules/tools'
     import lbTable from '@/components/lb-table/lb-table'
     import Read from './userList/Read'
@@ -148,16 +143,10 @@
                     batch: false,
                     resetPwd: false,
                 },
-                /*drawer: {
-                    show: false,
-                    title: '详情',
-                    width: 400,
-                },*/
                 drawer: {
                     show: false,
                     placement: 'right',
-                    title: '新增角色',
-                    draggable : true,
+                    draggable: true,
                     data: {}
                 },
                 dialog: {
@@ -447,8 +436,9 @@
             handleDetail({row}) {
                 this.drawer = {
                     ...this.drawer,
+                    width: '24%',
+                    title: '详情',
                     show: true,
-
                 }
                 this.component = {
                     ...this.component,

@@ -12,12 +12,12 @@
       pointer-events: all;
     }
   }
-  .ivu-drawer{
-    &-header{
+  .avue-drawer{
+    &__header{
       overflow: hidden !important;
       box-sizing: border-box;
     }
-    &-body{
+    &__body{
       padding: 0;
       overflow: visible;
       position: static;
@@ -26,10 +26,12 @@
     }
   }
   .@{prefix}-body-wrapper{
-
+    width: 100%;
+    height: 100%;
+    padding: 16px 0;
+    overflow: auto;
   }
   .@{prefix}-trigger-wrapper{
-    left : 0;
     top: 0;
     height: 100%;
     width: 0;
