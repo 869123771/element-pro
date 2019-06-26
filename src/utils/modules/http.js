@@ -171,5 +171,15 @@ export default {
                 return checkCode(res)
             }
         )
+    },
+    getFileDownload(url, params){
+        return ajax({
+            method: 'get',
+            url,
+            params,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
     }
 }

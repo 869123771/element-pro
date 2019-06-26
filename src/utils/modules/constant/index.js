@@ -44,7 +44,8 @@ export default {
         baseUrl: {
             domianURL: 'http://localhost:8080/jeecg-boot',
             imgDomainURL: 'http://localhost:8080/jeecg-boot/sys/common/view',
-            pdfDomainURL : 'http://localhost:8080/jeecg-boot/sys/common/pdf/pdfPreviewIframe'
+            pdfDomainURL : 'http://localhost:8080/jeecg-boot/sys/common/pdf/pdfPreviewIframe',
+            proxyURL : '/jeecg-boot'
         },
         /**
          * @description 默认打开的首页的路由name值，默认为home

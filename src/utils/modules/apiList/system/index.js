@@ -7,6 +7,7 @@ export default {
     sys_user_unique_user_check : '/sys/user/checkOnlyUser',
     sys_user_generate_user_id : '/sys/user/generateUserId',
     sys_user_add_user_dept_ids : '/sys/user/addUDepartIds',
+    sys_user_export : 'sys/user/exportXls',
     sys_user_add : '/sys/user/add',
     sys_user_edit : '/sys/user/edit',
     sys_common_dict : '/sys/dictItem/list',

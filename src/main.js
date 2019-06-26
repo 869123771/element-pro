@@ -14,9 +14,10 @@ import VModal from 'vue-js-modal'
 //import './element'
 import {constant} from '@/utils'
 
-let {config: {baseUrl: {domianURL, imgDomainURL, pdfDomainURL}}} = constant
+let {config: {baseUrl: {domianURL, imgDomainURL, pdfDomainURL,proxyURL}}} = constant
+
 window._CONFIG = {
-    domianURL, imgDomainURL, pdfDomainURL
+    domianURL, imgDomainURL, pdfDomainURL,proxyURL
 };
 
 /**

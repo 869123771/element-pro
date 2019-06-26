@@ -36,6 +36,31 @@ export const downloadFile = (data, filename) => {
     link.click()
 }
 
+export const formFileDownload = (url,params) => {
+    debugger;
+    let form = document.createElement("form");
+    form.style.display = 'none';
+    form.action = url;
+    form.method = "post";
+    form.target = '_self';
+    document.body.appendChild(form);
+    params = {
+        ...params,
+        token : getToken()
+    }
+    for(let key in params){
+        let input = document.createElement("input");
+        input.type = "hidden";
+        input.name = key;
+        input.value = params[key];
+        form.appendChild(input);
+    }
+
+    form.submit();
+    form.remove();
+}
+
+
 export const handleScreen = (fullScreen) => {
     let main = document.body
     if (fullScreen) {

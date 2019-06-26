@@ -60,7 +60,7 @@
         <el-row class="my-3">
             <el-button plain icon="el-icon-plus" @click="addUser">添加用户</el-button>
             <el-button plain icon="iconfont icon-upload">导入</el-button>
-            <el-button plain icon="iconfont icon-download">导出</el-button>
+            <el-button plain icon="iconfont icon-download" @click="fileExport">导出</el-button>
             <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
                 <el-button plain>
                     批量操作<i class="el-icon-arrow-down el-icon--right"></i>
@@ -94,14 +94,21 @@
                     @selection-change="checked"
             ></lb-table>
         </el-row>
-        <avue-drawer show-close
+        <!--<avue-drawer show-close
                      :title="drawer.title"
                      :width="drawer.width"
                      v-model="drawer.show"
                      :close-on-click-modal="false"
         >
             <component :is="component.type" :data="component.data" @closeFlush="closeFlush"></component>
-        </avue-drawer>
+        </avue-drawer>-->
+        <drag-drawer v-model="drawer.show"
+                     :draggable="drawer.draggable"
+                     :title="drawer.title"
+                     :width = "drawer.width"
+                     :placement="drawer.placement"
+                     :scrollable="true"
+        ></drag-drawer>
         <drag-dialog :drag-dialog="dialog">
             <reset-pwd v-if="show.resetPwd" :reset-pwd="props.resetPwd" @change-pwd-ok="changePwdOk"></reset-pwd>
         </drag-dialog>
@@ -109,18 +116,20 @@
 </template>
 
 <script>
+    import DragDrawer from '@/components/dragDrawer'
     import DragDialog from '@/components/dragDialog'
     import {mapState, mapActions} from 'vuex'
-    import {http, apiList, constant} from '@/utils'
+    import {http, apiList, constant,sweetAlert} from '@/utils'
+    import {downloadFile} from '@/utils/modules/tools'
     import lbTable from '@/components/lb-table/lb-table'
     import Read from './userList/Read'
     import Modify from './userList/Modify'
     import ResetPwd from './userList/ResetPwd'
-    import sweetAlert from "../../utils/modules/sweetAlert";
 
     export default {
         name: "UserList",
         components: {
+            DragDrawer,
             DragDialog,
             lbTable,
             ResetPwd
@@ -139,10 +148,17 @@
                     batch: false,
                     resetPwd: false,
                 },
-                drawer: {
+                /*drawer: {
                     show: false,
                     title: '详情',
                     width: 400,
+                },*/
+                drawer: {
+                    show: false,
+                    placement: 'right',
+                    title: '新增角色',
+                    draggable : true,
+                    data: {}
                 },
                 dialog: {
                     width: '22',
@@ -212,7 +228,7 @@
                                 return (
                                     <div>
                                         <span class="text-blue-500 text-base cursor-pointer">
-                                            <i class="fa fa-fw fa-pencil" onClick = {()=>this.edit(scope)}></i>
+                                            <i class="fa fa-fw fa-pencil" onClick={() => this.edit(scope)}></i>
                                         </span>
                                         <el-dropdown placement="bottom" className="dropdown">
                                               <span class="text-blue-500 text-base">
@@ -310,6 +326,12 @@
                 }
                 this.queryList()
             },
+            async fileExport() {
+                let params = {}
+                let res = await http.getFileDownload(apiList.sys_user_export, params)
+                downloadFile(res, '用户信息')
+
+            },
             getAvatarView({row: {avatar}}) {
                 let {config: {baseUrl: {imgDomainURL}}} = constant
                 return `${imgDomainURL}/${avatar}`
@@ -360,7 +382,7 @@
                     data: {}
                 }
             },
-            edit({row}){
+            edit({row}) {
                 this.drawer = {
                     ...this.drawer,
                     title: '修改用户',
