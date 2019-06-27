@@ -45,6 +45,8 @@
     import {http, apiList, constant} from '@/utils'
     import DragDialog from '@/components/dragDialog'
     import Add from './deptList/Add'
+    import {phoneCheck} from '@/utils/modules/validate'
+
     let customParams = {
         flag: true,
     }
@@ -96,7 +98,10 @@
                             {
                                 label: '手机号',
                                 prop: 'mobile',
-                                span: 24
+                                span: 24,
+                                rules: [
+                                    {validator: phoneCheck, trigger: 'change'}
+                                ]
                             },
                             {
                                 label: '地址',

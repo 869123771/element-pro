@@ -59,7 +59,7 @@
         </el-row>
         <el-row class="my-3">
             <el-button plain icon="el-icon-plus" @click="addUser">添加用户</el-button>
-            <el-button plain icon="iconfont icon-upload">导入</el-button>
+            <el-button plain icon="iconfont icon-upload" @click = "fileImport">导入</el-button>
             <el-button plain icon="iconfont icon-download" @click="fileExport">导出</el-button>
             <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
                 <el-button plain>
@@ -107,12 +107,14 @@
         <drag-dialog :drag-dialog="dialog">
             <reset-pwd v-if="show.resetPwd" :reset-pwd="props.resetPwd" @change-pwd-ok="changePwdOk"></reset-pwd>
         </drag-dialog>
+        <file-upload :file-upload = "fileUpload" @confirm = "uploadFile"></file-upload>
     </div>
 </template>
 
 <script>
     import DragDrawer from '@/components/dragDrawer'
     import DragDialog from '@/components/dragDialog'
+    import FileUpload from '@/components/fileUpload'
     import {mapState, mapActions} from 'vuex'
     import {http, apiList, constant, sweetAlert} from '@/utils'
     import {downloadFile} from '@/utils/modules/tools'
@@ -121,11 +123,17 @@
     import Modify from './userList/Modify'
     import ResetPwd from './userList/ResetPwd'
 
+    const uploadAction = () => {
+        let {config: {baseUrl: {domianURL}}} = constant
+        return `${domianURL + apiList.sys_user_import}`
+    }
+
     export default {
         name: "UserList",
         components: {
             DragDrawer,
             DragDialog,
+            FileUpload,
             lbTable,
             ResetPwd
         },
@@ -153,6 +161,10 @@
                     width: '22',
                     name: 'resetPwd',
                     title: '重设密码'
+                },
+                fileUpload : {
+                    name: 'fileUpload',
+                    action : uploadAction()
                 },
                 component: {
                     type: Read,
@@ -315,10 +327,16 @@
                 }
                 this.queryList()
             },
+            fileImport(){
+                this.$modal.show('fileUpload')
+            },
             async fileExport() {
                 let params = {}
-                let res = await http.getFileDownload(apiList.sys_user_export, params)
-                downloadFile(res, '用户信息')
+                let {data, filename} = await http.getFileDownload(apiList.sys_user_export, params)
+                downloadFile(data, filename)
+
+            },
+            async uploadFile(){
 
             },
             getAvatarView({row: {avatar}}) {

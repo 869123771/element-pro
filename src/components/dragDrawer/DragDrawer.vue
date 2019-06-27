@@ -140,13 +140,11 @@
                 event.atMin = width === parseFloat(this.minWidth)
                 // 如果当前width不大于100，视为百分比
                 if (width <= 100) width = (width / this.wrapperWidth) * 100
-                debugger;
                 this.$emit('update:width', parseInt(width))
                 this.$emit('on-resize', event)
 
             },
             handleMouseup(event) {
-                debugger;
                 this.canMove = false
                 this.$emit('on-resize-end')
             },

@@ -101,6 +101,10 @@
             },
             close() {
                 this.$modal.hide(this.dialog.name)
+                this.dialog = {
+                    ...this.dialog,
+                    loading: false
+                }
             },
             confirm() {
                 this.dialog = {

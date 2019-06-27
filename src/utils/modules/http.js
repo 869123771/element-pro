@@ -172,13 +172,28 @@ export default {
             }
         )
     },
-    getFileDownload(url, params){
+    getFileDownload(url, params) {
         return ajax({
             method: 'get',
             url,
             params,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
+            }
+        }).then(response => {
+            debugger;
+            let desObj = {}
+            let {data,headers} = response
+
+            headers['content-disposition'].split(';').forEach(item=>{
+                desObj = {
+                    ...desObj,
+                    ...qs.parse(item)
+                }
+            })
+            return {
+                filename : desObj.filename,
+                data
             }
         })
     }

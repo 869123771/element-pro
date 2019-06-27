@@ -7,6 +7,7 @@
 </template>
 
 <script>
+    import {phoneCheck} from '@/utils/modules/validate'
 
     export default {
         name: "Add",
@@ -24,7 +25,10 @@
                             {
                                 label: '手机号',
                                 prop: 'mobile',
-                                span: 24
+                                span: 24,
+                                rules: [
+                                    {validator: phoneCheck, trigger: 'change'}
+                                ]
                             },
                             {
                                 label: '传真',
