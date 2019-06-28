@@ -25,9 +25,11 @@
                 <div class="modal-header-control-close el-icon-close handle-icon" @click="close"></div>
             </div>
         </div>
-        <div class="modal-body" :style = "{'max-height':dialog.maxHeight}">
-            <slot></slot>
-        </div>
+        <el-scrollbar>
+            <div class="modal-body" :style="{maxHeight:dialog.maxHeight + 'px'}">
+                <slot></slot>
+            </div>
+        </el-scrollbar>
         <div class="modal-footer text-center" v-if="dialog.showFooter">
             <el-button plain @click="close">关闭</el-button>
             <el-button type="primary" :loading="dialog.loading" @click="confirm">确认</el-button>
@@ -52,9 +54,9 @@
                         ...this.dialog,
                         ...props
                     }
-                    this.$nextTick(()=>{
+                   /* this.$nextTick(() => {
                         this.exit()
-                    })
+                    })*/
                 },
                 immediate: true
             }
@@ -76,8 +78,8 @@
                     ...this.$children[0].modal,
                     width: 100,
                     height: 100,
-                    widthType : '%',
-                    heightType : '%'
+                    widthType: '%',
+                    heightType: '%'
                 }
                 this.dialog = {
                     ...this.dialog,
@@ -86,14 +88,15 @@
             },
             exit() {
                 debugger;
-                let {width, height} = this.dialog
+                let {width} = this.dialog
+                let height = this.$refs.modal.$el.height
+                //shift
                 this.$children[0].modal = {
                     ...this.$children[0].modal,
                     width,
-                    height,
                     widthType: Number(width) > 100 ? 'px' : '%',
-                    heightType:  Number(height) > 100 ? 'px' : '%',
                 }
+
                 this.dialog = {
                     ...this.dialog,
                     fullScreen: false
@@ -147,9 +150,12 @@
             }
 
         }
+        &-body {
+            /* overflow-y: scroll;*/
+        }
         &-footer {
-            /*position: absolute;
-            bottom: 1rem;*/
+            position: absolute;
+            bottom: 0px;
             width: 100%;
             border-top: 1px solid #e2e8f0;
             height: 60px;

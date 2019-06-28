@@ -202,7 +202,6 @@
                 },
                 dialog: {
                     width: 22,
-                    height: 'auto',
                     showFooter: true,
                     title: '部门搜索',
                     name: 'deptSearch'
