@@ -4,12 +4,13 @@
             <el-col :span="12" class="pr-2">
                 <el-card>
                     <div>
-                        <el-button plain icon="el-icon-plus" type = "primary" @click="addTopDept">添加一级部门</el-button>
+                        <el-button plain icon="el-icon-plus" type="primary" @click="addTopDept">添加一级部门</el-button>
                         <el-button plain icon="iconfont icon-upload">导入</el-button>
                         <el-button plain icon="iconfont icon-download">导出</el-button>
+                        <el-button plain icon="el-icon-close" v-show="show.delete" @click="deleteBatch">批量删除</el-button>
                     </div>
                     <div class="my-3">
-                        <el-input v-model="tree.filterDept"></el-input>
+                        <el-input size = "medium" v-model="tree.filterDept"></el-input>
                     </div>
                     <el-tree
                             ref="tree"
@@ -21,12 +22,13 @@
                             :data="tree.data"
                             :props="tree.defaultProps"
                             @node-click="nodeClick"
+                            @check="treeCheck"
                     ></el-tree>
                 </el-card>
             </el-col>
             <el-col :span="12" class="pl-2">
                 <el-card>
-                    <avue-form :option="form.option" v-model="form.model">
+                    <avue-form ref="dept" :option="form.option" v-model="form.model" @submit="submit">
                         <template slot="tree" slot-scope="{value}">
 
                         </template>
@@ -34,15 +36,15 @@
                 </el-card>
             </el-col>
         </el-row>
-        <drag-dialog :drag-dialog="dialog">
-            <add></add>
+        <drag-dialog :drag-dialog="dialog" @confirm = "confirmAdd">
+            <add ref = "add"></add>
         </drag-dialog>
     </div>
 </template>
 
 <script>
     import {mapState, mapActions} from 'vuex'
-    import {http, apiList, constant} from '@/utils'
+    import {http, apiList, constant, sweetAlert} from '@/utils'
     import DragDialog from '@/components/dragDialog'
     import Add from './deptList/Add'
     import {phoneCheck} from '@/utils/modules/validate'
@@ -53,12 +55,15 @@
 
     export default {
         name: "DepartList",
-        components : {
+        components: {
             DragDialog,
             Add
         },
         data() {
             return {
+                show: {
+                    delete: false
+                },
                 tree: {
                     filterDept: '',
                     data: [],
@@ -70,6 +75,7 @@
                 form: {
                     option: {
                         labelWidth: 100,
+                        submitText : '修改并保存',
                         column: [
                             {
                                 label: '机构名称',
@@ -80,7 +86,7 @@
                                 label: '上级部门',
                                 prop: 'parentId',
                                 //type: 'select',
-                                readonly : true,
+                                readonly: true,
                                 span: 24
                             },
                             {
@@ -112,7 +118,7 @@
                                 label: '备注',
                                 prop: 'memo',
                                 type: 'textarea',
-                                maxlength: 200,
+                                maxLength: 200,
                                 span: 24
                             },
                         ]
@@ -121,10 +127,10 @@
                 },
                 dialog: {
                     width: '30',
-                    height : '600',
+                    height: '600',
                     name: 'addTopDept',
                     title: '新增',
-                    showFooter : true,
+                    showFooter: true,
                 },
             }
         },
@@ -149,11 +155,26 @@
             ...mapActions({
                 getAllDepts: 'GET_ALL_DEPTS',
             }),
-            addTopDept(){
-                debugger;
+            addTopDept() {
                 this.$modal.show('addTopDept')
             },
-             deptCodeMapName(datas) {
+            confirmAdd(){
+                let addRef = this.$refs.add
+                addRef.$refs.form.validate(valid=>{
+                    if(valid){
+                        this.dialog = {
+                            ...this.dialog,
+                            loading : true
+                        }
+                        addRef.saveData()
+                    }
+                })
+                this.dialog = {
+                    ...this.dialog,
+                    loading : false
+                }
+            },
+            deptCodeMapName(datas) {
                 let {flag} = customParams
                 if (flag) {
                     for (let i = 0; i < datas.length; i++) {
@@ -172,19 +193,58 @@
                     }
 
                 }
-                return {departName : customParams.departName}
+                return {departName: customParams.departName}
             },
-            async nodeClick(obj, node, tree) {
+            submit() {
+                this.$refs.dept.validate(validate => {
+                    if (validate) {
+                        this.saveData()
+                    }
+                })
+            },
+            async saveData() {
+                let {model} = this.form
+                let params = {
+                    ...model,
+                    parentId: customParams.parentId
+                }
+                let {success, message, result} = await http.put(apiList.sys_dept_edit, params)
+                if (success) {
+
+                } else {
+                    sweetAlert.error(message)
+                }
+            },
+            treeCheck(treeItem, treeData) {
+                debugger;
+                let {checkedKeys} = treeData
+                if (checkedKeys.length) {
+                    this.show = {
+                        ...this.show,
+                        delete: true
+                    }
+                } else {
+                    this.show = {
+                        ...this.show,
+                        delete: false
+                    }
+                }
+                customParams = {
+                    ...customParams,
+                    checkedKeys
+                }
+            },
+            nodeClick(obj, node, tree) {
                 debugger;
                 let {model} = this.form
                 let {parentId} = obj
                 customParams = {
                     ...customParams,
                     parentId,
-                    flag : true,
+                    flag: true,
                 }
 
-                let departName = parentId ? await this.deptCodeMapName(this.depts) : ''
+                let departName = parentId ? this.deptCodeMapName(this.depts) : ''
                 console.log(departName)
 
                 this.form = {
@@ -195,7 +255,19 @@
                         parentId: departName
                     }
                 }
-            }
+            },
+            deleteBatch() {
+                let {checkedKeys} = customParams
+                sweetAlert.confirm('删除', '确认要删除吗', this.confirmDeleteBatch, checkedKeys.join(','))
+            },
+            async confirmDeleteBatch(ids) {
+                let {success, message} = await http.delete(apiList.sys_dept_delete_batch, ids)
+                if (success) {
+                    sweetAlert.successWithTimer(message)
+                } else {
+                    sweetAlert.error(message)
+                }
+            },
         },
         mounted() {
             this.getAllDepts()

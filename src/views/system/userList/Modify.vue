@@ -24,12 +24,11 @@
 
 <script>
     import {mapState} from 'vuex'
-    import {http, apiList, constant} from '@/utils'
+    import {http, apiList, constant,sweetAlert} from '@/utils'
     import {getToken} from '@/utils/modules/tools'
     import {uniqueUserCheck, pwdCheck, confirmPwdCheck, emailCheck, phoneCheck} from '@/utils/modules/validate'
     import dragDialog from '@/components/dragDialog'
     import DeptSearch from './DeptSearch'
-    import sweetAlert from "../../../utils/modules/sweetAlert";
 
     let customParams = {}
     const uploadAction = () => {
@@ -202,8 +201,8 @@
                     fileList: []
                 },
                 dialog: {
-                    width: '22',
-                    height: '500',
+                    width: 22,
+                    height: 'auto',
                     showFooter: true,
                     title: '部门搜索',
                     name: 'deptSearch'

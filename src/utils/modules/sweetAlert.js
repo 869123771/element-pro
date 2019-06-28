@@ -1,15 +1,17 @@
 import Swal from 'sweetalert2'
 
-const modelConf = {
+let alertConf = {
     width: '25rem',
     heightAuto: false,
-}
+    focusConfirm: true,
+};
+
 export default {
     success: (title) => {
         Swal.fire({
             type: 'success',
             title,
-            ...modelConf
+            ...alertConf
         })
     },
     successWithTimer: (title, oper) => {
@@ -18,7 +20,7 @@ export default {
             type: 'success',
             title,
             toast: true,
-            showCofirmButton: false,
+            showConfirmButton: false,
             timer: 1500
         }).then(() => {
             oper()
@@ -28,14 +30,14 @@ export default {
         Swal.fire({
             type: 'error',
             title,
-            ...modelConf
+            ...alertConf
         })
     },
     warn: (title) => {
         Swal.fire({
             type: 'warning',
             title,
-            ...modelConf
+            ...alertConf
         })
     },
     confirm: (title, text, oper, params) => {
@@ -47,7 +49,7 @@ export default {
             showCancelButton: true,
             confirmButtonText: '确定',
             cancelButtonText: '取消',
-            ...modelConf,
+            ...alertConf,
             preConfirm: () => {
                 oper(params)
             }

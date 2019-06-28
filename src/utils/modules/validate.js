@@ -53,7 +53,7 @@ export const confirmPwdCheck = (rule, value, callback, _this) => {
 };
 
 export const emailCheck = (rule, value, callback) => {
-    if (!isEmail(value)) {
+    if (value && !isEmail(value)) {
         callback(new Error('请输入正确的邮箱地址'));
     } else {
         callback();
@@ -61,7 +61,7 @@ export const emailCheck = (rule, value, callback) => {
 }
 
 export const phoneCheck = (rule, value, callback) => {
-    if (!isMobile(value)) {
+    if (value && !isMobile(value)) {
         callback(new Error('请输入正确的手机号码'));
     } else {
         callback();

@@ -25,7 +25,7 @@ window._CONFIG = {
  */
 importDirective(Vue)
 
-Vue.use(Element, {size: 'small', zIndex: 2000});
+Vue.use(Element, {size: 'medium', zIndex: 2000});
 Vue.use(Avue)
 Vue.use(VModal, {
     dialog: true,

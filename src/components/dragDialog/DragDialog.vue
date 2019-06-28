@@ -7,8 +7,8 @@
             transition="nice-modal-fade"
             :adaptive="true"
             :scrollable="true"
-            :min-width="300"
-            :min-height="300"
+            :min-width="dialog.minWidth"
+            :min-height="dialog.minHeight"
             :delay="100"
             :clickToClose="dialog.clickToClose"
             :width="dialog.width"
@@ -25,7 +25,7 @@
                 <div class="modal-header-control-close el-icon-close handle-icon" @click="close"></div>
             </div>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" :style = "{'max-height':dialog.maxHeight}">
             <slot></slot>
         </div>
         <div class="modal-footer text-center" v-if="dialog.showFooter">
@@ -107,10 +107,6 @@
                 }
             },
             confirm() {
-                this.dialog = {
-                    ...this.dialog,
-                    loading: true
-                }
                 this.$emit('confirm')
             }
         }

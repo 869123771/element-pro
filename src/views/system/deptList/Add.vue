@@ -1,6 +1,6 @@
 <template>
     <div class = "add">
-        <avue-form :option="form.option" v-model="form.model" ref="add">
+        <avue-form :option="form.option" v-model="form.model" ref="form">
 
         </avue-form>
     </div>
@@ -8,6 +8,7 @@
 
 <script>
     import {phoneCheck} from '@/utils/modules/validate'
+    import {http,apiList,constant,sweetAlert} from '@/utils'
 
     export default {
         name: "Add",
@@ -20,7 +21,10 @@
                             {
                                 label: '机构名称',
                                 prop: 'departName',
-                                span: 24
+                                span: 24,
+                                rules : [
+                                    {required : true, message : '必填',trigger:'change'}
+                                ]
                             },
                             {
                                 label: '手机号',
@@ -33,7 +37,6 @@
                             {
                                 label: '传真',
                                 prop: 'fax',
-                                disabled: true,
                                 span: 24
                             },
                             {
@@ -51,7 +54,6 @@
                                 label: '备注',
                                 prop: 'memo',
                                 type: 'textarea',
-                                maxlength: 200,
                                 span: 24
                             },
                         ]
@@ -59,6 +61,20 @@
                     modal : {
 
                     }
+                }
+            }
+        },
+        methods : {
+            async saveData(){
+                let {modal} = this.form
+                let params = {
+                    ...modal
+                }
+                let {success,message} = await http.post(apiList.sys_dept_add,params)
+                if(success){
+                    sweetAlert.successWithTimer(message)
+                }else{
+                    sweetAlert.error(message)
                 }
             }
         }

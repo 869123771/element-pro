@@ -9,6 +9,9 @@ export default {
         visible : false,
         resizable : true,
         width : '50%',
-        height : '300'
+        height : 300,
+        minWidth : 300,
+        minHeight : 300,
+        maxHeight : 800,
     }
 }

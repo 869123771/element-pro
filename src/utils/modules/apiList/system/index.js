@@ -16,5 +16,8 @@ export default {
     sys_role_query_all: '/sys/role/queryall',
     sys_role_query_user_role : '/sys/user/queryUserRole',
     sys_dept_query_all : '/sysdepart/sysDepart/queryTreeList',
-    sys_dept_query_by_user : '/sys/user/userDepartList'
+    sys_dept_query_by_user : '/sys/user/userDepartList',
+    sys_dept_add : '/sysdepart/sysDepart/add',
+    sys_dept_edit : '/sysdepart/sysDepart/edit',
+    sys_dept_delete_batch : '/sysdepart/sysDepart/deleteBatch',
 }
