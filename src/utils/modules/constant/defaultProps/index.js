@@ -16,5 +16,18 @@ export default {
         minWidth : 300,
         minHeight : 300,
         maxHeight : 800,
+    },
+    table : {
+        border: true,
+        stripe: true,
+        index: true,
+        page: true,
+        menu: false,
+        addBtn: false,
+        columnBtn: false,
+        menuBtn : false,
+        refreshBtn: false,
+        selection : true,
+        align: 'center',
     }
 }
