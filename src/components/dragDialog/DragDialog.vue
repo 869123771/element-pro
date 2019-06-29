@@ -25,11 +25,15 @@
                 <div class="modal-header-control-close el-icon-close handle-icon" @click="close"></div>
             </div>
         </div>
-        <el-scrollbar>
-            <div class="modal-body" :style="{maxHeight:dialog.maxHeight + 'px'}">
+
+            <div class="modal-body">
+                <el-scrollbar>
+                <div :style="{maxHeight:dialog.maxHeight + 'px'}">
                 <slot></slot>
+                </div>
+                </el-scrollbar>
             </div>
-        </el-scrollbar>
+
         <div class="modal-footer text-center" v-if="dialog.showFooter">
             <el-button plain @click="close">关闭</el-button>
             <el-button type="primary" :loading="dialog.loading" @click="confirm">确认</el-button>
@@ -54,9 +58,9 @@
                         ...this.dialog,
                         ...props
                     }
-                   /* this.$nextTick(() => {
+                    this.$nextTick(() => {
                         this.exit()
-                    })*/
+                    })
                 },
                 immediate: true
             }
@@ -88,12 +92,13 @@
             },
             exit() {
                 debugger;
-                let {width} = this.dialog
-                let height = this.$refs.modal.$el.height
-                //shift
+                let {width, height} = this.dialog
+
                 this.$children[0].modal = {
                     ...this.$children[0].modal,
                     width,
+                    height,
+                    heightType: Number(width) > 100 ? 'px' : '%',
                     widthType: Number(width) > 100 ? 'px' : '%',
                 }
 
@@ -154,8 +159,8 @@
             /* overflow-y: scroll;*/
         }
         &-footer {
-            position: absolute;
-            bottom: 0px;
+            /*position: absolute;
+            bottom: 0px;*/
             width: 100%;
             border-top: 1px solid #e2e8f0;
             height: 60px;

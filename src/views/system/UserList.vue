@@ -107,7 +107,7 @@
         <drag-dialog :drag-dialog="dialog">
             <reset-pwd v-if="show.resetPwd" :reset-pwd="props.resetPwd" @change-pwd-ok="changePwdOk"></reset-pwd>
         </drag-dialog>
-        <file-upload :file-upload = "fileUpload" @confirm = "uploadFile"></file-upload>
+        <file-upload ref = "fileUpload" :file-upload = "fileUpload" @uploadSuccess = "uploadSuccess"></file-upload>
     </div>
 </template>
 
@@ -124,8 +124,8 @@
     import ResetPwd from './userList/ResetPwd'
 
     const uploadAction = () => {
-        let {config: {baseUrl: {domianURL}}} = constant
-        return `${domianURL + apiList.sys_user_import}`
+        let {config: {baseUrl: {proxyURL}}} = constant
+        return `${proxyURL + apiList.sys_user_import}`
     }
 
     export default {
@@ -158,12 +158,12 @@
                     data: {}
                 },
                 dialog: {
-                    width: '22',
+                    width: '300',
+                    height: '300',
                     name: 'resetPwd',
                     title: '重设密码'
                 },
                 fileUpload : {
-                    name: 'fileUpload',
                     action : uploadAction()
                 },
                 component: {
@@ -336,7 +336,7 @@
                 downloadFile(data, filename)
 
             },
-            async uploadFile(){
+            uploadSuccess(){
 
             },
             getAvatarView({row: {avatar}}) {

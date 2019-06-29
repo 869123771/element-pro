@@ -10,11 +10,11 @@ export default {
         resizable : true,
         pivotX : 0.5,
         pivotY : 0.5,
-        width : '50%',
-        height : '300',
+        width : '50',
+        height : '50',
         reset : true,
         minWidth : 300,
         minHeight : 300,
-        maxHeight : 600,
+        maxHeight : 800,
     }
 }

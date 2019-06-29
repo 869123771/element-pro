@@ -202,6 +202,7 @@
                 },
                 dialog: {
                     width: 22,
+                    height : 80,
                     showFooter: true,
                     title: '部门搜索',
                     name: 'deptSearch'
@@ -300,6 +301,10 @@
             },
             confirm() {
                 debugger;
+                this.dialog = {
+                    ...this.dialog,
+                    loading: true
+                }
                 let {model} = this.form
                 let checkedNode = this.$refs.deptSearch.$refs.tree.getCheckedNodes()
                 let checkedNodeIds = checkedNode.map(({id}) => id)

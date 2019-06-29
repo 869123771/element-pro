@@ -6,8 +6,8 @@
                 drag
                 multiple
                 :auto-upload="false"
-                :action="dialog.action"
-                :headers="dialog.headers"
+                :action="upload.action"
+                :headers="upload.headers"
                 :on-success="success"
                 :on-error="error"
         >
@@ -34,22 +34,25 @@
         data() {
             return {
                 dialog: {
-                    width: '25',
-                    height: '400',
+                    name : 'fileUpload',
+                    width: 25,
+                    height: 50,
                     title: '上传',
+                    showFooter: true,
+                },
+                upload : {
                     headers: {
                         'X-Access-Token': getToken(),
                     },
-                    showFooter: true,
-                },
+                }
             }
         },
         watch: {
             fileUpload: {
                 handler(props) {
                     debugger;
-                    this.dialog = {
-                        ...this.dialog,
+                    this.upload = {
+                        ...this.upload,
                         ...props
                     }
                 },
@@ -62,6 +65,13 @@
             },
             success(response, file, fileList) {
                 debugger;
+                let {success,message} = response
+                if(success){
+                    sweetAlert.successWithTimer(message)
+                    this.$emit('uploadSuccess')
+                }else{
+                    sweetAlert.error(message)
+                }
             },
             error(err, file, fileList) {
                 debugger;

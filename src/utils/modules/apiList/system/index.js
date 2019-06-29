@@ -19,5 +19,7 @@ export default {
     sys_dept_query_by_user : '/sys/user/userDepartList',
     sys_dept_add : '/sysdepart/sysDepart/add',
     sys_dept_edit : '/sysdepart/sysDepart/edit',
+    sys_dept_export : '/sysdepart/sysDepart/exportXls',
+    sys_dept_import : '/sysdepart/sysDepart/importExcel',
     sys_dept_delete_batch : '/sysdepart/sysDepart/deleteBatch',
 }

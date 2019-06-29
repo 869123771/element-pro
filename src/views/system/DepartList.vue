@@ -5,8 +5,8 @@
                 <el-card>
                     <div>
                         <el-button plain icon="el-icon-plus" type="primary" @click="addTopDept">添加一级部门</el-button>
-                        <el-button plain icon="iconfont icon-upload">导入</el-button>
-                        <el-button plain icon="iconfont icon-download">导出</el-button>
+                        <el-button plain icon="iconfont icon-upload"  @click = "fileImport">导入</el-button>
+                        <el-button plain icon="iconfont icon-download" @click="fileExport">导出</el-button>
                         <el-button plain icon="el-icon-close" v-show="show.delete" @click="deleteBatch">批量删除</el-button>
                     </div>
                     <div class="my-3">
@@ -39,6 +39,7 @@
         <drag-dialog :drag-dialog="dialog" @confirm = "confirmAdd">
             <add ref = "add"></add>
         </drag-dialog>
+        <file-upload :file-upload = "fileUpload" @uploadSuccess = "uploadSuccess"></file-upload>
     </div>
 </template>
 
@@ -46,17 +47,25 @@
     import {mapState, mapActions} from 'vuex'
     import {http, apiList, constant, sweetAlert} from '@/utils'
     import DragDialog from '@/components/dragDialog'
+    import FileUpload from '@/components/fileUpload'
     import Add from './deptList/Add'
     import {phoneCheck} from '@/utils/modules/validate'
+    import {downloadFile} from '@/utils/modules/tools'
 
     let customParams = {
         flag: true,
+    }
+
+    const uploadAction = () => {
+        let {config: {baseUrl: {proxyURL}}} = constant
+        return `${proxyURL + apiList.sys_dept_import}`
     }
 
     export default {
         name: "DepartList",
         components: {
             DragDialog,
+            FileUpload,
             Add
         },
         data() {
@@ -127,10 +136,13 @@
                 },
                 dialog: {
                     width: '30',
-                    height: '600',
+                    height: '64',
                     name: 'addTopDept',
                     title: '新增',
                     showFooter: true,
+                },
+                fileUpload : {
+                    action : uploadAction()
                 },
             }
         },
@@ -155,6 +167,18 @@
             ...mapActions({
                 getAllDepts: 'GET_ALL_DEPTS',
             }),
+            fileImport(){
+                this.$modal.show('fileUpload')
+            },
+            async fileExport() {
+                let params = {}
+                let {data, filename} = await http.getFileDownload(apiList.sys_dept_export, params)
+                downloadFile(data, filename)
+
+            },
+            uploadSuccess(){
+
+            },
             addTopDept() {
                 this.$modal.show('addTopDept')
             },
@@ -261,7 +285,7 @@
                 sweetAlert.confirm('删除', '确认要删除吗', this.confirmDeleteBatch, checkedKeys.join(','))
             },
             async confirmDeleteBatch(ids) {
-                let {success, message} = await http.delete(apiList.sys_dept_delete_batch, ids)
+                let {success, message} = await http.delete(apiList.sys_dept_delete_batch, {ids})
                 if (success) {
                     sweetAlert.successWithTimer(message)
                 } else {
