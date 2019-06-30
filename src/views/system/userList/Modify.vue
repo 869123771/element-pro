@@ -98,6 +98,7 @@
                                 label: '用户账号',
                                 prop: 'username',
                                 span: 24,
+                                readonly : id ? true : false,
                                 rules: [
                                     {
                                         required: true,

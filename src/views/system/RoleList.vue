@@ -20,11 +20,20 @@
                     @on-load="queryList"
                     @size-change="sizeChange"
                     @current-change="currentChange"
+                    @selection-change="selectionChange"
             >
                 <template slot="menuLeft">
                     <el-button plain type="primary" icon="el-icon-plus" @click="addRole">新增</el-button>
                     <el-button plain icon="iconfont icon-upload" @click="fileImport">导入</el-button>
                     <el-button plain icon="iconfont icon-download" @click="fileExport">导出</el-button>
+                    <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
+                        <el-button plain>
+                            批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+                        </el-button>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item @click.native="deleteBatch"><i class="el-icon-delete"></i>删除</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
                 </template>
                 <template slot="oper" slot-scope="scope">
                     <span>
@@ -45,7 +54,7 @@
                                             <div class="text-right">
                                                 <el-button size="mini" type="text" @click="item.visible = false">取消
                                                 </el-button>
-                                                <el-button type="primary" size="mini" @click="item.action">确定
+                                                <el-button type="primary" size="mini" @click.native="item.action(scope)">确定
                                                 </el-button>
                                             </div>
                                             <el-dropdown-item slot="reference">{{item.label}}</el-dropdown-item>
@@ -53,18 +62,57 @@
                                     </template>
                                     <template v-else>
                                          <el-dropdown-item
-                                                 @click="item.action">{{item.label}}</el-dropdown-item>
+                                                 @click.native="()=>{item.action(scope)}">{{item.label}}</el-dropdown-item>
                                     </template>
                                 </template>
                             </el-dropdown-menu>
                         </el-dropdown>
-
                     </span>
                 </template>
             </avue-crud>
         </el-row>
+        <drag-drawer v-model="drawer.show"
+                     :draggable="drawer.draggable"
+                     :title="drawer.title"
+                     :width.sync="drawer.width"
+                     :placement="drawer.placement"
+        >
+            <component :is="component.type" :ref = "component.ref" :data="component.data" @closeFlush="closeFlush"></component>
+            <div class = "px-2 flex justify-between">
+                <div>
+                    <el-dropdown placement="top">
+                        <el-button plain>
+                            树操作<i class="el-icon-arrow-up el-icon--right"></i>
+                        </el-button>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item>父子关联</el-dropdown-item>
+                            <el-dropdown-item>取消关联</el-dropdown-item>
+                            <el-dropdown-item>全部勾选</el-dropdown-item>
+                            <el-dropdown-item>全部取消</el-dropdown-item>
+                            <el-dropdown-item>展开所有</el-dropdown-item>
+                            <el-dropdown-item>合并所有</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                </div>
+                <div>
+                    <el-popover
+                            class = "mx-2"
+                            placement="top"
+                            width="160"
+                            v-model="popover.drawerCancel">
+                        <p>确定要关闭吗</p>
+                        <div class = "text-right mt-3">
+                            <el-button size="mini" type="text" @click="popover.drawerCancel = false">取消</el-button>
+                            <el-button type="primary" size="mini" @click="popoverConfirm">确定</el-button>
+                        </div>
+                        <el-button plain slot="reference">取消</el-button>
+                    </el-popover>
+                    <el-button type = "primary" @click = "submit">提交</el-button>
+                </div>
+            </div>
+        </drag-drawer>
         <drag-dialog :drag-dialog="dialog" @confirm="confirmAdd">
-            <modify ref="modify"></modify>
+            <modify :data = "modify.data" ref="modify" @modifySuccess = "modifySuccess"></modify>
         </drag-dialog>
         <file-upload :file-upload="fileUpload" @uploadSuccess="uploadSuccess"></file-upload>
     </div>
@@ -74,9 +122,11 @@
     import {mapState, mapActions} from 'vuex'
     import {http, apiList, constant, sweetAlert} from '@/utils'
     import {downloadFile} from '@/utils/modules/tools'
+    import DragDrawer from '@/components/dragDrawer'
     import DragDialog from '@/components/dragDialog'
     import FileUpload from '@/components/fileUpload'
     import Modify from './roleList/Modify'
+    import Auth from './roleList/Auth'
 
     const uploadAction = () => {
         let {config: {baseUrl: {proxyURL}}} = constant
@@ -86,6 +136,7 @@
     export default {
         name: "RoleList",
         components: {
+            DragDrawer,
             DragDialog,
             FileUpload,
             Modify
@@ -125,7 +176,7 @@
                     {
                         label: '授权',
                         icon: '',
-                        action: 'handleAuth',
+                        action: this.handleAuth,
                         popover: false,
                         visible: '',
                         popText: ''
@@ -133,7 +184,7 @@
                     {
                         label: '删除',
                         icon: '',
-                        action: 'handleDel',
+                        action: this.handleDel,
                         popover: true,
                         visible: false,
                         popText: '确定删除吗'
@@ -174,17 +225,38 @@
                     },
                     model: {},
                     loading: false,
+                    selection : []
                 },
                 page: {
                     currentPage: 1,
                     pageSize: 10,
                     total: 0
                 },
+                drawer: {
+                    show: false,
+                    placement: 'right',
+                    draggable: true,
+                    data: {}
+                },
+                component: {
+                    type: Auth,
+                    ref : 'auth',
+                    data: {}
+                },
                 dialog: {
                     width: '24',
-                    height: '46',
+                    height: '52',
                     name: 'addRole',
                     showFooter: true,
+                },
+                modify : {
+                  data : {}
+                },
+                popover : {
+                    drawerCancel : false
+                },
+                show : {
+                    batch : false
                 },
                 fileUpload: {
                     action: uploadAction()
@@ -202,8 +274,28 @@
             reset() {
                 this.$refs.form.resetForm()
             },
+            popoverConfirm(){
+                 this.drawer = {
+                     ...this.drawer,
+                     show : false
+                 }
+                 this.popover = {
+                     ...this.popover,
+                     drawerCancel : false
+                 }
+            },
             addRole() {
-                this.$modal.show('addRole')
+                this.dialog = {
+                    ...this.dialog,
+                    title : '新增角色',
+                    name: 'addRole',
+                }
+                this.modify = {
+                    ...this.modify,
+                    data : {}
+                }
+                let {name} = this.dialog
+                this.$modal.show(name)
             },
             confirmAdd() {
                 let modifyRef = this.$refs.modify
@@ -215,11 +307,16 @@
                         }
                         modifyRef.saveData()
                     }
+                    this.dialog = {
+                        ...this.dialog,
+                        loading: false
+                    }
                 })
-                this.dialog = {
-                    ...this.dialog,
-                    loading: false
-                }
+            },
+            modifySuccess(){
+                let {name} = this.dialog
+                this.$modal.hide(name)
+                this.queryList()
             },
             fileImport() {
                 this.$modal.show('fileUpload')
@@ -233,14 +330,66 @@
             uploadSuccess() {
 
             },
-            edit(scope){
+            edit({row}){
                 debugger;
+                this.dialog = {
+                    ...this.dialog,
+                    title : '编辑角色',
+                    name: 'updateRole',
+                }
+                this.modify = {
+                    ...this.modify,
+                    data : {
+                        ...row
+                    }
+                }
+                let {name} = this.dialog
+                this.$nextTick(()=>{
+                    this.$modal.show(name)
+                })
             },
-            handleDel(scope){
-                debugger;
+            async submit(){
+                let {ref} = this.component
+                let authRef = this.$refs[ref]
+                let {lastpermissionIds,permissionIds} = authRef.getCheckedKeys()
+                let {id:roleId} = authRef.data
+                let params = {
+                    lastpermissionIds,
+                    permissionIds,
+                    roleId
+                }
+                let {success,message} = await http.post(apiList.sys_role_save_permission_by_role,params)
+                if(success){
+                    sweetAlert.successWithTimer(message)
+                    this.drawer = {
+                        ...this.drawer,
+                        show : false
+                    }
+                }else{
+                    sweetAlert.error(message)
+                }
             },
-            handleAuth(row){
+            handleDel({row:{id:ids}}){
+                this.confirmDeleteBatch(ids)
+            },
+            handleAuth({row}){
                 debugger;
+                this.drawer = {
+                    ...this.drawer,
+                    title: '角色权限配置',
+                    width: 500,
+                    show: true
+                }
+                this.component = {
+                    ...this.component,
+                    type: Auth,
+                    data: {
+                        ...row
+                    }
+                }
+            },
+            closeFlush(){
+
             },
             currentChange(currentPage) {
                 this.page = {
@@ -256,6 +405,36 @@
                 }
                 this.queryList()
             },
+            selectionChange(selection){
+                if(selection.length){
+                    this.show = {
+                        ...this.show,
+                        batch : true
+                    }
+                }else{
+                    this.show = {
+                        ...this.show,
+                        batch : false
+                    }
+                }
+                this.table = {
+                    ...this.table,
+                    selection
+                }
+            },
+            deleteBatch() {
+                let {selection} = this.table
+                sweetAlert.confirm('删除', '确认要删除吗', this.confirmDeleteBatch, selection.join(','))
+            },
+            async confirmDeleteBatch(ids) {
+                let {success, message} = await http.delete(apiList.sys_role_delete_batch, {ids})
+                if (success) {
+                    sweetAlert.successWithTimer(message)
+                    this.queryList()
+                } else {
+                    sweetAlert.error(message)
+                }
+            },
             async queryList() {
                 let {model: {createTime: [createTime_begin, createTime_end], ...res}} = this.form
                 let {currentPage: pageNo, pageSize} = this.page
@@ -264,6 +443,8 @@
                     loading: true
                 }
                 let params = {
+                    order: 'desc',
+                    column: 'createTime',
                     pageNo,
                     pageSize,
                     ...res,

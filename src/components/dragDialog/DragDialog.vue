@@ -159,8 +159,8 @@
             /* overflow-y: scroll;*/
         }
         &-footer {
-            /*position: absolute;
-            bottom: 0px;*/
+            position: absolute;
+            bottom: 0px;
             width: 100%;
             border-top: 1px solid #e2e8f0;
             height: 60px;

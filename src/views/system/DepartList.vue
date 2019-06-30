@@ -5,12 +5,12 @@
                 <el-card>
                     <div>
                         <el-button plain icon="el-icon-plus" type="primary" @click="addTopDept">添加一级部门</el-button>
-                        <el-button plain icon="iconfont icon-upload"  @click = "fileImport">导入</el-button>
+                        <el-button plain icon="iconfont icon-upload" @click="fileImport">导入</el-button>
                         <el-button plain icon="iconfont icon-download" @click="fileExport">导出</el-button>
                         <el-button plain icon="el-icon-close" v-show="show.delete" @click="deleteBatch">批量删除</el-button>
                     </div>
                     <div class="my-3">
-                        <el-input size = "medium" v-model="tree.filterDept"></el-input>
+                        <el-input size="medium" v-model="tree.filterDept"></el-input>
                     </div>
                     <el-tree
                             ref="tree"
@@ -21,6 +21,7 @@
                             highlight-current
                             :data="tree.data"
                             :props="tree.defaultProps"
+                            :render-content="renderTree"
                             @node-click="nodeClick"
                             @check="treeCheck"
                     ></el-tree>
@@ -36,10 +37,14 @@
                 </el-card>
             </el-col>
         </el-row>
-        <drag-dialog :drag-dialog="dialog" @confirm = "confirmAdd">
-            <add ref = "add"></add>
+        <drag-dialog :drag-dialog="dialog" @confirm="confirmAdd">
+            <component
+                    :is = "component.is"
+                    :ref="component.ref"
+                    :data = "component.data"
+                    @closeDialog="closeDialog"></component>
         </drag-dialog>
-        <file-upload :file-upload = "fileUpload" @uploadSuccess = "uploadSuccess"></file-upload>
+        <file-upload :file-upload="fileUpload" @uploadSuccess="uploadSuccess"></file-upload>
     </div>
 </template>
 
@@ -80,11 +85,12 @@
                         children: 'children',
                         label: 'departName'
                     },
+                    visible : false
                 },
                 form: {
                     option: {
                         labelWidth: 100,
-                        submitText : '修改并保存',
+                        submitText: '修改并保存',
                         column: [
                             {
                                 label: '机构名称',
@@ -94,7 +100,6 @@
                             {
                                 label: '上级部门',
                                 prop: 'parentId',
-                                //type: 'select',
                                 readonly: true,
                                 span: 24
                             },
@@ -136,13 +141,18 @@
                 },
                 dialog: {
                     width: '30',
-                    height: '64',
+                    height: '80',
                     name: 'addTopDept',
                     title: '新增',
                     showFooter: true,
                 },
-                fileUpload : {
-                    action : uploadAction()
+                component : {
+                    is : Add,
+                    ref : 'addDept',
+                    data : {}
+                },
+                fileUpload: {
+                    action: uploadAction()
                 },
             }
         },
@@ -167,7 +177,31 @@
             ...mapActions({
                 getAllDepts: 'GET_ALL_DEPTS',
             }),
-            fileImport(){
+            renderTree(h, {node, data, store}) {
+                let {id} = data
+                return (
+                    <span class="custom-tree-node">
+                        <span>{node.label}</span>
+                        <span class="custom-tree-node-control text-gray-900 text-base">
+                            <el-tooltip content="新增子部门" placement = "top">
+                                <i class="el-icon-plus px-1" onClick={()=>this.addChildDetp(node,data)}></i>
+                            </el-tooltip>
+                            <el-popover placement="top" width="160" value = {this.tree.visible}>
+                                <p class="pb-3">确定要删除吗</p>
+                                <div class="text-right">
+                                    <el-button size="mini" type="text" onClick = {()=>this.closeTreePopover()}>取消</el-button>
+                                    <el-button type="primary" size="mini" onClick = {()=>this.confirmDeleteBatch(id)}>确定
+                                    </el-button>
+                                </div>
+                                <span slot="reference">
+                                    <i class="el-icon-minus"></i>
+                                </span>
+                            </el-popover>
+                        </span>
+                    </span>
+                );
+            },
+            fileImport() {
                 this.$modal.show('fileUpload')
             },
             async fileExport() {
@@ -176,26 +210,67 @@
                 downloadFile(data, filename)
 
             },
-            uploadSuccess(){
+            uploadSuccess() {
 
             },
             addTopDept() {
-                this.$modal.show('addTopDept')
+                let {name} = this.dialog
+                this.$modal.show(name)
+                this.dialog = {
+                    ...this.dialog,
+                    title : '新增部门'
+                }
+                this.component = {
+                    ...this.component,
+                    data : {}
+                }
             },
-            confirmAdd(){
-                let addRef = this.$refs.add
-                addRef.$refs.form.validate(valid=>{
-                    if(valid){
+            closeTreePopover(){
+                debugger;
+                this.tree = {
+                    ...this.tree,
+                    visible : true
+                }
+                this.$nextTick(()=>{
+                    this.tree = {
+                        ...this.tree,
+                        visible : false
+                    }
+                })
+            },
+            addChildDetp(node,data){
+                debugger;
+                let {name} = this.dialog
+                this.$modal.show(name)
+                this.dialog = {
+                    ...this.dialog,
+                    title : '新增子部门'
+                }
+                this.component = {
+                    ...this.component,
+                    ref : 'addChildDept',
+                    data
+                }
+            },
+            closeDialog() {
+                let {name} = this.dialog
+                this.$modal.hide(name)
+            },
+            confirmAdd() {
+                let {ref} = this.component
+                let addRef = this.$refs[ref]
+                addRef.$refs.form.validate(valid => {
+                    if (valid) {
                         this.dialog = {
                             ...this.dialog,
-                            loading : true
+                            loading: true
                         }
                         addRef.saveData()
                     }
                 })
                 this.dialog = {
                     ...this.dialog,
-                    loading : false
+                    loading: false
                 }
             },
             deptCodeMapName(datas) {
@@ -217,7 +292,7 @@
                     }
 
                 }
-                return {departName: customParams.departName}
+                return customParams.departName
             },
             submit() {
                 this.$refs.dept.validate(validate => {
@@ -234,7 +309,8 @@
                 }
                 let {success, message, result} = await http.put(apiList.sys_dept_edit, params)
                 if (success) {
-
+                    sweetAlert.successWithTimer(message)
+                    this.getAllDepts()
                 } else {
                     sweetAlert.error(message)
                 }
@@ -288,6 +364,7 @@
                 let {success, message} = await http.delete(apiList.sys_dept_delete_batch, {ids})
                 if (success) {
                     sweetAlert.successWithTimer(message)
+                    this.getAllDepts()
                 } else {
                     sweetAlert.error(message)
                 }
@@ -299,6 +376,25 @@
     }
 </script>
 
-<style scoped>
-
+<style scoped lang="less">
+    .dept {
+        /deep/ .el-tree {
+            .custom-tree-node {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                font-size: 14px;
+                padding-right: 8px;
+                &-control {
+                    display: none;
+                }
+                &:hover {
+                   .custom-tree-node-control {
+                        display: inline-block;
+                    }
+                }
+            }
+        }
+    }
 </style>
