@@ -36,8 +36,8 @@
             getCheckedKeys(){
                 let {defaultCheckedkeys} = this.menuSearch
                 return {
-                    lastpermissionIds : this.defaultCheckedkeys.join(','),
-                    permissionIds : this.getTreeRef().tree.getCheckedKeys().join(',')
+                    lastpermissionIds : defaultCheckedkeys.join(','),
+                    permissionIds : this.getTreeRef().getCheckedKeys().join(',')
                 }
             },
             connect(){  //父子关联

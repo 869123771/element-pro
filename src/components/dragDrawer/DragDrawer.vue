@@ -2,14 +2,14 @@
     <avue-drawer ref="drawerWrapper"
                  :value="value"
                  @input="handleInput"
-                 :width="width"
+                 :width="width"s
+                 :title="title"
                  :class="outerClasses"
-                 :close-on-click-modal = "closeOnClickModal"
+                 :close-on-click-modal="closeOnClickModal"
                  :show-close="showClose"
-                 :before-close="$emit('close')"
+                 :before-close="handleClose"
     >
         <!-- 所有插槽内容显示在这里 ↓ -->
-
         <template v-for="(slots, slotsName) in $slots">
             <template v-if="slotsName !== 'default'">
                 <render-dom v-for="(render, index) in slots"
@@ -88,9 +88,12 @@
                 type: Boolean,
                 default: true
             },
-            closeOnClickModal : {
-                type : Boolean,
-                default : false
+            closeOnClickModal: {
+                type: Boolean,
+                default: false
+            },
+            title: {
+                type: String
             }
         },
         data() {
@@ -123,6 +126,10 @@
             }
         },
         methods: {
+            handleClose(hide) {
+                this.$emit('close')
+                hide()
+            },
             handleInput(status) {
                 this.$emit('input', status)
             },
@@ -172,10 +179,13 @@
         }
     }
 </script>
-<style lang = "less" scoped>
-    .avue-drawer{
-        &-__wrapper{
-            height : 100%;
+<style lang="less" scoped>
+    /deep/ .avue-drawer {
+        &__wrapper {
+            height: 100%;
+        }
+        &__content {
+            overflow: hidden;
         }
     }
 </style>
