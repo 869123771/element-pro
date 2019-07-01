@@ -4,10 +4,10 @@
                  @input="handleInput"
                  :width="width"
                  :class="outerClasses"
-                 :close-on-click-modal = "false"
+                 :close-on-click-modal = "closeOnClickModal"
                  :show-close="showClose"
-                 v-bind="$attrs"
-                 v-on="$listeners">
+                 :before-close="$emit('close')"
+    >
         <!-- 所有插槽内容显示在这里 ↓ -->
 
         <template v-for="(slots, slotsName) in $slots">
@@ -87,6 +87,10 @@
             showClose: {
                 type: Boolean,
                 default: true
+            },
+            closeOnClickModal : {
+                type : Boolean,
+                default : false
             }
         },
         data() {
@@ -168,3 +172,10 @@
         }
     }
 </script>
+<style lang = "less" scoped>
+    .avue-drawer{
+        &-__wrapper{
+            height : 100%;
+        }
+    }
+</style>

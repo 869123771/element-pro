@@ -16,6 +16,7 @@
     &__header{
       overflow: hidden !important;
       box-sizing: border-box;
+      height : 45px
     }
     &__body{
       padding: 0;
@@ -23,6 +24,7 @@
       position: static;
       display: flex;
       flex-direction: column;
+      min-height : calc(100%);
     }
   }
   .@{prefix}-body-wrapper{
@@ -30,6 +32,8 @@
     height: 100%;
     padding: 16px 0;
     overflow: auto;
+    position : relative;
+    min-height: calc(100vh - 45);
   }
   .@{prefix}-trigger-wrapper{
     top: 0;

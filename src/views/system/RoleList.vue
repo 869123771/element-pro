@@ -31,7 +31,8 @@
                             批量操作<i class="el-icon-arrow-down el-icon--right"></i>
                         </el-button>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item @click.native="deleteBatch"><i class="el-icon-delete"></i>删除</el-dropdown-item>
+                            <el-dropdown-item @click.native="deleteBatch"><i class="el-icon-delete"></i>删除
+                            </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </template>
@@ -54,7 +55,8 @@
                                             <div class="text-right">
                                                 <el-button size="mini" type="text" @click="item.visible = false">取消
                                                 </el-button>
-                                                <el-button type="primary" size="mini" @click.native="item.action(scope)">确定
+                                                <el-button type="primary" size="mini"
+                                                           @click.native="item.action(scope)">确定
                                                 </el-button>
                                             </div>
                                             <el-dropdown-item slot="reference">{{item.label}}</el-dropdown-item>
@@ -77,42 +79,38 @@
                      :width.sync="drawer.width"
                      :placement="drawer.placement"
         >
-            <component :is="component.type" :ref = "component.ref" :data="component.data" @closeFlush="closeFlush"></component>
-            <div class = "px-2 flex justify-between">
+            <component :is="component.type" :ref="component.ref" :data="component.data"
+                       @changeDialogWidth = "changeDialogWidth"></component>
+            <div class="dialog-footer p-2 w-full flex justify-between">
                 <div>
-                    <el-dropdown placement="top">
-                        <el-button plain>
-                            树操作<i class="el-icon-arrow-up el-icon--right"></i>
-                        </el-button>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item>父子关联</el-dropdown-item>
-                            <el-dropdown-item>取消关联</el-dropdown-item>
-                            <el-dropdown-item>全部勾选</el-dropdown-item>
-                            <el-dropdown-item>全部取消</el-dropdown-item>
-                            <el-dropdown-item>展开所有</el-dropdown-item>
-                            <el-dropdown-item>合并所有</el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
+                    <tree-operation
+                            @connect="connect"
+                            @cancelConnect="cancelConnect"
+                            @selectAll="selectAll"
+                            @selectNone="selectNone"
+                            @expandAll="expandAll"
+                            @shrinkAll="shrinkAll"
+                    ></tree-operation>
                 </div>
                 <div>
                     <el-popover
-                            class = "mx-2"
+                            class="mx-2"
                             placement="top"
                             width="160"
                             v-model="popover.drawerCancel">
                         <p>确定要关闭吗</p>
-                        <div class = "text-right mt-3">
+                        <div class="text-right mt-3">
                             <el-button size="mini" type="text" @click="popover.drawerCancel = false">取消</el-button>
                             <el-button type="primary" size="mini" @click="popoverConfirm">确定</el-button>
                         </div>
                         <el-button plain slot="reference">取消</el-button>
                     </el-popover>
-                    <el-button type = "primary" @click = "submit">提交</el-button>
+                    <el-button type="primary" @click="submit">提交</el-button>
                 </div>
             </div>
         </drag-drawer>
         <drag-dialog :drag-dialog="dialog" @confirm="confirmAdd">
-            <modify :data = "modify.data" ref="modify" @modifySuccess = "modifySuccess"></modify>
+            <modify :data="modify.data" ref="modify" @modifySuccess="modifySuccess"></modify>
         </drag-dialog>
         <file-upload :file-upload="fileUpload" @uploadSuccess="uploadSuccess"></file-upload>
     </div>
@@ -125,6 +123,7 @@
     import DragDrawer from '@/components/dragDrawer'
     import DragDialog from '@/components/dragDialog'
     import FileUpload from '@/components/fileUpload'
+    import TreeOperation from '@/views/common/TreeOperation'
     import Modify from './roleList/Modify'
     import Auth from './roleList/Auth'
 
@@ -133,12 +132,15 @@
         return `${proxyURL + apiList.sys_role_import}`
     }
 
+    const drawerDefaultWidth = 500
+
     export default {
         name: "RoleList",
         components: {
             DragDrawer,
             DragDialog,
             FileUpload,
+            TreeOperation,
             Modify
         },
         data() {
@@ -225,7 +227,7 @@
                     },
                     model: {},
                     loading: false,
-                    selection : []
+                    selection: []
                 },
                 page: {
                     currentPage: 1,
@@ -236,11 +238,12 @@
                     show: false,
                     placement: 'right',
                     draggable: true,
+                    width: drawerDefaultWidth,
                     data: {}
                 },
                 component: {
                     type: Auth,
-                    ref : 'auth',
+                    ref: 'auth',
                     data: {}
                 },
                 dialog: {
@@ -249,20 +252,21 @@
                     name: 'addRole',
                     showFooter: true,
                 },
-                modify : {
-                  data : {}
+                modify: {
+                    data: {}
                 },
-                popover : {
-                    drawerCancel : false
+                popover: {
+                    drawerCancel: false
                 },
-                show : {
-                    batch : false
+                show: {
+                    batch: false
                 },
                 fileUpload: {
                     action: uploadAction()
                 },
             }
         },
+        computed: {},
         methods: {
             search() {
                 this.page = {
@@ -274,28 +278,73 @@
             reset() {
                 this.$refs.form.resetForm()
             },
-            popoverConfirm(){
-                 this.drawer = {
-                     ...this.drawer,
-                     show : false
-                 }
-                 this.popover = {
-                     ...this.popover,
-                     drawerCancel : false
-                 }
+            connect() {
+                let {ref} = this.component
+                this.$refs[ref].connect()
+            },
+            cancelConnect() {
+                let {ref} = this.component
+                this.$refs[ref].cancelConnect()
+            },
+            selectAll() {
+                let {ref} = this.component
+                this.$refs[ref].selectAll()
+            },
+            selectNone() {
+                let {ref} = this.component
+                this.$refs[ref].selectNone()
+            },
+            expandAll() {
+                let {ref} = this.component
+                this.$refs[ref].expandAll()
+            },
+            shrinkAll() {
+                let {ref} = this.component
+                this.$refs[ref].shrinkAll()
+            },
+            changeDialogWidth(flag) {
+                debugger;
+                let {width} = this.drawer
+                if(flag){
+                    if (width !== drawerDefaultWidth) {
+                        this.drawer = {
+                            ...this.drawer,
+                            width: drawerDefaultWidth
+                        }
+                    }
+                }else{
+                    if (width === drawerDefaultWidth) {
+                        this.drawer = {
+                            ...this.drawer,
+                            width: width + 200
+                        }
+                    }
+                }
+            },
+            popoverConfirm() {
+                this.drawer = {
+                    ...this.drawer,
+                    show: false
+                }
+                this.popover = {
+                    ...this.popover,
+                    drawerCancel: false
+                }
             },
             addRole() {
                 this.dialog = {
                     ...this.dialog,
-                    title : '新增角色',
+                    title: '新增角色',
                     name: 'addRole',
                 }
                 this.modify = {
                     ...this.modify,
-                    data : {}
+                    data: {}
                 }
                 let {name} = this.dialog
-                this.$modal.show(name)
+                this.$nextTick(() => {
+                    this.$modal.show(name)
+                })
             },
             confirmAdd() {
                 let modifyRef = this.$refs.modify
@@ -313,7 +362,7 @@
                     }
                 })
             },
-            modifySuccess(){
+            modifySuccess() {
                 let {name} = this.dialog
                 this.$modal.hide(name)
                 this.queryList()
@@ -330,54 +379,54 @@
             uploadSuccess() {
 
             },
-            edit({row}){
+            edit({row}) {
                 debugger;
                 this.dialog = {
                     ...this.dialog,
-                    title : '编辑角色',
+                    title: '编辑角色',
                     name: 'updateRole',
                 }
                 this.modify = {
                     ...this.modify,
-                    data : {
+                    data: {
                         ...row
                     }
                 }
                 let {name} = this.dialog
-                this.$nextTick(()=>{
+                this.$nextTick(() => {
                     this.$modal.show(name)
                 })
             },
-            async submit(){
+            async submit() {
                 let {ref} = this.component
                 let authRef = this.$refs[ref]
-                let {lastpermissionIds,permissionIds} = authRef.getCheckedKeys()
-                let {id:roleId} = authRef.data
+                let {lastpermissionIds, permissionIds} = authRef.getCheckedKeys()
+                let {id: roleId} = authRef.data
                 let params = {
                     lastpermissionIds,
                     permissionIds,
                     roleId
                 }
-                let {success,message} = await http.post(apiList.sys_role_save_permission_by_role,params)
-                if(success){
+                let {success, message} = await http.post(apiList.sys_role_save_permission_by_role, params)
+                if (success) {
                     sweetAlert.successWithTimer(message)
                     this.drawer = {
                         ...this.drawer,
-                        show : false
+                        show: false
                     }
-                }else{
+                } else {
                     sweetAlert.error(message)
                 }
             },
-            handleDel({row:{id:ids}}){
+            handleDel({row: {id: ids}}) {
                 this.confirmDeleteBatch(ids)
             },
-            handleAuth({row}){
+            handleAuth({row}) {
                 debugger;
                 this.drawer = {
                     ...this.drawer,
                     title: '角色权限配置',
-                    width: 500,
+                    width: drawerDefaultWidth,
                     show: true
                 }
                 this.component = {
@@ -387,9 +436,6 @@
                         ...row
                     }
                 }
-            },
-            closeFlush(){
-
             },
             currentChange(currentPage) {
                 this.page = {
@@ -405,16 +451,16 @@
                 }
                 this.queryList()
             },
-            selectionChange(selection){
-                if(selection.length){
+            selectionChange(selection) {
+                if (selection.length) {
                     this.show = {
                         ...this.show,
-                        batch : true
+                        batch: true
                     }
-                }else{
+                } else {
                     this.show = {
                         ...this.show,
-                        batch : false
+                        batch: false
                     }
                 }
                 this.table = {
@@ -468,6 +514,9 @@
                     }
                 }
             },
+            mounted() {
+
+            }
         }
     }
 </script>

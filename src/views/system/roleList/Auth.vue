@@ -1,6 +1,6 @@
 <template>
     <div class = "auth">
-        <menu-search :menu-checked-ids="menuCheckedIds" ref = "menuSearch"></menu-search>
+        <menu-search :menu-search="menuSearch" ref = "menuSearch" v-bind="$attrs" v-on="$listeners"></menu-search>
     </div>
 </template>
 
@@ -19,15 +19,60 @@
         },
         data(){
             return {
-                menuCheckedIds : []
+                menuSearch : {
+                    defaultCheckedkeys : [],
+                    defaultExpandKes : [],
+                    checkStrict : true,
+                }
             }
         },
         methods : {
+            getMenuRef(){
+                return this.$refs.menuSearch
+            },
+            getTreeRef(){
+                return this.getMenuRef().$refs.tree
+            },
             getCheckedKeys(){
-                let menuRef =  this.$refs.menuSearch
+                let {defaultCheckedkeys} = this.menuSearch
                 return {
-                    lastpermissionIds : this.menuCheckedIds.join(','),
-                    permissionIds : menuRef.$refs.tree.getCheckedKeys().join(',')
+                    lastpermissionIds : this.defaultCheckedkeys.join(','),
+                    permissionIds : this.getTreeRef().tree.getCheckedKeys().join(',')
+                }
+            },
+            connect(){  //父子关联
+                this.menuSearch = {
+                    ...this.menuSearch,
+                    checkStrict : false
+                }
+            },
+            cancelConnect(){    //取消父子关联
+                this.menuSearch = {
+                    ...this.menuSearch,
+                    checkStrict : true
+                }
+            },
+            selectAll(){        //全选
+                let {form:{model:{menuAssign:{ids}}}} = this.getMenuRef()
+                this.menuSearch = {
+                    ...this.menuSearch,
+                    defaultCheckedkeys : [...ids],
+                }
+            },
+            selectNone(){       //全不选
+                this.getTreeRef().setCheckedKeys([]);
+            },
+            expandAll(){        //展开全部
+                let {form:{model:{menuAssign:{ids}}}} = this.getMenuRef()
+                this.menuSearch = {
+                    ...this.menuSearch,
+                    defaultExpandKes : [...ids],
+                }
+            },
+            shrinkAll(){        //收起全部
+                this.menuSearch = {
+                    ...this.menuSearch,
+                    defaultExpandKes : []
                 }
             },
             async queryPermissionByRole(){
@@ -37,7 +82,10 @@
                 }
                 let {success,result} = await http.get(apiList.sys_role_query_permission_by_role,params)
                 if(success){
-                    this.menuCheckedIds = result
+                    this.menuSearch = {
+                        ...this.menuSearch,
+                        defaultCheckedkeys : result
+                    }
                 }
             }
         },
