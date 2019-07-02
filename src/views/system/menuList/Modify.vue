@@ -1,25 +1,11 @@
 <template>
     <div class="modify">
         <avue-form :option="form.option" v-model="form.model" ref="form">
-            <template slot="parentId" slot-scope="{value}">
-                <select-tree
-                        :height="400"
-                        :data="selectTree.data"
-                        :defaultProps="selectTree.defaultProps"
-                        clearable
-                        collapseTags
-                        checkStrictly
-                        :nodeKey="selectTree.nodeKey"
-                        :checkedKeys="selectTree.defaultCheckedKeys"
-                        @popoverHide="popoverHide">
-                </select-tree>
-            </template>
         </avue-form>
     </div>
 </template>
 
 <script>
-    import SelectTree from '@/components/selectTree';
     import {mapState, mapActions} from 'vuex'
     import {phoneCheck} from '@/utils/modules/validate'
     import {http, apiList, constant, sweetAlert} from '@/utils'
@@ -36,14 +22,12 @@
 
     export default {
         name: "Modify",
-        components: {
-            SelectTree
-        },
         data() {
             return {
                 form: {
                     option: {
                         menuBtn: false,
+                        labelWidth : 100,
                         column: [
                             {
                                 label: '菜单类型',
@@ -51,6 +35,23 @@
                                 prop: 'menuType',
                                 dicData: DIC.MENU_TYPE,
                                 span: 24,
+                                change : ({value})=>{
+                                    let redirectIndex = this.$refs.form.findColumnIndex('redirect');
+                                    let prevMenuIndex = this.$refs.form.findColumnIndex('parentId');
+                                    console.log(this.form)
+                                    let {option:{column}} = this.form
+                                    debugger;
+                                    switch (value) {
+                                        case '0' :
+                                            column[redirectIndex].display = true
+                                            column[prevMenuIndex].display = false
+                                            break;
+                                        case '1' :
+                                            column[redirectIndex].display = false
+                                            column[prevMenuIndex].display = true
+                                            break;
+                                    }
+                                }
                             },
                             {
                                 label: '菜单名称',
@@ -61,9 +62,15 @@
                                 span: 24
                             },
                             {
-                                label: '上级菜单',
+                                label: '父级菜单',
                                 prop: 'parentId',
-                                formslot: true,
+                                type : 'cascader',
+                                dictData : [],
+                                props : {
+                                    value : 'id',
+                                    label : 'name'
+                                },
+                                display : false,
                                 span: 24
                             },
                             {
@@ -79,6 +86,7 @@
                             {
                                 label: '默认跳转地址',
                                 prop: 'redirect',
+                                display : true,
                                 span: 24
                             },
                             {
@@ -130,12 +138,19 @@
                 }
             }
         },
-        computed : {
+        computed: {
             ...mapState({
-                menus : ({system}) => system.menus
+                menus: ({system}) => system.menus
             })
         },
         methods: {
+            setParentMenu() {
+                debugger;
+                this.$nextTick(()=>{
+                    debugger;
+                    this.$refs.form.updateDic('parentId', this.menus)
+                })
+            },
             async saveData() {
                 let {model} = this.form
                 let params = {
@@ -149,6 +164,9 @@
                     sweetAlert.error(message)
                 }
             }
+        },
+        mounted() {
+            this.setParentMenu()
         }
     }
 </script>
