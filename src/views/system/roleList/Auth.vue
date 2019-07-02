@@ -84,7 +84,8 @@
                 if(success){
                     this.menuSearch = {
                         ...this.menuSearch,
-                        defaultCheckedkeys : result
+                        defaultCheckedkeys : result,
+                        roleId
                     }
                 }
             }

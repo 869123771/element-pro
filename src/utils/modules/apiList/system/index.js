@@ -19,6 +19,7 @@ export default {
     sys_role_query_tree_list : '/sys/role/queryTreeList',
     sys_role_query_permission_by_role : '/sys/permission/queryRolePermission',
     sys_role_save_permission_by_role : '/sys/permission/saveRolePermission',
+    sys_role_data_rule : '/sys/role/datarule',
     sys_role_export : '/sys/role/exportXls',
     sys_role_import : '/sys/role/importExcel',
     sys_role_add : '/sys/role/add',
@@ -32,4 +33,7 @@ export default {
     sys_dept_import : '/sysdepart/sysDepart/importExcel',
     sys_dept_delete_batch : '/sysdepart/sysDepart/deleteBatch',
     sys_dict_unique_check : '/sys/duplicate/check',
+    sys_menu_query_list: '/sys/permission/list',
+    sys_menu_delete_batch : '/sys/permission/deleteBatch',
+    sys_menu_add : '/sys/permission/add'
 }

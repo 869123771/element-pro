@@ -10,7 +10,7 @@
                         <el-button plain icon="el-icon-close" v-show="show.delete" @click="deleteBatch">批量删除</el-button>
                     </div>
                     <div class="my-3">
-                        <el-input size="medium" v-model="tree.filterDept"></el-input>
+                        <el-input size="medium" v-model="tree.filterDept" @input = "filterText"></el-input>
                     </div>
                     <el-tree
                             ref="tree"
@@ -22,6 +22,7 @@
                             :data="tree.data"
                             :props="tree.defaultProps"
                             :render-content="renderTree"
+                            :filter-node-method="filterNode"
                             @node-click="nodeClick"
                             @check="treeCheck"
                     ></el-tree>
@@ -200,6 +201,13 @@
                         </span>
                     </span>
                 );
+            },
+            filterText(val){
+                this.$refs.tree.filter(val);
+            },
+            filterNode(value, data) {
+                if (!value) return true;
+                return data.departName.indexOf(value) !== -1;
             },
             fileImport() {
                 this.$modal.show('fileUpload')

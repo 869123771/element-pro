@@ -1,10 +1,317 @@
 <template>
-    <div>菜单管理</div>
+    <div class="menu">
+        <el-row>
+            <avue-crud
+                    :data="table.data"
+                    :option="table.option"
+                    :table-loading="table.loading"
+                    v-model="table.model"
+                    @on-load="queryList"
+                    @selection-change="selectionChange"
+            >
+                <template slot="menuLeft">
+                    <el-button plain type="primary" icon="el-icon-plus" @click="addMenu">新增</el-button>
+                    <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
+                        <el-button plain>
+                            批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+                        </el-button>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item @click.native="deleteBatch"><i class="el-icon-delete"></i>删除
+                            </el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                </template>
+                <template slot="oper" slot-scope="scope">
+                    <span>
+                         <span class="text-blue-500 text-base cursor-pointer">
+                            <i class="fa fa-fw fa-pencil" @click="editMenu(scope)"></i>
+                        </span>
+                        <el-dropdown placement="bottom" className="dropdown">
+                            <span class="text-blue-500 text-base">
+                              <i class="fa fa-fw fa-ellipsis-h"></i>
+                            </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <template v-for="item in dropDownItem">
+                                    <template v-if="item.popover">
+                                        <el-popover placement="top" width="160"
+                                                    v-model="item.visible"
+                                        >
+                                            <p class="pb-3">{{item.popText}}</p>
+                                            <div class="text-right">
+                                                <el-button size="mini" type="text" @click="item.visible = false">取消
+                                                </el-button>
+                                                <el-button type="primary" size="mini"
+                                                           @click.native="item.action(scope)">确定
+                                                </el-button>
+                                            </div>
+                                            <el-dropdown-item slot="reference">{{item.label}}</el-dropdown-item>
+                                        </el-popover>
+                                    </template>
+                                    <template v-else>
+                                         <el-dropdown-item
+                                                 @click.native="()=>{item.action(scope)}">{{item.label}}</el-dropdown-item>
+                                    </template>
+                                </template>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </span>
+                </template>
+            </avue-crud>
+        </el-row>
+
+        <drag-drawer v-model="drawer.show"
+                     :draggable="drawer.draggable"
+                     :title="drawer.title"
+                     :width.sync="drawer.width"
+                     :placement="drawer.placement"
+        >
+            <component :is="component.type" :ref="component.ref" :data="component.data"
+                       @successClose="successClose"></component>
+            <div class="dialog-footer p-2 w-full flex justify-end">
+                <div>
+                    <el-popover
+                            class="mx-2"
+                            placement="top"
+                            width="160"
+                            v-model="popover.drawerCancel">
+                        <p>确定要关闭吗</p>
+                        <div class="text-right mt-3">
+                            <el-button size="mini" type="text" @click="popover.drawerCancel = false">取消</el-button>
+                            <el-button type="primary" size="mini" @click="popoverConfirm">确定</el-button>
+                        </div>
+                        <el-button plain slot="reference">取消</el-button>
+                    </el-popover>
+                    <el-button type="primary" @click="submit">提交</el-button>
+                </div>
+            </div>
+        </drag-drawer>
+
+    </div>
 </template>
 
 <script>
+    import {mapState, mapActions} from 'vuex'
+    import {http, apiList, constant, sweetAlert} from '@/utils'
+    import DragDrawer from '@/components/dragDrawer'
+    import DragDialog from '@/components/dragDialog'
+    import Modify from './menuList/Modify'
+
     export default {
-        name: "PermissionList"
+        name: "PermissionList",
+        components: {
+            DragDrawer,
+            DragDialog
+        },
+        data() {
+            let {table} = constant
+            return {
+                table: {
+                    data: [],
+                    option: {
+                        ...table,
+                        column: [
+                            {
+                                label: '菜单名称',
+                                prop: 'name'
+                            },
+                            {
+                                label: '菜单类型',
+                                prop: 'menuType'
+                            },
+                            {
+                                label: '图标',
+                                prop: 'icon'
+                            },
+                            {
+                                label: '组件',
+                                prop: 'component',
+                                overHidden: true
+                            },
+                            {
+                                label: '路径',
+                                prop: 'url',
+                                overHidden: true
+                            },
+                            {
+                                label: '排序',
+                                prop: 'sortNo',
+                                width: 70
+                            },
+                            {
+                                label: '操作',
+                                prop: 'oper',
+                                slot: true,
+                                width: 80
+                            },
+                        ]
+                    },
+                    model: {},
+                    loading: false,
+                    selection: []
+                },
+                dropDownItem: [
+                    {
+                        label: '详情',
+                        icon: '',
+                        action: this.handleDetail,
+                        popover: false,
+                        visible: '',
+                        popText: ''
+                    },
+                    {
+                        label: '数据规则',
+                        icon: '',
+                        action: this.handleDataRule,
+                        popover: false,
+                        visible: '',
+                        popText: ''
+                    },
+                    {
+                        label: '删除',
+                        icon: '',
+                        action: this.handleDel,
+                        popover: true,
+                        visible: false,
+                        popText: '确定删除吗'
+                    },
+                ],
+                show: {
+                    batch: false
+                },
+                drawer: {
+                    show: false,
+                    placement: 'right',
+                    draggable: true,
+                    data: {}
+                },
+                component: {
+                    type: Modify,
+                    ref: 'modify',
+                    data: {}
+                },
+                popover: {
+                    drawerCancel: false
+                },
+            }
+        },
+        methods: {
+            ...mapActions({
+                getAllMenus: 'GET_ALL_MENUS'
+            }),
+            selectionChange(selection) {
+                debugger;
+                if (selection.length) {
+                    this.show = {
+                        ...this.show,
+                        batch: true
+                    }
+                } else {
+                    this.show = {
+                        ...this.show,
+                        batch: false
+                    }
+                }
+                this.table = {
+                    ...this.table,
+                    selection
+                }
+            },
+            addMenu() {
+                this.drawer = {
+                    ...this.drawer,
+                    show: true,
+                    width: 500,
+                    title: '新增',
+                }
+                this.component = {
+                    ...this.component,
+                    type: Modify,
+                    ref: 'add',
+                    data: {}
+                }
+                let {name} = this.dialog
+                this.$nextTick(() => {
+                    this.$modal.show(name)
+                })
+            },
+            editMenu({row}) {
+
+            },
+            handleDetail({row}) {
+
+            },
+            handleDataRule({row}) {
+
+            },
+            handleDel({row}) {
+                this.confirmDeleteBatch(row.id)
+            },
+            popoverConfirm() {
+                this.drawer = {
+                    ...this.drawer,
+                    show: false
+                }
+                this.popover = {
+                    ...this.popover,
+                    drawerCancel: false
+                }
+            },
+            submit() {
+                let {ref} = this.component
+                let modifyRef = this.$refs[ref]
+                modifyRef.$refs.form.validate(valid => {
+                    if (valid) {
+                        this.dialog = {
+                            ...this.dialog,
+                            loading: true
+                        }
+                        modifyRef.saveData()
+                    }
+                })
+                this.dialog = {
+                    ...this.dialog,
+                    loading: false
+                }
+            },
+            deleteBatch() {
+                let {selection} = this.table
+                let ids = selection.map(item => item.id).join(',')
+                sweetAlert.confirm('删除', '确认要删除吗', this.confirmDeleteBatch, ids)
+            },
+            successClose() {
+                this.drawer = {
+                    ...this.drawer,
+                    show: false
+                }
+                this.queryList()
+            },
+            async confirmDeleteBatch(ids) {
+                let {success, message} = await http.delete(apiList.sys_menu_delete_batch, {ids})
+                if (success) {
+                    sweetAlert.successWithTimer(message)
+                    this.queryList()
+                } else {
+                    sweetAlert.error(message)
+                }
+            },
+            async queryList() {
+                this.table = {
+                    ...this.table,
+                    loading: true
+                }
+                let {success, result} = await this.getAllMenus()
+                if (success) {
+                    this.table = {
+                        ...this.table,
+                        data: result
+                    }
+                }
+                this.table = {
+                    ...this.table,
+                    loading: false
+                }
+            },
+        }
     }
 </script>
 

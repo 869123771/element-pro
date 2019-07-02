@@ -26,8 +26,9 @@
                      :width.sync="drawer.width"
                      :placement="drawer.placement"
                      :closeOnClickModal="drawer.closeOnClickModal"
-                     @close = "close"
+                     @close="close"
         >
+            <data-rule :data-rule-props="dataRuleProps" @closeDataRuleDialog="close"></data-rule>
         </drag-drawer>
     </div>
 </template>
@@ -36,6 +37,7 @@
     import {http, constant, apiList, sweetAlert} from '@/utils'
     import {mapState} from 'vuex'
     import DragDrawer from '@/components/dragDrawer'
+    import DataRule from './DataRule'
 
     export default {
         name: "MenuSearch",
@@ -45,7 +47,8 @@
             }
         },
         components: {
-            DragDrawer
+            DragDrawer,
+            DataRule
         },
         inject: {},
         data() {
@@ -86,6 +89,7 @@
                     closeOnClickModal: true,
                     draggable: false,
                 },
+                dataRuleProps: {}
             }
         },
         watch: {
@@ -94,15 +98,20 @@
                     debugger;
                     if (!this.validatenull(props)) {
                         let {model, model: {menuAssign}} = this.form
+                        let {roleId, ...res} = props
                         this.form = {
                             ...this.form,
                             model: {
                                 ...model,
                                 menuAssign: {
                                     ...menuAssign,
-                                    ...props
+                                    ...res
                                 }
                             }
+                        }
+                        this.dataRuleProps = {
+                            ...this.dataRuleProps,
+                            roleId
                         }
                     }
                 },
@@ -112,13 +121,18 @@
         methods: {
             dataRule(node, data) {
                 debugger;
+                let {key: dataRuleId} = data
                 this.drawer = {
                     ...this.drawer,
                     show: true
                 }
+                this.dataRuleProps = {
+                    ...this.dataRuleProps,
+                    dataRuleId
+                }
                 this.$emit('changeDialogWidth')
             },
-            close(){
+            close() {
                 this.drawer = {
                     ...this.drawer,
                     show: false
