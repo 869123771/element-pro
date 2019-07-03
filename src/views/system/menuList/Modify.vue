@@ -1,7 +1,97 @@
 <template>
     <div class="modify">
-        <avue-form :option="form.option" v-model="form.model" ref="form">
-        </avue-form>
+        <el-form :model="form" l="form" :rules="rules" ref = "form" label-width="100px" :status-icon = "true">
+            <el-form-item label = "菜单类型">
+                <el-radio-group v-model = "form.menuType">
+                    <template v-for = "item in menuType">
+                        <el-radio :label = "item.itemValue">{{item.itemText}}</el-radio>
+                    </template>
+                </el-radio-group>
+            </el-form-item>
+            <template v-if = "form.menuType === '2'">
+                <el-form-item label = "按钮/权限" prop = "name">
+                    <el-input v-model = "form.name" placeholder = "请输入按钮名称" clearable ></el-input>
+                </el-form-item>
+                    <el-form-item label = "父级菜单">
+                        <el-cascader
+                                :options="menus"
+                                :props="{ checkStrictly: true,label:'name',value : 'id'}"
+                                clearable
+                                filterable
+                                class = "w-full"
+                        >
+                        </el-cascader>
+                    </el-form-item>
+                    <el-form-item label = "菜单路径">
+                        <el-input v-model = "form.url" placeholder = "请输入菜单路径" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label = "授权标识">
+                        <el-input v-model = "form.url" placeholder = "多个用逗号分隔, 如: user:list,user:create" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label = "授权策略">
+                        <el-radio-group v-model = "form.permsType">
+                            <template v-for = "item in permissionType">
+                                <el-radio :label = "item.itemValue">{{item.itemText}}</el-radio>
+                            </template>
+                        </el-radio-group>
+                    </el-form-item>
+                    <el-form-item label = "状态">
+                        <el-radio-group v-model = "form.status">
+                            <template v-for = "item in validStatus">
+                                <el-radio :label = "item.itemValue">{{item.itemText}}</el-radio>
+                            </template>
+                        </el-radio-group>
+                    </el-form-item>
+            </template>
+            <template v-else>
+                <el-form-item label = "菜单名称" prop = "name">
+                    <el-input v-model = "form.name" placeholder = "请输入菜单名称" clearable ></el-input>
+                </el-form-item>
+                <template v-if = "form.menuType === '1'">
+                    <el-form-item label = "父级菜单">
+                        <el-cascader
+                                :options="menus"
+                                :props="{ checkStrictly: true,label:'name',value : 'id'}"
+                                clearable
+                                filterable
+                                class = "w-full"
+                        >
+                        </el-cascader>
+                    </el-form-item>
+                </template>
+                <el-form-item label = "菜单路径">
+                    <el-input v-model = "form.url" placeholder = "请输入菜单路径" clearable></el-input>
+                </el-form-item>
+                <el-form-item label = "前端组件">
+                    <el-input v-model = "form.component" placeholder = "请输入菜单组件" clearable></el-input>
+                </el-form-item>
+                <template v-if = "form.menuType === '0'">
+                    <el-form-item label = "默认跳转地址">
+                        <el-input v-model = "form.redirect" placeholder = "请输入默认跳转地址" clearable></el-input>
+                    </el-form-item>
+                </template>
+                <el-form-item label = "菜单图标">
+                    <el-input v-model = "form.icon" placeholder = "请输入菜单图标" clearable>
+                        <i slot="suffix" class="el-input__icon el-icon-setting" @click = "checkIcons"></i>
+                    </el-input>
+                </el-form-item>
+                <el-form-item label = "排序">
+                    <el-input-number v-model = "form.sortNo" :min = "0" class = "w-full"></el-input-number>
+                </el-form-item>
+                <el-form-item label = "是否路由">
+                    <el-switch v-model = "form.route"></el-switch>
+                </el-form-item>
+                <el-form-item label = "隐藏路由">
+                    <el-switch v-model = "form.hide"></el-switch>
+                </el-form-item>
+                <el-form-item label = "聚合路由">
+                    <el-switch v-model = "form.alwaysShow"></el-switch>
+                </el-form-item>
+            </template>
+        </el-form>
+        <drag-dialog :drag-dialog="dialog">
+            <icons></icons>
+        </drag-dialog>
     </div>
 </template>
 
@@ -9,147 +99,63 @@
     import {mapState, mapActions} from 'vuex'
     import {phoneCheck} from '@/utils/modules/validate'
     import {http, apiList, constant, sweetAlert} from '@/utils'
+    import Icons from './icon/Icons'
 
     let customParams = {}
 
-    let DIC = {
-        MENU_TYPE: [
-            {label: '一级菜单', value: '0'},
-            {label: '子菜单', value: '1'},
-            {label: '按钮/权限', value: '2'},
-        ],
-    }
-
     export default {
         name: "Modify",
+        components : {
+            Icons
+        },
         data() {
             return {
-                form: {
-                    option: {
-                        menuBtn: false,
-                        labelWidth : 100,
-                        column: [
-                            {
-                                label: '菜单类型',
-                                type: 'radio',
-                                prop: 'menuType',
-                                dicData: DIC.MENU_TYPE,
-                                span: 24,
-                                change : ({value})=>{
-                                    let redirectIndex = this.$refs.form.findColumnIndex('redirect');
-                                    let prevMenuIndex = this.$refs.form.findColumnIndex('parentId');
-                                    console.log(this.form)
-                                    let {option:{column}} = this.form
-                                    debugger;
-                                    switch (value) {
-                                        case '0' :
-                                            column[redirectIndex].display = true
-                                            column[prevMenuIndex].display = false
-                                            break;
-                                        case '1' :
-                                            column[redirectIndex].display = false
-                                            column[prevMenuIndex].display = true
-                                            break;
-                                    }
-                                }
-                            },
-                            {
-                                label: '菜单名称',
-                                prop: 'name',
-                                rules: [
-                                    {required: true, message: '必填', trigger: 'change'}
-                                ],
-                                span: 24
-                            },
-                            {
-                                label: '父级菜单',
-                                prop: 'parentId',
-                                type : 'cascader',
-                                dictData : [],
-                                props : {
-                                    value : 'id',
-                                    label : 'name'
-                                },
-                                display : false,
-                                span: 24
-                            },
-                            {
-                                label: '菜单路径',
-                                prop: 'url',
-                                span: 24,
-                            },
-                            {
-                                label: '前端组件',
-                                prop: 'component',
-                                span: 24
-                            },
-                            {
-                                label: '默认跳转地址',
-                                prop: 'redirect',
-                                display : true,
-                                span: 24
-                            },
-                            {
-                                label: '菜单图标',
-                                prop: 'icon',
-                                span: 24
-                            },
-                            {
-                                label: '排序',
-                                prop: 'sortNo',
-                                type: 'number',
-                                span: 24
-                            },
-                            {
-                                label: '是否路由',
-                                prop: 'route',
-                                type: 'switch',
-                                span: 24
-                            },
-                            {
-                                label: '隐藏路由',
-                                prop: 'hide',
-                                type: 'switch',
-                                span: 24
-                            },
-                            {
-                                label: '聚合路由',
-                                prop: 'alwaysShow',
-                                type: 'switch',
-                                span: 24
-                            },
-                        ]
-                    },
-                    model: {
-                        menuType: '0',
-                        route: true,
-                        hide: false,
-                        alwaysShow: false
-                    }
+                form : {
+                    menuType: '0',                  //菜单类型
+                    name : '',                      //菜单名称
+                    parentId : '',                  //父级菜单
+                    url : '',                       //菜单路径
+                    component : '',                 //前端组件
+                    redirect : '',                  //默认跳转地址
+                    icon : '',                      //菜单图标
+                    sortNo : '',                    //排序
+                    route: true,                    //是否路由
+                    hide: false,                    //隐藏路由
+                    alwaysShow: false,              //聚合路由
+                    permsType : '',                  //授权策略
+                    status : '1'                      //状态
                 },
-                selectTree: {
-                    data: this.menus,
-                    defaultProps: {
-                        children: 'children',
-                        label: 'menuName'
-                    },
-                    nodeKey: 'menuId',
-                    defaultCheckedKeys: ''
-                }
+                rules : {
+                    name : [
+                        {required : true, message : '必填',trigger :'change'}
+                    ]
+                },
+                dialog: {
+                    width: '80',
+                    height: '80',
+                    name: 'iconSelect',
+                    title: '图标选择',
+                    showFooter: true,
+                },
             }
         },
         computed: {
             ...mapState({
-                menus: ({system}) => system.menus
+                menus: ({system}) => system.menus,
+                menuType : ({dict}) => dict.menuType,
+                permissionType : ({dict}) => dict.permissionType,
+                validStatus : ({dict}) => dict.validStatus
             })
         },
         methods: {
-            setParentMenu() {
-                debugger;
-                this.$nextTick(()=>{
-                    debugger;
-                    this.$refs.form.updateDic('parentId', this.menus)
-                })
+            ...mapActions({
+                getMenuType : 'GET_MENU_TYPE',
+                getPermissionType : 'GET_PERMISSION_TYPE',
+                getValidStatus : 'GET_VALID_STATUS',
+            }),
+            checkIcons(){
+                let {name} = this.dialog
+                this.$modal.show(name)
             },
             async saveData() {
                 let {model} = this.form
@@ -166,11 +172,13 @@
             }
         },
         mounted() {
-            this.setParentMenu()
+            this.getMenuType()
+            this.getPermissionType()
+            this.getValidStatus()
         }
     }
 </script>
 
 <style scoped>
-
+    @import '../../../views/iconfont/iconfont.css';
 </style>

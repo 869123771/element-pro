@@ -8,7 +8,6 @@
 <script>
     import "@/assets/iconfont/iconfont.css";
     import "font-awesome/less/font-awesome.less";
-    import "tailwindcss/tailwind.css";
     import '@/assets/less/index.less'
 
     export default {

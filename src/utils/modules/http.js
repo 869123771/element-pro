@@ -21,6 +21,11 @@ ajax.interceptors.request.use(config => {
             ...config.params
         }
     }
+    config.params = {
+        ...config.params,
+        order: 'desc',
+        column: 'createTime'
+    }
     return config
 }, error => {
     return Promise.reject(error)

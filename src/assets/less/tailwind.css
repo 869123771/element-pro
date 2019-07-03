@@ -1,0 +1,35 @@
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+@variants hover {
+  .rotate-0 {
+    transform: rotate(0deg);
+  }
+  .rotate-90 {
+    transform: rotate(90deg);
+    transition: all 0.8s;
+  }
+  .color-blue-500{
+    color : #4299e1 !important;
+  }
+  .rotate-180 {
+    transform: rotate(180deg);
+    transition: all 0.5s;
+  }
+  .rotate-270 {
+    transform: rotate(270deg);
+    transition: all 0.8s;
+  }
+  .rotate-360 {
+    transform: rotate(360deg);
+    transition: all 0.8s;
+  }
+}
+
+.w-full{
+  width : 100% !important;
+}
+

@@ -1,9 +1,12 @@
 import {http,apiList} from '@/utils'
 export default {
     state : {
-        sex : [],                                //性别
-        userStatus : [],                         //用户状态
-        activitiSync : [],                       //同步工作流引擎
+        sex : [],                                           //性别
+        userStatus : [],                                    //用户状态
+        activitiSync : [],                                  //同步工作流引擎,
+        permissionType : [],                                 //授权策略
+        menuType : [],                                        //菜单类型
+        validStatus : [],                                     //有效无效状态
     },
     mutations: {
         SET_SEX(state,sex){
@@ -14,26 +17,59 @@ export default {
        },
         SET_ACTIVIYI_SYNC(state,activitiSync){
             state.activitiSync = activitiSync
-        }
+        },
+        SET_PERMISSION_TYPE(state,permissionType){
+            state.permissionType = permissionType
+        },
+        SET_MENU_TYPE(state,menuType){
+            state.menuType = menuType
+        },
+        SET_VALID_STATUS(state,validStatus){
+            state.validStatus = validStatus
+        },
     },
     actions : {
         async GET_SEX({commit}){
-            let {success,result} = await http.get(apiList.sys_common_dict,{dictId:'3d9a351be3436fbefb1307d4cfb49bf2'})
-            if(success){
-                commit('SET_SEX',result.records)
+            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'sex'})
+            if(success) {
+                let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
+                commit('SET_SEX',records)
             }
         },
         async GET_USER_STATUS({commit}){
-            let {success,result} = await http.get(apiList.sys_common_dict,{dictId:'fc6cd58fde2e8481db10d3a1e68ce70c'})
-            if(success){
-                commit('SET_USER_STATUS',result.records)
+            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'user_status'})
+            if(success) {
+                let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
+                commit('SET_USER_STATUS',records)
             }
         },
         async GET_ACTIVIYI_SYNC({commit}){
-            let {success,result} = await http.get(apiList.sys_common_dict,{dictId:'236e8a4baff0db8c62c00dd95632834f'})
-            if(success){
-                commit('SET_ACTIVIYI_SYNC',result.records)
+            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'activiti_sync'})
+            if(success) {
+                let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
+                commit('SET_ACTIVIYI_SYNC',records)
             }
-        }
+        },
+        async GET_PERMISSION_TYPE({commit}){
+            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'perms_type'})
+            if(success) {
+                let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
+                commit('SET_PERMISSION_TYPE',records)
+            }
+        },
+        async GET_MENU_TYPE({commit}){
+            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'menu_type'})
+            if(success) {
+                let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
+                commit('SET_MENU_TYPE',records)
+            }
+        },
+        async GET_VALID_STATUS({commit}){
+            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'valid_status'})
+            if(success) {
+                let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
+                commit('SET_VALID_STATUS',records)
+            }
+        },
     }
 }
