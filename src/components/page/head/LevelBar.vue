@@ -1,6 +1,6 @@
 <template>
     <div class="levelbar">
-        <i class="iconfont icon-shrink levelbar-shrink" :class="{barShrink}" @click="shrink"></i>
+        <i class="iconfont icon-wy-shrink levelbar-shrink" :class="{barShrink}" @click="shrink"></i>
     </div>
 </template>
 <script>

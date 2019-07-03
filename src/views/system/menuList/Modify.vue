@@ -100,13 +100,15 @@
     import {phoneCheck} from '@/utils/modules/validate'
     import {http, apiList, constant, sweetAlert} from '@/utils'
     import Icons from './icon/Icons'
+    import DragDialog from '@/components/dragDialog'
 
     let customParams = {}
 
     export default {
         name: "Modify",
         components : {
-            Icons
+            Icons,
+            DragDialog
         },
         data() {
             return {

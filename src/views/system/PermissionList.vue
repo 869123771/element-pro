@@ -220,6 +220,7 @@
                 this.drawer = {
                     ...this.drawer,
                     show: true,
+                    name : 'addMenu',
                     width: 500,
                     title: '新增',
                 }
@@ -229,7 +230,7 @@
                     ref: 'add',
                     data: {}
                 }
-                let {name} = this.dialog
+                let {name} = this.drawer
                 this.$nextTick(() => {
                     this.$modal.show(name)
                 })

@@ -24,8 +24,8 @@
             >
                 <template slot="menuLeft">
                     <el-button plain type="primary" icon="el-icon-plus" @click="addRole">新增</el-button>
-                    <el-button plain icon="iconfont icon-upload" @click="fileImport">导入</el-button>
-                    <el-button plain icon="iconfont icon-download" @click="fileExport">导出</el-button>
+                    <el-button plain icon="iconfont icon-wy-upload" @click="fileImport">导入</el-button>
+                    <el-button plain icon="iconfont icon-wy-download" @click="fileExport">导出</el-button>
                     <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
                         <el-button plain>
                             批量操作<i class="el-icon-arrow-down el-icon--right"></i>

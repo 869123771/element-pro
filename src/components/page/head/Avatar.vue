@@ -9,7 +9,7 @@
             </div>
             <el-dropdown-menu>
                 <el-dropdown-item @click.native = "logout">
-                    <i class = "iconfont icon-log-out"></i>登出
+                    <i class = "iconfont icon-wy-log-out"></i>登出
                 </el-dropdown-item>
             </el-dropdown-menu>
         </el-dropdown>
