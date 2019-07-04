@@ -33,6 +33,16 @@ export default {
             ...alertConf
         })
     },
+    errorWithTimer: (title) => {
+        Swal.fire({
+            position: 'top',
+            type: 'error',
+            title,
+            toast: true,
+            showConfirmButton: false,
+            timer: 1500
+        })
+    },
     warn: (title) => {
         Swal.fire({
             type: 'warning',

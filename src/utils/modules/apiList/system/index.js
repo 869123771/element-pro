@@ -36,5 +36,7 @@ export default {
     sys_dict_unique_check : '/sys/duplicate/check',
     sys_menu_query_list: '/sys/permission/list',
     sys_menu_delete_batch : '/sys/permission/deleteBatch',
-    sys_menu_add : '/sys/permission/add'
+    sys_menu_add : '/sys/permission/add',
+    sys_menu_edit : '/sys/permission/edit',
+
 }

@@ -50,6 +50,7 @@
                 <template v-if = "form.menuType === '1'">
                     <el-form-item label = "父级菜单">
                         <el-cascader
+                                v-model="form.parentId"
                                 :options="menus"
                                 :props="{ checkStrictly: true,label:'name',value : 'id'}"
                                 clearable
@@ -71,8 +72,8 @@
                     </el-form-item>
                 </template>
                 <el-form-item label = "菜单图标">
-                    <el-input v-model = "form.icon" placeholder = "请输入菜单图标" clearable>
-                        <i slot="suffix" class="el-input__icon el-icon-setting" @click = "checkIcons"></i>
+                    <el-input v-model = "form.icon" placeholder = "请输入菜单图标" readonly clearable>
+                        <i slot="suffix" class="el-input__icon el-icon-setting cursor-pointer" @click = "checkIcons"></i>
                     </el-input>
                 </el-form-item>
                 <el-form-item label = "排序">
@@ -89,8 +90,8 @@
                 </el-form-item>
             </template>
         </el-form>
-        <drag-dialog :drag-dialog="dialog">
-            <icons></icons>
+        <drag-dialog :drag-dialog="dialog" @confirm = "iconChooseConfirm">
+            <icons ref = "icons" :icons-checked = "icons"></icons>
         </drag-dialog>
     </div>
 </template>
@@ -109,6 +110,11 @@
         components : {
             Icons,
             DragDialog
+        },
+        props : {
+            data : {
+                type : Object
+            }
         },
         data() {
             return {
@@ -133,12 +139,13 @@
                     ]
                 },
                 dialog: {
-                    width: '80',
-                    height: '80',
+                    width: '50',
+                    height: '60',
                     name: 'iconSelect',
                     title: '图标选择',
                     showFooter: true,
                 },
+                icons : {}
             }
         },
         computed: {
@@ -149,6 +156,21 @@
                 validStatus : ({dict}) => dict.validStatus
             })
         },
+        watch : {
+            data : {
+                handler(props) {
+                    if (!this.validatenull(props)) {
+                        let {menuType} = props
+                        this.form = {
+                            ...this.form,
+                            ...props,
+                            menuType : menuType.toString()
+                        }
+                    }
+                },
+                immediate : true
+            },
+        },
         methods: {
             ...mapActions({
                 getMenuType : 'GET_MENU_TYPE',
@@ -157,14 +179,56 @@
             }),
             checkIcons(){
                 let {name} = this.dialog
+                let {icon} = this.form
+                if(icon){
+                    this.icons = {
+                        ...this.icons,
+                        name : icon,
+                    }
+                }else{
+                    this.icons = {
+                        ...this.icons,
+                        name : '',
+                        paneName : 'direct'
+                    }
+                }
                 this.$modal.show(name)
             },
-            async saveData() {
-                let {model} = this.form
-                let params = {
-                    ...model
+            iconChooseConfirm(){
+                let {checked:{icon},pane:{name:paneName}} = this.$refs.icons
+                let {name} = this.dialog
+                if(icon){
+                    this.form = {
+                        ...this.form,
+                        icon
+                    }
+                    this.icons = {
+                        ...this.icons,
+                        paneName
+                    }
+                    this.$modal.hide(name)
+                }else{
+                    sweetAlert.errorWithTimer('请选择图标')
                 }
-                let {success, message} = await http.post(apiList.sys_menu_add, params)
+            },
+            async saveData() {
+                let {parentId} = this.form
+                let {id} = this.data
+                let params = {
+                    ...this.form,
+                    parentId : Array.isArray(parentId) ? parentId.slice(-1).join('') : ''
+                }
+                let res
+                if(id){                     //编辑
+                    params = {
+                        ...this.data,
+                        ...params
+                    }
+                    res = await http.put(apiList.sys_menu_edit, params)
+                }else{
+                    res = await http.post(apiList.sys_menu_add, params)
+                }
+                let {success,message} = res
                 if (success) {
                     sweetAlert.successWithTimer(message)
                     this.$emit('successClose')
@@ -174,7 +238,6 @@
             }
         },
         mounted() {
-            this.getMenuType()
             this.getPermissionType()
             this.getValidStatus()
         }

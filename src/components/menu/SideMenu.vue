@@ -10,15 +10,6 @@
                 :default-active = "menuProps.activeName"
                 :default-openeds = "menuProps.openNames"
         >
-            <!-- :default-openeds = "menu.openNames"  -->
-            <!--<el-menu-item class="sideMenu-title text-center" v-if="!menuProps.collapse" index = "">
-                <span>LiveData</span>
-            </el-menu-item>
-            <Tooltip content="LiveData" placement="right" v-else>
-                <MenuItem class="sideMenu-title-icon" index = "">
-                    <i class="iconfont icon-livedata"></i>
-                </MenuItem>
-            </Tooltip>-->
             <nav-menu :nav-menus="permissionList"></nav-menu>
         </el-menu>
         </el-scrollbar>

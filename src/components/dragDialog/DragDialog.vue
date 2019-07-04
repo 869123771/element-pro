@@ -19,8 +19,8 @@
             <div class="modal-header-title">{{dialog.title}}</div>
             <div class="modal-header-control">
                 <div class="modal-header-control-screen">
-                    <div class="iconfont icon-compress handle-icon px-1 hover:color-blue-500 " v-if="dialog.fullScreen" @click="exit"></div>
-                    <div class="iconfont icon-expend handle-icon px-1 hover:color-blue-500 " v-else @click="full"></div>
+                    <div class="iconfont icon-wy-compress handle-icon px-1 hover:color-blue-500 " v-if="dialog.fullScreen" @click="exit"></div>
+                    <div class="iconfont icon-wy-expend handle-icon px-1 hover:color-blue-500 " v-else @click="full"></div>
                 </div>
                 <div class="modal-header-control-close el-icon-close handle-icon hover:color-blue-500 hover:rotate-180" @click="close"></div>
             </div>
@@ -113,6 +113,7 @@
                     ...this.dialog,
                     loading: false
                 }
+                this.$emit('close')
             },
             confirm() {
                 this.$emit('confirm')

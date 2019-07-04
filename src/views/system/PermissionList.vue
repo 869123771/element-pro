@@ -21,6 +21,11 @@
                         </el-dropdown-menu>
                     </el-dropdown>
                 </template>
+                <template slot = "menuType" slot-scope = "{row}">
+                    <div>
+                        {{menuType.find(item=>item.itemValue == row.menuType).itemText}}
+                    </div>
+                </template>
                 <template slot="oper" slot-scope="scope">
                     <span>
                          <span class="text-blue-500 text-base cursor-pointer">
@@ -116,7 +121,8 @@
                             },
                             {
                                 label: '菜单类型',
-                                prop: 'menuType'
+                                prop: 'menuType',
+                                slot : true
                             },
                             {
                                 label: '图标',
@@ -194,8 +200,14 @@
                 },
             }
         },
+        computed : {
+            ...mapState({
+                menuType : ({dict}) => dict.menuType,
+            })
+        },
         methods: {
             ...mapActions({
+                getMenuType : 'GET_MENU_TYPE',
                 getAllMenus: 'GET_ALL_MENUS'
             }),
             selectionChange(selection) {
@@ -236,7 +248,25 @@
                 })
             },
             editMenu({row}) {
-
+                this.drawer = {
+                    ...this.drawer,
+                    show: true,
+                    name : 'updateMenu',
+                    width: 500,
+                    title: '修改',
+                }
+                this.component = {
+                    ...this.component,
+                    type: Modify,
+                    ref: 'add',
+                    data: {
+                        ...row
+                    }
+                }
+                let {name} = this.drawer
+                this.$nextTick(() => {
+                    this.$modal.show(name)
+                })
             },
             handleDetail({row}) {
 
@@ -312,6 +342,9 @@
                     loading: false
                 }
             },
+        },
+        created(){
+            this.getMenuType()
         }
     }
 </script>
