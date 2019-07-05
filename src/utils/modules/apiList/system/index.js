@@ -38,5 +38,6 @@ export default {
     sys_menu_delete_batch : '/sys/permission/deleteBatch',
     sys_menu_add : '/sys/permission/add',
     sys_menu_edit : '/sys/permission/edit',
+    sys_menu_query_data_rule : '/sys/permission/queryPermissionRule'
 
 }

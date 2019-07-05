@@ -1,6 +1,6 @@
 <template>
     <div class="modify">
-        <el-form :model="form" l="form" :rules="rules" ref = "form" label-width="100px" :status-icon = "true">
+        <el-form :model="form" :rules="rules" ref = "form" label-width="100px" :status-icon = "true">
             <el-form-item label = "菜单类型">
                 <el-radio-group v-model = "form.menuType">
                     <template v-for = "item in menuType">
@@ -14,6 +14,7 @@
                 </el-form-item>
                     <el-form-item label = "父级菜单">
                         <el-cascader
+                                v-model="form.parentId"
                                 :options="menus"
                                 :props="{ checkStrictly: true,label:'name',value : 'id'}"
                                 clearable
@@ -26,7 +27,7 @@
                         <el-input v-model = "form.url" placeholder = "请输入菜单路径" clearable></el-input>
                     </el-form-item>
                     <el-form-item label = "授权标识">
-                        <el-input v-model = "form.url" placeholder = "多个用逗号分隔, 如: user:list,user:create" clearable></el-input>
+                        <el-input v-model = "form.perms" placeholder = "多个用逗号分隔, 如: user:list,user:create" clearable></el-input>
                     </el-form-item>
                     <el-form-item label = "授权策略">
                         <el-radio-group v-model = "form.permsType">
@@ -131,7 +132,8 @@
                     hide: false,                    //隐藏路由
                     alwaysShow: false,              //聚合路由
                     permsType : '',                  //授权策略
-                    status : '1'                      //状态
+                    perms : '',                      //授权标识
+                    status : ''                      //状态
                 },
                 rules : {
                     name : [
@@ -172,11 +174,6 @@
             },
         },
         methods: {
-            ...mapActions({
-                getMenuType : 'GET_MENU_TYPE',
-                getPermissionType : 'GET_PERMISSION_TYPE',
-                getValidStatus : 'GET_VALID_STATUS',
-            }),
             checkIcons(){
                 let {name} = this.dialog
                 let {icon} = this.form
@@ -212,6 +209,7 @@
                 }
             },
             async saveData() {
+                debugger;
                 let {parentId} = this.form
                 let {id} = this.data
                 let params = {
@@ -222,7 +220,8 @@
                 if(id){                     //编辑
                     params = {
                         ...this.data,
-                        ...params
+                        ...params,
+                        parentId : Array.isArray(parentId) ? parentId.slice(-1).join('') : parentId
                     }
                     res = await http.put(apiList.sys_menu_edit, params)
                 }else{
@@ -238,8 +237,7 @@
             }
         },
         mounted() {
-            this.getPermissionType()
-            this.getValidStatus()
+
         }
     }
 </script>

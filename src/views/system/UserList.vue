@@ -58,8 +58,8 @@
             </el-form>
         </el-row>
         <el-row class="my-3">
-            <el-button plain icon="el-icon-plus" @click="addUser">添加用户</el-button>
-            <el-button plain icon="iconfont icon-wy-upload" @click = "fileImport">导入</el-button>
+            <el-button plain icon="el-icon-plus" @click="addUser" v-has = "'user:add'">添加用户</el-button>
+            <el-button plain icon="iconfont icon-wy-upload" v-has = "'user:import'" @click = "fileImport">导入</el-button>
             <el-button plain icon="iconfont icon-wy-download" @click="fileExport">导出</el-button>
             <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
                 <el-button plain>

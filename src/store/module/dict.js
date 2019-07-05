@@ -7,6 +7,7 @@ export default {
         permissionType : [],                                 //授权策略
         menuType : [],                                        //菜单类型
         validStatus : [],                                     //有效无效状态
+        ruleConditions : [],                                    //条件规则
     },
     mutations: {
         SET_SEX(state,sex){
@@ -26,6 +27,9 @@ export default {
         },
         SET_VALID_STATUS(state,validStatus){
             state.validStatus = validStatus
+        },
+        SET_RULE_CONDITIONS(state,ruleConditions){
+            state.ruleConditions = ruleConditions
         },
     },
     actions : {
@@ -71,5 +75,13 @@ export default {
                 commit('SET_VALID_STATUS',records)
             }
         },
+        async GET_RULE_CONDITIONS({commit}){
+            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'rule_conditions'})
+            if(success) {
+                let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
+                commit('SET_RULE_CONDITIONS',records)
+            }
+        },
+
     }
 }

@@ -72,7 +72,7 @@
         >
             <component :is="component.type" :ref="component.ref" :data="component.data"
                        @successClose="successClose"></component>
-            <div class="dialog-footer p-2 w-full flex justify-end">
+            <div class="dialog-footer p-2 w-full flex justify-end" v-if = "component.showFooter">
                 <div>
                     <el-popover
                             class="mx-2"
@@ -100,6 +100,8 @@
     import DragDrawer from '@/components/dragDrawer'
     import DragDialog from '@/components/dragDialog'
     import Modify from './menuList/Modify'
+    import Read from './menuList/Read'
+    import DataRule from './menuList/DataRule'
 
     export default {
         name: "PermissionList",
@@ -193,6 +195,7 @@
                 component: {
                     type: Modify,
                     ref: 'modify',
+                    showFooter : true,
                     data: {}
                 },
                 popover: {
@@ -208,7 +211,9 @@
         methods: {
             ...mapActions({
                 getMenuType : 'GET_MENU_TYPE',
-                getAllMenus: 'GET_ALL_MENUS'
+                getAllMenus: 'GET_ALL_MENUS',
+                getPermissionType : 'GET_PERMISSION_TYPE',
+                getValidStatus : 'GET_VALID_STATUS',
             }),
             selectionChange(selection) {
                 debugger;
@@ -240,6 +245,7 @@
                     ...this.component,
                     type: Modify,
                     ref: 'add',
+                    showFooter : true,
                     data: {}
                 }
                 let {name} = this.drawer
@@ -258,7 +264,8 @@
                 this.component = {
                     ...this.component,
                     type: Modify,
-                    ref: 'add',
+                    ref: 'update',
+                    showFooter : true,
                     data: {
                         ...row
                     }
@@ -269,10 +276,48 @@
                 })
             },
             handleDetail({row}) {
-
+                this.drawer = {
+                    ...this.drawer,
+                    show: true,
+                    name : 'readMenu',
+                    width: 500,
+                    title: '详情',
+                }
+                this.component = {
+                    ...this.component,
+                    type: Read,
+                    ref: 'read',
+                    showFooter : false,
+                    data: {
+                        ...row
+                    }
+                }
+                let {name} = this.drawer
+                this.$nextTick(() => {
+                    this.$modal.show(name)
+                })
             },
             handleDataRule({row}) {
-
+                this.drawer = {
+                    ...this.drawer,
+                    show: true,
+                    name : 'dataRule',
+                    width: 800,
+                    title: '数据权限规则',
+                }
+                this.component = {
+                    ...this.component,
+                    type: DataRule,
+                    ref: 'dataRule',
+                    showFooter : false,
+                    data: {
+                        ...row
+                    }
+                }
+                let {name} = this.drawer
+                this.$nextTick(() => {
+                    this.$modal.show(name)
+                })
             },
             handleDel({row}) {
                 this.confirmDeleteBatch(row.id)
@@ -345,6 +390,8 @@
         },
         created(){
             this.getMenuType()
+            this.getPermissionType()
+            this.getValidStatus()
         }
     }
 </script>

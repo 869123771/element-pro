@@ -3,16 +3,18 @@ import App from './App.vue'
 import router from './router'
 import {store} from './store'
 import './permission'
+import importDirective from '@/directive'
 
 Vue.config.productionTip = false
 import Element from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
 import Avue from '@smallwei/avue';
 import '@smallwei/avue/lib/index.css';
-import importDirective from '@/directive'
+
+
 import VModal from 'vue-js-modal'
 //import './element'
-import {constant} from '@/utils'
+import {constant,hasPermission} from '@/utils'
 
 let {config: {baseUrl: {domianURL, imgDomainURL, pdfDomainURL,proxyURL}}} = constant
 
@@ -27,6 +29,8 @@ importDirective(Vue)
 
 Vue.use(Element, {size: 'medium', zIndex: 2000});
 Vue.use(Avue)
+Vue.use(hasPermission)
+
 Vue.use(VModal, {
     dialog: true,
     dynamic: true,
