@@ -285,13 +285,6 @@
                     }
                 }
             },
-            openPopover(id){
-                debugger;
-                this.$refs[id].doToggle()
-            },
-            closePopover(id){
-                this.$refs[id].doDestroy()
-            },
             popoverConfirm() {
                 this.drawer = {
                     ...this.drawer,
@@ -348,7 +341,8 @@
 
             },
             uploadSuccess() {
-
+                this.$modal.hide('fileUpload')
+                this.queryList()
             },
             edit(row) {
                 debugger;

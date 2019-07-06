@@ -19,13 +19,14 @@
                             check-strictly
                             node-key="id"
                             highlight-current
+                            :expand-on-click-node = "false"
                             :data="tree.data"
                             :props="tree.defaultProps"
                             :filter-node-method="filterNode"
                             @node-click="nodeClick"
                             @check="treeCheck"
                     >
-                        <span class="mt-1 custom-tree-node" slot-scope="{ node, data}">
+                        <span class="custom-tree-node" slot-scope="{ node, data}">
                             <span>{{ node.label }}</span>
                             <span class="custom-tree-node-control text-gray-900 text-base">
                                 <el-tooltip content="新增子部门" placement="top">

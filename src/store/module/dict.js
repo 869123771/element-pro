@@ -8,6 +8,7 @@ export default {
         menuType : [],                                        //菜单类型
         validStatus : [],                                     //有效无效状态
         ruleConditions : [],                                    //条件规则
+        dictItemStatus : [],                                    //字典状态
     },
     mutations: {
         SET_SEX(state,sex){
@@ -30,6 +31,9 @@ export default {
         },
         SET_RULE_CONDITIONS(state,ruleConditions){
             state.ruleConditions = ruleConditions
+        },
+        SET_DICT_ITEM_STATUS(state,dictItemStatus){
+            state.dictItemStatus = dictItemStatus
         },
     },
     actions : {
@@ -80,6 +84,13 @@ export default {
             if(success) {
                 let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
                 commit('SET_RULE_CONDITIONS',records)
+            }
+        },
+        async GET_DICT_ITEM_STATUS({commit}){
+            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'dict_item_status'})
+            if(success) {
+                let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
+                commit('SET_DICT_ITEM_STATUS',records)
             }
         },
 

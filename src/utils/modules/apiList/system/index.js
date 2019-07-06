@@ -42,4 +42,13 @@ export default {
     sys_menu_add_add_permission_rule: '/sys/permission/addPermissionRule',
     sys_menu_add_edit_permission_rule: '/sys/permission/editPermissionRule',
     sys_menu_add_delete_permission_rule: '/sys/permission/deletePermissionRule',
+    sys_dict_query_list : '/sys/dict/list',
+    sys_dict_add : '/sys/dict/add',
+    sys_dict_edit : '/sys/dict/edit',
+    sys_dict_delete : '/sys/dict/delete',
+    sys_dict_export : '/sys/dict/exportXls',
+    sys_dict_import : '/sys/dict/importExcel',
+    sys_dict_item_add : '/sys/dictItem/add',
+    sys_dict_item_edit : '/sys/dictItem/edit',
+    sys_dict_item_delete : '/sys/dictItem/delete',
 }
