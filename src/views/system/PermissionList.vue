@@ -38,19 +38,11 @@
                             <el-dropdown-menu slot="dropdown">
                                 <template v-for="item in dropDownItem">
                                     <template v-if="item.popover">
-                                        <el-popover placement="top" width="160"
-                                                    v-model="item.visible"
-                                        >
-                                            <p class="pb-3">{{item.popText}}</p>
-                                            <div class="text-right">
-                                                <el-button size="mini" type="text" @click="item.visible = false">取消
-                                                </el-button>
-                                                <el-button type="primary" size="mini"
-                                                           @click.native="item.action(scope)">确定
-                                                </el-button>
+                                        <popover-confirm @confirm = "item.action(scope)">
+                                            <div slot="popover-content">
+                                                <el-dropdown-item>{{item.label}}</el-dropdown-item>
                                             </div>
-                                            <el-dropdown-item slot="reference">{{item.label}}</el-dropdown-item>
-                                        </el-popover>
+                                        </popover-confirm>
                                     </template>
                                     <template v-else>
                                          <el-dropdown-item
@@ -73,19 +65,13 @@
             <component :is="component.type" :ref="component.ref" :data="component.data"
                        @successClose="successClose"></component>
             <div class="dialog-footer p-2 w-full flex justify-end" v-if = "component.showFooter">
-                <div>
-                    <el-popover
-                            class="mx-2"
-                            placement="top"
-                            width="160"
-                            v-model="popover.drawerCancel">
-                        <p>确定要关闭吗</p>
-                        <div class="text-right mt-3">
-                            <el-button size="mini" type="text" @click="popover.drawerCancel = false">取消</el-button>
-                            <el-button type="primary" size="mini" @click="popoverConfirm">确定</el-button>
+                <div class = "flex">
+                    <popover-confirm @confirm = "popoverConfirm" class="mx-2">
+                        <div slot = "popover-title">确定要关闭吗</div>
+                        <div slot="popover-content">
+                            <el-button plain >取消</el-button>
                         </div>
-                        <el-button plain slot="reference">取消</el-button>
-                    </el-popover>
+                    </popover-confirm>
                     <el-button type="primary" @click="submit">提交</el-button>
                 </div>
             </div>
@@ -102,12 +88,14 @@
     import Modify from './menuList/Modify'
     import Read from './menuList/Read'
     import DataRule from './menuList/DataRule'
+    import PopoverConfirm from '@/components/popoverConfirm'
 
     export default {
         name: "PermissionList",
         components: {
             DragDrawer,
-            DragDialog
+            DragDialog,
+            PopoverConfirm
         },
         data() {
             let {table} = constant
@@ -163,24 +151,18 @@
                         icon: '',
                         action: this.handleDetail,
                         popover: false,
-                        visible: '',
-                        popText: ''
                     },
                     {
                         label: '数据规则',
                         icon: '',
                         action: this.handleDataRule,
                         popover: false,
-                        visible: '',
-                        popText: ''
                     },
                     {
                         label: '删除',
                         icon: '',
                         action: this.handleDel,
                         popover: true,
-                        visible: false,
-                        popText: '确定删除吗'
                     },
                 ],
                 show: {
@@ -197,9 +179,6 @@
                     ref: 'modify',
                     showFooter : true,
                     data: {}
-                },
-                popover: {
-                    drawerCancel: false
                 },
             }
         },
@@ -302,7 +281,7 @@
                     ...this.drawer,
                     show: true,
                     name : 'dataRule',
-                    width: 800,
+                    width: 600,
                     title: '数据权限规则',
                 }
                 this.component = {
@@ -326,10 +305,6 @@
                 this.drawer = {
                     ...this.drawer,
                     show: false
-                }
-                this.popover = {
-                    ...this.popover,
-                    drawerCancel: false
                 }
             },
             submit() {

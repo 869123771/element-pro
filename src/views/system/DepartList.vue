@@ -10,7 +10,7 @@
                         <el-button plain icon="el-icon-close" v-show="show.delete" @click="deleteBatch">批量删除</el-button>
                     </div>
                     <div class="my-3">
-                        <el-input size="medium" v-model="tree.filterDept" @input = "filterText"></el-input>
+                        <el-input size="medium" v-model="tree.filterDept" @input="filterText"></el-input>
                     </div>
                     <el-tree
                             ref="tree"
@@ -21,11 +21,24 @@
                             highlight-current
                             :data="tree.data"
                             :props="tree.defaultProps"
-                            :render-content="renderTree"
                             :filter-node-method="filterNode"
                             @node-click="nodeClick"
                             @check="treeCheck"
-                    ></el-tree>
+                    >
+                        <span class="mt-1 custom-tree-node" slot-scope="{ node, data}">
+                            <span>{{ node.label }}</span>
+                            <span class="custom-tree-node-control text-gray-900 text-base">
+                                <el-tooltip content="新增子部门" placement="top">
+                                    <i class="el-icon-plus px-1" @click = "addChildDetp(node,data)"></i>
+                                </el-tooltip>
+                                <popover-confirm @confirm="confirmDeleteBatch(data.id)">
+                                    <div slot="popover-content">
+                                        <i class="el-icon-minus"></i>
+                                    </div>
+                                </popover-confirm>
+                            </span>
+                        </span>
+                    </el-tree>
                 </el-card>
             </el-col>
             <el-col :span="12" class="pl-2">
@@ -40,9 +53,9 @@
         </el-row>
         <drag-dialog :drag-dialog="dialog" @confirm="confirmAdd">
             <component
-                    :is = "component.is"
+                    :is="component.is"
                     :ref="component.ref"
-                    :data = "component.data"
+                    :data="component.data"
                     @closeDialog="closeDialog"></component>
         </drag-dialog>
         <file-upload :file-upload="fileUpload" @uploadSuccess="uploadSuccess"></file-upload>
@@ -58,6 +71,8 @@
     import {phoneCheck} from '@/utils/modules/validate'
     import {downloadFile} from '@/utils/modules/tools'
 
+    import PopoverConfirm from '@/components/popoverConfirm'
+
     let customParams = {
         flag: true,
     }
@@ -72,7 +87,8 @@
         components: {
             DragDialog,
             FileUpload,
-            Add
+            Add,
+            PopoverConfirm
         },
         data() {
             return {
@@ -86,7 +102,6 @@
                         children: 'children',
                         label: 'departName'
                     },
-                    visible : false
                 },
                 form: {
                     option: {
@@ -147,10 +162,10 @@
                     title: '新增',
                     showFooter: true,
                 },
-                component : {
-                    is : Add,
-                    ref : 'addDept',
-                    data : {}
+                component: {
+                    is: Add,
+                    ref: 'addDept',
+                    data: {}
                 },
                 fileUpload: {
                     action: uploadAction()
@@ -178,31 +193,8 @@
             ...mapActions({
                 getAllDepts: 'GET_ALL_DEPTS',
             }),
-            renderTree(h, {node, data, store}) {
-                let {id} = data
-                return (
-                    <span class="custom-tree-node">
-                        <span>{node.label}</span>
-                        <span class="custom-tree-node-control text-gray-900 text-base">
-                            <el-tooltip content="新增子部门" placement = "top">
-                                <i class="el-icon-plus px-1" onClick={()=>this.addChildDetp(node,data)}></i>
-                            </el-tooltip>
-                            <el-popover placement="top" width="160" value = {this.tree.visible}>
-                                <p class="pb-3">确定要删除吗</p>
-                                <div class="text-right">
-                                    <el-button size="mini" type="text" onClick = {()=>this.closeTreePopover()}>取消</el-button>
-                                    <el-button type="primary" size="mini" onClick = {()=>this.confirmDeleteBatch(id)}>确定
-                                    </el-button>
-                                </div>
-                                <span slot="reference">
-                                    <i class="el-icon-minus"></i>
-                                </span>
-                            </el-popover>
-                        </span>
-                    </span>
-                );
-            },
-            filterText(val){
+
+            filterText(val) {
                 this.$refs.tree.filter(val);
             },
             filterNode(value, data) {
@@ -226,37 +218,29 @@
                 this.$modal.show(name)
                 this.dialog = {
                     ...this.dialog,
-                    title : '新增部门'
+                    title: '新增部门'
                 }
                 this.component = {
                     ...this.component,
-                    data : {}
+                    data: {}
                 }
             },
-            closeTreePopover(){
+            closeTreePopover(id) {
                 debugger;
-                this.tree = {
-                    ...this.tree,
-                    visible : true
-                }
-                this.$nextTick(()=>{
-                    this.tree = {
-                        ...this.tree,
-                        visible : false
-                    }
-                })
+                console.log(this.$refs[id])
+                this.$refs[id].doClose()
             },
-            addChildDetp(node,data){
+            addChildDetp(node, data) {
                 debugger;
                 let {name} = this.dialog
                 this.$modal.show(name)
                 this.dialog = {
                     ...this.dialog,
-                    title : '新增子部门'
+                    title: '新增子部门'
                 }
                 this.component = {
                     ...this.component,
-                    ref : 'addChildDept',
+                    ref: 'addChildDept',
                     data
                 }
             },
@@ -396,10 +380,13 @@
                 padding-right: 8px;
                 &-control {
                     display: none;
+                    position: absolute;
+                    right: 0.25rem;
                 }
                 &:hover {
-                   .custom-tree-node-control {
-                        display: inline-block;
+                    .custom-tree-node-control {
+                        display: flex;
+                        align-items: center;
                     }
                 }
             }

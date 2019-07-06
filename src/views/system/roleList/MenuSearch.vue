@@ -13,9 +13,9 @@
                         :props="value.defaultProps"
                         :default-checked-keys="value.defaultCheckedkeys"
                 >
-                <span class="flex items-center" slot-scope="{ node, data}" @click="dataRule(node,data)">
+                <span class="mt-1" slot-scope="{ node, data}" @click="dataRule(node,data)">
                     <span>{{ node.label }}</span>
-                    <span v-if="data.ruleFlag" class="fa fa-fw fa-align-left text-red-600"></span>
+                    <span v-if="data.ruleFlag" class="fa fa-fw fa-align-left text-red-600 pl-1"></span>
                 </span>
                 </el-tree>
             </template>

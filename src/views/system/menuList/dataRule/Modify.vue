@@ -14,8 +14,14 @@
 
 <script>
     import {mapState} from 'vuex'
+    import {http,apiList,sweetAlert} from '@/utils'
     export default {
         name: "Modify",
+        props : {
+            data : {
+                type : Object
+            }
+        },
         data(){
             return {
                 form: {
@@ -72,16 +78,64 @@
                 },
             }
         },
-        methods : {
-            setRuleConditions(){
-                this.$refs.form.updateDic('ruleConditions', this.ruleConditions)
-            },
-        },
         computed : {
             ...mapState({
                 ruleConditions : ({dict}) => dict.ruleConditions,
                 validStatus : ({dict}) => dict.validStatus
             })
+        },
+        watch : {
+            data : {
+                handler(props) {
+                    if (!this.validatenull(props)) {
+                        let {model} = this.form
+                        this.form = {
+                            ...this.form,
+                            model : {
+                                ...model,
+                                ...props
+                            }
+                        }
+                    }
+                },
+                immediate : true
+            },
+        },
+        methods : {
+            setRuleConditions(){
+                this.$refs.form.updateDic('ruleConditions', this.ruleConditions)
+            },
+            saveData(){
+                let {id,permissionId} = this.data
+                let {model} = this.form
+                let params = {
+                    ...model,
+                    permissionId,
+                }
+                if(id){
+                    this.updateRule(params)
+                }else{
+                    this.addRule(params)
+                }
+            },
+            async addRule(params){
+                let {success,message} = await http.post(apiList.sys_menu_add_add_permission_rule,params)
+                if (success) {
+                    sweetAlert.successWithTimer(message)
+                    this.$emit('modifySuccess')
+                } else {
+                    sweetAlert.error(message)
+                }
+            },
+            async updateRule(params){
+                let {success,message} = await http.put(apiList.sys_menu_add_edit_permission_rule,params)
+                if (success) {
+                    sweetAlert.successWithTimer(message)
+                    this.$emit('modifySuccess')
+                } else {
+                    sweetAlert.error(message)
+                }
+            }
         },
         mounted(){
             this.setRuleConditions()

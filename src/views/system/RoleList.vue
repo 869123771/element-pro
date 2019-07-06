@@ -36,37 +36,23 @@
                         </el-dropdown-menu>
                     </el-dropdown>
                 </template>
-                <template slot="oper" slot-scope="scope">
+                <template slot="oper" slot-scope="{row}">
                     <span>
                          <span class="text-blue-500 text-base cursor-pointer">
-                            <i class="fa fa-fw fa-pencil" @click="edit(scope)"></i>
+                            <i class="fa fa-fw fa-pencil" @click="edit(row)"></i>
                         </span>
-                        <el-dropdown placement="bottom" className="dropdown">
+                        <el-dropdown placement="bottom" class="dropdown">
                             <span class="text-blue-500 text-base">
                               <i class="fa fa-fw fa-ellipsis-h"></i>
                             </span>
                             <el-dropdown-menu slot="dropdown">
-                                <template v-for="item in dropDownItem">
-                                    <template v-if="item.popover">
-                                        <el-popover placement="top" width="160"
-                                                    v-model="item.visible"
-                                        >
-                                            <p class="pb-3">{{item.popText}}</p>
-                                            <div class="text-right">
-                                                <el-button size="mini" type="text" @click="item.visible = false">取消
-                                                </el-button>
-                                                <el-button type="primary" size="mini"
-                                                           @click.native="item.action(scope)">确定
-                                                </el-button>
-                                            </div>
-                                            <el-dropdown-item slot="reference">{{item.label}}</el-dropdown-item>
-                                        </el-popover>
-                                    </template>
-                                    <template v-else>
-                                         <el-dropdown-item
-                                                 @click.native="()=>{item.action(scope)}">{{item.label}}</el-dropdown-item>
-                                    </template>
-                                </template>
+                                <popover-confirm @confirm = "handleDel(row)">
+                                    <div slot="popover-content">
+                                        <el-dropdown-item>删除</el-dropdown-item>
+                                    </div>
+                                </popover-confirm>
+                                <el-dropdown-item
+                                                 @click.native="handleAuth(row)">授权</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </span>
@@ -92,19 +78,13 @@
                             @shrinkAll="shrinkAll"
                     ></tree-operation>
                 </div>
-                <div>
-                    <el-popover
-                            class="mx-2"
-                            placement="top"
-                            width="160"
-                            v-model="popover.drawerCancel">
-                        <p>确定要关闭吗</p>
-                        <div class="text-right mt-3">
-                            <el-button size="mini" type="text" @click="popover.drawerCancel = false">取消</el-button>
-                            <el-button type="primary" size="mini" @click="popoverConfirm">确定</el-button>
+                <div class = "flex">
+                    <popover-confirm @confirm = "popoverConfirm" class="mx-2">
+                        <div slot = "popover-title">确定要关闭吗</div>
+                        <div slot="popover-content">
+                            <el-button plain >取消</el-button>
                         </div>
-                        <el-button plain slot="reference">取消</el-button>
-                    </el-popover>
+                    </popover-confirm>
                     <el-button type="primary" @click="submit">提交</el-button>
                 </div>
             </div>
@@ -126,6 +106,7 @@
     import TreeOperation from '@/views/common/TreeOperation'
     import Modify from './roleList/Modify'
     import Auth from './roleList/Auth'
+    import PopoverConfirm from '@/components/popoverConfirm'
 
     const uploadAction = () => {
         let {config: {baseUrl: {proxyURL}}} = constant
@@ -141,7 +122,8 @@
             DragDialog,
             FileUpload,
             TreeOperation,
-            Modify
+            Modify,
+            PopoverConfirm
         },
         data() {
             let {table} = constant
@@ -174,24 +156,6 @@
                     },
                     modal: {}
                 },
-                dropDownItem: [
-                    {
-                        label: '授权',
-                        icon: '',
-                        action: this.handleAuth,
-                        popover: false,
-                        visible: '',
-                        popText: ''
-                    },
-                    {
-                        label: '删除',
-                        icon: '',
-                        action: this.handleDel,
-                        popover: true,
-                        visible: false,
-                        popText: '确定删除吗'
-                    },
-                ],
                 table: {
                     data: [],
                     option: {
@@ -321,6 +285,13 @@
                     }
                 }
             },
+            openPopover(id){
+                debugger;
+                this.$refs[id].doToggle()
+            },
+            closePopover(id){
+                this.$refs[id].doDestroy()
+            },
             popoverConfirm() {
                 this.drawer = {
                     ...this.drawer,
@@ -379,7 +350,7 @@
             uploadSuccess() {
 
             },
-            edit({row}) {
+            edit(row) {
                 debugger;
                 this.dialog = {
                     ...this.dialog,
@@ -418,10 +389,10 @@
                     sweetAlert.error(message)
                 }
             },
-            handleDel({row: {id: ids}}) {
+            handleDel({id: ids}) {
                 this.confirmDeleteBatch(ids)
             },
-            handleAuth({row}) {
+            handleAuth(row) {
                 debugger;
                 this.drawer = {
                     ...this.drawer,

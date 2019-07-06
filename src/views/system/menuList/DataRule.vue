@@ -20,25 +20,25 @@
             <template slot="menuLeft">
                 <el-button plain type="primary" icon="el-icon-plus" @click="addRule">新增</el-button>
             </template>
-            <template slot="oper" slot-scope="scope">
+            <template slot="oper" slot-scope="{row}">
                     <span>
                          <span class="text-blue-500 text-base cursor-pointer">
-                            <i class="fa fa-fw fa-pencil" @click="edit(scope)"></i>
+                            <i class="fa fa-fw fa-pencil" @click="edit(row)"></i>
                         </span>
                         <span class="text-blue-500 text-base cursor-pointer px-1">
                              <el-popover placement="top"
                                          width="160"
-                                         v-model="popover.visible"
+                                         :ref="row.id"
                              >
                                  <p class="pb-3">确定要删除吗</p>
                                  <div class="text-right">
-                                    <el-button size="mini" type="text" @click="popover.visible = false">取消
+                                    <el-button size="mini" type="text" @click="closePopover(row.id)">取消
                                     </el-button>
                                     <el-button type="primary" size="mini"
-                                               @click="confirmDeleteBatch(scope.row.id)">确定
+                                               @click="confirmDeleteBatch(row.id)">确定
                                     </el-button>
                                 </div>
-                                 <i slot="reference" class="anticon icon-delete"></i>
+                                 <i slot="reference" class="iconfont icon-wy-delete2"></i>
                              </el-popover>
                         </span>
                     </span>
@@ -127,9 +127,6 @@
                     model: {},
                     loading: false,
                 },
-                popover: {
-                    visible: false,
-                },
                 page: {
                     currentPage: 1,
                     pageSize: 10,
@@ -173,7 +170,11 @@
                 }
                 this.queryList()
             },
+            closePopover(id){
+                this.$refs[id].doClose();
+            },
             addRule() {
+                let {id} = this.data
                 this.dialog = {
                     ...this.dialog,
                     title: '新增',
@@ -181,24 +182,57 @@
                 }
                 this.modify = {
                     ...this.modify,
-                    data: {}
+                    data: {
+                        permissionId: id
+                    }
                 }
                 let {name} = this.dialog
                 this.$nextTick(() => {
                     this.$modal.show(name)
                 })
             },
-            edit(scope) {
-
+            edit(row) {
+                let {id} = this.data
+                this.dialog = {
+                    ...this.dialog,
+                    title: '修改',
+                    name: 'updateRule',
+                }
+                this.modify = {
+                    ...this.modify,
+                    data: {
+                        permissionId: id,
+                        ...row
+                    }
+                }
+                let {name} = this.dialog
+                this.$nextTick(() => {
+                    this.$modal.show(name)
+                })
             },
             confirmAdd(){
-
+                let modifyRef = this.$refs.modify
+                modifyRef.$refs.form.validate(valid => {
+                    if (valid) {
+                        this.dialog = {
+                            ...this.dialog,
+                            loading: true
+                        }
+                        modifyRef.saveData()
+                    }
+                    this.dialog = {
+                        ...this.dialog,
+                        loading: false
+                    }
+                })
             },
             modifySuccess(){
-
+                let {name} = this.dialog
+                this.$modal.hide(name)
+                this.queryList()
             },
-            async confirmDeleteBatch(ids) {
-                let {success, message} = await http.delete(apiList.sys_role_delete_batch, {ids})
+            async confirmDeleteBatch(id) {
+                let {success, message} = await http.delete(apiList.sys_menu_add_delete_permission_rule, {id})
                 if (success) {
                     sweetAlert.successWithTimer(message)
                     this.queryList()

@@ -190,7 +190,7 @@ module.exports = {
         //   errors: true
         // },
         open: IS_PROD,
-        host: "localhost",
+        //host: "localhost",
         port: 8088,
         https: false,
         hotOnly: true,

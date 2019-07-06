@@ -122,6 +122,7 @@
     import Read from './userList/Read'
     import Modify from './userList/Modify'
     import ResetPwd from './userList/ResetPwd'
+    import PopDropdown from './userList/PopDropdown'
 
     const uploadAction = () => {
         let {config: {baseUrl: {proxyURL}}} = constant
@@ -135,7 +136,8 @@
             DragDialog,
             FileUpload,
             lbTable,
-            ResetPwd
+            ResetPwd,
+            PopDropdown
         },
         data() {
             return {
@@ -173,51 +175,6 @@
                 props: {
                     resetPwd: {}
                 },
-                popover: {
-                    visible: false
-                },
-                dropDownItem: [
-                    {
-                        label: '详情',
-                        icon: '',
-                        action: 'handleDetail',
-                        popover: false,
-                        visible: false,
-                        popText: ''
-                    },
-                    {
-                        label: '密码',
-                        icon: '',
-                        action: 'handlePwd',
-                        popover: false,
-                        visible: false,
-                        popText: ''
-                    },
-                    {
-                        label: '删除',
-                        icon: '',
-                        action: 'handleDel',
-                        popover: true,
-                        visible: false,
-                        popText: '确定删除吗'
-                    },
-                    {
-                        label: '冻结',
-                        icon: '',
-                        action: 'frozen',
-                        popover: true,
-                        visible: false,
-                        popText: '确定冻结吗'
-                    },
-                    {
-                        label: '代理人',
-                        icon: '',
-                        action: '',
-                        popover: false,
-                        visible: '',
-                        popText: ''
-                    },
-                ],
                 table: {
                     column: [
                         {type: 'selection', fixed: true},
@@ -227,47 +184,25 @@
                             width: '100',
                             render: (h, scope) => {
                                 return (
-                                    <div>
-                                        <span class="text-blue-500 text-base cursor-pointer">
-                                            <i class="fa fa-fw fa-pencil" onClick={() => this.edit(scope)}></i>
-                                        </span>
-                                        <el-dropdown placement="bottom" className="dropdown">
-                                              <span class="text-blue-500 text-base">
-                                                  <i class="fa fa-fw fa-ellipsis-h"></i>
-                                              </span>
-                                            <el-dropdown-menu slot="dropdown">
-                                                {
-                                                    this.dropDownItem.map(({popover, popText, visible, label, icon, action}, index) => {
-                                                        return (
-                                                            popover ? <el-popover
-                                                                    placement="top"
-                                                                    width="160"
-                                                                    value={visible}
-                                                                >
-                                                                    <p class="pb-3">{popText}</p>
-                                                                    <div class="text-right">
-                                                                        <el-button size="mini" type="text"
-                                                                                   nativeOnClick={() => this.handleCancel(index)}>取消
-                                                                        </el-button>
-                                                                        <el-button type="primary" size="mini"
-                                                                                   nativeOnClick={() => this[action](scope)}>确定
-                                                                        </el-button>
-                                                                    </div>
-                                                                    <el-dropdown-item slot="reference">
-                                                                        {label}
-                                                                    </el-dropdown-item>
-                                                                </el-popover> :
-                                                                <el-dropdown-item
-                                                                    nativeOnClick={() => this[action](scope)}>
-                                                                    {label}
-                                                                </el-dropdown-item>
-
-                                                        )
-                                                    })
-                                                }
-                                            </el-dropdown-menu>
-                                        </el-dropdown>
-                                    </div>
+                                    h(PopDropdown,{
+                                        on : {
+                                            edit : ()=> {
+                                                this.edit(scope)
+                                            },
+                                            handleDetail : ()=> {
+                                                this.handleDetail(scope)
+                                            },
+                                            handlePwd : ()=> {
+                                                this.handlePwd(scope)
+                                            },
+                                            handleDel : ()=> {
+                                                this.handleDel(scope)
+                                            },
+                                            frozen : ()=> {
+                                                this.frozen(scope)
+                                            }
+                                        }
+                                    })
                                 )
                             },
                         },
@@ -337,7 +272,8 @@
 
             },
             uploadSuccess(){
-
+                this.$modal.hide('fileUpload')
+                this.queryList()
             },
             getAvatarView({row: {avatar}}) {
                 let {config: {baseUrl: {imgDomainURL}}} = constant
@@ -483,15 +419,7 @@
                         ...row
                     }
                 }
-            }
-            ,
-            handleCancel(index) {
-                this.$set(this.dropDownItem, index, {...this.dropDownItem[index], visible: true})
-                this.$nextTick(() => {
-                    this.$set(this.dropDownItem, index, {...this.dropDownItem[index], visible: false})
-                })
-            }
-            ,
+            },
             async handleDel(scope) {
                 debugger;
                 let {row: {id}} = scope
@@ -510,8 +438,7 @@
                     currentPage: 1
                 }
                 this.queryList()
-            }
-            ,
+            },
             reset() {
                 this.$refs.form.resetFields()
             }
