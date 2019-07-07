@@ -25,15 +25,11 @@
                 <div class="modal-header-control-close el-icon-close handle-icon hover:color-blue-500 hover:rotate-180" @click="close"></div>
             </div>
         </div>
-
-            <div class="modal-body">
-                <el-scrollbar>
-                <div :style="{maxHeight:dialog.maxHeight + 'px'}">
+        <el-scrollbar>
+            <div class="modal-body" :style="{maxHeight:dialog.maxHeight + 'px'}">
                 <slot></slot>
-                </div>
-                </el-scrollbar>
             </div>
-
+        </el-scrollbar>
         <div class="modal-footer text-center" v-if="dialog.showFooter">
             <el-button plain @click="close">关闭</el-button>
             <el-button type="primary" :loading="dialog.loading" @click="confirm">确认</el-button>

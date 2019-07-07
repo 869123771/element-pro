@@ -12,15 +12,16 @@
         </el-row>
         <el-row>
             <avue-crud
+                    ref = "crud"
                     :data="table.data"
                     :option="table.option"
                     :page="page"
                     :table-loading="table.loading"
-                    v-model="table.model"
                     @on-load="queryList"
                     @size-change="sizeChange"
                     @current-change="currentChange"
                     @selection-change="selectionChange"
+                    @cell-click = "cellClick"
             >
                 <template slot="menuLeft">
                     <el-button plain type="primary" icon="el-icon-plus" @click="addRole">新增</el-button>
@@ -58,6 +59,9 @@
                     </span>
                 </template>
             </avue-crud>
+        </el-row>
+        <el-row>
+            <role-maintenance :data = "role.data" v-show = "role.show"></role-maintenance>
         </el-row>
         <drag-drawer v-model="drawer.show"
                      :draggable="drawer.draggable"
@@ -106,6 +110,7 @@
     import TreeOperation from '@/views/common/TreeOperation'
     import Modify from './roleList/Modify'
     import Auth from './roleList/Auth'
+    import RoleMaintenance from './roleList/RoleMaintenance'
     import PopoverConfirm from '@/components/popoverConfirm'
 
     const uploadAction = () => {
@@ -123,6 +128,7 @@
             FileUpload,
             TreeOperation,
             Modify,
+            RoleMaintenance,
             PopoverConfirm
         },
         data() {
@@ -160,6 +166,7 @@
                     data: [],
                     option: {
                         ...table,
+                        highlightCurrentRow : true,
                         column: [
                             {
                                 label: '操作',
@@ -181,15 +188,16 @@
                             },
                             {
                                 label: '创建时间',
-                                prop: 'createTime'
+                                prop: 'createTime',
+                                sortable:true,
                             },
                             {
                                 label: '更新时间',
-                                prop: 'updateTime'
+                                prop: 'updateTime',
+                                sortable:true,
                             },
                         ]
                     },
-                    model: {},
                     loading: false,
                     selection: []
                 },
@@ -225,6 +233,10 @@
                 show: {
                     batch: false
                 },
+                role : {
+                    data : {},
+                    show :false,
+                },
                 fileUpload: {
                     action: uploadAction()
                 },
@@ -232,6 +244,9 @@
         },
         computed: {},
         methods: {
+            ...mapActions({
+                getPermissionList : 'GET_PERMISSION_LIST'
+            }),
             search() {
                 this.page = {
                     ...this.page,
@@ -375,6 +390,7 @@
                 let {success, message} = await http.post(apiList.sys_role_save_permission_by_role, params)
                 if (success) {
                     sweetAlert.successWithTimer(message)
+                    this.getPermissionList()                    //刷新菜单
                     this.drawer = {
                         ...this.drawer,
                         show: false
@@ -400,6 +416,19 @@
                     data: {
                         ...row
                     }
+                }
+            },
+            cellClick(row, column){
+                debugger;
+                let {property,type} = column
+                let exceptCell = ['oper']
+                if(type !== 'selection' && !exceptCell.includes(property)){
+                    this.role = {
+                        ...this.role,
+                        data : row,
+                        show : true
+                    }
+                    this.$refs.crud.setCurrentRow(row)
                 }
             },
             currentChange(currentPage) {
