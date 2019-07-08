@@ -14,13 +14,34 @@
     let customParams = {}
 
     export default {
-        name: "Add",
+        name: "Modify",
         props: {
             data: {
                 type: Object
             }
         },
         data() {
+            let {flag} = this.data
+            let handleData = flag ?
+                [{
+                    label: '上级部门',
+                    prop: 'parentId',
+                    readonly: true,
+                    span: 24
+                },
+                {
+                    label: '机构编码',
+                    prop: 'orgCode',
+                    disabled: true,
+                    span: 24
+                }] :
+                [{
+                    label: '上级部门',
+                    prop: 'parentId',
+                    disabled: true,
+                    span: 24
+                }]
+
             return {
                 form: {
                     option: {
@@ -34,12 +55,7 @@
                                     {required: true, message: '必填', trigger: 'change'}
                                 ]
                             },
-                            {
-                                label: '上级部门',
-                                prop: 'parentId',
-                                disabled: true,
-                                span: 24
-                            },
+                            ...handleData,
                             {
                                 label: '手机号',
                                 prop: 'mobile',
@@ -85,24 +101,39 @@
             data: {
                 handler(props) {
                     if (!this.validatenull(props)) {
+                        debugger;
                         let {model} = this.form
-                        let {id,departName} = props
-                        customParams = {
-                            ...customParams,
-                            parentId : id
-                        }
-                        this.form = {
-                            ...this.form,
-                            model: {
-                                ...model,
-                                ...props,
-                                departName : '',
-                                address : '',
-                                memo : '',
-                                parentId : departName
+                        let {id,departName,flag,parentId} = props
+                        if(flag){
+                            let {parentIdName} =  props
+                            this.form = {
+                                ...this.form,
+                                model: {
+                                    ...props,
+                                    parentId : parentIdName
+                                }
+                            }
+                            customParams = {
+                                ...customParams,
+                                parentId
+                            }
+                        }else{
+                            this.form = {
+                                ...this.form,
+                                model: {
+                                    ...model,
+                                    ...props,
+                                    departName : '',
+                                    address : '',
+                                    memo : '',
+                                    parentId : departName
+                                }
+                            }
+                            customParams = {
+                                ...customParams,
+                                parentId : id
                             }
                         }
-
                     }else{
                         customParams = {
                             ...customParams,
@@ -117,7 +148,16 @@
             ...mapActions({
                 getAllDepts: 'GET_ALL_DEPTS'
             }),
-            async saveData() {
+
+            saveData() {
+                let {flag} = this.data
+                if(flag){
+                    this.saveEdit()
+                }else{
+                    this.saveAdd()
+                }
+            },
+            async saveAdd(){
                 let {model:{departName,mobile,fax,address,departOrder,memo}} = this.form
                 let {parentId} = customParams
                 let params = {
@@ -127,7 +167,20 @@
                 let {success, message} = await http.post(apiList.sys_dept_add, params)
                 if (success) {
                     sweetAlert.successWithTimer(message)
-                    this.getAllDepts()
+                    this.$emit('closeDialog')
+                } else {
+                    sweetAlert.error(message)
+                }
+            },
+            async saveEdit(){
+                let {model} = this.form
+                let params = {
+                    ...model,
+                    parentId: customParams.parentId
+                }
+                let {success, message} = await http.put(apiList.sys_dept_edit, params)
+                if (success) {
+                    sweetAlert.successWithTimer(message)
                     this.$emit('closeDialog')
                 } else {
                     sweetAlert.error(message)

@@ -4,7 +4,7 @@
 
 @tailwind utilities;
 
-@variants hover {
+@variants focus,hover {
   .rotate-0 {
     transform: rotate(0deg);
   }

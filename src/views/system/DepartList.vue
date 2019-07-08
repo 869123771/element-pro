@@ -10,7 +10,7 @@
                         <el-button plain icon="el-icon-close" v-show="show.delete" @click="deleteBatch">批量删除</el-button>
                     </div>
                     <div class="my-3">
-                        <el-input size="medium" v-model="tree.filterDept" @input="filterText"></el-input>
+                        <el-input size="medium" v-model="tree.filterDept" @input="filterText" clearable suffix-icon="el-icon-search"></el-input>
                     </div>
                     <el-tree
                             ref="tree"
@@ -30,11 +30,14 @@
                             <span>{{ node.label }}</span>
                             <span class="custom-tree-node-control text-gray-900 text-base">
                                 <el-tooltip content="新增子部门" placement="top">
-                                    <i class="el-icon-plus px-1" @click = "addChildDetp(node,data)"></i>
+                                    <i class="fa fa-fw fa-plus px-1 hover:color-blue-500" @click = "addChildDetp(node,data)"></i>
+                                </el-tooltip>
+                                <el-tooltip content="编辑" placement="top">
+                                    <i class="fa fa-fw fa-pencil hover:color-blue-500" @click = "edit(node,data)"></i>
                                 </el-tooltip>
                                 <popover-confirm @confirm="confirmDeleteBatch(data.id)">
                                     <div slot="popover-content">
-                                        <i class="el-icon-minus"></i>
+                                        <i class="fa fa-fw fa-minus hover:color-blue-500"></i>
                                     </div>
                                 </popover-confirm>
                             </span>
@@ -44,11 +47,12 @@
             </el-col>
             <el-col :span="12" class="pl-2">
                 <el-card>
-                    <avue-form ref="dept" :option="form.option" v-model="form.model" @submit="submit">
-                        <template slot="tree" slot-scope="{value}">
-
-                        </template>
-                    </avue-form>
+                    <el-tabs v-model="tabs.name" @tab-click="handleClick">
+                        <el-tab-pane label="基本信息" name="basicInfo">
+                            <basic-info :basic-info = "tabs.basicInfo"></basic-info>
+                        </el-tab-pane>
+                        <el-tab-pane label="用户信息" name="userInfo">配置管理</el-tab-pane>
+                    </el-tabs>
                 </el-card>
             </el-col>
         </el-row>
@@ -68,7 +72,8 @@
     import {http, apiList, constant, sweetAlert} from '@/utils'
     import DragDialog from '@/components/dragDialog'
     import FileUpload from '@/components/fileUpload'
-    import Add from './deptList/Add'
+    import Modify from './deptList/Modify'
+    import BasicInfo from './deptList/BasicInfo'
     import {phoneCheck} from '@/utils/modules/validate'
     import {downloadFile} from '@/utils/modules/tools'
 
@@ -88,13 +93,19 @@
         components: {
             DragDialog,
             FileUpload,
-            Add,
+            Modify,
+            BasicInfo,
             PopoverConfirm
         },
         data() {
             return {
                 show: {
                     delete: false
+                },
+                tabs : {
+                    name : 'userInfo',
+                    basicInfo : {},
+                    userInfo : {}
                 },
                 tree: {
                     filterDept: '',
@@ -104,67 +115,14 @@
                         label: 'departName'
                     },
                 },
-                form: {
-                    option: {
-                        labelWidth: 100,
-                        submitText: '修改并保存',
-                        column: [
-                            {
-                                label: '机构名称',
-                                prop: 'departName',
-                                span: 24
-                            },
-                            {
-                                label: '上级部门',
-                                prop: 'parentId',
-                                readonly: true,
-                                span: 24
-                            },
-                            {
-                                label: '机构编码',
-                                prop: 'orgCode',
-                                disabled: true,
-                                span: 24
-                            },
-                            {
-                                label: '排序',
-                                prop: 'departOrder',
-                                type: 'number',
-                                span: 24
-                            },
-                            {
-                                label: '手机号',
-                                prop: 'mobile',
-                                span: 24,
-                                rules: [
-                                    {validator: phoneCheck, trigger: 'change'}
-                                ]
-                            },
-                            {
-                                label: '地址',
-                                prop: 'address',
-                                span: 24
-                            },
-                            {
-                                label: '备注',
-                                prop: 'memo',
-                                type: 'textarea',
-                                maxLength: 200,
-                                span: 24
-                            },
-                        ]
-                    },
-                    model: {}
-                },
                 dialog: {
                     width: '30',
                     height: '80',
-                    name: 'addTopDept',
                     title: '新增',
                     showFooter: true,
                 },
                 component: {
-                    is: Add,
+                    is: Modify,
                     ref: 'addDept',
                     data: {}
                 },
@@ -194,7 +152,12 @@
             ...mapActions({
                 getAllDepts: 'GET_ALL_DEPTS',
             }),
-
+            handleClick({name}, event) {
+                this.tabs = {
+                    ...this.tabs,
+                    name
+                }
+            },
             filterText(val) {
                 this.$refs.tree.filter(val);
             },
@@ -212,58 +175,104 @@
 
             },
             uploadSuccess() {
-
+                this.$modal.hide('fileUpload')
+                this.getAllDepts()
             },
             addTopDept() {
-                let {name} = this.dialog
-                this.$modal.show(name)
                 this.dialog = {
                     ...this.dialog,
-                    title: '新增部门'
+                    title: '新增部门',
+                    name : 'addTopDept'
                 }
                 this.component = {
                     ...this.component,
+                    ref : 'addTopDept',
                     data: {}
                 }
-            },
-            closeTreePopover(id) {
-                debugger;
-                console.log(this.$refs[id])
-                this.$refs[id].doClose()
+                let {name} = this.dialog
+                this.$nextTick(()=>{
+                    this.$modal.show(name)
+                })
             },
             addChildDetp(node, data) {
-                debugger;
-                let {name} = this.dialog
-                this.$modal.show(name)
                 this.dialog = {
                     ...this.dialog,
-                    title: '新增子部门'
+                    title: '新增子部门',
+                    name : 'addChildDept'
                 }
                 this.component = {
                     ...this.component,
                     ref: 'addChildDept',
-                    data
+                    data : {
+                        ...data,
+                        flag : 0            //新增
+                    }
                 }
+                let {name} = this.dialog
+                this.$nextTick(()=>{
+                    this.$modal.show(name)
+                })
+            },
+            edit(node, data){
+                this.dialog = {
+                    ...this.dialog,
+                    title: '编辑部门',
+                    name : 'editDept'
+                }
+                this.component = {
+                    ...this.component,
+                    ref: 'editDept',
+                    data : {
+                        ...data,
+                        ...this.handleDeptName(data),
+                        flag : 1            //编辑
+                    },
+                }
+                let {name} = this.dialog
+                this.$nextTick(()=>{
+                    this.$modal.show(name)
+                })
             },
             closeDialog() {
                 let {name} = this.dialog
                 this.$modal.hide(name)
+                this.getAllDepts()
             },
             confirmAdd() {
                 let {ref} = this.component
-                let addRef = this.$refs[ref]
-                addRef.$refs.form.validate(valid => {
+                let modifyRef = this.$refs[ref]
+                modifyRef.$refs.form.validate(valid => {
                     if (valid) {
                         this.dialog = {
                             ...this.dialog,
                             loading: true
                         }
-                        addRef.saveData()
+                        modifyRef.saveData()
                     }
                 })
                 this.dialog = {
                     ...this.dialog,
                     loading: false
+                }
+            },
+
+            treeCheck(treeItem, treeData) {
+                debugger;
+                let {checkedKeys} = treeData
+                if (checkedKeys.length) {
+                    this.show = {
+                        ...this.show,
+                        delete: true
+                    }
+                } else {
+                    this.show = {
+                        ...this.show,
+                        delete: false
+                    }
+                }
+                customParams = {
+                    ...customParams,
+                    checkedKeys
                 }
             },
             deptCodeMapName(datas) {
@@ -287,50 +296,10 @@
                 }
                 return customParams.departName
             },
-            submit() {
-                this.$refs.dept.validate(validate => {
-                    if (validate) {
-                        this.saveData()
-                    }
-                })
-            },
-            async saveData() {
-                let {model} = this.form
-                let params = {
-                    ...model,
-                    parentId: customParams.parentId
-                }
-                let {success, message, result} = await http.put(apiList.sys_dept_edit, params)
-                if (success) {
-                    sweetAlert.successWithTimer(message)
-                    this.getAllDepts()
-                } else {
-                    sweetAlert.error(message)
-                }
-            },
-            treeCheck(treeItem, treeData) {
+
+            handleDeptName(data){
                 debugger;
-                let {checkedKeys} = treeData
-                if (checkedKeys.length) {
-                    this.show = {
-                        ...this.show,
-                        delete: true
-                    }
-                } else {
-                    this.show = {
-                        ...this.show,
-                        delete: false
-                    }
-                }
-                customParams = {
-                    ...customParams,
-                    checkedKeys
-                }
-            },
-            nodeClick(obj, node, tree) {
-                debugger;
-                let {model} = this.form
-                let {parentId} = obj
+                let {parentId} = data
                 customParams = {
                     ...customParams,
                     parentId,
@@ -340,14 +309,20 @@
                 let departName = parentId ? this.deptCodeMapName(this.depts) : ''
                 console.log(departName)
 
-                this.form = {
-                    ...this.form,
-                    model: {
-                        ...model,
-                        ...obj,
-                        parentId: departName
+                return {parentIdName: departName}
+            },
+            handleBaseInfo(data){
+                this.tabs = {
+                    ...this.tabs,
+                    basicInfo : {
+                        ...data,
+                        ...this.handleDeptName(data)
                     }
                 }
+            },
+            nodeClick(data, node, tree) {
+                //this.handleDeptName(data)
+                this.handleBaseInfo(data)
             },
             deleteBatch() {
                 let {checkedKeys} = customParams
