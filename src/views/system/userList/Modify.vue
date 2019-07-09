@@ -133,7 +133,7 @@
                             },
                             {
                                 label: '部门分配',
-                                prop: 'id',
+                                prop: 'deptName',
                                 span: 24,
                                 suffixIcon: 'el-icon-more',
                                 clearable: false,
@@ -277,7 +277,7 @@
                         ...this.form,
                         model: {
                             ...model,
-                            id: result.map(item => item.title).join(',')
+                            deptName: result.map(item => item.title).join(',')
                         }
                     }
                     customParams = {
@@ -300,13 +300,16 @@
                 let {userId} = await this.generateuserId()
                 let {success} = await http.post(apiList.sys_user_add_user_dept_ids, {departIdList, userId})
             },
+            async updateUserDeptIds(userId,departIdList){
+                await http.put(apiList.sys_user_edit_user_dept_ids, {departIdList, userId})
+            },
             confirm() {
                 debugger;
                 this.dialog = {
                     ...this.dialog,
                     loading: true
                 }
-                let {model} = this.form
+                let {model,model:{id}} = this.form
                 let checkedNode = this.$refs.deptSearch.$refs.tree.getCheckedNodes()
                 let checkedNodeIds = checkedNode.map(({id}) => id)
                 customParams = {
@@ -318,7 +321,7 @@
                     ...this.form,
                     model: {
                         ...model,
-                        id: checkedNode.map(({departName}) => departName).join(',')
+                        deptName: checkedNode.map(({departName}) => departName).join(',')
                     }
                 }
                 this.dialog = {
@@ -326,7 +329,11 @@
                     loading: false
                 }
                 this.$modal.hide('deptSearch')
-                this.addUserDeptIds(checkedNodeIds)
+                if(id){
+                    this.updateUserDeptIds(id,checkedNodeIds)
+                }else{
+                    this.addUserDeptIds(checkedNodeIds)
+                }
             },
             submit() {
                 this.$refs.modify.validate(validate => {
@@ -336,18 +343,19 @@
                 })
             },
             async commitData() {
-                let {selectedroles} = this.form.model
-                let {userId: id, avatar} = customParams
-                let {id: isEdit} = this.data || {}
+                debugger;
+                let {model,model:{selectedroles}} = this.form
+                let {userId, avatar} = customParams
+                let {id} = this.data || {}
                 let params = {
-                    ...this.form.model,
-                    id : isEdit ? isEdit : id ,             //新增取userId, 编辑去带过来的id
+                    ...model,
+                    id : id ? id: userId ,             //新增取userId, 编辑去带过来的id
                     avatar,
                     selectedroles: selectedroles.join(','),
                 }
                 //
                 let res
-                if (isEdit) {
+                if (id) {
                     res = await http.put(apiList.sys_user_edit, params)
                 } else {
                     res = await http.post(apiList.sys_user_add, params)

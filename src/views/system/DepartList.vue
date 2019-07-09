@@ -51,7 +51,9 @@
                         <el-tab-pane label="基本信息" name="basicInfo">
                             <basic-info :basic-info = "tabs.basicInfo"></basic-info>
                         </el-tab-pane>
-                        <el-tab-pane label="用户信息" name="userInfo">配置管理</el-tab-pane>
+                        <el-tab-pane label="用户信息" name="userInfo">
+                            <user-info :user-info = "tabs.userInfo"></user-info>
+                        </el-tab-pane>
                     </el-tabs>
                 </el-card>
             </el-col>
@@ -74,6 +76,7 @@
     import FileUpload from '@/components/fileUpload'
     import Modify from './deptList/Modify'
     import BasicInfo from './deptList/BasicInfo'
+    import UserInfo from './deptList/UserInfo'
     import {phoneCheck} from '@/utils/modules/validate'
     import {downloadFile} from '@/utils/modules/tools'
 
@@ -95,6 +98,7 @@
             FileUpload,
             Modify,
             BasicInfo,
+            UserInfo,
             PopoverConfirm
         },
         data() {
@@ -320,9 +324,18 @@
                     }
                 }
             },
+            handleUserInfo(data){
+                this.tabs = {
+                    ...this.tabs,
+                    userInfo : {
+                        ...data,
+                    }
+                }
+            },
             nodeClick(data, node, tree) {
                 //this.handleDeptName(data)
                 this.handleBaseInfo(data)
+                this.handleUserInfo(data)
             },
             deleteBatch() {
                 let {checkedKeys} = customParams

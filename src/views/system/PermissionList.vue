@@ -193,6 +193,7 @@
                 getAllMenus: 'GET_ALL_MENUS',
                 getPermissionType : 'GET_PERMISSION_TYPE',
                 getValidStatus : 'GET_VALID_STATUS',
+                getPermissionList : 'GET_PERMISSION_LIST'
             }),
             selectionChange(selection) {
                 debugger;
@@ -341,6 +342,7 @@
                 if (success) {
                     sweetAlert.successWithTimer(message)
                     this.queryList()
+                    this.getPermissionList()                    //刷新菜单
                 } else {
                     sweetAlert.error(message)
                 }
