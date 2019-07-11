@@ -9,6 +9,8 @@ export default {
         validStatus : [],                                     //有效无效状态
         ruleConditions : [],                                    //条件规则
         dictItemStatus : [],                                    //字典状态
+        msgCategory : [],                                       //消息类型
+        priority : [],                                          //优先级
     },
     mutations: {
         SET_SEX(state,sex){
@@ -34,6 +36,12 @@ export default {
         },
         SET_DICT_ITEM_STATUS(state,dictItemStatus){
             state.dictItemStatus = dictItemStatus
+        },
+        SET_MSG_CATEGORY(state,msgCategory){
+            state.msgCategory = msgCategory
+        },
+        SET_PRIORITY(state,priority){
+            state.priority = priority
         },
     },
     actions : {
@@ -93,6 +101,19 @@ export default {
                 commit('SET_DICT_ITEM_STATUS',records)
             }
         },
-
+        async GET_MSG_CATEGORY({commit}){
+            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'msg_category'})
+            if(success) {
+                let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
+                commit('SET_MSG_CATEGORY',records)
+            }
+        },
+        async GET_PRIORITY({commit}){
+            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'priority'})
+            if(success) {
+                let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
+                commit('SET_PRIORITY',records)
+            }
+        },
     }
 }

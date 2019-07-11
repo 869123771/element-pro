@@ -14,7 +14,7 @@ export default {
             ...alertConf
         })
     },
-    successWithTimer: (title, oper) => {
+    successWithTimer: (title) => {
         Swal.fire({
             position: 'top',
             type: 'success',
@@ -48,6 +48,16 @@ export default {
             type: 'warning',
             title,
             ...alertConf
+        })
+    },
+    warnWithTimer: (title) => {
+        Swal.fire({
+            position: 'top',
+            type: 'warning',
+            title,
+            toast: true,
+            showConfirmButton: false,
+            timer: 1500
         })
     },
     confirm: (title, text, oper, params) => {

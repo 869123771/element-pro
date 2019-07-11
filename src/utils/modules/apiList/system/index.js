@@ -60,4 +60,6 @@ export default {
     sys_dict_item_add : '/sys/dictItem/add',
     sys_dict_item_edit : '/sys/dictItem/edit',
     sys_dict_item_delete : '/sys/dictItem/delete',
+    sys_my_message_query_list : 'system/sysAnnouncementSend/getMyAnnouncementSend',
+    sys_my_message_note_read_all : '/system/sysAnnouncementSend/readAll',
 }

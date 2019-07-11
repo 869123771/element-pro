@@ -23,7 +23,7 @@
                 </template>
                 <template slot = "menuType" slot-scope = "{row}">
                     <div>
-                        {{menuType.find(item=>item.itemValue == row.menuType).itemText}}
+                        {{menuType.length ? menuType.find(item=>item.itemValue == row.menuType).itemText : ''}}
                     </div>
                 </template>
                 <template slot="oper" slot-scope="scope">
