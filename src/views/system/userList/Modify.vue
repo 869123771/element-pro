@@ -48,7 +48,7 @@
         },
         data() {
             debugger;
-            let {id} = this.data
+            let {id,deptId} = this.data
             let ps = id ? [] : [
                 {
                     label: '登陆密码',
@@ -81,6 +81,24 @@
                             validator: (rule, value, callback) => confirmPwdCheck(rule, value, callback, this)
                         }
                     ],
+                },
+            ]
+            let dept = deptId ? [] : [
+                {
+                    label: '部门分配',
+                    prop: 'deptName',
+                    span: 24,
+                    suffixIcon: 'el-icon-more',
+                    clearable: false,
+                    readonly: true,
+                    click: () => {
+                        let {checkedNodeIds} = customParams;
+                        debugger;
+                        if (checkedNodeIds) {
+                            this.deptCheckedIds = checkedNodeIds
+                        }
+                        this.$modal.show('deptSearch')
+                    }
                 },
             ]
             let isUserUniqueCheck = id ? {} : {validator: uniqueUserCheck}
@@ -131,22 +149,7 @@
                                 },
                                 span: 24
                             },
-                            {
-                                label: '部门分配',
-                                prop: 'deptName',
-                                span: 24,
-                                suffixIcon: 'el-icon-more',
-                                clearable: false,
-                                readonly: true,
-                                click: () => {
-                                    let {checkedNodeIds} = customParams;
-                                    debugger;
-                                    if (checkedNodeIds) {
-                                        this.deptCheckedIds = checkedNodeIds
-                                    }
-                                    this.$modal.show('deptSearch')
-                                }
-                            },
+                            ...dept,
                             {
                                 label: '头像',
                                 prop: 'avatar',
@@ -190,7 +193,9 @@
                             },
                         ]
                     },
-                    model: {}
+                    model: {
+                        activitiSync : '1'
+                    }
                 },
                 deptCheckedIds: [],
                 upload: {
@@ -346,10 +351,10 @@
                 debugger;
                 let {model,model:{selectedroles}} = this.form
                 let {userId, avatar} = customParams
-                let {id} = this.data || {}
+                let {id,deptId} = this.data || {}
                 let params = {
                     ...model,
-                    id : id ? id: userId ,             //新增取userId, 编辑去带过来的id
+                    id : id ? id : deptId ? deptId : userId ,             //新增取userId, 编辑去带过来的id
                     avatar,
                     selectedroles: selectedroles.join(','),
                 }

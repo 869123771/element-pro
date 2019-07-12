@@ -11,6 +11,8 @@ export default {
         dictItemStatus : [],                                    //字典状态
         msgCategory : [],                                       //消息类型
         priority : [],                                          //优先级
+        sendStatus : [],                                        //发布状态
+        msgType : [],                                           //推送类别
     },
     mutations: {
         SET_SEX(state,sex){
@@ -42,6 +44,12 @@ export default {
         },
         SET_PRIORITY(state,priority){
             state.priority = priority
+        },
+        SET_SEND_STATUS(state,sendStatus){
+            state.sendStatus = sendStatus
+        },
+        SET_MSG_TYPE(state,msgType){
+            state.msgType = msgType
         },
     },
     actions : {
@@ -113,6 +121,20 @@ export default {
             if(success) {
                 let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
                 commit('SET_PRIORITY',records)
+            }
+        },
+        async GET_SEND_STATUS({commit}){
+            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'send_status'})
+            if(success) {
+                let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
+                commit('SET_SEND_STATUS',records)
+            }
+        },
+        async GET_MSG_TYPE({commit}){
+            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'msg_type'})
+            if(success) {
+                let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
+                commit('SET_MSG_TYPE',records)
             }
         },
     }

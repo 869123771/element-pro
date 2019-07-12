@@ -159,7 +159,7 @@
             position: absolute;
             bottom: 0px;
             background: #fff;
-            z-index: 10;
+            z-index: 99999;
             width: 100%;
             border-top: 1px solid #e2e8f0;
             height: 60px;

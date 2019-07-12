@@ -62,4 +62,12 @@ export default {
     sys_dict_item_delete : '/sys/dictItem/delete',
     sys_my_message_query_list : 'system/sysAnnouncementSend/getMyAnnouncementSend',
     sys_my_message_note_read_all : '/system/sysAnnouncementSend/readAll',
+    sys_sys_announcement_query_list: '/sys/annountCement/list',
+    sys_sys_announcement_importExcel: '/sys/annountCement/importExcel',
+    sys_sys_announcement_exportXls: '/sys/annountCement/exportXls',
+    sys_sys_announcement_add: '/sys/annountCement/add',
+    sys_sys_announcement_edit: '/sys/annountCement/edit',
+    sys_sys_announcement_delete: '/sys/annountCement/delete',
+    sys_sys_announcement_delete_batch: '/sys/annountCement/deleteBatch',
+    sys_sys_announcement_release: '/sys/annountCement/doReleaseData',
 }

@@ -12,7 +12,7 @@
         >
             <template slot="menuLeft">
                 <el-button plain type="primary" icon="el-icon-plus" @click="addUser">用户录入</el-button>
-                <el-button plain icon="iconfont icon-wy-upload" @click="addUserHas" v-show = "userInfo.id">添加已有用户</el-button>
+                <el-button plain icon="el-icon-plus" @click="addUserHas">添加已有用户</el-button>
                 <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
                     <el-button plain>
                         批量操作<i class="el-icon-arrow-down el-icon--right"></i>
@@ -155,6 +155,11 @@
                 getActivitiSync: 'GET_ACTIVIYI_SYNC',
             }),
             addUser() {
+                let {id} = this.userInfo
+                if(!id){
+                    sweetAlert.warnWithTimer('请选择一个部门')
+                    return
+                }
                 this.drawer = {
                     ...this.drawer,
                     title: '添加用户',
@@ -164,7 +169,9 @@
                 this.component = {
                     ...this.component,
                     type: Modify,
-                    data: {}
+                    data: {
+                        deptId : id
+                    }
                 }
             },
             edit(row) {
@@ -181,6 +188,11 @@
                 }
             },
             addUserHas(){
+                let {id} = this.userInfo
+                if(!id){
+                    sweetAlert.warnWithTimer('请选择一个部门')
+                    return
+                }
                 let {name} = this.dialog
                 this.$modal.show(name)
                 this.dialog = {
