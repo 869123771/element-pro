@@ -79,7 +79,6 @@
                 this.queryList()
             },
             async saveData(depId){
-                debugger;
                 let {selection} = this.table
                 let params = {
                     depId,

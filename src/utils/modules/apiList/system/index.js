@@ -70,4 +70,5 @@ export default {
     sys_sys_announcement_delete: '/sys/annountCement/delete',
     sys_sys_announcement_delete_batch: '/sys/annountCement/deleteBatch',
     sys_sys_announcement_release: '/sys/annountCement/doReleaseData',
+    sys_sys_announcement_revoke: '/sys/annountCement/doReovkeData',
 }

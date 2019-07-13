@@ -79,7 +79,6 @@
                 this.queryList()
             },
             async saveData(roleId){
-                debugger;
                 let {selection} = this.table
                 let params = {
                     roleId,

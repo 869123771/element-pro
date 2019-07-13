@@ -47,7 +47,6 @@
             }
         },
         data() {
-            debugger;
             let {id,deptId} = this.data
             let ps = id ? [] : [
                 {
@@ -93,7 +92,6 @@
                     readonly: true,
                     click: () => {
                         let {checkedNodeIds} = customParams;
-                        debugger;
                         if (checkedNodeIds) {
                             this.deptCheckedIds = checkedNodeIds
                         }
@@ -226,7 +224,6 @@
         watch: {
             data: {
                 handler(props) {
-                    debugger;
                     if (!this.validatenull(props)) {
                         let {config: {baseUrl: {imgDomainURL}}} = constant
                         let {model} = this.form
@@ -309,7 +306,6 @@
                 await http.put(apiList.sys_user_edit_user_dept_ids, {departIdList, userId})
             },
             confirm() {
-                debugger;
                 this.dialog = {
                     ...this.dialog,
                     loading: true
@@ -348,7 +344,6 @@
                 })
             },
             async commitData() {
-                debugger;
                 let {model,model:{selectedroles}} = this.form
                 let {userId, avatar} = customParams
                 let {id,deptId} = this.data || {}
@@ -374,7 +369,6 @@
                 }
             },
             handleChange(file, fileList) {
-                debugger;
                 let {response, response: {success, message} = {}} = file
                 if (response && success) {
                     let [fileItem] = fileList

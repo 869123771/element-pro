@@ -18,7 +18,6 @@
         data(){
             const checkUnique = async (rule, value, callback)=>{
                 let {flag,message} = await this.uniqueCheck(value)
-                debugger;
                 if(!flag){
                     callback(new Error(message));
                 }else{

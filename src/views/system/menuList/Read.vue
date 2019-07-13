@@ -125,7 +125,6 @@
         },
         methods : {
             queryMenuById(menus){
-                debugger;
                 let {parentId} = this.form
                 let {flag, menuName} = customParams
                 if(flag){

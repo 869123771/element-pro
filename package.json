@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "30-seconds-of-code": "^1.2.3",
-    "@smallwei/avue": "^2.0.3",
+    "@smallwei/avue": "^2.0.4",
     "axios": "^0.18.1",
     "dayjs": "^1.8.14",
     "element-ui": "^2.9.1",

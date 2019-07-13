@@ -85,17 +85,19 @@
                                 <i class="fa fa-fw fa-pencil" @click="edit(row)"></i>
                             </span>
                         </el-tooltip>
-                        <popover-confirm @confirm="handleRelease(row)" v-if="row.sendStatus === '0'">
+                        <popover-confirm @confirm="handleRelease(row)" v-if="Number(row.sendStatus) === 0">
                              <div slot="popover-title">确定要发布吗</div>
                             <div slot="popover-content" class="text-blue-500 text-base cursor-pointer">
                                 <i class="fa fa-fw fa-mail-forward"></i>
                             </div>
                         </popover-confirm>
-                         <popover-confirm @confirm="handleReply(row)" v-if="row.sendStatus === '1'">
+                         <popover-confirm @confirm="handleReply(row)" v-else-if="Number(row.sendStatus) === 1">
                              <div slot="popover-title">确定要撤销吗</div>
-                             <span class="text-blue-500 text-base cursor-pointer">
-                                <i class="fa fa-fw fa-mail-reply"></i>
-                            </span>
+                             <div slot="popover-content" class="text-blue-500 text-base cursor-pointer">
+                                  <span class="text-blue-500 text-base cursor-pointer">
+                                    <i class="fa fa-fw fa-mail-reply"></i>
+                                </span>
+                             </div>
                         </popover-confirm>
                         <popover-confirm @confirm="handleDel(row)">
                             <div slot="popover-content" class="text-blue-500 text-base cursor-pointer">
@@ -106,9 +108,25 @@
                 </template>
             </avue-crud>
         </el-row>
-        <drag-dialog :drag-dialog="dialog" @confirm="confirmAdd">
+        <drag-drawer v-model="drawer.show"
+                     :draggable="drawer.draggable"
+                     :title="drawer.title"
+                     :width.sync="drawer.width"
+                     :placement="drawer.placement"
+        >
             <modify :data="modify.data" ref="modify" @modifySuccess="modifySuccess"></modify>
-        </drag-dialog>
+            <div class="dialog-footer p-2 w-full flex justify-end">
+                <div class = "flex">
+                    <popover-confirm @confirm = "popoverConfirm" class="mx-2">
+                        <div slot = "popover-title">确定要关闭吗</div>
+                        <div slot="popover-content">
+                            <el-button plain >取消</el-button>
+                        </div>
+                    </popover-confirm>
+                    <el-button type="primary" @click="submit">提交</el-button>
+                </div>
+            </div>
+        </drag-drawer>
         <file-upload :file-upload="fileUpload" @uploadSuccess="uploadSuccess"></file-upload>
     </div>
 </template>
@@ -119,7 +137,7 @@
     import {downloadFile} from '@/utils/modules/tools'
     import PopoverConfirm from '@/components/popoverConfirm'
     import Modify from './sysAnnouncementList/Modify'
-    import DragDialog from '@/components/dragDialog'
+    import DragDrawer from '@/components/dragDrawer'
     import FileUpload from '@/components/fileUpload'
 
     const uploadAction = () => {
@@ -130,7 +148,7 @@
     export default {
         name: "SysAnnouncementList",
         components: {
-            DragDialog,
+            DragDrawer,
             FileUpload,
             PopoverConfirm,
             Modify
@@ -204,10 +222,12 @@
                     pageSize: 10,
                     total: 0
                 },
-                dialog: {
-                    width: '50',
-                    height: '90',
-                    showFooter: true
+                drawer: {
+                    show: false,
+                    placement: 'right',
+                    draggable: true,
+                    width: 900,
+                    data: {}
                 },
                 modify: {
                     data: {}
@@ -242,10 +262,10 @@
                 this.$refs.form.resetFields()
             },
             edit(row) {
-                this.dialog = {
-                    ...this.dialog,
+                this.drawer = {
+                    ...this.drawer,
                     title: '编辑',
-                    name: 'update',
+                    show: true,
                 }
                 this.modify = {
                     ...this.modify,
@@ -253,33 +273,37 @@
                         ...row
                     }
                 }
-                let {name} = this.dialog
-                this.$nextTick(() => {
-                    this.$modal.show(name)
-                })
             },
-            handleRelease(row) {
-
+            async handleRelease({id}) {
+                let {success,message} = await http.get(apiList.sys_sys_announcement_release,{id})
+                if (success) {
+                    sweetAlert.successWithTimer(message)
+                    this.queryList()
+                } else {
+                    sweetAlert.error(message)
+                }
             },
-            handleReply(row) {
-
+            async handleReply({id}) {
+                let {success,message} = await http.get(apiList.sys_sys_announcement_revoke,{id})
+                if (success) {
+                    sweetAlert.successWithTimer(message)
+                    this.queryList()
+                } else {
+                    sweetAlert.error(message)
+                }
             },
             add() {
-                this.dialog = {
-                    ...this.dialog,
+                this.drawer = {
+                    ...this.drawer,
+                    show : true,
                     title: '新增',
-                    name: 'add',
                 }
                 this.modify = {
                     ...this.modify,
                     data: {}
                 }
-                let {name} = this.dialog
-                this.$nextTick(() => {
-                    this.$modal.show(name)
-                })
             },
-            confirmAdd() {
+            submit() {
                 let modifyRef = this.$refs.modify
                 modifyRef.$refs.form.validate(valid => {
                     if (valid) {
@@ -288,10 +312,6 @@
                             loading: true
                         }
                         modifyRef.saveData()
-                    }
-                    this.dialog = {
-                        ...this.dialog,
-                        loading: false
                     }
                 })
             },
@@ -340,9 +360,21 @@
 
             },
             modifySuccess() {
-                let {name} = this.dialog
-                this.$modal.hide(name)
+                this.drawer = {
+                    ...this.drawer,
+                    show: false
+                }
                 this.queryList()
+            },
+            popoverConfirm() {
+                this.drawer = {
+                    ...this.drawer,
+                    show: false
+                }
+                this.popover = {
+                    ...this.popover,
+                    drawerCancel: false
+                }
             },
             uploadSuccess() {
                 this.$modal.hide('fileUpload')

@@ -101,7 +101,6 @@
             data: {
                 handler(props) {
                     if (!this.validatenull(props)) {
-                        debugger;
                         let {model} = this.form
                         let {id,departName,flag,parentId} = props
                         if(flag){

@@ -282,7 +282,6 @@
                 this.$refs[ref].shrinkAll()
             },
             changeDialogWidth(flag) {
-                debugger;
                 let {width} = this.drawer
                 if(flag){
                     if (width !== drawerDefaultWidth) {
@@ -360,7 +359,6 @@
                 this.queryList()
             },
             edit(row) {
-                debugger;
                 this.dialog = {
                     ...this.dialog,
                     title: '编辑角色',
@@ -403,7 +401,6 @@
                 this.confirmDeleteBatch(ids)
             },
             handleAuth(row) {
-                debugger;
                 this.drawer = {
                     ...this.drawer,
                     title: '角色权限配置',
@@ -419,7 +416,6 @@
                 }
             },
             cellClick(row, column){
-                debugger;
                 let {property,type} = column
                 let exceptCell = ['oper']
                 if(type !== 'selection' && !exceptCell.includes(property)){

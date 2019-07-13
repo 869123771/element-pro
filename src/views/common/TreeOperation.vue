@@ -22,7 +22,6 @@
           }
         },
         render(h,context){
-            debugger;
             let {operation} = this.tree
             return (
                 <el-dropdown placement="top">

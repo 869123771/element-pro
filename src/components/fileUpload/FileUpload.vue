@@ -50,7 +50,6 @@
         watch: {
             fileUpload: {
                 handler(props) {
-                    debugger;
                     this.upload = {
                         ...this.upload,
                         ...props
@@ -64,7 +63,6 @@
                 this.$refs.upload.submit();
             },
             success(response, file, fileList) {
-                debugger;
                 let {success,message} = response
                 if(success){
                     sweetAlert.successWithTimer(message)
@@ -74,7 +72,6 @@
                 }
             },
             error(err, file, fileList) {
-                debugger;
                 sweetAlert.error('上传失败')
             }
         },

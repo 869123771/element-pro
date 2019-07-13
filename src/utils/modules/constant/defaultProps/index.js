@@ -15,7 +15,7 @@ export default {
         reset : true,
         minWidth : 300,
         minHeight : 300,
-        maxHeight : 800,
+        maxHeight : 700,
     },
     table : {
         border: true,

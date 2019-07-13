@@ -261,7 +261,6 @@
             },
 
             treeCheck(treeItem, treeData) {
-                debugger;
                 let {checkedKeys} = treeData
                 if (checkedKeys.length) {
                     this.show = {
@@ -302,7 +301,6 @@
             },
 
             handleDeptName(data){
-                debugger;
                 let {parentId} = data
                 customParams = {
                     ...customParams,

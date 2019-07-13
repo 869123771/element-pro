@@ -95,7 +95,6 @@
         watch: {
             menuSearch: {
                 handler(props) {
-                    debugger;
                     if (!this.validatenull(props)) {
                         let {model, model: {menuAssign}} = this.form
                         let {roleId, ...res} = props
@@ -120,7 +119,6 @@
         },
         methods: {
             dataRule(node, data) {
-                debugger;
                 let {key: dataRuleId} = data
                 this.drawer = {
                     ...this.drawer,

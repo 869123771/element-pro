@@ -78,7 +78,6 @@ export default {
                 state.navTagList = [...navTagList, ...addTagList]
             },
             removeNavTag(state, tagProps) {
-                debugger;
                 let {path, current} = tagProps
                 let {navTagList} = state
                 let newTagList = navTagList

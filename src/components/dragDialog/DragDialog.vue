@@ -49,7 +49,6 @@
         watch: {
             dragDialog: {
                 handler(props) {
-                    debugger;
                     this.dialog = {
                         ...this.dialog,
                         ...props
@@ -73,7 +72,6 @@
         ,
         methods: {
             full() {
-                debugger;
                 this.$children[0].modal = {
                     ...this.$children[0].modal,
                     width: 100,
@@ -87,7 +85,6 @@
                 }
             },
             exit() {
-                debugger;
                 let {width, height} = this.dialog
 
                 this.$children[0].modal = {

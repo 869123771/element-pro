@@ -37,7 +37,6 @@ export const downloadFile = (data, filename) => {
 }
 
 export const formFileDownload = (url,params) => {
-    debugger;
     let form = document.createElement("form");
     form.style.display = 'none';
     form.action = url;

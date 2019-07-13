@@ -186,7 +186,6 @@ export default {
                 'X-Requested-With': 'XMLHttpRequest'
             }
         }).then(response => {
-            debugger;
             let desObj = {}
             let {data,headers} = response
 

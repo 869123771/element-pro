@@ -55,7 +55,6 @@
         watch : {
             basicInfo : {
                 handler(props){
-                    debugger;
                     if(!this.validatenull(props)){
                         let {model} = this.detail
                         let {parentIdName} = props

@@ -54,6 +54,7 @@
                                 v-model="form.parentId"
                                 :options="menus"
                                 :props="{ checkStrictly: true,label:'name',value : 'id'}"
+                                :show-all-levels="false"
                                 clearable
                                 filterable
                                 class = "w-full"
@@ -209,7 +210,6 @@
                 }
             },
             async saveData() {
-                debugger;
                 let {parentId} = this.form
                 let {id} = this.data
                 let params = {

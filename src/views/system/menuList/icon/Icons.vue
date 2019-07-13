@@ -92,7 +92,6 @@
             iconsChecked : {
                 handler(props){
                     if(!this.validatenull(props)) {
-                        debugger;
                         let {name, paneName} = props
                         this.checked = {
                             ...this.checked,
@@ -123,7 +122,6 @@
                 sweetAlert.successWithTimer(`选中 ${icon}`)
             },
             iconClass(checkIcon) {
-                debugger;
                 let iconClass = ''
                 let {icon} = this.checked
                 if (checkIcon === icon) {

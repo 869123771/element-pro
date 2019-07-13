@@ -62,7 +62,6 @@
         watch : {
             depts : {
                 handler(props){
-                    debugger;
                     let {model,model:{deptAssign}} = this.form
                     this.form = {
                         ...this.form,

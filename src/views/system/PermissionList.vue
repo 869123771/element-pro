@@ -196,7 +196,6 @@
                 getPermissionList : 'GET_PERMISSION_LIST'
             }),
             selectionChange(selection) {
-                debugger;
                 if (selection.length) {
                     this.show = {
                         ...this.show,

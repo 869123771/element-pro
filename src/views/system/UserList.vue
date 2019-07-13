@@ -296,7 +296,6 @@
                 }
             },
             changePwdOk(row) {
-                debugger;
                 let {resetPwd: {index}} = this.props
                 let {data} = this.table
                 data[index] = {
@@ -350,7 +349,6 @@
                 }
             },
             async frozen(scope) {
-                debugger;
                 let params = {}
                 let {selection} = this.table
                 if (scope) {
@@ -421,7 +419,6 @@
                 }
             },
             async handleDel(scope) {
-                debugger;
                 let {row: {id}} = scope
                 let {success, message, result} = await http.delete(apiList.sys_user_delete, {id})
                 if (success) {
