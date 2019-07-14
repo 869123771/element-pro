@@ -32,6 +32,8 @@
     import {mapActions} from 'vuex'
     import IdenfiryCode from './component/IdentifyCode'
     import {http,constant,apiList,sweetAlert} from "@/utils";
+    import { encryption } from '@/utils/encryption/aesEncrypt'
+
     export default {
         name: "login",
         components : {
@@ -74,6 +76,10 @@
             ...mapActions({
                 handleLogin : 'HANDLE_LOGIN'
             }),
+            async handleParams(params){
+
+                //encryption(values.password,res.result.key,res.result.iv)
+            },
             handleSubmit() {
                 this.$refs.form.validate((valid) => {
                     if (valid) {
@@ -83,8 +89,11 @@
             },
             async login() {
                 this.loading = true
+                let {password} = this.form
+                let {result:{iv,key}} = await http.get(apiList.login_encrypted)
                 let params = {
-                    ...this.form
+                    ...this.form,
+                    password : encryption(password,key,iv)
                 }
                 let {success,message,result} = await http.post(apiList.login, params)
                 if (success) {

@@ -4,7 +4,7 @@
             <side-menu></side-menu>
         </el-aside>
         <el-container>
-            <el-header class = "layout-header border-b border-gray-300" :style = "{marginLeft : menuProps.collapse ? '64px' : '200px'}">
+            <el-header class = "layout-header border-b bg-white" :style = "{marginLeft : menuProps.collapse ? '64px' : '200px'}">
                 <global-header></global-header>
             </el-header>
             <el-main class = "layout-main" :style = "{marginLeft : menuProps.collapse ? '64px' : '200px'}">
@@ -46,7 +46,7 @@
             padding : 0 1rem;
         }
         &-main{
-            padding : 1rem;
+            padding : 0.75rem;
         }
     }
 </style>

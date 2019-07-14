@@ -15,5 +15,7 @@
     };
 </script>
 <style lang="less">
-
+    #app{
+        background : #f0f2f5;
+    }
 </style>

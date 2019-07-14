@@ -1,5 +1,5 @@
 <template>
-    <div class="user">
+    <div class="user bg-white p-3">
         <el-row>
             <el-form ref="form" :model="form" label-width="80px">
                 <el-row>

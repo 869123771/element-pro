@@ -1,5 +1,5 @@
 <template>
-    <div class="announce">
+    <div class="announce bg-white p-3">
         <el-row>
             <el-form ref="form" :model="form" label-width="90px">
                 <el-row>
@@ -32,9 +32,18 @@
                                 </el-select>
                             </el-form-item>
                         </el-col>
+                        <el-col :md = "6" :sm = "8">
+                            <el-form-item label="优先级:" prop="priority">
+                                <el-select v-model="form.priority" clearable filterable class="w-full">
+                                    <template v-for="item in priority">
+                                        <el-option :value="item.itemValue" :label="item.itemText"></el-option>
+                                    </template>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
                     </div>
                     <el-col :md="6" :sm="8">
-                        <el-form-item label-width="38px">
+                        <el-form-item label-width="20px">
                             <el-button type="primary" icon="el-icon-search" @click="search">查询</el-button>
                             <el-button plain icon="el-icon-refresh-left" @click="reset">重置</el-button>
                             <span class="cursor-pointer inline-block text-blue-500 pl-2" @click="arrowClick">
@@ -161,6 +170,7 @@
                     msgCategory: '',                               //消息类型
                     sender: '',                                    //发布人
                     sendStatus: '',                                //发布状态
+                    priority : '',                                  //优先级
                 },
                 show: {
                     collapse: false,
@@ -411,8 +421,8 @@
                 this.queryList()
             },
             async queryList() {
-                let {model} = this.form
                 let {currentPage: pageNo, pageSize} = this.page
+                let {titile, msgCategory, sender, sendStatus,priority} = this.form
                 this.table = {
                     ...this.table,
                     loading: true
@@ -420,7 +430,11 @@
                 let params = {
                     pageNo,
                     pageSize,
-                    ...model,
+                    titile : titile ? titile : undefined,
+                    msgCategory : msgCategory ? msgCategory : undefined,
+                    sender : sender ? sender : undefined ,
+                    sendStatus : sendStatus ? sendStatus : undefined,
+                    priority : priority ? priority : undefined,
                 }
                 let {success, result} = await http.get(apiList.sys_sys_announcement_query_list, params)
                 if (success) {

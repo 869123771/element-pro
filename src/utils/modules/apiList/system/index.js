@@ -62,6 +62,7 @@ export default {
     sys_dict_item_delete : '/sys/dictItem/delete',
     sys_my_message_query_list : 'system/sysAnnouncementSend/getMyAnnouncementSend',
     sys_my_message_note_read_all : '/system/sysAnnouncementSend/readAll',
+    sys_my_message_note_read_one : '/system/sysAnnouncementSend/editByAnntIdAndUserId',
     sys_sys_announcement_query_list: '/sys/annountCement/list',
     sys_sys_announcement_importExcel: '/sys/annountCement/importExcel',
     sys_sys_announcement_exportXls: '/sys/annountCement/exportXls',

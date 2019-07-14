@@ -1,5 +1,5 @@
 <template>
-    <div class = "message">
+    <div class = "message bg-white p-3">
         <el-row>
             <avue-form :option="form.option" v-model="form.model" ref="form">
                 <template slot-scope="scope" slot="searchBtn">
@@ -22,7 +22,7 @@
                     @current-change="currentChange"
             >
                 <template slot="menuLeft">
-                    <el-button plain type="primary" icon="el-icon-plus" @click="noteReadAll">全部标记已读</el-button>
+                    <el-button plain type="primary" icon="fa fa-fw fa-eye" @click="noteReadAll">全部标记已读</el-button>
                 </template>
                 <template slot="oper" slot-scope="{row}">
                     <span>
@@ -183,6 +183,9 @@
                     sweetAlert.errorWithTimer(message)
                 }
             },
+            async noteReadOne(anntId){
+                await http.put(apiList.sys_my_message_note_read_one,{anntId})
+            },
             read(row){
                 let {titile} = row
                 this.dialog = {
@@ -197,6 +200,7 @@
                 this.$nextTick(() => {
                     this.$modal.show(name)
                 })
+                this.noteReadOne(row.id)
             },
             currentChange(currentPage) {
                 this.page = {

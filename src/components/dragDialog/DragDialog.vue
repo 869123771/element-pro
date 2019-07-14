@@ -51,7 +51,7 @@
                 handler(props) {
                     this.dialog = {
                         ...this.dialog,
-                        ...props
+                        ...props,
                     }
                     this.$nextTick(() => {
                         this.exit()

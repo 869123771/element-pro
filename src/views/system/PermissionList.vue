@@ -1,5 +1,5 @@
 <template>
-    <div class="menu">
+    <div class="menu bg-white p-3">
         <el-row>
             <avue-crud
                     :data="table.data"
