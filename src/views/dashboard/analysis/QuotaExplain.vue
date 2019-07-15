@@ -69,7 +69,7 @@
                     <div slot="card-content">
                         <div class="text-3xl">6560</div>
                         <div class = "chart-container">
-                            <v-chart :options="options.visit" auto-resize></v-chart>
+                            <v-chart :options="options.payNum" auto-resize></v-chart>
                         </div>
                     </div>
                     <div slot="card-footer">
@@ -93,8 +93,8 @@
                     </div>
                     <div slot="card-content">
                         <div class="text-3xl">78%</div>
-                        <div class = "chart-container">
-                            <v-chart :options="options.visit" auto-resize></v-chart>
+                        <div class = "progress-container">
+                            <el-progress :show-text = "false" :stroke-width="26" :percentage="78"></el-progress>
                         </div>
                     </div>
                     <div slot="card-footer">
@@ -112,7 +112,22 @@
     import ChartCard from './ChartCard'
     import ECharts from 'vue-echarts/components/ECharts'
     import 'echarts/lib/chart/line'
+    import 'echarts/lib/chart/bar'
     import 'echarts/lib/component/tooltip';
+
+    import dayjs from 'dayjs'
+
+    const xData = [] ,yData = []
+    const beginDay = new Date().getTime()
+
+    for (let i = 0; i < 10; i++) {
+        xData.push(
+            dayjs(new Date(beginDay + 1000 * 60 * 60 * 24 * i)).format('YYYY-MM-DD')
+        )
+        yData.push(
+            Math.round(Math.random() * 10)
+        )
+    }
 
     export default {
         name: "QuotaExplain",
@@ -124,6 +139,19 @@
             return {
                 options: {
                     visit: {
+
+                    },
+                    payNum : {
+
+                    },
+                }
+            }
+        },
+        methods : {
+            initVisitChart(){
+                this.options = {
+                    ...this.options,
+                    visit : {
                         tooltip: {
                             trigger: 'axis',
                             axisPointer: {
@@ -144,7 +172,7 @@
                                 splitLine: {            //网格线
                                     show: false
                                 },
-                                data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+                                data: xData,
                             }
                         ],
                         yAxis: [
@@ -189,12 +217,81 @@
                                 },
                                 symbol: 'none',             //取消折点圆圈
                                 smooth: true,
-                                data: [820, 932, 901, 934, 1290, 1330, 1320]
+                                data: yData
+                            }
+                        ]
+                    }
+                }
+            },
+            initPayNumChart(){
+                this.options = {
+                    ...this.options,
+                    payNum : {
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'cross',
+                                label: {
+                                    backgroundColor: '#6a7985'
+                                }
+                            }
+                        },
+                        grid: {
+                            left: '0',
+                            right: '0',
+                        },
+                        xAxis: [
+                            {
+                                type: 'category',
+                                boundaryGap: false,
+                                splitLine: {            //网格线
+                                    show: false
+                                },
+                                data: xData,
+                            }
+                        ],
+                        yAxis: [
+                            {
+                                type: 'value',
+                                axisLine: {       //y轴
+                                    show: false
+                                },
+                                axisTick: {       //y轴刻度线
+                                    show: false
+                                },
+                                splitLine: {     //网格线
+                                    "show": false
+                                },
+                                axisLabel: {
+                                    formatter: () => {
+                                        return "";
+                                    }
+                                }
+                            }
+                        ],
+                        series: [
+                            {
+                                name: '搜索引擎',
+                                type: 'bar',
+                                itemStyle: {
+                                    normal: {
+                                        color : (params) =>{
+                                            let colorList = ['#C33531','#EFE42A','#64BD3D','#EE9201','#29AAE3', '#B74AE5','#0AAF9F','#E89589','#16A085','#4A235A','#C39BD3 ','#F9E79F','#BA4A00','#ECF0F1','#616A6B','#EAF2F8','#4A235A','#3498DB' ];
+                                            return colorList[params.dataIndex]
+                                        }
+                                    },
+                                },
+                                data: yData
                             }
                         ]
                     }
                 }
             }
+
+        },
+        mounted(){
+            this.initVisitChart()
+            this.initPayNumChart()
         }
     }
 </script>
@@ -209,8 +306,20 @@
             height : 60px;
             line-height: 60px;
         }
+        .progress-container{
+            height : 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
         /deep/ .el-card__body{
             padding : 10px !important;
+        }
+        /deep/ .el-progress-bar__outer{
+            border-radius : 0px;
+        }
+        /deep/ .el-progress-bar__inner{
+            border-radius : 0px;
         }
     }
 </style>
