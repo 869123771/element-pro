@@ -1,17 +1,17 @@
 <template>
     <div class="sideMenu">
         <el-scrollbar>
-        <el-menu
-                class = "h-screen"
-                unique-opened
-                :router="true"
-                :collapse="menuProps.collapse"
-                :collapse-transition = "false"
-                :default-active = "menuProps.activeName"
-                :default-openeds = "menuProps.openNames"
-        >
-            <nav-menu :nav-menus="permissionList"></nav-menu>
-        </el-menu>
+            <el-menu
+                    class="h-screen"
+                    unique-opened
+                    :router="true"
+                    :collapse="menuProps.collapse"
+                    :collapse-transition="false"
+                    :default-active="menuProps.activeName"
+                    :default-openeds="menuProps.openNames"
+            >
+                <nav-menu :nav-menus="permissionList"></nav-menu>
+            </el-menu>
         </el-scrollbar>
     </div>
 </template>
@@ -30,7 +30,7 @@
         },
         computed: {
             ...mapState({
-                menuProps : ({app}) => app.menuProps
+                menuProps: ({app}) => app.menuProps
             }),
             ...mapGetters([
                 'permissionList',
@@ -60,24 +60,23 @@
         border-right: solid 1px #e6e6e6;
     }
 </style>
-<style scoped>
+<style scoped lang="less">
     .el-menu {
         border: none;
     }
 
-    .el-menu--collapse >>> .menu-item-title {
-        display: none;
+    /deep/ .el-menu--collapse {
+        .menu-item-title {
+            display: none;
+        }
+        .el-menu-item .el-submenu__icon-arrow,
+        .el-submenu .el-submenu__title .el-submenu__icon-arrow {
+            display: none;
+        }
     }
 
-    >>> .el-submenu .el-menu-item {
+    /deep/ .el-submenu .el-menu-item {
         min-width: auto !important;
-    }
-
-    >>> .el-menu-item:focus,
-    >>> .el-menu-item:hover,
-    >>> .el-submenu__title:hover,
-    >>> .el-submenu__title:focus {
-        background-color: #f7f7f7;
     }
 
 </style>

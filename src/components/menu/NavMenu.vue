@@ -1,5 +1,5 @@
 <template>
-    <div class="navMenu">
+    <div>
         <template v-for="navMenu in navMenus">
             <Submenu v-if="navMenu.children && navMenu.children.length" :index="navMenu.path">
                 <template slot="title">
@@ -10,7 +10,7 @@
             </Submenu>
             <MenuItem v-else :index="navMenu.path">
                 <i class="anticon pr-1" :class="'icon-' + navMenu.meta.icon"></i>
-                <span class="menu-item-title">{{navMenu.meta.title}}</span>
+                <span slot="title" class="menu-item-title">{{navMenu.meta.title}}</span>
             </MenuItem>
         </template>
     </div>
