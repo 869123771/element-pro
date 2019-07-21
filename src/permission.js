@@ -16,7 +16,7 @@ router.beforeEach((to, from, next) => {
     if (getToken()) {
         /* has token */
         if (path === '/user/login') {
-            next({path: '/dashboard/workplace'})
+            next({path: '/dashboard/analysis'})
             NProgress.done()
         } else {
             if (store.getters.permissionList.length === 0) {
@@ -52,7 +52,7 @@ router.beforeEach((to, from, next) => {
                     let activeName, openNames = []
                     let {path,parent} = matched[matched.length - 1]
                     activeName = path
-                    openNames = [...openNames,parent.path].filter(item=>Boolean(item))
+                    openNames = findOpenNames(parent)
                     store.commit('ACTIVE_NAME',activeName)
                     store.commit('OPEN_NAMES',openNames)
                 }
@@ -73,3 +73,12 @@ router.beforeEach((to, from, next) => {
 router.afterEach(() => {
     NProgress.done() // finish progress bar
 })
+
+const findOpenNames = (obj ,pathList = [])=>{
+    if(obj && obj.constructor === Object){
+        let {path,parent} = obj
+        pathList.push(path)
+        findOpenNames(parent,pathList)
+    }
+    return pathList.filter(item=>Boolean(item))
+}

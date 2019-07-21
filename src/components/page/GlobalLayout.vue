@@ -46,7 +46,7 @@
             padding : 0 1rem;
         }
         &-main{
-            padding : 0.75rem;
+            padding: 0px;
         }
     }
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <div class="announce bg-white p-3">
+    <div class="announce bg-white p-3 m-3">
         <el-row>
             <el-form ref="form" :model="form" label-width="90px">
                 <el-row>

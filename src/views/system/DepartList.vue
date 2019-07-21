@@ -1,5 +1,5 @@
 <template>
-    <div class="dept">
+    <div class="dept m-3">
         <el-row>
             <el-col :span="12" class="pr-2">
                 <el-card>

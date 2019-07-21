@@ -1,8 +1,8 @@
 <template>
-    <div class = "cell-num">
+    <div class = "visit-num">
         <el-row>
             <el-col :span = "18">
-                <h4 class="title">销售额排行</h4>
+                <h4 class="title">销售额趋势</h4>
                 <v-chart :options="options.cellNum" auto-resize></v-chart>
             </el-col>
             <el-col :span = "6">
@@ -26,9 +26,9 @@
     import 'echarts/lib/component/tooltip';
 
     export default {
-        name: "CellNum",
+        name: "VisitNum",
         components: {
-            'v-chart': ECharts,
+            'v-chart': ECharts
         },
         data(){
             const rankList = []
@@ -47,7 +47,7 @@
             }
         },
         methods : {
-            initCellNumCharts(){
+            initVisitNumCharts(){
                 let xData = [], yData = [];
                 for (let i = 0; i < 12; i += 1) {
                     xData.push(`${i + 1}月`)
@@ -122,13 +122,13 @@
             }
         },
         mounted(){
-            this.initCellNumCharts()
+            this.initVisitNumCharts()
         }
     }
 </script>
 
 <style scoped lang = "less">
-    .cell-num{
+    .visit-num{
         .echarts {
             width: 100%;
             height: 400px;

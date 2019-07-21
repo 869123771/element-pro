@@ -200,5 +200,12 @@ export default {
                 data
             }
         })
+    },
+    ajax(method,url, params){
+        return ajax({
+            method,
+            url,
+            params,
+        })
     }
 }

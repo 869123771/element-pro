@@ -1,5 +1,5 @@
 <template>
-    <div class="role bg-white p-3">
+    <div class="role bg-white p-3 m-3">
         <el-row>
             <avue-form :option="form.option" v-model="form.model" ref="form">
                 <template slot-scope="scope" slot="searchBtn">
