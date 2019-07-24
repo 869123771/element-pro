@@ -54,10 +54,7 @@
             },
             selectAll(){        //全选
                 let {form:{model:{menuAssign:{ids}}}} = this.getMenuRef()
-                this.menuSearch = {
-                    ...this.menuSearch,
-                    defaultCheckedkeys : [...ids],
-                }
+                this.getTreeRef().setCheckedKeys(ids);
             },
             selectNone(){       //全不选
                 this.getTreeRef().setCheckedKeys([]);
@@ -72,7 +69,7 @@
             shrinkAll(){        //收起全部
                 this.menuSearch = {
                     ...this.menuSearch,
-                    defaultExpandKes : []
+                    defaultExpandKes : [],
                 }
             },
             async queryPermissionByRole(){

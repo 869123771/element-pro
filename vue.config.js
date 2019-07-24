@@ -48,7 +48,7 @@ module.exports = {
             plugins.push(
                 new ParallelUglifyPlugin({
                     // 传递给 UglifyJS的参数如下：
-                    uglifyJS: {
+                    uglifyES: {
                         output: {
                             beautify: false,
                             comments: false
@@ -59,7 +59,7 @@ module.exports = {
                             collapse_vars: true,
                             reduce_vars: true
                         }
-                    }
+                    },
                 }),
 
             );
@@ -201,10 +201,10 @@ module.exports = {
         disableHostCheck : true,
         proxy: {
             '/jeecg-boot': {
-                //target: process.env.VUE_APP_BASE_API || 'http://localhost:8080',
+                target: process.env.VUE_APP_BASE_API || 'http://localhost:8080',
                 //target: process.env.VUE_APP_BASE_API || 'http://10.149.10.50:8080',
                 //target: process.env.VUE_APP_BASE_API || 'http://47.105.36.102:8080',
-                 target: process.env.VUE_APP_BASE_API || 'http://boot.jeecg.org/',
+                 //target: process.env.VUE_APP_BASE_API || 'http://boot.jeecg.org/',
                 ws: false,
                 secure : false,
                 changeOrigin: true

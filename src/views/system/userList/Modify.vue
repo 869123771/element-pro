@@ -349,11 +349,20 @@
                 let {id,deptId} = this.data || {}
                 let params = {
                     ...model,
-                    id : id ? id : deptId ? deptId : userId ,             //新增取userId, 编辑去带过来的id
                     avatar,
                     selectedroles: selectedroles.join(','),
                 }
-                //
+                if(deptId){                             //部门管理用户录入
+                    params = {
+                        ...params,
+                        selecteddeparts : deptId
+                    }
+                }else{
+                    params = {
+                        ...params,
+                        id : id ? id : userId ,             //新增取userId, 编辑去带过来的id
+                    }
+                }
                 let res
                 if (id) {
                     res = await http.put(apiList.sys_user_edit, params)

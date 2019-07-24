@@ -333,7 +333,7 @@
             async confirmDeleteBatch(ids) {
                 let {success, message} = await http.delete(apiList.sys_sys_announcement_delete_batch, {ids})
                 if (success) {
-                    sweetAlert.successWithTimer(message)
+                    sweetAlert.success(message)
                     this.queryList()
                     this.show = {
                         ...this.show,

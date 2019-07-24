@@ -242,7 +242,7 @@
                 }
                 let {success, message} = await http.delete(apiList.sys_user_delete_batch_dept_user, params)
                 if (success) {
-                    sweetAlert.successWithTimer(message)
+                    sweetAlert.success(message)
                     this.queryList()
                 } else {
                     sweetAlert.error(message)

@@ -460,12 +460,13 @@
             },
             deleteBatch() {
                 let {selection} = this.table
-                sweetAlert.confirm('删除', '确认要删除吗', this.confirmDeleteBatch, selection.join(','))
+                let ids = selection.map(item=>item.id).join(',')
+                sweetAlert.confirm('删除', '确认要删除吗', this.confirmDeleteBatch, ids)
             },
             async confirmDeleteBatch(ids) {
                 let {success, message} = await http.delete(apiList.sys_role_delete_batch, {ids})
                 if (success) {
-                    sweetAlert.successWithTimer(message)
+                    sweetAlert.success(message)
                     this.queryList()
                 } else {
                     sweetAlert.error(message)

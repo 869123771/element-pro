@@ -18,13 +18,10 @@ ajax.interceptors.request.use(config => {
     if (config.method == 'get') {
         config.params = {
             _t: Date.parse(new Date()) / 1000,
+            order: 'desc',
+            column: 'createTime',
             ...config.params
         }
-    }
-    config.params = {
-        ...config.params,
-        order: 'desc',
-        column: 'createTime'
     }
     return config
 }, error => {
