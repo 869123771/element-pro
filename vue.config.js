@@ -1,6 +1,6 @@
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
     .BundleAnalyzerPlugin;
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
 const CompressionWebpackPlugin = require("compression-webpack-plugin");
 // const zopfli = require("@gfx/zopfli");
 // const BrotliPlugin = require("brotli-webpack-plugin");
@@ -46,18 +46,22 @@ module.exports = {
             );
 
             plugins.push(
-                new UglifyJsPlugin({
-                    uglifyOptions: {
+                new ParallelUglifyPlugin({
+                    // 传递给 UglifyJS的参数如下：
+                    uglifyJS: {
+                        output: {
+                            beautify: false,
+                            comments: false
+                        },
+                        warnings: false,
                         compress: {
-                            warnings: false,
                             drop_console: true,
-                            drop_debugger: false,
-                            pure_funcs: ["console.log"] //移除console
+                            collapse_vars: true,
+                            reduce_vars: true
                         }
-                    },
-                    sourceMap: false,
-                    parallel: true
-                })
+                    }
+                }),
+
             );
             plugins.push(
                 new CompressionWebpackPlugin({
@@ -194,12 +198,15 @@ module.exports = {
         port: 8088,
         https: false,
         hotOnly: true,
+        disableHostCheck : true,
         proxy: {
             '/jeecg-boot': {
                 //target: process.env.VUE_APP_BASE_API || 'http://localhost:8080',
-                //target: process.env.VUE_APP_BASE_API || 'http://boot.jeecg.org',
-                target: process.env.VUE_APP_BASE_API || 'http://47.105.36.102:8080',
+                //target: process.env.VUE_APP_BASE_API || 'http://10.149.10.50:8080',
+                //target: process.env.VUE_APP_BASE_API || 'http://47.105.36.102:8080',
+                 target: process.env.VUE_APP_BASE_API || 'http://boot.jeecg.org/',
                 ws: false,
+                secure : false,
                 changeOrigin: true
             },
         },
