@@ -73,28 +73,29 @@
             </el-dropdown>
         </el-row>
         <el-row>
-            <lb-table
-                    border
-                    stripe
-                    fit
-                    align="center"
-                    v-loading="table.loading"
-                    :column="table.column"
-                    :data="table.data"
-                    pagination
-                    background
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :page-sizes="[5, 10, 20, 30]"
-                    :pager-count="5"
-                    :current-page.sync="page.currentPage"
-                    :total="page.total"
-                    :page-size="page.pageSize"
-                    @size-change="handleSizeChange"
-                    @p-current-change="handleCurrentChange"
-                    @selection-change="checked"
-            ></lb-table>
+           <el-table-bar>
+               <lb-table
+                       border
+                       stripe
+                       fit
+                       align="center"
+                       v-loading="table.loading"
+                       :column="table.column"
+                       :data="table.data"
+                       pagination
+                       background
+                       layout="total, sizes, prev, pager, next, jumper"
+                       :page-sizes="[5, 10, 20, 30]"
+                       :pager-count="5"
+                       :current-page.sync="page.currentPage"
+                       :total="page.total"
+                       :page-size="page.pageSize"
+                       @size-change="handleSizeChange"
+                       @p-current-change="handleCurrentChange"
+                       @selection-change="checked"
+               ></lb-table>
+           </el-table-bar>
         </el-row>
-
         <drag-drawer v-model="drawer.show"
                      :draggable="drawer.draggable"
                      :title="drawer.title"
@@ -102,7 +103,8 @@
                      :placement="drawer.placement"
                      :scrollable="true"
         >
-            <component :is="component.type" :data="component.data" @closeFlush="closeFlush"></component>
+
+               <component :is="component.type" :data="component.data" @closeFlush="closeFlush"></component>
         </drag-drawer>
         <drag-dialog :drag-dialog="dialog">
             <reset-pwd v-if="show.resetPwd" :reset-pwd="props.resetPwd" @change-pwd-ok="changePwdOk"></reset-pwd>
@@ -206,8 +208,6 @@
                                 )
                             },
                         },
-                        {label: '用户账号', prop: 'username',},
-                        {label: '真实姓名', prop: 'realname'},
                         {
                             label: '头像',
                             width: '70',

@@ -11,6 +11,7 @@
         >
             <grid-item
                     v-for="(item,index) in layout"
+                    :key = "index"
                     :static="item.static"
                     :x="item.x"
                     :y="item.y"

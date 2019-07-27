@@ -11,8 +11,9 @@
             </avue-form>
         </el-row>
         <el-row>
+
             <avue-crud
-                    ref = "crud"
+                    ref="crud"
                     :data="table.data"
                     :option="table.option"
                     :page="page"
@@ -21,7 +22,7 @@
                     @size-change="sizeChange"
                     @current-change="currentChange"
                     @selection-change="selectionChange"
-                    @cell-click = "cellClick"
+                    @cell-click="cellClick"
             >
                 <template slot="menuLeft">
                     <el-button plain type="primary" icon="el-icon-plus" @click="addRole">新增</el-button>
@@ -47,13 +48,13 @@
                               <i class="fa fa-fw fa-ellipsis-h"></i>
                             </span>
                             <el-dropdown-menu slot="dropdown">
-                                <popover-confirm @confirm = "handleDel(row)">
+                                <popover-confirm @confirm="handleDel(row)">
                                     <div slot="popover-content">
                                         <el-dropdown-item>删除</el-dropdown-item>
                                     </div>
                                 </popover-confirm>
                                 <el-dropdown-item
-                                                 @click.native="handleAuth(row)">授权</el-dropdown-item>
+                                        @click.native="handleAuth(row)">授权</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </span>
@@ -61,7 +62,7 @@
             </avue-crud>
         </el-row>
         <el-row>
-            <role-maintenance :data = "role.data" v-show = "role.show"></role-maintenance>
+            <role-maintenance :data="role.data" v-show="role.show"></role-maintenance>
         </el-row>
         <drag-drawer v-model="drawer.show"
                      :draggable="drawer.draggable"
@@ -70,7 +71,7 @@
                      :placement="drawer.placement"
         >
             <component :is="component.type" :ref="component.ref" :data="component.data"
-                       @changeDialogWidth = "changeDialogWidth"></component>
+                       @changeDialogWidth="changeDialogWidth"></component>
             <div class="dialog-footer p-2 w-full flex justify-between">
                 <div>
                     <tree-operation
@@ -82,11 +83,11 @@
                             @shrinkAll="shrinkAll"
                     ></tree-operation>
                 </div>
-                <div class = "flex">
-                    <popover-confirm @confirm = "popoverConfirm" class="mx-2">
-                        <div slot = "popover-title">确定要关闭吗</div>
+                <div class="flex">
+                    <popover-confirm @confirm="popoverConfirm" class="mx-2">
+                        <div slot="popover-title">确定要关闭吗</div>
                         <div slot="popover-content">
-                            <el-button plain >取消</el-button>
+                            <el-button plain>取消</el-button>
                         </div>
                     </popover-confirm>
                     <el-button type="primary" @click="submit">提交</el-button>
@@ -166,7 +167,7 @@
                     data: [],
                     option: {
                         ...table,
-                        highlightCurrentRow : true,
+                        highlightCurrentRow: true,
                         column: [
                             {
                                 label: '操作',
@@ -182,6 +183,7 @@
                                 label: '角色编码',
                                 prop: 'roleCode'
                             },
+
                             {
                                 label: '备注',
                                 prop: 'description'
@@ -189,12 +191,12 @@
                             {
                                 label: '创建时间',
                                 prop: 'createTime',
-                                sortable:true,
+                                sortable: true,
                             },
                             {
                                 label: '更新时间',
                                 prop: 'updateTime',
-                                sortable:true,
+                                sortable: true,
                             },
                         ]
                     },
@@ -233,9 +235,9 @@
                 show: {
                     batch: false
                 },
-                role : {
-                    data : {},
-                    show :false,
+                role: {
+                    data: {},
+                    show: false,
                 },
                 fileUpload: {
                     action: uploadAction()
@@ -245,7 +247,7 @@
         computed: {},
         methods: {
             ...mapActions({
-                getPermissionList : 'GET_PERMISSION_LIST'
+                getPermissionList: 'GET_PERMISSION_LIST'
             }),
             search() {
                 this.page = {
@@ -283,14 +285,14 @@
             },
             changeDialogWidth(flag) {
                 let {width} = this.drawer
-                if(flag){
+                if (flag) {
                     if (width !== drawerDefaultWidth) {
                         this.drawer = {
                             ...this.drawer,
                             width: drawerDefaultWidth
                         }
                     }
-                }else{
+                } else {
                     if (width === drawerDefaultWidth) {
                         this.drawer = {
                             ...this.drawer,
@@ -415,14 +417,14 @@
                     }
                 }
             },
-            cellClick(row, column){
-                let {property,type} = column
+            cellClick(row, column) {
+                let {property, type} = column
                 let exceptCell = ['oper']
-                if(type !== 'selection' && !exceptCell.includes(property)){
+                if (type !== 'selection' && !exceptCell.includes(property)) {
                     this.role = {
                         ...this.role,
-                        data : row,
-                        show : true
+                        data: row,
+                        show: true
                     }
                     this.$refs.crud.setCurrentRow(row)
                 }
@@ -460,7 +462,7 @@
             },
             deleteBatch() {
                 let {selection} = this.table
-                let ids = selection.map(item=>item.id).join(',')
+                let ids = selection.map(item => item.id).join(',')
                 sweetAlert.confirm('删除', '确认要删除吗', this.confirmDeleteBatch, ids)
             },
             async confirmDeleteBatch(ids) {
