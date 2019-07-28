@@ -107,7 +107,8 @@
                         column: [
                             {
                                 label: '菜单名称',
-                                prop: 'name'
+                                prop: 'name',
+                                align : 'left'
                             },
                             {
                                 label: '菜单类型',

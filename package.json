@@ -12,6 +12,7 @@
     "@babel/polyfill": "^7.4.4",
     "@smallwei/avue": "^2.0.4",
     "axios": "^0.18.1",
+    "crypto-js": "^3.1.9-1",
     "dayjs": "^1.8.14",
     "el-table-bar-base": "^2.0.5",
     "element-ui": "^2.10.1",

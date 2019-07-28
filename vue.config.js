@@ -35,15 +35,15 @@ module.exports = {
         if (IS_PROD) {
             const plugins = [];
 
-            plugins.push(
+            /*plugins.push(
                 new PurgecssPlugin({
                     paths: glob.sync([
                         path.join(__dirname, "./src/index.html"),
-                        path.join(__dirname, "./**/*.vue"),
-                        path.join(__dirname, "./src/**/*.js")
+                        path.join(__dirname, "./!**!/!*.vue"),
+                        path.join(__dirname, "./src/!**!/!*.js")
                     ])
                 })
-            );
+            );*/
 
             plugins.push(
                 new ParallelUglifyPlugin({
@@ -201,10 +201,10 @@ module.exports = {
         disableHostCheck : true,
         proxy: {
             '/jeecg-boot': {
-                //target: process.env.VUE_APP_BASE_API || 'http://localhost:8080',
+                target: process.env.VUE_APP_BASE_API || 'http://localhost:8080',
                 //target: process.env.VUE_APP_BASE_API || 'http://10.149.10.50:8080',
                 //target: process.env.VUE_APP_BASE_API || 'http://47.105.36.102:8080',
-                 target: process.env.VUE_APP_BASE_API || 'http://boot.jeecg.org/',
+                 //target: process.env.VUE_APP_BASE_API || 'http://boot.jeecg.org/',
                 ws: false,
                 secure : false,
                 changeOrigin: true

@@ -47,6 +47,7 @@
         }
         &-main{
             padding: 0px;
+            overflow: hidden;
         }
     }
 </style>

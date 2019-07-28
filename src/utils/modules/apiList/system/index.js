@@ -9,7 +9,7 @@ export default {
     sys_user_frozenBatch : '/sys/user/frozenBatch',
     sys_user_unique_user_check : '/sys/user/checkOnlyUser',
     sys_user_generate_user_id : '/sys/user/generateUserId',
-    sys_user_add_user_dept_ids : '/sys/user/addUDepartIds',
+    //sys_user_add_user_dept_ids : '/sys/user/addUDepartIds',
     sys_user_edit_user_dept_ids : '/sys/user/editUDepartIds',
     sys_user_query_user_by_role : '/sys/user/userRoleList',
     sys_user_query_user_by_dept : '/sys/user/departUserList',

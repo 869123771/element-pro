@@ -66,7 +66,7 @@
                     批量操作<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item @click.native="batchDel"><i class="el-icon-delete"></i>删除</el-dropdown-item>
+                    <el-dropdown-item @click.native="deleteBatch"><i class="el-icon-delete"></i>删除</el-dropdown-item>
                     <el-dropdown-item @click.native="frozen()"><i class="el-icon-lock"></i>冻结</el-dropdown-item>
                     <el-dropdown-item @click.native="frozen(1)"><i class="el-icon-unlock"></i>解冻</el-dropdown-item>
                 </el-dropdown-menu>
@@ -209,6 +209,14 @@
                             },
                         },
                         {
+                            label : '用户账号',
+                            prop : 'username',
+                        },
+                        {
+                            label : '真实姓名',
+                            prop : 'realname',
+                        },
+                        {
                             label: '头像',
                             width: '70',
                             prop: 'avatar',
@@ -337,13 +345,17 @@
                     data: row
                 }
             },
-            async batchDel() {
+
+            deleteBatch() {
                 let {selection} = this.table
                 let ids = selection.map(item => item.id).join(',')
-                let {success, message, result} = await http.delete(apiList.sys_user_deleteBatch, {ids})
+                sweetAlert.confirm('删除', '确认要删除吗', this.confirmDeleteBatch, ids)
+            },
+            async confirmDeleteBatch(ids) {
+                let {success, message} = await http.delete(apiList.sys_user_deleteBatch, {ids})
                 if (success) {
-                    sweetAlert.successWithTimer('删除成功'),
-                        this.queryList()
+                    sweetAlert.success(message)
+                    this.queryList()
                 } else {
                     sweetAlert.error(message)
                 }

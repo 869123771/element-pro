@@ -24,7 +24,7 @@
 
 <script>
     import {mapState} from 'vuex'
-    import {http, apiList, constant,sweetAlert} from '@/utils'
+    import {http, apiList, constant, sweetAlert} from '@/utils'
     import {getToken} from '@/utils/modules/tools'
     import {uniqueUserCheck, pwdCheck, confirmPwdCheck, emailCheck, phoneCheck} from '@/utils/modules/validate'
     import dragDialog from '@/components/dragDialog'
@@ -47,7 +47,7 @@
             }
         },
         data() {
-            let {id,deptId} = this.data
+            let {id, deptId} = this.data
             let ps = id ? [] : [
                 {
                     label: '登陆密码',
@@ -114,7 +114,7 @@
                                 label: '用户账号',
                                 prop: 'username',
                                 span: 24,
-                                readonly : id ? true : false,
+                                readonly: id ? true : false,
                                 rules: [
                                     {
                                         required: true,
@@ -158,6 +158,7 @@
                                 label: '生日',
                                 prop: 'birthday',
                                 type: 'date',
+                                valueFormat: 'yyyy-MM-dd hh:mm:ss',
                                 span: 24
                             },
                             {
@@ -192,7 +193,7 @@
                         ]
                     },
                     model: {
-                        activitiSync : '1'
+                        activitiSync: '1'
                     }
                 },
                 deptCheckedIds: [],
@@ -206,7 +207,7 @@
                 },
                 dialog: {
                     width: 22,
-                    height : 80,
+                    height: 80,
                     showFooter: true,
                     title: '部门搜索',
                     name: 'deptSearch'
@@ -288,7 +289,7 @@
                     }
                 }
             },
-            async generateuserId() {
+            async generateUserId() {
                 let {success, result: userId} = await http.get(apiList.sys_user_generate_user_id)
                 if (success) {
                     customParams = {
@@ -298,21 +299,14 @@
                 }
                 return {userId}
             },
-            async addUserDeptIds(departIdList) {
-                let {userId} = await this.generateuserId()
-                let {success} = await http.post(apiList.sys_user_add_user_dept_ids, {departIdList, userId})
-            },
-            async updateUserDeptIds(userId,departIdList){
-                await http.put(apiList.sys_user_edit_user_dept_ids, {departIdList, userId})
-            },
             confirm() {
                 this.dialog = {
                     ...this.dialog,
                     loading: true
                 }
-                let {model,model:{id}} = this.form
+                let {model, model: {id}} = this.form
                 let checkedNode = this.$refs.deptSearch.$refs.tree.getCheckedNodes()
-                let checkedNodeIds = checkedNode.map(({id}) => id)
+                let checkedNodeIds = checkedNode.map(({id}) => id).join(',')
                 customParams = {
                     ...customParams,
                     checkedNodeIds
@@ -330,10 +324,8 @@
                     loading: false
                 }
                 this.$modal.hide('deptSearch')
-                if(id){
-                    this.updateUserDeptIds(id,checkedNodeIds)
-                }else{
-                    this.addUserDeptIds(checkedNodeIds)
+                if (!id) {
+                    this.generateUserId(checkedNodeIds)
                 }
             },
             submit() {
@@ -344,23 +336,25 @@
                 })
             },
             async commitData() {
-                let {model,model:{selectedroles}} = this.form
-                let {userId, avatar} = customParams
-                let {id,deptId} = this.data || {}
+                let {model, model: {selectedroles}} = this.form
+                let {userId, avatar, checkedNodeIds} = customParams
+                let {id, deptId} = this.data || {}           //部门管理用户录入
                 let params = {
                     ...model,
                     avatar,
+                    id: id ? id : userId,                 //新增取userId, 编辑去带过来的id
                     selectedroles: selectedroles.join(','),
+                    selecteddeparts: deptId ? deptId : Array.isArray(checkedNodeIds) ? checkedNodeIds.join(',') : checkedNodeIds
                 }
-                if(deptId){                             //部门管理用户录入
+                if (deptId) {
                     params = {
                         ...params,
-                        selecteddeparts : deptId
+                        selecteddeparts: deptId
                     }
-                }else{
+                } else {
                     params = {
                         ...params,
-                        id : id ? id : userId ,             //新增取userId, 编辑去带过来的id
+                        id: id ? id : userId,             //新增取userId, 编辑去带过来的id
                     }
                 }
                 let res
