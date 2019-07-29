@@ -342,20 +342,9 @@
                 let params = {
                     ...model,
                     avatar,
-                    id: id ? id : userId,                 //新增取userId, 编辑去带过来的id
+                    id: id ? id : deptId ? deptId : userId,                 //新增取userId,如果有deptId,取这个, 编辑去带过来的id
                     selectedroles: selectedroles.join(','),
                     selecteddeparts: deptId ? deptId : Array.isArray(checkedNodeIds) ? checkedNodeIds.join(',') : checkedNodeIds
-                }
-                if (deptId) {
-                    params = {
-                        ...params,
-                        selecteddeparts: deptId
-                    }
-                } else {
-                    params = {
-                        ...params,
-                        id: id ? id : userId,             //新增取userId, 编辑去带过来的id
-                    }
                 }
                 let res
                 if (id) {

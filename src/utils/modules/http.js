@@ -5,7 +5,7 @@ import {getToken} from '@/utils/modules/tools'
 import {constant, sweetAlert} from "../index";
 
 const ajax = axios.create({
-    baseURL: process.env.NODE_ENV === 'development' ? '/jeecg-boot' : '',
+    //baseURL: process.env.NODE_ENV === 'development' ? '/jeecg-boot' : '',
     timeout: 1000,
 })
 

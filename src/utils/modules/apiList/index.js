@@ -1,11 +1,6 @@
-import system from './system'
-import monitor from './monitor'
+import jeecg from './jeecg'
+import molicode from './molicode'
 export default {
-    ...system,
-    ...monitor,
-    login : '/sys/login',
-    login_encrypted : '/sys/getEncryptedString',
-    login_out : '/sys/logout',
-    permission_menu : '/sys/permission/getUserPermissionByToken',
-    home_login_info: '/sys/loginfo',
+    ...jeecg,
+    ...molicode,
 }

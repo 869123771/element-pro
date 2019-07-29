@@ -15,7 +15,7 @@ const IS_PROD = ["production", "prod"].includes(process.env.NODE_ENV);
 const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i;
 
 module.exports = {
-    baseUrl: IS_PROD ? process.env.VUE_APP_SRC || "/" : "./", // 默认'/'，部署应用包时的基本 URL
+    publicPath: IS_PROD ? process.env.VUE_APP_SRC || "/" : "./", // 默认'/'，部署应用包时的基本 URL
     outputDir: process.env.outputDir || "dist", // 'dist', 生产环境构建文件的目录
     assetsDir: "", // 相对于outputDir的静态资源(js、css、img、fonts)目录
     lintOnSave: false,
@@ -201,10 +201,16 @@ module.exports = {
         disableHostCheck : true,
         proxy: {
             '/jeecg-boot': {
-                target: process.env.VUE_APP_BASE_API || 'http://localhost:8080',
-                //target: process.env.VUE_APP_BASE_API || 'http://10.149.10.50:8080',
+                //target: process.env.VUE_APP_BASE_API || 'http://localhost:8080',
+                target: process.env.VUE_APP_BASE_API || 'http://10.149.10.50:8080',
                 //target: process.env.VUE_APP_BASE_API || 'http://47.105.36.102:8080',
-                 //target: process.env.VUE_APP_BASE_API || 'http://boot.jeecg.org/',
+                // target: process.env.VUE_APP_BASE_API || 'http://boot.jeecg.org/',
+                ws: false,
+                secure : false,
+                changeOrigin: true
+            },
+            '/': {
+                target: process.env.VUE_APP_BASE_API || 'http://127.0.0.1:8098',
                 ws: false,
                 secure : false,
                 changeOrigin: true

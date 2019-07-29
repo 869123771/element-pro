@@ -109,7 +109,7 @@
                 this.$emit('close')
             },
             confirm() {
-                this.$emit('confirm')
+                this.$emit('confirm',this.dialog.name)
             }
         }
     }
