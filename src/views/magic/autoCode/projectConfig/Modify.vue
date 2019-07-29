@@ -6,7 +6,7 @@
 <script>
     import {http,apiList,sweetAlert} from '@/utils'
     export default {
-        name: "Copy",
+        name: "Modify",
         props : {
             data : {
                 type : Object
@@ -20,13 +20,13 @@
                         labelWidth: 120,
                         column: [
                             {
-                                label: '被复制的项目id',
+                                label: 'ID',
                                 prop: 'id',
                                 disabled : true,
                                 span: 24
                             },
                             {
-                                label: '被复制的项目key',
+                                label: 'Key',
                                 prop: 'projectKey',
                                 disabled : true,
                                 span: 24
@@ -47,20 +47,6 @@
                                 showWordLimit:true,
                                 span: 24
                             },
-                            {
-                                label: '是否默认',
-                                prop: 'isDefault',
-                                type : 'radio',
-                                props : {
-                                    label : 'label',
-                                    value : 'value'
-                                },
-                                dicData : [
-                                    {label : '是',value : true},
-                                    {label : '否',value : false},
-                                ],
-                                span: 24,
-                            }
                         ]
                     },
                     model: {}
@@ -91,9 +77,9 @@
                     ...model,
                     token : 'wangyang'
                 }
-                let {data:{success}} = await http.ajax('post',apiList.project_config_copy_project,params)
+                let {data:{success}} = await http.ajax('post',apiList.project_config_modify_project,params)
                 if(success){
-                    sweetAlert.successWithTimer('复制成功')
+                    sweetAlert.successWithTimer('修改成功')
                     this.$emit('closeDialog')
                 }
             }
