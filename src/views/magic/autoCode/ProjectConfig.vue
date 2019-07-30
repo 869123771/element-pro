@@ -58,6 +58,27 @@
                 </el-row>
             </div>
         </collapse>
+        <collapse :collapse-props="collapse.configInfo" class = "my-3">
+            <div slot="collapse-title">
+                <span class="el-icon-tickets pr-1"></span>
+                <span>默认项目下配置信息 （默认项目ID:{{getDefaultId}}）</span>
+            </div>
+            <div slot="collapse-content">
+                <el-row class = "m-3">
+                    <collapse :collapse-props="collapse.dataSource">
+                        <div slot="collapse-title">
+                            <span class="el-icon-tickets pr-1"></span>
+                            <span>数据库设置</span>
+                        </div>
+                        <div slot="collapse-content">
+                            <el-row class = "m-3">
+                                <data-source :data-source-props = "collapse.defaultPlateInfo"></data-source>
+                            </el-row>
+                        </div>
+                    </collapse>
+                </el-row>
+            </div>
+        </collapse>
         <drag-dialog :drag-dialog="dialog" @confirm="confirm">
             <component
                     :is="component.is"
@@ -77,6 +98,8 @@
     import PopoverConfirm from '@/components/popoverConfirm'
     import Copy from './projectConfig/Copy'
     import Modify from './projectConfig/Modify'
+    import Add from './projectConfig/Add'
+    import DataSource from './projectConfig/DataSource'
 
     export default {
         name: "ProjectConfig",
@@ -84,13 +107,12 @@
             Collapse,
             DragDialog,
             PopoverConfirm,
-            Copy
+            DataSource
         },
         data() {
             return {
                 collapse: {
                     projectList: {
-                        title: '项目列表',
                         name: 'projectList',
                     },
                     datas: [],
@@ -99,6 +121,12 @@
                         pageNum: 1,
                         pageSize: 4,
                         total: 0
+                    },
+                    configInfo : {
+                        name : 'configInfo'
+                    },
+                    dataSource : {
+                        name : 'dataSource'
                     }
                 },
                 defaultPlateInfo: {},
@@ -112,6 +140,15 @@
                     ref: 'copy',
                     data: {}
                 },
+            }
+        },
+        computed : {
+            getDefaultId(){
+                debugger;
+                let {datas,defaultPlate} = this.collapse
+                if(datas.length && defaultPlate){
+                    return datas.find(item=>item.projectKey === defaultPlate).id
+                }
             }
         },
         methods: {
@@ -160,7 +197,23 @@
                 })
             },
             addPlate() {
-
+                this.dialog = {
+                    ...this.dialog,
+                    title: '新增项目',
+                    name: 'add',
+                    width : 25,
+                    height : 35
+                }
+                this.component = {
+                    ...this.component,
+                    is: Add,
+                    ref: 'add',
+                    data: {}
+                }
+                let {name} = this.dialog
+                this.$nextTick(() => {
+                    this.$modal.show(name)
+                })
             },
             edit(data) {
                 this.dialog = {
@@ -189,6 +242,7 @@
                 let {data: {success}} = await http.ajax('post', apiList.project_config_delete_project, params)
                 if (success) {
                     sweetAlert.successWithTimer('删除成功')
+                    this.getProjectList()
                 }
             },
             currentChange(pageNum) {

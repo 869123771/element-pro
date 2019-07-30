@@ -5,4 +5,6 @@ export default {
     project_config_copy_project : '/conf/acProject/copyProject',
     project_config_modify_project : '/conf/acProject/update',
     project_config_delete_project : '/conf/acProject/delete',
+    project_config_add_project : '/conf/acProject/add',
+    project_config_save_data_source : '/conf/acConfig/save',
 }
