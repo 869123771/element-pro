@@ -50,11 +50,12 @@ router.beforeEach((to, from, next) => {
             } else {
                 if(matched.length){
                     let activeName, openNames = []
-                    let {path,parent} = matched[matched.length - 1]
+                    let {path,parent,name,meta:{title}} = matched[matched.length - 1]
                     activeName = path
                     openNames = findOpenNames(parent)
                     store.commit('ACTIVE_NAME',activeName)
                     store.commit('OPEN_NAMES',openNames)
+                    store.commit('ACTIVE_NAV_TAG',{path,name,title})
                 }
                 next()
             }

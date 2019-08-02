@@ -1,7 +1,7 @@
 <template>
     <div class="login" @keydown.enter="handleSubmit">
         <el-row type="flex" justify="center" class="px-3">
-            <el-col :md="6" :xs="24" :sm="12">
+            <el-col :md="12" :xs="24" :sm="12" class = "max-w-sm">
                 <el-card>
                     <div class="login-logo">
                         <i class="el-icon-eleme"></i>

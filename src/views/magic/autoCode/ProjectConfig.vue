@@ -72,7 +72,7 @@
                         </div>
                         <div slot="collapse-content">
                             <el-row class = "m-3">
-                                <data-source :data-source-props = "collapse.defaultPlateInfo"></data-source>
+                                <data-source :data-source-props = "defaultPlateInfo"></data-source>
                             </el-row>
                         </div>
                     </collapse>
@@ -144,7 +144,6 @@
         },
         computed : {
             getDefaultId(){
-                debugger;
                 let {datas,defaultPlate} = this.collapse
                 if(datas.length && defaultPlate){
                     return datas.find(item=>item.projectKey === defaultPlate).id
@@ -153,7 +152,6 @@
         },
         methods: {
             confirm(name) {
-                debugger;
                 let {ref} = this.component
                 let modifyRef = this.$refs[ref]
                 modifyRef.$refs.form.validate(valid => {
@@ -275,7 +273,6 @@
                         ...this.collapse,
                         defaultPlate: value.extValue
                     }
-                    debugger;
                     sweetAlert.successWithTimer('设置默认项目成功')
                 }
             },
@@ -289,9 +286,7 @@
                     token: 'wangyang'
                 }
                 let {data: {success, value, pageQuery: {totalCount: total}}} = await http.ajax('post', apiList.project_config_project_list_query_list, params)
-                debugger;
                 if (success) {
-                    debugger;
                     this.collapse = {
                         ...this.collapse,
                         datas: value,

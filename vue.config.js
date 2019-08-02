@@ -1,6 +1,7 @@
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
     .BundleAnalyzerPlugin;
 const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
+const MonacoEditorPlugin = require('monaco-editor-webpack-plugin')
 const CompressionWebpackPlugin = require("compression-webpack-plugin");
 // const zopfli = require("@gfx/zopfli");
 // const BrotliPlugin = require("brotli-webpack-plugin");
@@ -31,10 +32,12 @@ module.exports = {
         //     'vuex': 'Vuex',
         //     'axios': 'axios'
         // }
+        const plugins = [];
+        plugins.push(
+            new MonacoEditorPlugin()
+        )
 
         if (IS_PROD) {
-            const plugins = [];
-
             /*plugins.push(
                 new PurgecssPlugin({
                     paths: glob.sync([
@@ -61,8 +64,8 @@ module.exports = {
                         }
                     },
                 }),
-
             );
+
             plugins.push(
                 new CompressionWebpackPlugin({
                     filename: "[path].gz[query]",
@@ -107,8 +110,8 @@ module.exports = {
             //         minRatio: 0.99
             //     })
             // );
-            config.plugins = [...config.plugins, ...plugins];
         }
+        config.plugins = [...config.plugins, ...plugins];
     },
     chainWebpack: config => {
         // 修复HMR
@@ -198,23 +201,23 @@ module.exports = {
         port: 8088,
         https: false,
         hotOnly: true,
-        disableHostCheck : true,
+        disableHostCheck: true,
         proxy: {
             '/jeecg-boot': {
                 //target: process.env.VUE_APP_BASE_API || 'http://localhost:8080',
-                target: process.env.VUE_APP_BASE_API || 'http://10.149.10.50:8080',
+                //target: process.env.VUE_APP_BASE_API || 'http://10.149.10.50:8080',
                 //target: process.env.VUE_APP_BASE_API || 'http://47.105.36.102:8080',
-                // target: process.env.VUE_APP_BASE_API || 'http://boot.jeecg.org/',
+                target: process.env.VUE_APP_BASE_API || 'http://boot.jeecg.com/',
                 ws: false,
-                secure : false,
+                secure: false,
                 changeOrigin: true
             },
-            '/': {
+            /*'/': {
                 target: process.env.VUE_APP_BASE_API || 'http://127.0.0.1:8098',
                 ws: false,
                 secure : false,
                 changeOrigin: true
-            },
+            },*/
         },
     }
 };

@@ -93,34 +93,44 @@
                     model: {
                         databaseName : 'mysql',
                         driverClass : 'com.mysql.jdbc.Driver',
-                        url : 'jdbc:mysql://127.0.0.1:3306/auto-code?useUnicode=true&characterEncoding=UTF8',
+                        url : 'jdbc:mysql://127.0.0.1:3306/jeecg-boot?characterEncoding=UTF-8&useUnicode=true&useSSL=false',
                         username : 'root',
-                        password : '123456',
+                        password : 'root',
                     }
                 },
             }
         },
         methods : {
-            async save(){
+            handlerDataSourceParams(){
                 let {model} = this.form
                 let configValue = {
                     ...model
                 }
                 let params = {
-                    projectKey : this.dataSourceProps.projectKey,
+                    projectKey : this.dataSourceProps.extValue,
                     configKey : 'databaseConfig',
                     configValue : JSON.stringify(configValue),
                     type : 2,
                     scope : 1,
                     token  :'wangyang'
                 }
-                let {success,value} = await http.ajax('post',apiList.project_config_save_data_source,params)
+                return params
+            },
+            async save(){
+                let {data:{success,message,value}} = await http.ajax('post',apiList.project_config_save_data_source,this.handlerDataSourceParams())
                 if(success){
                     sweetAlert.successWithTimer('保存数据库配置成功')
+                }else{
+                    sweetAlert.errorWithTimer(message)
                 }
             },
             async test(){
-
+                let {data:{success,message,value}} = await http.ajax('post',apiList.project_config_test_data_source,this.handlerDataSourceParams())
+                if(success){
+                    sweetAlert.successWithTimer('连接数据库成功')
+                }else{
+                    sweetAlert.errorWithTimer(message)
+                }
             }
         }
     }

@@ -6,9 +6,9 @@ export default {
             openNames: [],
         },
             breadcrumbList: [],
-            navTagList: []
+            navTagList : [],
+            currentNav : '',
         },
-        getters: {},
         mutations: {
             SHRINK_MENU(state) {
                 let {menuProps,menuProps: {collapse}} = state
@@ -44,53 +44,40 @@ export default {
                 breadcrumbList.unshift({path: '/home', title: '首頁', icon: 'icon-home'})
                 state.breadcrumbList = breadcrumbList
             },
-            activeNavTag(state, {path, title}) {
-                let defaultTagList = [{path: '/home', title: '首頁', closable: false}]
+            ACTIVE_NAV_TAG(state, {path, title,name}) {
+                debugger;
                 let {navTagList} = state
                 let addTagList = []
-
-                if (navTagList.length) {
+                if(navTagList.length){
                     navTagList.forEach(item => {
-                        if (!navTagList.map(item => item.path).includes(path) && !addTagList.map(item => item.path).includes(path)) {
-                            if (navTagList.length >= 5) {
-                                navTagList.splice(1, 1)
-                            }
-                            addTagList.push({path, title, current: true, closable: true})
-                        } else {
-                            if (item.path === path) {
-                                item.current = true;
-                            } else {
-                                item.current = false;
-                            }
+                        if (!navTagList.map(item => item.path).includes(path)) {
+                            navTagList = [
+                                ...navTagList,
+                                {path,name,title}
+                            ]
                         }
                     })
-
-                } else {
-                    defaultTagList.forEach(item => {
-                        if (item.path !== path) {
-                            addTagList.push({path, title, current: true, closable: true})
-                        } else {
-                            item.current = true;
-                        }
-                    })
-                    navTagList = defaultTagList
+                }else{
+                    navTagList = [
+                        ...navTagList,
+                        {path,name,title}
+                    ]
                 }
-                state.navTagList = [...navTagList, ...addTagList]
+                state.navTagList = [...navTagList]
+                state.currentNav = path
             },
-            removeNavTag(state, tagProps) {
-                let {path, current} = tagProps
-                let {navTagList} = state
-                let newTagList = navTagList
-                navTagList.forEach((item, index) => {
-                    if (item.path === path) {
-                        if (current) {
-                            newTagList[index - 1].current = true;
-                            location.href = location.origin + '#' + newTagList[index - 1].path
-                        }
-                        newTagList.splice(index, 1)
+            REMOVE_NAV_TAG(state, removeNav) {
+                let _30s = require('30-seconds-of-code');
+                let {navTagList,currentNav} = state
+                debugger;
+                navTagList = _30s.remove(navTagList, item => item.path !== removeNav);
+                if(navTagList.length){
+                    let [{path:lastNav}] = navTagList.slice(-1)
+                    if(removeNav === currentNav) {
+                        state.currentNav = lastNav
                     }
-                })
-                state.navTagList = newTagList
+                }
+                state.navTagList = [...navTagList]
             }
         },
         actions: {}
