@@ -1,5 +1,5 @@
 <template>
-    <el-tabs v-model="tabs" type="card" closable @tab-click = "clickTab" @tab-remove="removeTab">
+    <el-tabs v-model="tabs" closable @tab-click="clickTab" @tab-remove="removeTab">
         <el-tab-pane
                 v-for="item in navTagList"
                 :key="item.name"
@@ -11,43 +11,49 @@
 </template>
 
 <script>
-    import {mapState,mapMutations} from 'vuex'
+    import {mapState, mapMutations} from 'vuex'
+
     export default {
         name: "NavPanel",
-        data(){
+        data() {
             return {
-                tabs : ''
+                tabs: ''
             }
         },
-        computed : {
+        computed: {
             ...mapState({
-                navTagList : ({app}) => app.navTagList,
-                currentNav : ({app}) => app.currentNav
+                navTagList: ({app}) => app.navTagList,
+                currentNav: ({app}) => app.currentNav
             })
         },
-        watch : {
-            currentNav : {
-                handler(path){
+        watch: {
+            currentNav: {
+                handler(path) {
                     this.tabs = path
                     this.$router.push(path)
                 },
-                immediate : true
+                immediate: true
             }
         },
-        methods : {
+        methods: {
             ...mapMutations({
-                removeCurrent : 'REMOVE_NAV_TAG'
+                removeCurrent: 'REMOVE_NAV_TAG'
             }),
-            clickTab(tab){
-               this.$router.push(tab.name)
+            clickTab(tab) {
+                this.$router.push(tab.name)
             },
-            removeTab(path){
-               this.removeCurrent(path)
+            removeTab(path) {
+                this.removeCurrent(path)
             }
         }
     }
 </script>
 
-<style scoped>
-
+<style scoped lang="less">
+    .el-tabs {
+        padding: 0px 1rem;
+        /deep/ .el-tabs__header {
+            margin: 0px;
+        }
+    }
 </style>

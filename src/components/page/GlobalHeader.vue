@@ -1,9 +1,17 @@
 <template>
-    <div class = "flex justify-between items-center">
-        <level-bar></level-bar>
-        <bread-crumb></bread-crumb>
-        <nav-tag></nav-tag>
-        <avatar></avatar>
+    <div>
+        <div class = "pr-3 inline-block">
+            <level-bar></level-bar>
+        </div>
+
+        <div class = "inline-block">
+            <bread-crumb></bread-crumb>
+            <nav-tag></nav-tag>
+        </div>
+            <div class = "inline-block float-right">
+                <avatar></avatar>
+            </div>
+
     </div>
 </template>
 <script>

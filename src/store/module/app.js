@@ -5,7 +5,7 @@ export default {
             activeName: '',
             openNames: [],
         },
-            breadcrumbList: [],
+            navBreadcrumbList: [],
             navTagList : [],
             currentNav : '',
         },
@@ -31,18 +31,10 @@ export default {
                     openNames
                 }
             },
-            activeBreadcrumb(state, {matched}) {
-                let breadcrumbList = []
-                matched.filter(item => item.path).forEach(({path, meta}) => {
-                    if (path !== '/home') {
-                        breadcrumbList = [
-                            ...breadcrumbList,
-                            {path, ...meta}
-                        ]
-                    }
-                })
-                breadcrumbList.unshift({path: '/home', title: '首頁', icon: 'icon-home'})
-                state.breadcrumbList = breadcrumbList
+            ACTIVE_BREAD_CREAM(state, activeBreadcream) {
+               debugger;
+
+                state.navBreadcrumbList = activeBreadcream
             },
             ACTIVE_NAV_TAG(state, {path, title,name}) {
                 debugger;

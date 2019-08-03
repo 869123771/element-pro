@@ -45,7 +45,8 @@
             height: 100vh;
         }
         &-header{
-            line-height : 60px;
+            line-height : 50px;
+            height : 50px !important;
             padding : 0 1rem;
         }
         &-main{

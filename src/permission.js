@@ -12,7 +12,7 @@ const whiteList = ['/user/login', '/user/register', '/user/register-result'] // 
 
 router.beforeEach((to, from, next) => {
     NProgress.start() // start progress bar
-    let {matched,path} = to
+    let {matched, path} = to
     if (getToken()) {
         /* has token */
         if (path === '/user/login') {
@@ -48,14 +48,16 @@ router.beforeEach((to, from, next) => {
                         })
                     })
             } else {
-                if(matched.length){
-                    let activeName, openNames = []
-                    let {path,parent,name,meta:{title}} = matched[matched.length - 1]
-                    activeName = path
-                    openNames = findOpenNames(parent)
-                    store.commit('ACTIVE_NAME',activeName)
-                    store.commit('OPEN_NAMES',openNames)
-                    store.commit('ACTIVE_NAV_TAG',{path,name,title})
+                if (matched.length) {
+                    const {path, parent, name, meta: {title, icon}} = matched[matched.length - 1]
+                    const result = findOpenNames(parent)
+                    const activeName = path
+                    const openNames = result.map(item => item.path)
+                    result.unshift({path, name, title, icon})
+                    store.commit('ACTIVE_NAME', activeName)
+                    store.commit('OPEN_NAMES', openNames)
+                    store.commit('ACTIVE_NAV_TAG', {path, name, title})
+                    store.commit('ACTIVE_BREAD_CREAM', result.reverse())
                 }
                 next()
             }
@@ -75,11 +77,11 @@ router.afterEach(() => {
     NProgress.done() // finish progress bar
 })
 
-const findOpenNames = (obj ,pathList = [])=>{
-    if(obj && obj.constructor === Object){
-        let {path,parent} = obj
-        pathList.push(path)
-        findOpenNames(parent,pathList)
+const findOpenNames = (obj, resultList = []) => {
+    if (obj && obj.constructor === Object) {
+        let {path, name, meta: {title, icon}, parent} = obj
+        resultList.push({path, name, title, icon})
+        findOpenNames(parent, resultList)
     }
-    return pathList.filter(item=>Boolean(item))
+    return resultList.filter(item => Boolean(item.path))
 }
