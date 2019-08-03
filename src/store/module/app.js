@@ -32,23 +32,17 @@ export default {
                 }
             },
             ACTIVE_BREAD_CREAM(state, activeBreadcream) {
-               debugger;
-
                 state.navBreadcrumbList = activeBreadcream
             },
             ACTIVE_NAV_TAG(state, {path, title,name}) {
-                debugger;
                 let {navTagList} = state
-                let addTagList = []
                 if(navTagList.length){
-                    navTagList.forEach(item => {
-                        if (!navTagList.map(item => item.path).includes(path)) {
-                            navTagList = [
-                                ...navTagList,
-                                {path,name,title}
-                            ]
-                        }
-                    })
+                    if (!navTagList.map(item => item.path).includes(path)) {
+                        navTagList = [
+                            ...navTagList,
+                            {path,name,title}
+                        ]
+                    }
                 }else{
                     navTagList = [
                         ...navTagList,

@@ -58,7 +58,7 @@
             </el-form>
         </el-row>
         <el-row class="my-3">
-            <el-button plain icon="el-icon-plus" @click="addUser" v-has = "'user:add'">添加用户</el-button>
+            <el-button plain type = "primary" icon="el-icon-plus" @click="addUser" v-has = "'user:add'">添加用户</el-button>
             <el-button plain icon="iconfont icon-wy-upload" v-has = "'user:import'" @click = "fileImport">导入</el-button>
             <el-button plain icon="iconfont icon-wy-download" @click="fileExport">导出</el-button>
             <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
@@ -108,6 +108,7 @@
         </drag-drawer>
         <drag-dialog :drag-dialog="dialog">
             <reset-pwd v-if="show.resetPwd" :reset-pwd="props.resetPwd" @change-pwd-ok="changePwdOk"></reset-pwd>
+            <proxy-man-config v-if = "show.proxyManConfig" :proxy-man = "props.proxyMan"></proxy-man-config>
         </drag-dialog>
         <file-upload ref = "fileUpload" :file-upload = "fileUpload" @uploadSuccess = "uploadSuccess"></file-upload>
     </div>
@@ -125,6 +126,7 @@
     import Modify from './userList/Modify'
     import ResetPwd from './userList/ResetPwd'
     import PopDropdown from './userList/PopDropdown'
+    import ProxyManConfig from './userList/ProxyManConfig'
 
     const uploadAction = () => {
         let {config: {baseUrl: {proxyURL}}} = constant
@@ -139,7 +141,8 @@
             FileUpload,
             lbTable,
             ResetPwd,
-            PopDropdown
+            PopDropdown,
+            ProxyManConfig
         },
         data() {
             return {
@@ -154,6 +157,7 @@
                     collapse: false,
                     batch: false,
                     resetPwd: false,
+                    proxyManConfig : false,
                 },
                 drawer: {
                     show: false,
@@ -175,7 +179,8 @@
                     data: {}
                 },
                 props: {
-                    resetPwd: {}
+                    resetPwd: {},
+                    proxyMan : {}
                 },
                 table: {
                     column: [
@@ -202,6 +207,9 @@
                                             },
                                             frozen : ()=> {
                                                 this.frozen(scope)
+                                            },
+                                            proxyMan : ()=>{
+                                                this.proxyMan(scope)
                                             }
                                         }
                                     })
@@ -397,6 +405,30 @@
                 }
 
             },
+            proxyMan({row}){
+                this.dialog = {
+                    ...this.dialog,
+                    width: 20,
+                    height: 50,
+                    name: 'proxyConf',
+                    title: '用户代理人设置',
+                    showFooter : true
+                }
+                this.show = {
+                    ...this.show,
+                    proxyManConfig: true
+                }
+                this.props = {
+                    ...this.props,
+                    proxyMan: {
+                        ...row
+                    }
+                }
+                let {name} = this.dialog
+                this.$nextTick(()=>{
+                    this.$modal.show(name)
+                })
+            },
             handleDetail({row}) {
                 this.drawer = {
                     ...this.drawer,
@@ -412,11 +444,12 @@
             }
             ,
             handlePwd({row, $index: index}) {
-                this.$modal.show('resetPwd')
-
                 this.dialog = {
                     ...this.dialog,
-                    visible: true
+                    width: '300',
+                    height: '300',
+                    name: 'resetPwd',
+                    title: '重设密码'
                 }
                 this.show = {
                     ...this.show,
@@ -429,6 +462,11 @@
                         ...row
                     }
                 }
+                let {name} = this.dialog
+                this.$nextTick(()=>{
+                    this.$modal.show(name)
+                })
+
             },
             async handleDel(scope) {
                 let {row: {id}} = scope

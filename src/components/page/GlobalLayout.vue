@@ -1,13 +1,13 @@
 <template>
     <el-container class="layout">
-        <el-aside :width="menuProps.collapse ? '64px' : '200px'" class="layout-aside">
+        <el-aside :width="menuProps.collapse ? '64px' : '240px'" class="layout-aside">
             <side-menu></side-menu>
         </el-aside>
         <el-container>
-            <el-header class = "layout-header border-b bg-white" :style = "{marginLeft : menuProps.collapse ? '64px' : '200px'}">
+            <el-header class = "layout-header border-b bg-white" :style = "{marginLeft : menuProps.collapse ? '64px' : '240px'}">
                 <global-header></global-header>
             </el-header>
-            <el-main class = "layout-main" :style = "{marginLeft : menuProps.collapse ? '64px' : '200px'}">
+            <el-main class = "layout-main" :style = "{marginLeft : menuProps.collapse ? '64px' : '240px'}">
                 <nav-panel></nav-panel>
                 <router-view></router-view>
             </el-main>

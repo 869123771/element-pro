@@ -70,7 +70,7 @@
                     {
                         label: '代理人',
                         icon: '',
-                        action: '',
+                        action: this.proxyMan,
                         popover: false,
                     },
                 ],
@@ -91,6 +91,9 @@
             },
             frozen(){
                 this.$emit('frozen')
+            },
+            proxyMan(){
+                this.$emit('proxyMan')
             },
             confirm(event){
                event()
