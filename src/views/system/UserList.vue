@@ -106,9 +106,14 @@
 
                <component :is="component.type" :data="component.data" @closeFlush="closeFlush"></component>
         </drag-drawer>
-        <drag-dialog :drag-dialog="dialog">
+        <drag-dialog :drag-dialog="dialog" @confirm = "confirm">
             <reset-pwd v-if="show.resetPwd" :reset-pwd="props.resetPwd" @change-pwd-ok="changePwdOk"></reset-pwd>
-            <proxy-man-config v-if = "show.proxyManConfig" :proxy-man = "props.proxyMan"></proxy-man-config>
+            <proxy-man-config
+                    v-if = "show.proxyManConfig"
+                    :proxy-man = "props.proxyMan"
+                    ref = "proxyMan"
+                    @successClose = "successClose"
+            ></proxy-man-config>
         </drag-dialog>
         <file-upload ref = "fileUpload" :file-upload = "fileUpload" @uploadSuccess = "uploadSuccess"></file-upload>
     </div>
@@ -408,8 +413,8 @@
             proxyMan({row}){
                 this.dialog = {
                     ...this.dialog,
-                    width: 20,
-                    height: 50,
+                    width: 26,
+                    height: 450,
                     name: 'proxyConf',
                     title: '用户代理人设置',
                     showFooter : true
@@ -429,10 +434,31 @@
                     this.$modal.show(name)
                 })
             },
+            confirm() {
+                let selectUserRef = this.$refs['proxyMan']
+                selectUserRef.$refs.form.validate(valid => {
+                    if (valid) {
+                        this.dialog = {
+                            ...this.dialog,
+                            loading: true
+                        }
+                        selectUserRef.saveData()
+                    }
+                })
+                this.dialog = {
+                    ...this.dialog,
+                    loading: false
+                }
+            },
+            successClose(){
+                let {name} = this.dialog
+                this.$modal.hide(name)
+                this.queryList()
+            },
             handleDetail({row}) {
                 this.drawer = {
                     ...this.drawer,
-                    width: '24%',
+                    width: 450,
                     title: '详情',
                     show: true,
                 }

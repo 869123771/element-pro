@@ -19,10 +19,13 @@
             <div class="modal-header-title">{{dialog.title}}</div>
             <div class="modal-header-control">
                 <div class="modal-header-control-screen">
-                    <div class="iconfont icon-wy-compress handle-icon px-1 hover:color-blue-500 " v-if="dialog.fullScreen" @click="exit"></div>
-                    <div class="iconfont icon-wy-expend handle-icon px-1 hover:color-blue-500 " v-else @click="full"></div>
+                    <div class="iconfont icon-wy-compress handle-icon px-1 hover:color-blue-500 "
+                         v-if="dialog.fullScreen" @click="exit"></div>
+                    <div class="iconfont icon-wy-expend handle-icon px-1 hover:color-blue-500 " v-else
+                         @click="full"></div>
                 </div>
-                <div class="modal-header-control-close el-icon-close handle-icon hover:color-blue-500 hover:rotate-180" @click="close"></div>
+                <div class="modal-header-control-close el-icon-close handle-icon hover:color-blue-500 hover:rotate-180"
+                     @click="close"></div>
             </div>
         </div>
         <el-scrollbar>
@@ -91,7 +94,7 @@
                     ...this.$children[0].modal,
                     width,
                     height,
-                    heightType: Number(width) > 100 ? 'px' : '%',
+                    heightType: Number(height) > 100 ? 'px' : '%',
                     widthType: Number(width) > 100 ? 'px' : '%',
                 }
 
@@ -109,7 +112,7 @@
                 this.$emit('close')
             },
             confirm() {
-                this.$emit('confirm',this.dialog.name)
+                this.$emit('confirm', this.dialog.name)
             }
         }
     }
@@ -156,12 +159,15 @@
             position: absolute;
             bottom: 0px;
             background: #fff;
-            z-index: 99999;
+            z-index: inherit;
             width: 100%;
             border-top: 1px solid #e2e8f0;
             height: 60px;
             line-height: 60px;
             min-height: 60px;
+        }
+        /deep/ .vue-modal-resizer {
+            z-index: inherit;
         }
     }
 </style>

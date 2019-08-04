@@ -198,7 +198,7 @@
                 this.dialog = {
                     ...this.dialog,
                     width : 70,
-                    height : 80,
+                    height : 85,
                     title: '添加已有用户'
                 }
             },

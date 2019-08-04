@@ -47,6 +47,7 @@
 <script>
     import {http, apiList, constant, sweetAlert} from '@/utils'
     import dayjs from 'dayjs'
+    import {chunk} from '30-seconds-of-code'
 
     export default {
         name: 'HttpTrace',
@@ -147,10 +148,11 @@
                 let {status, data: {traces}} = await http.ajax('get', apiList.monitor_performance_http_query, params)
                 debugger;
                 if (status === constant.SUCCESS) {
+                    let chunkResult = chunk(traces,pageSize)
                     debugger;
                     this.table = {
                         ...this.table,
-                        data: traces
+                        data: chunkResult[pageNo-1]
                     }
                     this.page = {
                         ...this.page,

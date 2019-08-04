@@ -10,7 +10,14 @@
             @selection-change="selectionChange"
     >
         <template slot="menuLeft">
-
+            <el-form inline>
+                <el-form-item label = "姓名">
+                    <el-input v-model = "table.name" placeholder = "请输入姓名" clearable></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type = "primary" icon="el-icon-search" @click="search">查询</el-button>
+                </el-form-item>
+            </el-form>
         </template>
     </avue-crud>
 </template>
@@ -47,6 +54,7 @@
                             },
                         ]
                     },
+                    name : '',
                     loading: false,
                     selection: []
                 },
@@ -63,6 +71,13 @@
                     ...this.table,
                     selection
                 }
+            },
+            search() {
+                this.page = {
+                    ...this.page,
+                    currentPage: 1
+                }
+                this.queryList()
             },
             currentChange(currentPage) {
                 this.page = {
@@ -94,6 +109,7 @@
             },
             async queryList() {
                 let {currentPage: pageNo, pageSize} = this.page
+                let {name} = this.table
                 this.table = {
                     ...this.table,
                     loading: true
@@ -101,6 +117,7 @@
                 let params = {
                     pageNo,
                     pageSize,
+                    realname : name
                 }
                 let {success, result} = await http.get(apiList.sys_user_query_list, params)
                 if (success) {
@@ -124,5 +141,7 @@
 </script>
 
 <style scoped>
-
+    /deep/ .el-form-item{
+        margin-bottom: 0px;
+    }
 </style>
