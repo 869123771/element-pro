@@ -8,6 +8,7 @@
                     v-model="table.model"
                     @on-load="queryList"
                     @selection-change="selectionChange"
+                    :header-cell-class-name = "headerCellClassName"
             >
                 <template slot="menuLeft">
                     <el-button plain type="primary" icon="el-icon-plus" @click="addMenu">新增</el-button>
@@ -196,6 +197,12 @@
                 getValidStatus : 'GET_VALID_STATUS',
                 getPermissionList : 'GET_PERMISSION_LIST'
             }),
+            headerCellClassName({row,column}){
+                let {property} = column
+                if(property === 'name'){
+                    return 'text-center'
+                }
+            },
             selectionChange(selection) {
                 if (selection.length) {
                     this.show = {

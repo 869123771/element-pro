@@ -13,6 +13,7 @@ export default {
         priority : [],                                          //优先级
         sendStatus : [],                                        //发布状态
         msgType : [],                                           //推送类别
+        formTableType : [],                                     //Online表单类型
     },
     mutations: {
         SET_SEX(state,sex){
@@ -50,6 +51,9 @@ export default {
         },
         SET_MSG_TYPE(state,msgType){
             state.msgType = msgType
+        },
+        SET_FORM_TABLE_TYPE(state,formTableType){
+            state.formTableType = formTableType
         },
     },
     actions : {
@@ -135,6 +139,13 @@ export default {
             if(success) {
                 let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
                 commit('SET_MSG_TYPE',records)
+            }
+        },
+        async GET_FORM_TABLE_TYPE({commit}){
+            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'cgform_table_type'})
+            if(success) {
+                let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
+                commit('SET_FORM_TABLE_TYPE',records)
             }
         },
     }
