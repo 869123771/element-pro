@@ -28,6 +28,7 @@ export default {
         menuBtn : false,
         refreshBtn: false,
         selection : true,
+        headerAlign: 'center',
         align: 'center',
     }
 }
