@@ -9,16 +9,16 @@
                     <dbprops :data = "tabs.data"></dbprops>
                 </el-tab-pane>
                 <el-tab-pane label="页面属性" name="pageProps">
-
+                    <page-props :data = "tabs.data"></page-props>
                 </el-tab-pane>
                 <el-tab-pane label="校验字段" name="validFields">
-
+                    <valid-fields :data = "tabs.data"></valid-fields>
                 </el-tab-pane>
                 <el-tab-pane label="外键" name="foreignKeys">
-
+                    <foreign-keys :data = "tabs.data"></foreign-keys>
                 </el-tab-pane>
                 <el-tab-pane label="索引" name="index">
-
+                    <index :data = "data.formInfo"></index>
                 </el-tab-pane>
             </el-tabs>
         </div>
@@ -29,16 +29,24 @@
     import {mapState} from 'vuex'
     import {http,apiList,sweetAlert} from '@/utils'
     import Dbprops from './modify/DbProps'
+    import PageProps from './modify/PageProps'
+    import ValidFields from './modify/ValidFields'
+    import ForeignKeys from './modify/ForeignKeys'
+    import Index from './modify/Index'
 
     export default {
         name: "Modify",
         props : {
             data : {
-                type : Object
+                type : Object,
             }
         },
         components : {
-            Dbprops
+            Dbprops,
+            PageProps,
+            ValidFields,
+            ForeignKeys,
+            Index
         },
         data(){
             return {
@@ -156,18 +164,18 @@
                 handler(props) {
                     if (!this.validatenull(props)) {
                         let {model} = this.form
-                        let  {tableType} = props
+                        let  {formInfo,formInfo:{tableType},tableInfo} = props
                         this.form = {
                             ...this.form,
                             model : {
                                 ...model,
-                                ...props,
+                                ...formInfo,
                                 tableType : tableType.toString()
                             }
                         }
                         this.tabs = {
                             ...this.tabs,
-                            data : props
+                            data : tableInfo
                         }
                     }
                 },

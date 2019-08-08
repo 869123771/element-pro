@@ -253,26 +253,33 @@
             customButton() {
 
             },
-            edit(row) {
-                this.dialog = {
-                    ...this.dialog,
-                    title: '修改',
-                    width : 90,
-                    height : 90,
-                    name : 'update'
-                }
-                this.component = {
-                    ...this.component,
-                    is : Modify,
-                    ref : 'modify',
-                    data: {
-                        ...row,
+            async edit(row) {
+                let {id} = row
+                let {success,result} = await this.queryHeadInfoById(id)
+                if(success){
+                    this.dialog = {
+                        ...this.dialog,
+                        title: '修改',
+                        width : 90,
+                        height : 90,
+                        name : 'update'
                     }
+                    this.component = {
+                        ...this.component,
+                        is : Modify,
+                        ref : 'modify',
+                        data: {
+                            formInfo : {
+                                ...row
+                            },
+                            tableInfo : result
+                        }
+                    }
+                    let {name} = this.dialog
+                    this.$nextTick(()=>{
+                        this.$modal.show(name)
+                    })
                 }
-                let {name} = this.dialog
-                this.$nextTick(()=>{
-                    this.$modal.show(name)
-                })
             },
             functionalTest(scope) {
                 debugger;
@@ -285,6 +292,9 @@
             },
             closeDialog(){
 
+            },
+            async queryHeadInfoById(headId) {
+                return await http.get(apiList.online_form_head_query_by_id, {headId})
             },
             async handleRemove({id}){
                 let {success, message} = await http.delete(apiList.online_form_head_remove, {id})

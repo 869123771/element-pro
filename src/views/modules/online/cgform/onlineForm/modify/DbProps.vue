@@ -1,25 +1,24 @@
 <template>
     <div>
         <avue-crud
-                ref = "crud"
+                ref="crud"
                 :data="table.data"
                 :option="table.option"
                 :table-loading="table.loading"
-                @on-load="queryList"
                 @selection-change="selectionChange"
         >
             <template slot="menuLeft">
                 <el-button plain type="primary" icon="el-icon-plus" @click="add">新增</el-button>
-                <template v-show = "show.batch">
+                <template v-if="show.batch">
                     <el-button plain icon="el-icon-minus" @click="del">删除</el-button>
                     <el-button plain @click="clear">
-                        <span class = "iconfont icon-wy-delete2"></span>
+                        <span class="iconfont icon-wy-delete2"></span>
                         <span>清空选择</span>
                     </el-button>
                 </template>
             </template>
-            <template slot = "dbIsNull" slot-scope = "{row}">
-                <el-checkbox v-model = "row.dbIsNull" :true-label = "1" :false-label = "0"></el-checkbox>
+            <template slot="dbIsNull" slot-scope="{row}">
+                <el-checkbox v-model="row.dbIsNull" :true-label="1" :false-label="0"></el-checkbox>
             </template>
         </avue-crud>
     </div>
@@ -27,13 +26,13 @@
 
 <script>
     import {mapState} from 'vuex'
-    import {http, apiList, sweetAlert,constant} from '@/utils'
+    import {http, apiList, sweetAlert, constant} from '@/utils'
 
     export default {
         name: "DbProps",
-        props : {
-            data : {
-                type : Object,
+        props: {
+            data: {
+                type: Array,
             },
         },
         data() {
@@ -43,74 +42,78 @@
                     data: [],
                     option: {
                         ...table,
-                        page : false,
-                        props : {
-                            label : 'itemText',
-                            value : 'itemValue'
+                        page: false,
+                        selectable : (row,index)=>{
+                            debugger;
+                            console.log(row)
+                        },
+                        props: {
+                            label: 'itemText',
+                            value: 'itemValue'
                         },
                         column: [
                             {
                                 label: '字段名称',
                                 prop: 'dbFieldName',
-                                cell : true,
+                                cell: true,
                             },
                             {
                                 label: '字段备注',
                                 prop: 'dbFieldTxt',
-                                cell : true,
+                                cell: true,
                             },
                             {
                                 label: '字段长度',
                                 prop: 'dbLength',
-                                cell : true,
-                                type : 'number',
+                                cell: true,
+                                type: 'number',
                             },
                             {
                                 label: '小数点',
                                 prop: 'dbPointLength',
-                                cell : true,
-                                type : 'number'
+                                cell: true,
+                                type: 'number'
                             },
                             {
                                 label: '默认值',
                                 prop: 'dbDefaultVal',
-                                cell : true,
+                                cell: true,
                             },
                             {
                                 label: '字段类型',
                                 prop: 'dbType',
-                                type : 'select',
-                                cell : true,
-                                dicData : [
-                                    {itemText : 'String',itemValue : 'string'},
-                                    {itemText : 'Integer',itemValue : 'Integer'},
-                                    {itemText : 'Double',itemValue : 'double'},
-                                    {itemText : 'Date',itemValue : 'Date'},
-                                    {itemText : 'BigDecimal',itemValue : 'BigDecimal'},
-                                    {itemText : 'Text',itemValue : 'Text'},
-                                    {itemText : 'Blob',itemValue : 'Blob'},
+                                type: 'select',
+                                cell: true,
+                                dicData: [
+                                    {itemText: 'String', itemValue: 'string'},
+                                    {itemText: 'Integer', itemValue: 'Integer'},
+                                    {itemText: 'Double', itemValue: 'double'},
+                                    {itemText: 'Date', itemValue: 'Date'},
+                                    {itemText: 'BigDecimal', itemValue: 'BigDecimal'},
+                                    {itemText: 'Text', itemValue: 'Text'},
+                                    {itemText: 'Blob', itemValue: 'Blob'},
                                 ]
                             },
                             {
                                 label: '主键',
                                 prop: 'dbIsKey',
-                                type : 'switch',
-                                cell : true,
-                                dicData : [
-                                    {itemText : '',itemValue : 0},
-                                    {itemText : '',itemValue : 1},
+                                type: 'switch',
+                                cell: true,
+                                dicData: [
+                                    {itemText: '', itemValue: 0},
+                                    {itemText: '', itemValue: 1},
                                 ]
                             },
                             {
                                 label: '允许空值',
                                 prop: 'dbIsNull',
-                                slot : true,
+                                slot: true,
                             },
                             {
                                 label: '排序',
                                 prop: 'orderNum',
-                                cell : true,
-                                type : 'number'
+                                cell: true,
+                                type: 'number'
                             },
                         ]
                     },
@@ -126,10 +129,10 @@
             add() {
 
             },
-            del(){
+            del() {
 
             },
-            clear(){
+            clear() {
 
             },
             selectionChange(selection) {
@@ -149,31 +152,29 @@
                     selection
                 }
             },
-            async queryList() {
-                debugger;
-                 let {id:headId} = this.data
-                 this.table = {
-                     ...this.table,
-                     loading: true
-                 }
-                 let {success, result} = await http.get(apiList.online_form_head_query_by_id, {headId})
-                 if (success) {
-                     this.$nextTick(()=>{
-                         result.forEach((item,index)=>{
-                             this.$refs.crud.rowCell(item, index)
-                         })
-                     })
-                     this.table = {
-                         ...this.table,
-                         data: result
-                     }
-                     this.table = {
-                         ...this.table,
-                         loading: false
-                     }
-                 }
-            },
+            setDbInfo() {
+                this.table = {
+                    ...this.table,
+                    loading: true
+                }
+                this.table = {
+                    ...this.table,
+                    data: this.data
+                }
+                this.$nextTick(() => {
+                    this.data.forEach((item, index) => {
+                        this.$refs.crud.rowCell(item, index)
+                    })
+                })
+                this.table = {
+                    ...this.table,
+                    loading: false
+                }
+            }
         },
+        mounted() {
+            this.setDbInfo()
+        }
     }
 </script>
 

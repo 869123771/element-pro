@@ -15,14 +15,8 @@
             <template slot="dbFieldTxt" slot-scope="{row}">
                 <el-input v-model="row.dbFieldTxt" placeholder = "字段备注" size = "mini" disabled></el-input>
             </template>
-            <template slot="isShowForm" slot-scope="{row}">
-                <el-checkbox v-model="row.isShowForm" :true-label="1" :false-label="0"></el-checkbox>
-            </template>
-            <template slot="isShowList" slot-scope="{row}">
-                <el-checkbox v-model="row.isShowList" :true-label="1" :false-label="0"></el-checkbox>
-            </template>
-            <template slot="isQuery" slot-scope="{row}">
-                <el-checkbox v-model="row.isQuery" :true-label="1" :false-label="0"></el-checkbox>
+            <template slot="fieldMustInput" slot-scope="{row}">
+                <el-checkbox v-model="row.fieldMustInput" :true-label="1" :false-label="0"></el-checkbox>
             </template>
         </avue-crud>
     </div>
@@ -33,7 +27,7 @@
     import {http, apiList, sweetAlert, constant} from '@/utils'
 
     export default {
-        name: "PageProps",
+        name: "ValidFields",
         props: {
             data: {
                 type: Array,
@@ -56,78 +50,64 @@
                             {
                                 label: '字段名称',
                                 prop: 'dbFieldName',
+                                cell: true,
                                 slot : true
                             },
                             {
                                 label: '字段备注',
                                 prop: 'dbFieldTxt',
+                                slot : true
+                            },
+                            {
+                                label: '字段Href',
+                                prop: 'fieldHref',
+                                cell: true,
+                                clearable : true,
+                            },
+                            {
+                                label: '验证规则',
+                                prop: 'fieldValidType',
+                                cell: true,
+                                type : 'select',
+                                clearable : true,
+                                dicData : [
+                                    {itemText: '唯一校验', itemValue: 'only'},
+                                    {itemText: '6到16位数字', itemValue: 'n6-16'},
+                                    {itemText: '6到16位任意字符', itemValue: '*6-16'},
+                                    {itemText: '网址', itemValue: 'url'},
+                                    {itemText: '电子邮件', itemValue: 'e'},
+                                    {itemText: '手机号码', itemValue: 'm'},
+                                    {itemText: '邮政编码', itemValue: 'p'},
+                                    {itemText: '字母', itemValue: 's'},
+                                    {itemText: '数字', itemValue: 'n'},
+                                    {itemText: '整数', itemValue: 'z'},
+                                    {itemText: '非空', itemValue: '*'},
+                                    {itemText: '6到18位字符', itemValue: 's6-18'},
+                                ]
+                            },
+                            {
+                                label: '校验必填',
+                                prop: 'fieldMustInput',
+                                cell: true,
                                 slot : true,
                             },
                             {
-                                label: '表单显示',
-                                prop: 'isShowForm',
+                                label: '字典Table',
+                                prop: 'dictTable',
                                 cell: true,
-                                slot : true
+                                clearable : true,
                             },
                             {
-                                label: '列表显示',
-                                prop: 'isShowList',
+                                label: '字典Code',
+                                prop: 'dictField',
                                 cell: true,
-                                slot : true
+                                clearable : true,
                             },
                             {
-                                label: '控件类型',
-                                prop: 'fieldShowType',
+                                label: '字典Text',
+                                prop: 'dictText',
                                 cell: true,
-                                type : 'select',
-                                dicData : [
-                                    {itemText:'文本框',itemValue:'text'},
-                                    {itemText:'密码',itemValue:'password'},
-                                    {itemText:'单选框',itemValue:'radio'},
-                                    {itemText:'多选',itemValue:'checkbox'},
-                                    {itemText:'日期(yyyy-MM-dd)',itemValue:'date'},
-                                    {itemText:'日期(yyyy-MM-dd HH:mm:ss)',itemValue:'datetime'},
-                                    {itemText:'文件',itemValue:'file'},
-                                    {itemText:'多行文本',itemValue:'textarea'},
-                                    {itemText:'下拉框',itemValue:'list'},
-                                    {itemText:'下拉多选框',itemValue:'"list_multi"'},
-                                    {itemText:'下拉搜索框',itemValue:'sel_search'},
-                                    {itemText:'popup弹出框',itemValue:'popup'},
-                                    {itemText:'图片',itemValue:'image'},
-                                    {itemText:'富文本编辑器',itemValue:'umeditor'},
-                                ]
-                            },
-                            {
-                                label: '控件长度',
-                                prop: 'fieldLength',
-                                type: 'number',
-                                cell: true,
-                            },
-                            {
-                                label: '是否查询',
-                                prop: 'isQuery',
-                                cell: true,
-                                slot : true
-                            },
-                            {
-                                label: '查询类型',
-                                prop: 'queryMode',
-                                type : 'select',
-                                cell : true,
-                                dicData : [
-                                    {itemText : '普通查询',itemValue:'single'},
-                                    {itemText : '范围查询',itemValue:'group'},
-                                ]
-                            },
-                            {
-                                label: '扩展参数',
-                                prop: 'fieldExtendJson',
-                                cell: true,
-                            },
-                            {
-                                label: '填值规则',
-                                prop: 'fieldValueRuleCode',
-                                cell: true,
+                                clearable : true,
                             },
                         ]
                     },
@@ -137,7 +117,7 @@
             }
         },
         methods: {
-            setPageInfo() {
+            setValidFieldsInfo() {
                 this.table = {
                     ...this.table,
                     loading: true
@@ -158,7 +138,7 @@
             }
         },
         mounted() {
-            this.setPageInfo()
+            this.setValidFieldsInfo()
         }
     }
 </script>
