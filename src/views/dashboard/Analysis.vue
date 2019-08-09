@@ -7,10 +7,10 @@
             <chart-card>
                 <div slot="card-head" class="relative">
                     <el-tabs v-model="tabs.name">
-                        <el-tab-pane label="销售额" name="cellNum">
+                        <el-tab-pane :label="$t('cell_count')" name="cellNum">
                             <cell-num ref = "cellNum"></cell-num>
                         </el-tab-pane>
-                        <el-tab-pane label="访问量" name="visitNum">
+                        <el-tab-pane :label="$t('visit_count')" name="visitNum">
                             <visit-num ref = "visitNum"></visit-num>
                         </el-tab-pane>
                     </el-tabs>

@@ -16,6 +16,9 @@ import ELTableBar from 'el-table-bar-base'
 import 'el-table-bar-base/lib/ElTableBar.css'
 
 import VModal from 'vue-js-modal'
+
+import i18n from '@/locale'
+
 //import './element'
 import {constant,hasPermission} from '@/utils'
 
@@ -25,12 +28,17 @@ window._CONFIG = {
     domianURL, imgDomainURL, pdfDomainURL,proxyURL
 };
 
-/**
+/*
+ *
  * 注册指令
  */
 importDirective(Vue)
 
-Vue.use(Element, {size: 'medium', zIndex: 2000});
+Vue.use(Element, {
+    size: 'medium',
+    zIndex: 2000,
+    i18n: (key, value) => i18n.t(key, value)
+});
 Vue.use(Avue)
 Vue.use(hasPermission)
 Vue.use(ELTableBar)
@@ -47,5 +55,6 @@ Vue.use(VModal, {
 new Vue({
     router,
     store,
+    i18n,
     render: h => h(App)
 }).$mount('#app')

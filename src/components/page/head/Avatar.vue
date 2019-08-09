@@ -5,7 +5,10 @@
                 <div class = "px-1">
                     <avue-avatar :src = "getAvatarView(userInfo.avatar)"></avue-avatar>
                 </div>
-                <div>{{userInfo.username}}</div>
+                <div class = "flex items-center">
+                    <span class = "px-1">{{userInfo.username}}</span>
+                    <span><i class="el-icon-arrow-down el-icon--right"></i></span>
+                </div>
             </div>
             <el-dropdown-menu>
                 <el-dropdown-item @click.native = "logout">

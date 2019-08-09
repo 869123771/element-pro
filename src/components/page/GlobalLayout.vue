@@ -16,7 +16,7 @@
 
 </template>
 <script>
-    import {mapState} from 'vuex'
+    import {mapState,mapMutations} from 'vuex'
     import SideMenu from "@/components/menu/SideMenu";
     import GlobalHeader from "./GlobalHeader"
     import navPanel from './nav/NavPanel'
@@ -33,6 +33,15 @@
         },
         data() {
             return {}
+        },
+        methods : {
+            ...mapMutations({
+                setLang : 'SET_LANG'
+            })
+        },
+        mounted(){
+            // 设置初始语言
+            this.setLang(this.$i18n.locale)
         }
     }
 </script>
