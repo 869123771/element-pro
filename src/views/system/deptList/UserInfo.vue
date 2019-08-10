@@ -1,6 +1,17 @@
 <template>
     <div class = "role-maintenance">
-        <avue-crud
+        <vxe-grid
+                border
+                show-overflow
+                class="vxe-table-element"
+                height="460"
+                :loading="table.loading"
+                :data.sync="table.data"
+                :columns="table.column"
+        >
+        </vxe-grid>
+
+        <!--<avue-crud
                 :data="table.data"
                 :option="table.option"
                 :page="page"
@@ -15,7 +26,7 @@
                 <el-button plain icon="el-icon-plus" @click="addUserHas">添加已有用户</el-button>
                 <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
                     <el-button plain>
-                        批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+                        批量操作<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i>
                     </el-button>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item @click.native="deleteBatch"><i class="el-icon-delete"></i>删除
@@ -37,7 +48,7 @@
                     </span>
                 </span>
             </template>
-        </avue-crud>
+        </avue-crud>-->
         <drag-drawer v-model="drawer.show"
                      :draggable="drawer.draggable"
                      :title="drawer.title"
@@ -78,7 +89,7 @@
         data(){
             let {table} = constant
             return {
-                table: {
+                /*table: {
                     data: [],
                     option: {
                         ...table,
@@ -105,7 +116,40 @@
                     },
                     loading: false,
                     selection: []
-                },
+                },*/
+
+               table : {
+                   loading: false,
+                   selection: [],
+                   data: [
+                       {}
+                   ],
+                   column: [
+                       { type: 'selection', width: 60 },
+                       { type: 'index', title: 'Number', width: 80 },
+                       { field: 'name', title: 'ElInput', minWidth: 140, editRender: { name: 'ElInput' } },
+                       { field: 'role', title: 'ElAutocomplete', width: 160, },
+                       { field: 'age', title: 'ElInputNumber', width: 160, },
+                       { field: 'sex', title: 'ElSelect', width: 140, editRender: { name: 'ElSelect', options: [] } },
+                       { field: 'sex1', title: 'ElSelect', width: 160, },
+                       { field: 'sex2', title: 'ElSelect', width: 140, },
+                       { field: 'region', title: 'ElCascader', width: 200},
+                       { field: 'date', title: 'ElDatePicker', width: 200},
+                       { field: 'date1', title: 'DateTimePicker', width: 220 },
+                       { field: 'date5', title: 'ElTimeSelect', width: 200 },
+                       { field: 'flag', title: 'ElSwitch', width: 100},
+                       { field: 'rate', title: 'ElRate', width: 200}
+                   ],
+                   restaurants: [
+                       { value: '前端', name: '前端' },
+                       { value: '后端', name: '后端' },
+                       { value: '开发', name: '开发' },
+                       { value: '测试', name: '测试' }
+                   ]
+               },
+
+
+
                 page: {
                     currentPage: 1,
                     pageSize: 10,

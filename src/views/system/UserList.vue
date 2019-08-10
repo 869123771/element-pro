@@ -2,22 +2,24 @@
     <div class="user bg-white p-3 m-3">
         <el-row>
             <el-form ref="form" :model="form" label-width="80px">
-                <el-row>
-                    <el-col :md="6" :sm="8">
-                        <el-form-item label="账号:" prop="username">
-                            <el-input v-model="form.username" clearable></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :md="6" :sm="8">
-                        <el-form-item label="性别:" prop="sex">
-                            <el-select v-model="form.sex" clearable filterable class="w-full">
-                                <template v-for="item in sex">
-                                    <el-option :value="item.itemValue" :label="item.itemText"></el-option>
-                                </template>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <div v-show="show.collapse">
+                <form-query @search="search" @reset="reset">
+                    <template slot="show">
+                        <el-col :md="6" :sm="8">
+                            <el-form-item label="账号:" prop="username">
+                                <el-input v-model="form.username" clearable></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :md="6" :sm="8">
+                            <el-form-item label="性别:" prop="sex">
+                                <el-select v-model="form.sex" clearable filterable class="w-full">
+                                    <template v-for="item in sex">
+                                        <el-option :value="item.itemValue" :label="item.itemText"></el-option>
+                                    </template>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                    </template>
+                    <template slot="hide">
                         <el-col :md="6" :sm="8">
                             <el-form-item label="邮箱:" prop="email">
                                 <el-input v-model="form.email" clearable></el-input>
@@ -37,29 +39,14 @@
                                 </el-select>
                             </el-form-item>
                         </el-col>
-                    </div>
-                    <el-col :md="6" :sm="8">
-                        <el-form-item label-width="38px">
-                            <el-button type="primary" icon="el-icon-search" @click="search">查询</el-button>
-                            <el-button plain icon="el-icon-refresh-left" @click="reset">重置</el-button>
-                            <span class="cursor-pointer inline-block text-blue-500 pl-2" @click="arrowClick">
-                            <span v-if="!show.collapse">
-                                <span>展开</span>
-                                <i class="el-icon-arrow-down pl-1"></i>
-                            </span>
-                            <span v-else>
-                                <span>收起</span>
-                                <i class="el-icon-arrow-up pl-1"></i>
-                            </span>
-                        </span>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
+                    </template>
+                </form-query>
             </el-form>
         </el-row>
         <el-row class="my-3">
-            <el-button plain type = "primary" icon="el-icon-plus" @click="addUser" v-has = "'user:add'">添加用户</el-button>
-            <el-button plain icon="iconfont icon-wy-upload" v-has = "'user:import'" @click = "fileImport">{{$t('import')}}</el-button>
+            <el-button plain type="primary" icon="el-icon-plus" @click="addUser" v-has="'user:add'">添加用户</el-button>
+            <el-button plain icon="iconfont icon-wy-upload" v-has="'user:import'" @click="fileImport">{{$t('import')}}
+            </el-button>
             <el-button plain icon="iconfont icon-wy-download" @click="fileExport">{{$t('export')}}</el-button>
             <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
                 <el-button plain>
@@ -73,28 +60,28 @@
             </el-dropdown>
         </el-row>
         <el-row>
-           <el-table-bar>
-               <lb-table
-                       border
-                       stripe
-                       fit
-                       align="center"
-                       v-loading="table.loading"
-                       :column="table.column"
-                       :data="table.data"
-                       pagination
-                       background
-                       layout="total, sizes, prev, pager, next, jumper"
-                       :page-sizes="[5, 10, 20, 30]"
-                       :pager-count="5"
-                       :current-page.sync="page.currentPage"
-                       :total="page.total"
-                       :page-size="page.pageSize"
-                       @size-change="handleSizeChange"
-                       @p-current-change="handleCurrentChange"
-                       @selection-change="checked"
-               ></lb-table>
-           </el-table-bar>
+            <el-table-bar>
+                <lb-table
+                        border
+                        stripe
+                        fit
+                        align="center"
+                        v-loading="table.loading"
+                        :column="table.column"
+                        :data="table.data"
+                        pagination
+                        background
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :page-sizes="[5, 10, 20, 30]"
+                        :pager-count="5"
+                        :current-page.sync="page.currentPage"
+                        :total="page.total"
+                        :page-size="page.pageSize"
+                        @size-change="handleSizeChange"
+                        @p-current-change="handleCurrentChange"
+                        @selection-change="checked"
+                ></lb-table>
+            </el-table-bar>
         </el-row>
         <drag-drawer v-model="drawer.show"
                      :draggable="drawer.draggable"
@@ -104,18 +91,18 @@
                      :scrollable="true"
         >
 
-               <component :is="component.type" :data="component.data" @closeFlush="closeFlush"></component>
+            <component :is="component.type" :data="component.data" @closeFlush="closeFlush"></component>
         </drag-drawer>
-        <drag-dialog :drag-dialog="dialog" @confirm = "confirm">
+        <drag-dialog :drag-dialog="dialog" @confirm="confirm">
             <reset-pwd v-if="show.resetPwd" :reset-pwd="props.resetPwd" @change-pwd-ok="changePwdOk"></reset-pwd>
             <proxy-man-config
-                    v-if = "show.proxyManConfig"
-                    :proxy-man = "props.proxyMan"
-                    ref = "proxyMan"
-                    @successClose = "successClose"
+                    v-if="show.proxyManConfig"
+                    :proxy-man="props.proxyMan"
+                    ref="proxyMan"
+                    @successClose="successClose"
             ></proxy-man-config>
         </drag-dialog>
-        <file-upload ref = "fileUpload" :file-upload = "fileUpload" @uploadSuccess = "uploadSuccess"></file-upload>
+        <file-upload ref="fileUpload" :file-upload="fileUpload" @uploadSuccess="uploadSuccess"></file-upload>
     </div>
 </template>
 
@@ -123,6 +110,7 @@
     import DragDrawer from '@/components/dragDrawer'
     import DragDialog from '@/components/dragDialog'
     import FileUpload from '@/components/fileUpload'
+    import FormQuery from '@/components/form/query'
     import {mapState, mapActions} from 'vuex'
     import {http, apiList, constant, sweetAlert} from '@/utils'
     import {downloadFile} from '@/utils/modules/tools'
@@ -144,6 +132,7 @@
             DragDrawer,
             DragDialog,
             FileUpload,
+            FormQuery,
             lbTable,
             ResetPwd,
             PopDropdown,
@@ -159,10 +148,9 @@
                     status: ''
                 },
                 show: {
-                    collapse: false,
                     batch: false,
                     resetPwd: false,
-                    proxyManConfig : false,
+                    proxyManConfig: false,
                 },
                 drawer: {
                     show: false,
@@ -176,8 +164,8 @@
                     name: 'resetPwd',
                     title: '重设密码'
                 },
-                fileUpload : {
-                    action : uploadAction()
+                fileUpload: {
+                    action: uploadAction()
                 },
                 component: {
                     type: Read,
@@ -185,7 +173,7 @@
                 },
                 props: {
                     resetPwd: {},
-                    proxyMan : {}
+                    proxyMan: {}
                 },
                 table: {
                     column: [
@@ -196,24 +184,24 @@
                             width: '100',
                             render: (h, scope) => {
                                 return (
-                                    h(PopDropdown,{
-                                        on : {
-                                            edit : ()=> {
+                                    h(PopDropdown, {
+                                        on: {
+                                            edit: () => {
                                                 this.edit(scope)
                                             },
-                                            handleDetail : ()=> {
+                                            handleDetail: () => {
                                                 this.handleDetail(scope)
                                             },
-                                            handlePwd : ()=> {
+                                            handlePwd: () => {
                                                 this.handlePwd(scope)
                                             },
-                                            handleDel : ()=> {
+                                            handleDel: () => {
                                                 this.handleDel(scope)
                                             },
-                                            frozen : ()=> {
+                                            frozen: () => {
                                                 this.frozen(scope)
                                             },
-                                            proxyMan : ()=>{
+                                            proxyMan: () => {
                                                 this.proxyMan(scope)
                                             }
                                         }
@@ -222,12 +210,12 @@
                             },
                         },
                         {
-                            label : '用户账号',
-                            prop : 'username',
+                            label: '用户账号',
+                            prop: 'username',
                         },
                         {
-                            label : '真实姓名',
-                            prop : 'realname',
+                            label: '真实姓名',
+                            prop: 'realname',
                         },
                         {
                             label: '头像',
@@ -283,7 +271,7 @@
                 }
                 this.queryList()
             },
-            fileImport(){
+            fileImport() {
                 this.$modal.show('fileUpload')
             },
             async fileExport() {
@@ -292,7 +280,7 @@
                 downloadFile(data, filename)
 
             },
-            uploadSuccess(){
+            uploadSuccess() {
                 this.$modal.hide('fileUpload')
                 this.queryList()
             },
@@ -308,13 +296,6 @@
                     url: `${imgDomainURL}/${data[index].avatar}`
                 }
                 this.$ImagePreview(data, index);
-            },
-            arrowClick() {
-                let {collapse} = this.show
-                this.show = {
-                    ...this.show,
-                    collapse: !collapse
-                }
             },
             changePwdOk(row) {
                 let {resetPwd: {index}} = this.props
@@ -410,14 +391,14 @@
                 }
 
             },
-            proxyMan({row}){
+            proxyMan({row}) {
                 this.dialog = {
                     ...this.dialog,
                     width: 26,
                     height: 450,
                     name: 'proxyConf',
                     title: '用户代理人设置',
-                    showFooter : true
+                    showFooter: true
                 }
                 this.show = {
                     ...this.show,
@@ -430,7 +411,7 @@
                     }
                 }
                 let {name} = this.dialog
-                this.$nextTick(()=>{
+                this.$nextTick(() => {
                     this.$modal.show(name)
                 })
             },
@@ -450,7 +431,7 @@
                     loading: false
                 }
             },
-            successClose(){
+            successClose() {
                 let {name} = this.dialog
                 this.$modal.hide(name)
                 this.queryList()
@@ -489,7 +470,7 @@
                     }
                 }
                 let {name} = this.dialog
-                this.$nextTick(()=>{
+                this.$nextTick(() => {
                     this.$modal.show(name)
                 })
 

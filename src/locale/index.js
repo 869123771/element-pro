@@ -4,6 +4,7 @@ import {localRead} from '@/utils/modules/tools'
 import customZhCn from './lang/zh-CN'
 import customZhTw from './lang/zh-TW'
 import customEnUs from './lang/en-US'
+
 import zhCnLocale from 'element-ui/lib/locale/lang/zh-CN'
 import enUsLocale from 'element-ui/lib/locale/lang/en'
 import zhTwLocale from 'element-ui/lib/locale/lang/zh-TW'
@@ -15,19 +16,24 @@ const navLang = navigator.language
 const localLang = (navLang === 'zh-CN' || navLang === 'en-US') ? navLang : false
 let lang = localLang || localRead('lang') || 'zh-CN'
 
-
+console.log(customZhCn)
+debugger;
 // vue-i18n 6.x+写法
 Vue.locale = () => {}
 const messages = {
-  'zh-CN': Object.assign(zhCnLocale, customZhCn),
+  /*'zh-CN': Object.assign(zhCnLocale, customZhCn),
   'zh-TW': Object.assign(zhTwLocale, customZhTw),
-  'en-US': Object.assign(enUsLocale, customEnUs)
+  'en-US': Object.assign(enUsLocale, customEnUs)*/
+    'zh-CN': Object.assign({}, customZhCn),
+    'zh-TW': Object.assign({}, customZhTw),
+    'en-US': Object.assign({}, customEnUs)
 }
 
 const i18n = new VueI18n({
   locale: lang,
   messages
 })
+
 
 export default i18n
 

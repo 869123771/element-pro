@@ -9,13 +9,18 @@ import importDirective from '@/directive'
 Vue.config.productionTip = false
 import Element from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
+
 import Avue from '@smallwei/avue';
 import '@smallwei/avue/lib/index.css';
+
 
 import ELTableBar from 'el-table-bar-base'
 import 'el-table-bar-base/lib/ElTableBar.css'
 
 import VModal from 'vue-js-modal'
+
+import './vxeTable'
+import formCreate from '@form-create/element-ui';
 
 import i18n from '@/locale'
 
@@ -37,9 +42,10 @@ importDirective(Vue)
 Vue.use(Element, {
     size: 'medium',
     zIndex: 2000,
-    i18n: (key, value) => i18n.t(key, value)
 });
+
 Vue.use(Avue)
+Vue.use(formCreate);
 Vue.use(hasPermission)
 Vue.use(ELTableBar)
 
