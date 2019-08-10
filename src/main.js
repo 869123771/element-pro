@@ -42,6 +42,7 @@ importDirective(Vue)
 Vue.use(Element, {
     size: 'medium',
     zIndex: 2000,
+    i18n: (key, value) => i18n.t(key, value)
 });
 
 Vue.use(Avue)

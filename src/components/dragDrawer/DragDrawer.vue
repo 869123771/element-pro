@@ -1,11 +1,12 @@
 <template>
-    <avue-drawer ref="drawerWrapper"
-                 :value="value"
+    <el-drawer ref="drawerWrapper"
+                 :visible="value"
                  @input="handleInput"
-                 :width="width"s
+                 :size="width"
                  :title="title"
+                 :direction="direction"
                  :class="outerClasses"
-                 :close-on-click-modal="closeOnClickModal"
+                 :wrapperClosable="closeOnClickModal"
                  :show-close="showClose"
                  :before-close="handleClose"
     >
@@ -42,7 +43,7 @@
               :class="`${prefix}-footer`">
              <slot name="footer-wrapper"></slot>
          </div>-->
-    </avue-drawer>
+    </el-drawer>
 </template>
 
 <script>
@@ -66,7 +67,11 @@
             },
             width: {
                 type: [String, Number],
-                default: 256
+                default: '256'
+            },
+            direction : {
+                type: String,
+                default: 'rtl'
             },
             // 是否可拖动修改宽度
             draggable: {
@@ -75,8 +80,8 @@
             },
             // 最小拖动宽度
             minWidth: {
-                type: [String, Number],
-                default: 256
+                type: [Number,String],
+                default: '256'
             },
             // 是否可关闭
             closable: {
@@ -164,6 +169,7 @@
                     width,
                     left
                 } = this.$refs.drawerWrapper.$el.getBoundingClientRect()
+                debugger;
                 this.wrapperWidth = width
                 this.wrapperLeft = left
             },

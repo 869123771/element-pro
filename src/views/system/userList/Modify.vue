@@ -1,6 +1,6 @@
 <template>
     <div class="modify">
-        <avue-form :option="form.option" v-model="form.model" ref="modify" @submit="submit">
+        <!--<avue-form :option="form.option" v-model="form.model" ref="modify" @submit="submit">
             <template slot="avatar" slot-scope="scope">
                 <el-upload
                         class="avatar-uploader"
@@ -15,7 +15,57 @@
                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
             </template>
-        </avue-form>
+        </avue-form>-->
+        <el-form :model = "form" label-width = "100px" :status-icon="true">
+            <el-form-item label = "用户账号" prop = "username">
+                <el-input v-model = "form.username" placeholder = "用户账号" clearable></el-input>
+            </el-form-item>
+            <el-form-item label = "登陆密码" prop = "password">
+                <el-input type = "password" v-model = "form.password" placeholder = "登陆密码" clearable></el-input>
+            </el-form-item>
+            <el-form-item label = "确认密码" prop = "confirmpassword">
+                <el-input type = "password" v-model = "form.confirmpassword" placeholder = "登陆密码" clearable></el-input>
+            </el-form-item>
+            <el-form-item label = "用户名字" prop = "realname">
+                <el-input v-model = "form.realname" placeholder = "用户名字" clearable></el-input>
+            </el-form-item>
+            <el-form-item label = "角色分配" prop = "selectedroles">
+                <el-select v-model = "form.selectedroles" placeholder = "角色分配" clearable filterable class = "w-full">
+                    <template v-for = "item in roles">
+                        <el-option :value = "item.itemValue" :label = "item.itemText"></el-option>
+                    </template>
+                </el-select>
+            </el-form-item>
+            <el-form-item label = "部门分配" prop = "deptName">
+                <el-input v-model = "form.deptName" placeholder = "部门分配" clearable suffix-icon="el-icon-more"></el-input>
+            </el-form-item>
+            <el-form-item label = "头像" prop = "">
+
+            </el-form-item>
+            <el-form-item label = "生日" prop = "birthday">
+                <el-date-picker type = "datetime" v-model = "form.birthday" value-format="yyyy-MM-dd hh:mm:ss" class = "full"></el-date-picker>
+            </el-form-item>
+            <el-form-item label = "性别" prop = "sex">
+                <el-select v-model = "form.sex" placeholder = "性别" clearable filterable class = "w-full">
+                    <template v-for = "item in sex">
+                        <el-option :value = "item.itemValue" :label = "item.itemText"></el-option>
+                    </template>
+                </el-select>
+            </el-form-item>
+            <el-form-item label = "邮箱" prop = "email">
+                <el-input v-model = "form.email" placeholder = "邮箱" clearable></el-input>
+            </el-form-item>
+            <el-form-item label = "手机号码" prop = "phone">
+                <el-input v-model = "form.phone" placeholder = "手机号码" clearable></el-input>
+            </el-form-item>
+            <el-form-item label = "工作流引擎" prop = "activitiSync">
+                <el-radio-group v-model = "form.activitiSync">
+                    <template v-for = "item in activitiSync">
+                        <el-radio :label = "item.itemValue">{{item.itemText}}</el-radio>
+                    </template>
+                </el-radio-group>
+            </el-form-item>
+        </el-form>
         <drag-dialog :drag-dialog="dialog" @confirm="confirm">
             <dept-search ref="deptSearch" :dept-checked-ids="deptCheckedIds"></dept-search>
         </drag-dialog>
@@ -102,99 +152,16 @@
             let isUserUniqueCheck = id ? {} : {validator: uniqueUserCheck}
 
             return {
-                form: {
-                    option: {
-                        labelWidth: 100,
-                        props: {
-                            value: 'itemValue',
-                            label: 'itemText'
-                        },
-                        column: [
-                            {
-                                label: '用户账号',
-                                prop: 'username',
-                                span: 24,
-                                readonly: id ? true : false,
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: "必填",
-                                        trigger: "change"
-                                    },
-                                    {...isUserUniqueCheck}
-                                ],
-                            },
-                            ...ps,
-                            {
-                                label: '用户名字',
-                                prop: 'realname',
-                                span: 24,
-                                rules: [{
-                                    required: true,
-                                    message: "必填",
-                                    trigger: "change"
-                                }],
-                            },
-                            {
-                                label: '角色分配',
-                                prop: 'selectedroles',
-                                type: 'select',
-                                filterable: true,
-                                multiple: true,
-                                props: {
-                                    label: 'roleName',
-                                    value: 'id'
-                                },
-                                span: 24
-                            },
-                            ...dept,
-                            {
-                                label: '头像',
-                                prop: 'avatar',
-                                type: 'upload',
-                                formslot: true,
-                            },
-                            {
-                                label: '生日',
-                                prop: 'birthday',
-                                type: 'date',
-                                valueFormat: 'yyyy-MM-dd hh:mm:ss',
-                                span: 24
-                            },
-                            {
-                                label: '性别',
-                                prop: 'sex',
-                                type: 'select',
-                                dataType: 'string',
-                                span: 24
-                            },
-                            {
-                                label: '邮箱',
-                                prop: 'email',
-                                span: 24,
-                                rules: [
-                                    {validator: emailCheck, trigger: 'change'}
-                                ]
-                            },
-                            {
-                                label: '手机号码',
-                                prop: 'phone',
-                                span: 24,
-                                rules: [
-                                    {validator: phoneCheck, trigger: 'change'}
-                                ]
-                            },
-                            {
-                                label: '工作流引擎',
-                                prop: 'activitiSync',
-                                type: 'radio',
-                                span: 24
-                            },
-                        ]
-                    },
+                /*form: {
+
                     model: {
                         activitiSync: '1'
                     }
+                },*/
+                form : {
+                    model : {},
+                    option : {},
+
                 },
                 deptCheckedIds: [],
                 upload: {
@@ -249,15 +216,6 @@
             },
         },
         methods: {
-            setRoles() {
-                this.$refs.modify.updateDic('selectedroles', this.roles)
-            },
-            setSex() {
-                this.$refs.modify.updateDic('sex', this.sex)
-            },
-            setActivitiSync() {
-                this.$refs.modify.updateDic('activitiSync', this.activitiSync)
-            },
             async getUserRole(userid) {
                 let {success, result} = await http.get(apiList.sys_role_query_user_role, {userid})
                 if (success) {
@@ -383,9 +341,7 @@
             }
         },
         mounted() {
-            this.setRoles()
-            this.setSex()
-            this.setActivitiSync()
+
         }
     }
 </script>
