@@ -34,7 +34,7 @@ export const isURL = (s) => {
 
 
 export const pwdCheck = (rule, value, callback, _this, ref) => {
-    let {model: {confirmpassword}} = _this.form
+    let {confirmpassword} = _this.form
     if (confirmpassword) {
         _this.$refs[ref].validateField('confirmpassword');
     }
@@ -42,7 +42,7 @@ export const pwdCheck = (rule, value, callback, _this, ref) => {
 }
 
 export const confirmPwdCheck = (rule, value, callback, _this) => {
-    let {model: {password}} = _this.form
+    let {password} = _this.form
     if (value === '') {
         callback(new Error('请再次输入密码'));
     } else if (value !== password) {

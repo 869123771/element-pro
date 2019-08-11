@@ -1,14 +1,14 @@
 export const common_zh_cn = {
-    import : '导入',
-    export : '导出'
+    common_import : '导入',
+    common_export : '导出'
 }
 
 export const common_en_us = {
-    import : 'import',
-    export : 'export'
+    common_import : 'import',
+    common_export : 'export'
 }
 
 export const common_zh_tw = {
-    import : '导入123',
-    export : '导出123'
+    common_import : '導入',
+    common_export : '導出'
 }

@@ -45,9 +45,10 @@
         </el-row>
         <el-row class="my-3">
             <el-button plain type="primary" icon="el-icon-plus" @click="addUser" v-has="'user:add'">添加用户</el-button>
-            <el-button plain icon="iconfont icon-wy-upload" v-has="'user:import'" @click="fileImport">{{$t('import')}}
+            <el-button plain icon="iconfont icon-wy-upload" v-has="'user:import'" @click="fileImport">
+                {{$t('common_import')}}
             </el-button>
-            <el-button plain icon="iconfont icon-wy-download" @click="fileExport">{{$t('export')}}</el-button>
+            <el-button plain icon="iconfont icon-wy-download" @click="fileExport">{{$t('common_export')}}</el-button>
             <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
                 <el-button plain>
                     批量操作<i class="el-icon-arrow-down el-icon--right"></i>
@@ -87,11 +88,23 @@
                      :draggable="drawer.draggable"
                      :title="drawer.title"
                      :width.sync="drawer.width"
-                     :placement="drawer.placement"
+                     :direction="drawer.direction"
                      :scrollable="true"
         >
 
-            <component :is="component.type" :data="component.data" @closeFlush="closeFlush"></component>
+            <component :ref="component.ref" :is="component.type" :data="component.data"
+                       @closeFlush="closeFlush"></component>
+            <div class="dialog-footer p-2 w-full" v-show = "drawer.showFooter">
+                <div class="flex justify-end">
+                    <popover-confirm @confirm="popoverConfirm" class="mx-2">
+                        <div slot="popover-title">确定要关闭吗</div>
+                        <div slot="popover-content">
+                            <el-button plain>取消</el-button>
+                        </div>
+                    </popover-confirm>
+                    <el-button type="primary" @click="submit">提交</el-button>
+                </div>
+            </div>
         </drag-drawer>
         <drag-dialog :drag-dialog="dialog" @confirm="confirm">
             <reset-pwd v-if="show.resetPwd" :reset-pwd="props.resetPwd" @change-pwd-ok="changePwdOk"></reset-pwd>
@@ -112,13 +125,14 @@
     import FileUpload from '@/components/fileUpload'
     import FormQuery from '@/components/form/query'
     import {mapState, mapActions} from 'vuex'
-    import {http, apiList, constant, sweetAlert} from '@/utils'
+    import {http, apiList, constant, mixin, sweetAlert} from '@/utils'
     import {downloadFile} from '@/utils/modules/tools'
     import lbTable from '@/components/lb-table/lb-table'
     import Read from './userList/Read'
     import Modify from './userList/Modify'
     import ResetPwd from './userList/ResetPwd'
     import PopDropdown from './userList/PopDropdown'
+    import PopoverConfirm from '@/components/popoverConfirm'
     import ProxyManConfig from './userList/ProxyManConfig'
 
     const uploadAction = () => {
@@ -136,8 +150,10 @@
             lbTable,
             ResetPwd,
             PopDropdown,
+            PopoverConfirm,
             ProxyManConfig
         },
+        mixins: [mixin],
         data() {
             return {
                 form: {
@@ -154,8 +170,9 @@
                 },
                 drawer: {
                     show: false,
-                    placement: 'right',
+                    direction: 'rtl',
                     draggable: true,
+                    showFooter : true,
                     data: {}
                 },
                 dialog: {
@@ -169,6 +186,7 @@
                 },
                 component: {
                     type: Read,
+                    ref: 'read',
                     data: {}
                 },
                 props: {
@@ -223,9 +241,15 @@
                             prop: 'avatar',
                             render: (h, scope) => {
                                 let imgPath = this.getAvatarView(scope)
+                                debugger;
                                 return (
-                                    <avue-avatar src={imgPath}
-                                                 nativeOnClick={() => this.openPreview(scope.$index)}></avue-avatar>
+                                    <el-image size={26} src={imgPath}
+                                              preview-src-list={[imgPath]}
+                                    >
+                                        <div slot="error" class="cursor-pointer">
+                                            <i class="el-icon-picture-outline"></i>
+                                        </div>
+                                    </el-image>
                                 )
                             }
                         },
@@ -265,6 +289,7 @@
                 getActivitiSync: 'GET_ACTIVIYI_SYNC',
             }),
             closeFlush() {
+                debugger;
                 this.drawer = {
                     ...this.drawer,
                     show: false,
@@ -288,15 +313,6 @@
                 let {config: {baseUrl: {imgDomainURL}}} = constant
                 return `${imgDomainURL}/${avatar}`
             },
-            openPreview(index) {
-                let {data} = this.table
-                let {config: {baseUrl: {imgDomainURL}}} = constant
-                data[index] = {
-                    ...data[index],
-                    url: `${imgDomainURL}/${data[index].avatar}`
-                }
-                this.$ImagePreview(data, index);
-            },
             changePwdOk(row) {
                 let {resetPwd: {index}} = this.props
                 let {data} = this.table
@@ -317,12 +333,14 @@
                 this.drawer = {
                     ...this.drawer,
                     title: '添加用户',
-                    width: 500,
+                    width: '500px',
+                    showFooter : true,
                     show: true
                 }
                 this.component = {
                     ...this.component,
                     type: Modify,
+                    ref: 'modify',
                     data: {}
                 }
             },
@@ -330,16 +348,17 @@
                 this.drawer = {
                     ...this.drawer,
                     title: '修改用户',
-                    width: 500,
+                    width: '500px',
+                    showFooter : true,
                     show: true
                 }
                 this.component = {
                     ...this.component,
                     type: Modify,
+                    ref: 'modify',
                     data: row
                 }
             },
-
             deleteBatch() {
                 let {selection} = this.table
                 let ids = selection.map(item => item.id).join(',')
@@ -402,7 +421,8 @@
                 }
                 this.show = {
                     ...this.show,
-                    proxyManConfig: true
+                    proxyManConfig: true,
+                    resetPwd : false
                 }
                 this.props = {
                     ...this.props,
@@ -431,6 +451,19 @@
                     loading: false
                 }
             },
+            submit() {
+                let {ref} = this.component
+                let modifyRef = this.$refs[ref]
+                modifyRef.$refs.modify.validate(valid => {
+                    if (valid) {
+                        modifyRef.commitData()
+                    }
+                })
+                this.dialog = {
+                    ...this.dialog,
+                    loading: false
+                }
+            },
             successClose() {
                 let {name} = this.dialog
                 this.$modal.hide(name)
@@ -439,13 +472,15 @@
             handleDetail({row}) {
                 this.drawer = {
                     ...this.drawer,
-                    width: 450,
+                    width: '450px',
                     title: '详情',
+                    showFooter : false,
                     show: true,
                 }
                 this.component = {
                     ...this.component,
                     type: Read,
+                    ref : 'read',
                     data: row
                 }
             }
@@ -456,11 +491,13 @@
                     width: '300',
                     height: '300',
                     name: 'resetPwd',
-                    title: '重设密码'
+                    title: '重设密码',
+                    showFooter: false
                 }
                 this.show = {
                     ...this.show,
-                    resetPwd: true
+                    resetPwd: true,
+                    proxyManConfig : false,
                 }
                 this.props = {
                     ...this.props,
@@ -484,8 +521,7 @@
                 } else {
                     sweetAlert.error(message)
                 }
-            }
-            ,
+            },
             search() {
                 this.page = {
                     ...this.page,
@@ -495,8 +531,7 @@
             },
             reset() {
                 this.$refs.form.resetFields()
-            }
-            ,
+            },
             checked(selection) {
                 if (selection.length) {
                     this.show = {
@@ -571,6 +606,12 @@
     .user {
         .dropdown {
             padding: 0 10px;
+        }
+        /deep/ .cell {
+            .el-image {
+                height: 26px;
+                width: 26px;
+            }
         }
     }
 </style>

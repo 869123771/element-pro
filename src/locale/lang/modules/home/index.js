@@ -1,14 +1,14 @@
 export const home_zh_cn = {
-    cell_count : '销售额',
-    visit_count : '访问量'
+    home_cell_count : '销售额',
+    home_visit_count : '访问量'
 }
 
 export const home_en_us = {
-    cell_count : 'cell count',
-    visit_count : 'visit count'
+    home_cell_count : 'cell count',
+    home_visit_count : 'visit count'
 }
 
 export const home_zh_tw = {
-    cell_count : '销售额',
-    visit_count : '访问量'
+    home_cell_count : '銷售額',
+    home_visit_count : '訪問量'
 }

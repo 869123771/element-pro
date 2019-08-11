@@ -166,8 +166,5 @@
             line-height: 60px;
             min-height: 60px;
         }
-        /deep/ .vue-modal-resizer {
-            z-index: inherit;
-        }
     }
 </style>

@@ -21,12 +21,9 @@ debugger;
 // vue-i18n 6.x+写法
 Vue.locale = () => {}
 const messages = {
-  /*'zh-CN': Object.assign(zhCnLocale, customZhCn),
+  'zh-CN': Object.assign(zhCnLocale, customZhCn),
   'zh-TW': Object.assign(zhTwLocale, customZhTw),
-  'en-US': Object.assign(enUsLocale, customEnUs)*/
-    'zh-CN': Object.assign({}, customZhCn),
-    'zh-TW': Object.assign({}, customZhTw),
-    'en-US': Object.assign({}, customEnUs)
+  'en-US': Object.assign(enUsLocale, customEnUs)
 }
 
 const i18n = new VueI18n({

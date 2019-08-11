@@ -1,6 +1,41 @@
 <template>
     <div>
-        <avue-form v-model="form.model" :option="form.option" ref="form"></avue-form>
+        <el-form ref = "form" :model = "form" :rules = "rules" label-width="110px">
+            <el-form-item label = "用户名" prop = "userName">
+                <el-input v-model = "form.userName" readonly></el-input>
+            </el-form-item>
+            <el-form-item label = "代理人用户名" prop = "agentUserName">
+                <el-input v-model = "form.agentUserName"
+                          readonly
+                          suffix-icon="el-icon-more"
+                          @click.native = "selectAgent"
+                ></el-input>
+            </el-form-item>
+            <el-form-item label = "代理开始时间" prop = "startTime">
+                <el-date-picker
+                        v-model = "form.startTime"
+                        type = "datetime"
+                        value-format="yyyy-MM-dd hh:mm:ss"
+                        class = "w-full"
+                ></el-date-picker>
+            </el-form-item>
+            <el-form-item label = "代理结束时间" prop = "endTime">
+                <el-date-picker
+                        v-model = "form.endTime"
+                        type = "datetime"
+                        value-format="yyyy-MM-dd hh:mm:ss"
+                        class = "w-full"
+                ></el-date-picker>
+            </el-form-item>
+            <el-form-item label = "状态" prop = "status">
+                <el-radio-group v-model = "form.status">
+                    <template v-for = "item in validStatus">
+                        <el-radio :label = "item.itemValue">{{item.itemText}}</el-radio>
+                    </template>
+                </el-radio-group>
+            </el-form-item>
+        </el-form>
+
         <drag-dialog :drag-dialog="dialog" @confirm="confirm">
             <component
                     :is="component.is"
@@ -31,68 +66,18 @@
         data() {
             return {
                 form: {
-                    option: {
-                        menuBtn: false,
-                        labelWidth: 110,
-                        column: [
-                            {
-                                label: '用户名',
-                                prop: 'userName',
-                                readonly: true,
-                                span: 24
-                            },
-                            {
-                                label: '代理人用户名',
-                                prop: 'agentUserName',
-                                readonly: true,
-                                suffixIcon: 'el-icon-more',
-                                clearable: false,
-                                span: 24,
-                                rules: [
-                                    {required: true, message: '必填', trigger: 'change'}
-                                ],
-                                click: () => {
-                                    let {name} = this.dialog
-                                    this.$nextTick(() => {
-                                        this.$modal.show(name)
-                                    })
-                                }
-                            },
-                            {
-                                label: "代理开始时间",
-                                prop: "startTime",
-                                type: "datetime",
-                                format: "yyyy-MM-dd hh:mm:ss",
-                                valueFormat: "yyyy-MM-dd hh:mm:ss",
-                                span: 24,
-                                rules: [
-                                    {required: true, message: '必填', trigger: 'change'}
-                                ]
-                            },
-                            {
-                                label: '代理结束时间',
-                                prop: "endTime",
-                                type: "datetime",
-                                format: "yyyy-MM-dd hh:mm:ss",
-                                valueFormat: "yyyy-MM-dd hh:mm:ss",
-                                span: 24,
-                                rules: [
-                                    {required: true, message: '必填', trigger: 'change'}
-                                ]
-                            },
-                            {
-                                label: '状态',
-                                prop: 'status',
-                                type: 'radio',
-                                props : {
-                                    label : 'itemText',
-                                    value : 'itemValue'
-                                },
-                                span: 24,
-                            },
-                        ]
-                    },
-                    model: {}
+                    status : '1'
+                },
+                rules : {
+                    agentUserName : [
+                        {required: true, message: '必填', trigger: 'change'}
+                    ],
+                    startTime : [
+                        {required: true, message: '必填', trigger: 'change'}
+                    ],
+                    endTime : [
+                        {required: true, message: '必填', trigger: 'change'}
+                    ]
                 },
                 dialog: {
                     width: 80,
@@ -117,8 +102,11 @@
             ...mapActions({
                 getValidStatus: 'GET_VALID_STATUS',
             }),
-            setValidStatus() {
-                this.$refs.form.updateDic('status', this.validStatus)
+            selectAgent(){
+                let {name} = this.dialog
+                this.$nextTick(() => {
+                    this.$modal.show(name)
+                })
             },
             closeDialog() {
                 let {name} = this.dialog
@@ -128,22 +116,16 @@
                 let {ref} = this.component
                 let {table:{selection}} = this.$refs[ref]
                 let {name} = this.dialog
-                let {model} = this.form
                 let agentUserName = selection.map(item=>item.username).join(',')
                 this.form = {
                     ...this.form,
-                    model : {
-                        ...model,
-                        agentUserName
-                    }
+                    agentUserName
                 }
                 this.$modal.hide(name)
             },
             async saveData(){
-                debugger;
-                let {model} = this.form
                 let params = {
-                    ...model,
+                    ...this.form,
                 }
                 let {success,message} = await http.put(apiList.sys_user_agent_edit,params)
                 if(success){
@@ -157,13 +139,9 @@
                 let {username: userName} = this.proxyMan
                 let {success, result} = await http.get(apiList.sys_user_agent_user_info_query, {userName})
                 if (success) {
-                    let {model} = this.form
                     this.form = {
                         ...this.form,
-                        model: {
-                            ...model,
-                            ...result,
-                        }
+                        ...result,
                     }
                 }
             }
@@ -171,7 +149,6 @@
         mounted() {
             this.getProxyUserInfo()
             this.getValidStatus()
-            this.setValidStatus()
         }
     }
 </script>

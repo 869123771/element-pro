@@ -1,23 +1,24 @@
 <template>
     <div class = "dept-search">
-        <avue-form :option = "form.option" v-model = "form.model">
-            <template slot="deptAssign" slot-scope = "{value}">
+        <el-form label-width="80px">
+            <el-form-item label = "上级部门">
                 <el-tree
                         ref = "tree"
                         show-checkbox
                         default-expand-all
                         check-strictly
                         node-key = "id"
-                        :data="value.data"
-                        :props="value.defaultProps"
-                        :default-checked-keys = "value.defaultCheckedkeys"
+                        :data="deptAssign.data"
+                        :props="deptAssign.defaultProps"
+                        :default-checked-keys = "deptAssign.defaultCheckedkeys"
                 ></el-tree>
-            </template>
-        </avue-form>
+            </el-form-item>
+        </el-form>
     </div>
 </template>
 
 <script>
+    import {isEmpty} from '30-seconds-of-code'
     import {mapState} from 'vuex'
     export default {
         name: "DeptSearch",
@@ -33,45 +34,25 @@
         },
         data(){
             return {
-               form : {
-                   model : {
-                       deptAssign : {
-                           data : [],
-                           defaultProps : {
-                               children: 'children',
-                               label: 'departName'
-                           },
-                           defaultCheckedkeys : []
-                       }
-                   },
-                   option : {
-                       menuBtn : false,
-                       column : [
-                           {
-                               label: '上级部门',
-                               prop: 'deptAssign',
-                               type : 'tree',
-                               formslot: true,
-                               span: 24,
-                           },
-                       ]
-                   }
-               }
+                deptAssign : {
+                    data : [],
+                    defaultProps : {
+                        children: 'children',
+                        label: 'departName'
+                    },
+                    defaultCheckedkeys : []
+                },
             }
         },
         watch : {
             depts : {
                 handler(props){
-                    let {model,model:{deptAssign}} = this.form
-                    this.form = {
-                        ...this.form,
-                        model : {
-                            ...model,
-                            deptAssign : {
-                                ...deptAssign,
-                                data : props,
-                                defaultCheckedkeys : this.deptCheckedIds
-                            }
+                    if(!isEmpty(props)){
+                        debugger;
+                        this.deptAssign = {
+                            ...this.deptAssign,
+                            data : props,
+                            defaultCheckedkeys : this.deptCheckedIds
                         }
                     }
                 },
@@ -85,6 +66,9 @@
     .dept-search{
         /deep/ .el-form-item__content{
             margin-top:0.25rem;
+        }
+        /deep/ .el-tree-node__content>.el-checkbox{
+            margin-right: 8px;
         }
     }
 </style>

@@ -2,12 +2,11 @@
     <div>
         <el-dropdown>
             <div class = "avatar flex items-center">
-                <div class = "px-1">
-                    <avue-avatar :src = "getAvatarView(userInfo.avatar)"></avue-avatar>
+                <div class = "flex px-1">
+                    <el-avatar :size = "36":src = "getAvatarView(userInfo.avatar)"></el-avatar>
                 </div>
                 <div class = "flex items-center">
                     <span class = "px-1">{{userInfo.username}}</span>
-                    <span><i class="el-icon-arrow-down el-icon--right"></i></span>
                 </div>
             </div>
             <el-dropdown-menu>

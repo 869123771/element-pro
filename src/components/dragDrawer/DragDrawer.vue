@@ -1,14 +1,14 @@
 <template>
     <el-drawer ref="drawerWrapper"
-                 :visible="value"
-                 @input="handleInput"
-                 :size="width"
-                 :title="title"
-                 :direction="direction"
-                 :class="outerClasses"
-                 :wrapperClosable="closeOnClickModal"
-                 :show-close="showClose"
-                 :before-close="handleClose"
+               :visible="value"
+               @input="handleInput"
+               :size="width"
+               :title="title"
+               :direction="direction"
+               :class="outerClasses"
+               :wrapperClosable="closeOnClickModal"
+               :show-close="showClose"
+               :before-close="handleClose"
     >
         <!-- 所有插槽内容显示在这里 ↓ -->
         <template v-for="(slots, slotsName) in $slots">
@@ -20,6 +20,7 @@
                 </render-dom>
             </template>
             <template v-else>
+
                 <div :class="`${prefix}-body-wrapper`"
                      :key="`b_drawer_${slotsName}`">
                     <render-dom v-for="(render, index) in slots"
@@ -54,7 +55,7 @@
     import './index.less'
 
     export default {
-        name: 'BDrawer',
+        name: 'DragDrawer',
         components: {
             RenderDom,
             DragDrawerTrigger,
@@ -69,10 +70,6 @@
                 type: [String, Number],
                 default: '256'
             },
-            direction : {
-                type: String,
-                default: 'rtl'
-            },
             // 是否可拖动修改宽度
             draggable: {
                 type: Boolean,
@@ -80,7 +77,7 @@
             },
             // 最小拖动宽度
             minWidth: {
-                type: [Number,String],
+                type: [Number, String],
                 default: '256'
             },
             // 是否可关闭
@@ -116,24 +113,30 @@
                 ]
                 return classesArray.join(' ')
             },
-            placement() {
-                return this.$attrs.placement
+            direction() {
+                return this.$attrs.direction
             },
             innerWidth() {
-                const width = this.width
+                const width = Number(this.width)
                 return width <= 100 ? (this.wrapperWidth * width) / 100 : width
             },
             triggerStyle() {
+                let placement
+                switch (this.direction) {
+                    case 'rtl' :
+                        placement = 'right';
+                        break
+                }
                 return {
-                    [this.placement]: `${this.innerWidth}px`,
+                    [placement]: `${this.innerWidth}px`,
                     position: this.$attrs.inner ? 'absolute' : 'fixed'
                 }
             }
         },
         methods: {
-            handleClose(hide) {
+            handleClose() {
                 this.$emit('close')
-                hide()
+                this.handleInput(false)
             },
             handleInput(status) {
                 this.$emit('input', status)
@@ -150,13 +153,13 @@
                 this.setWrapperWidth()
                 const left = event.pageX - this.wrapperLeft
                 // 如果抽屉方向为右边，宽度计算需用容器宽度减去left
-                let width = this.placement === 'right' ? this.wrapperWidth - left : left
+                let width = this.direction === 'rtl' ? this.wrapperWidth - left : left
                 // 限定做小宽度
                 width = Math.max(width, parseFloat(this.minWidth))
                 event.atMin = width === parseFloat(this.minWidth)
                 // 如果当前width不大于100，视为百分比
                 if (width <= 100) width = (width / this.wrapperWidth) * 100
-                this.$emit('update:width', parseInt(width))
+                this.$emit('update:width', width + 'px')
                 this.$emit('on-resize', event)
 
             },
@@ -169,7 +172,6 @@
                     width,
                     left
                 } = this.$refs.drawerWrapper.$el.getBoundingClientRect()
-                debugger;
                 this.wrapperWidth = width
                 this.wrapperLeft = left
             },

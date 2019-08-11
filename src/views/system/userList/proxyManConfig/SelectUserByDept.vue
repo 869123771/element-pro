@@ -37,17 +37,36 @@
                             suffix-icon="el-icon-search">
                     </el-input>
                 </div>
-                <avue-crud
-                        :data="table.data"
-                        :option="table.option"
-                        :page="page"
-                        :table-loading="table.loading"
-                        @on-load="queryList"
-                        @size-change="sizeChange"
-                        @current-change="currentChange"
-                        @selection-change="selectionChange"
-                >
-                </avue-crud>
+                <el-row>
+                    <el-table
+                            border
+                            stripe
+                            :data="table.data"
+                            v-loading="table.loading"
+                            @selection-change="selectionChange"
+                    >
+                        <el-table-column align="center" type="selection" width="60"></el-table-column>
+                        <el-table-column align="center" type="index" width="60"></el-table-column>
+                        <el-table-column align="center" :show-overflow-tooltip="true" label="用户账号"
+                                         prop="username"></el-table-column>
+                        <el-table-column align="center" :show-overflow-tooltip="true" label="用户名称"
+                                         prop="realname"></el-table-column>
+                        <el-table-column align="center" :show-overflow-tooltip="true" label="状态"
+                                         prop="status_dictText"></el-table-column>
+                    </el-table>
+                </el-row>
+                <el-row v-show = "table.data.length" class = "my-3 text-right">
+                    <el-pagination
+                            background
+                            layout="total, prev, pager, next"
+                            :current-page.sync="page.pageNum"
+                            :page-size="page.pageSize"
+                            :total="page.total"
+                            @size-change="sizeChange"
+                            @current-change="currentChange"
+                    >
+                    </el-pagination>
+                </el-row>
             </el-col>
         </el-row>
     </div>
@@ -65,7 +84,7 @@
                 tree: {
                     filterDept: '',
                     data: [],
-                    clickedData : {},
+                    clickedData: {},
                     defaultProps: {
                         children: 'children',
                         label: 'departName'
@@ -73,29 +92,12 @@
                 },
                 table: {
                     data: [],
-                    option: {
-                        ...table,
-                        column: [
-                            {
-                                label: '用户账号',
-                                prop: 'username'
-                            },
-                            {
-                                label: '用户名称',
-                                prop: 'realname'
-                            },
-                            {
-                                label: '状态',
-                                prop: 'status_dictText'
-                            },
-                        ]
-                    },
                     userName: '',
                     loading: false,
                     selection: []
                 },
                 page: {
-                    currentPage: 1,
+                    pageNum: 1,
                     pageSize: 10,
                     total: 0
                 },
@@ -132,7 +134,7 @@
             nodeClick(data, node, tree) {
                 this.tree = {
                     ...this.tree,
-                    clickedData : data
+                    clickedData: data
                 }
                 this.queryList()
             },
@@ -142,10 +144,10 @@
                     selection
                 }
             },
-            currentChange(currentPage) {
+            currentChange(pageNum) {
                 this.page = {
                     ...this.page,
-                    currentPage
+                    pageNum
                 }
                 this.queryList()
             },
@@ -157,8 +159,8 @@
                 this.queryList()
             },
             async queryList() {
-                let {currentPage: pageNo, pageSize} = this.page
-                let {clickedData : {id}} = this.tree
+                let {pageNum: pageNo, pageSize} = this.page
+                let {clickedData: {id}} = this.tree
                 let {userName} = this.table
                 this.table = {
                     ...this.table,
@@ -168,7 +170,7 @@
                     pageNo,
                     pageSize,
                     depId: id,
-                    username : userName
+                    username: userName
                 }
                 let {success, result} = await http.get(apiList.sys_user_query_user_by_dept, params)
                 if (success) {

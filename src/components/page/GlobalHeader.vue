@@ -1,21 +1,21 @@
 <template>
-    <div>
-        <div class="pr-3 inline-block">
-            <level-bar></level-bar>
-        </div>
-
-        <div class="inline-block">
-            <bread-crumb></bread-crumb>
-            <nav-tag></nav-tag>
-        </div>
-
-        <div class="inline-block float-right">
-            <div class="flex">
-                <div class = "px-2">
-                    <language @on-lang-change="setLang" :lang="lang"></language>
-                </div>
-                <avatar></avatar>
+    <div class = "h-full flex items-center justify-between">
+        <div class = "floal-left flex items-center self-stretch">
+            <div class="pr-3">
+                <level-bar></level-bar>
             </div>
+
+            <div>
+                <bread-crumb></bread-crumb>
+                <nav-tag></nav-tag>
+            </div>
+        </div>
+
+        <div class="float-right flex items-center self-stretch">
+            <div class = "px-2 flex items-center">
+                <language @on-lang-change="setLang" :lang="lang"></language>
+            </div>
+             <avatar></avatar>
         </div>
 
     </div>

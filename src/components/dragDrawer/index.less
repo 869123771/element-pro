@@ -12,15 +12,16 @@
       pointer-events: all;
     }
   }
-  .avue-drawer{
+  .el-drawer{
     &__header{
-      overflow: hidden !important;
       box-sizing: border-box;
-      height : 45px
+      height : 45px;
+      margin-bottom: 1rem;
+      padding: 10px 20px;
+      border-bottom: 1px solid #e8e8e8;
     }
     &__body{
-      height: 100%;
-      padding-bottom: 3rem;
+      height: calc(100% - 50px);
     }
   }
   .@{prefix}-body-wrapper{
