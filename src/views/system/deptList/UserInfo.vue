@@ -1,15 +1,42 @@
 <template>
     <div class = "role-maintenance">
-        <vxe-grid
-                border
-                show-overflow
-                class="vxe-table-element"
-                height="460"
-                :loading="table.loading"
-                :data.sync="table.data"
-                :columns="table.column"
-        >
-        </vxe-grid>
+        <el-row>
+            <el-button plain type="primary" icon="el-icon-plus" @click="addUser">用户录入</el-button>
+            <el-button plain icon="el-icon-plus" @click="addUserHas">添加已有用户</el-button>
+            <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
+                <el-button plain>
+                    批量操作<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i>
+                </el-button>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item @click.native="deleteBatch"><i class="el-icon-delete"></i>删除
+                    </el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+        </el-row>
+        <el-row class = "my-3">
+            <el-table-bar>
+                <fox-table
+                        border
+                        stripe
+                        fit
+                        align="center"
+                        v-loading="table.loading"
+                        :column="table.column"
+                        :data="table.data"
+                        pagination
+                        background
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :page-sizes="[5, 10, 20, 30]"
+                        :page-count="10"
+                        :current-page="page.currentPage"
+                        :total="page.total"
+                        :page-size="page.pageSize"
+                        @size-change="sizeChange"
+                        @p-current-change="currentChange"
+                        @selection-change="selectionChange"
+                ></fox-table>
+            </el-table-bar>
+        </el-row>
 
         <!--<avue-crud
                 :data="table.data"
@@ -67,11 +94,14 @@
 <script>
     import {mapActions} from 'vuex'
     import {http,apiList,sweetAlert,constant} from '@/utils'
+    import foxTable from '@/components/fox-table'
+    import OperBtn from '@/components/table/OperBtn'
     import DragDrawer from '@/components/dragDrawer'
     import DragDialog from '@/components/dragDialog'
     import Modify from '../userList/Modify'
     import AddUser from './AddUser'
     import PopoverConfirm from '@/components/popoverConfirm'
+    import {isEmpty} from '30-seconds-of-code'
 
     export default {
         name: "UserInfo",
@@ -81,77 +111,65 @@
             },
         },
         components : {
+            foxTable,
             DragDrawer,
             DragDialog,
             AddUser,
             PopoverConfirm
         },
         data(){
-            let {table} = constant
             return {
-                /*table: {
-                    data: [],
-                    option: {
-                        ...table,
-                        column: [
-                            {
-                                label: '操作',
-                                prop: 'oper',
-                                slot: true,
-                                width: 80
-                            },
-                            {
-                                label: '用户账号',
-                                prop: 'username'
-                            },
-                            {
-                                label: '用户名称',
-                                prop: 'realname'
-                            },
-                            {
-                                label: '状态',
-                                prop: 'status_dictText'
-                            },
-                        ]
-                    },
+                table : {
                     loading: false,
-                    selection: []
-                },*/
-
-               table : {
-                   loading: false,
-                   selection: [],
-                   data: [
-                       {}
-                   ],
-                   column: [
-                       { type: 'selection', width: 60 },
-                       { type: 'index', title: 'Number', width: 80 },
-                       { field: 'name', title: 'ElInput', minWidth: 140, editRender: { name: 'ElInput' } },
-                       { field: 'role', title: 'ElAutocomplete', width: 160, },
-                       { field: 'age', title: 'ElInputNumber', width: 160, },
-                       { field: 'sex', title: 'ElSelect', width: 140, editRender: { name: 'ElSelect', options: [] } },
-                       { field: 'sex1', title: 'ElSelect', width: 160, },
-                       { field: 'sex2', title: 'ElSelect', width: 140, },
-                       { field: 'region', title: 'ElCascader', width: 200},
-                       { field: 'date', title: 'ElDatePicker', width: 200},
-                       { field: 'date1', title: 'DateTimePicker', width: 220 },
-                       { field: 'date5', title: 'ElTimeSelect', width: 200 },
-                       { field: 'flag', title: 'ElSwitch', width: 100},
-                       { field: 'rate', title: 'ElRate', width: 200}
-                   ],
-                   restaurants: [
-                       { value: '前端', name: '前端' },
-                       { value: '后端', name: '后端' },
-                       { value: '开发', name: '开发' },
-                       { value: '测试', name: '测试' }
-                   ]
-               },
-
-
+                    selection: [],
+                    data : [],
+                    column: [
+                        {type: 'selection', fixed: true},
+                        {
+                            label: '操作',
+                            prop: 'oper',
+                            width: 80,
+                            render(h,{row,$index}){
+                                let btnInfo = [
+                                    {
+                                        content : '修改',
+                                        className : 'fa fa -fw fa-edit',
+                                        permission : 'user:update',
+                                        event : ()=>{
+                                            this.edit(row)
+                                        }
+                                    },
+                                    {
+                                        content : '删除',
+                                        className : 'iconfont icon-wy-delete2',
+                                        permission : 'user:view',
+                                        event : ()=>{
+                                            this.view(row)
+                                        }
+                                    },
+                                ]
+                                return(
+                                    <OperBtn btnInfo = {btnInfo}></OperBtn>
+                                )
+                            }
+                        },
+                        {
+                            label: '用户账号',
+                            prop: 'username'
+                        },
+                        {
+                            label: '用户名称',
+                            prop: 'realname'
+                        },
+                        {
+                            label: '状态',
+                            prop: 'status_dictText'
+                        },
+                    ]
+                },
 
                 page: {
-                    currentPage: 1,
+                    pageNum: 1,
                     pageSize: 10,
                     total: 0
                 },
@@ -169,8 +187,8 @@
                     data: {}
                 },
                 dialog: {
-                    width: '300',
-                    height: '300',
+                    width: 300,
+                    height: 300,
                     name: 'addUserHas',
                     showFooter : true
                 },
@@ -183,7 +201,7 @@
         watch : {
             userInfo : {
                 handler(props) {
-                    if (!this.validatenull(props)) {
+                    if (!isEmpty(props)) {
                         this.queryList()
                     }
                 },
@@ -318,10 +336,10 @@
                 this.$modal.hide(name)
                 this.queryList()
             },
-            currentChange(currentPage) {
+            currentChange(pageNum) {
                 this.page = {
                     ...this.page,
-                    currentPage
+                    pageNum
                 }
                 this.queryList()
             },
@@ -368,6 +386,7 @@
             this.getAllRoles()
             this.getAllDepts()
             this.getActivitiSync()
+            this.queryList()
         }
     }
 </script>

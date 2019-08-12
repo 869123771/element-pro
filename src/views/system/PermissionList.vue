@@ -1,6 +1,33 @@
 <template>
     <div class="menu bg-white p-3 m-3">
         <el-row>
+            <el-button plain type="primary" icon="el-icon-plus" @click="addMenu">新增</el-button>
+            <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
+                <el-button plain>
+                    批量操作<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i>
+                </el-button>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item @click.native="deleteBatch"><i class="el-icon-delete"></i>删除
+                    </el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+        </el-row>
+        <el-row class="my-3">
+            <el-table-bar>
+                <fox-table
+                        border
+                        stripe
+                        align="center"
+                        row-key="id"
+                        :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+                        v-loading="table.loading"
+                        :column="table.column"
+                        :data="table.data"
+                        @selection-change="selectionChange"
+                ></fox-table>
+            </el-table-bar>
+        </el-row>
+        <!--<el-row>
             <avue-crud
                     :data="table.data"
                     :option="table.option"
@@ -14,7 +41,7 @@
                     <el-button plain type="primary" icon="el-icon-plus" @click="addMenu">新增</el-button>
                     <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
                         <el-button plain>
-                            批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+                            批量操作<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i>
                         </el-button>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item @click.native="deleteBatch"><i class="el-icon-delete"></i>删除
@@ -55,7 +82,7 @@
                     </span>
                 </template>
             </avue-crud>
-        </el-row>
+        </el-row>-->
 
         <drag-drawer v-model="drawer.show"
                      :draggable="drawer.draggable"
@@ -65,12 +92,12 @@
         >
             <component :is="component.type" :ref="component.ref" :data="component.data"
                        @successClose="successClose"></component>
-            <div class="dialog-footer p-2 w-full flex justify-end" v-if = "component.showFooter">
-                <div class = "flex">
-                    <popover-confirm @confirm = "popoverConfirm" class="mx-2">
-                        <div slot = "popover-title">确定要关闭吗</div>
+            <div class="dialog-footer p-2 w-full flex justify-end" v-if="component.showFooter">
+                <div class="flex">
+                    <popover-confirm @confirm="popoverConfirm" class="mx-2">
+                        <div slot="popover-title">确定要关闭吗</div>
                         <div slot="popover-content">
-                            <el-button plain >取消</el-button>
+                            <el-button plain>取消</el-button>
                         </div>
                     </popover-confirm>
                     <el-button type="primary" @click="submit">提交</el-button>
@@ -86,6 +113,8 @@
     import {http, apiList, constant, sweetAlert} from '@/utils'
     import DragDrawer from '@/components/dragDrawer'
     import DragDialog from '@/components/dragDialog'
+    import foxTable from '@/components/fox-table/'
+    import OperBtn from '@/components/table/OperBtn'
     import Modify from './menuList/Modify'
     import Read from './menuList/Read'
     import DataRule from './menuList/DataRule'
@@ -96,12 +125,91 @@
         components: {
             DragDrawer,
             DragDialog,
+            foxTable,
             PopoverConfirm
         },
         data() {
-            let {table} = constant
             return {
                 table: {
+                    loading: false,
+                    selection: [],
+                    data: [],
+                    column: [
+                        {
+                            type : 'index',
+                            width : 70
+                        },
+                        {
+                            label: '菜单名称',
+                            prop: 'name',
+                            headerAlign: 'center',
+                            align: 'left',
+                        },
+                        {
+                            label: '菜单类型',
+                            prop: 'menuType',
+                            render: (h, {row, $index, column}) => {
+                                let {menuType} = row
+                                return (
+                                    <span>
+                                        {
+                                            this.menuType.length ? this.menuType.find(item => item.itemValue === menuType.toString()).itemText : ''
+                                        }
+                                    </span>
+                                )
+
+                            }
+                        },
+                        {
+                            label: '图标',
+                            prop: 'icon',
+                            showOverflowTooltip: true
+                        },
+                        {
+                            label: '组件',
+                            prop: 'component',
+                            showOverflowTooltip: true
+                        },
+                        {
+                            label: '路径',
+                            prop: 'url',
+                            showOverflowTooltip: true
+                        },
+                        {
+                            label: '排序',
+                            prop: 'sortNo',
+                            width: 70
+                        },
+                        {
+                            label: '操作',
+                            width: 80,
+                            render(h,{row,$index}){
+                                let btnInfo = [
+                                    {
+                                        content : '修改',
+                                        className : 'fa fa -fw fa-edit',
+                                        permission : 'menu:table:update',
+                                        event : ()=>{
+                                            this.edit(row)
+                                        }
+                                    },
+                                    {
+                                        content : '删除',
+                                        className : 'iconfont icon-wy-delete2',
+                                        permission : 'user:view',
+                                        event : ()=>{
+                                            this.view(row)
+                                        }
+                                    },
+                                ]
+                                return(
+                                    <OperBtn btnInfo = {btnInfo}></OperBtn>
+                                )
+                            }
+                        },
+                    ]
+                },
+                /*table: {
                     data: [],
                     option: {
                         ...table,
@@ -146,7 +254,7 @@
                     model: {},
                     loading: false,
                     selection: []
-                },
+                },*/
                 dropDownItem: [
                     {
                         label: '详情',
@@ -179,27 +287,27 @@
                 component: {
                     type: Modify,
                     ref: 'modify',
-                    showFooter : true,
+                    showFooter: true,
                     data: {}
                 },
             }
         },
-        computed : {
+        computed: {
             ...mapState({
-                menuType : ({dict}) => dict.menuType,
+                menuType: ({dict}) => dict.menuType,
             })
         },
         methods: {
             ...mapActions({
-                getMenuType : 'GET_MENU_TYPE',
+                getMenuType: 'GET_MENU_TYPE',
                 getAllMenus: 'GET_ALL_MENUS',
-                getPermissionType : 'GET_PERMISSION_TYPE',
-                getValidStatus : 'GET_VALID_STATUS',
-                getPermissionList : 'GET_PERMISSION_LIST'
+                getPermissionType: 'GET_PERMISSION_TYPE',
+                getValidStatus: 'GET_VALID_STATUS',
+                getPermissionList: 'GET_PERMISSION_LIST'
             }),
-            headerCellClassName({row,column}){
+            headerCellClassName({row, column}) {
                 let {property} = column
-                if(property === 'name'){
+                if (property === 'name') {
                     return 'text-center'
                 }
             },
@@ -224,7 +332,7 @@
                 this.drawer = {
                     ...this.drawer,
                     show: true,
-                    name : 'addMenu',
+                    name: 'addMenu',
                     width: 500,
                     title: '新增',
                 }
@@ -232,7 +340,7 @@
                     ...this.component,
                     type: Modify,
                     ref: 'add',
-                    showFooter : true,
+                    showFooter: true,
                     data: {}
                 }
                 let {name} = this.drawer
@@ -244,7 +352,7 @@
                 this.drawer = {
                     ...this.drawer,
                     show: true,
-                    name : 'updateMenu',
+                    name: 'updateMenu',
                     width: 500,
                     title: '修改',
                 }
@@ -252,7 +360,7 @@
                     ...this.component,
                     type: Modify,
                     ref: 'update',
-                    showFooter : true,
+                    showFooter: true,
                     data: {
                         ...row
                     }
@@ -266,7 +374,7 @@
                 this.drawer = {
                     ...this.drawer,
                     show: true,
-                    name : 'readMenu',
+                    name: 'readMenu',
                     width: 500,
                     title: '详情',
                 }
@@ -274,7 +382,7 @@
                     ...this.component,
                     type: Read,
                     ref: 'read',
-                    showFooter : false,
+                    showFooter: false,
                     data: {
                         ...row
                     }
@@ -288,7 +396,7 @@
                 this.drawer = {
                     ...this.drawer,
                     show: true,
-                    name : 'dataRule',
+                    name: 'dataRule',
                     width: 600,
                     title: '数据权限规则',
                 }
@@ -296,7 +404,7 @@
                     ...this.component,
                     type: DataRule,
                     ref: 'dataRule',
-                    showFooter : false,
+                    showFooter: false,
                     data: {
                         ...row
                     }
@@ -361,10 +469,12 @@
                 }
                 let {success, result} = await this.getAllMenus()
                 if (success) {
-                    this.table = {
-                        ...this.table,
-                        data: result
-                    }
+                    this.$nextTick(() => {
+                        this.table = {
+                            ...this.table,
+                            data: result
+                        }
+                    })
                 }
                 this.table = {
                     ...this.table,
@@ -372,10 +482,13 @@
                 }
             },
         },
-        created(){
+        created() {
             this.getMenuType()
             this.getPermissionType()
             this.getValidStatus()
+        },
+        mounted() {
+            this.queryList()
         }
     }
 </script>

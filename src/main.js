@@ -16,7 +16,7 @@ import 'el-table-bar-base/lib/ElTableBar.css'
 
 import VModal from 'vue-js-modal'
 
-import './vxeTable'
+//import './vxeTable'
 
 import i18n from '@/locale'
 

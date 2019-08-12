@@ -62,7 +62,7 @@
         </el-row>
         <el-row>
             <el-table-bar>
-                <lb-table
+                <fox-table
                         border
                         stripe
                         fit
@@ -81,7 +81,7 @@
                         @size-change="handleSizeChange"
                         @p-current-change="handleCurrentChange"
                         @selection-change="checked"
-                ></lb-table>
+                ></fox-table>
             </el-table-bar>
         </el-row>
         <drag-drawer v-model="drawer.show"
@@ -127,7 +127,7 @@
     import {mapState, mapActions} from 'vuex'
     import {http, apiList, constant, mixin, sweetAlert} from '@/utils'
     import {downloadFile} from '@/utils/modules/tools'
-    import lbTable from '@/components/lb-table/lb-table'
+    import foxTable from '@/components/fox-table/'
     import Read from './userList/Read'
     import Modify from './userList/Modify'
     import ResetPwd from './userList/ResetPwd'
@@ -147,7 +147,7 @@
             DragDialog,
             FileUpload,
             FormQuery,
-            lbTable,
+            foxTable,
             ResetPwd,
             PopDropdown,
             PopoverConfirm,
