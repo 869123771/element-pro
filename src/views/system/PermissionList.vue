@@ -24,7 +24,11 @@
                         :column="table.column"
                         :data="table.data"
                         @selection-change="selectionChange"
-                ></fox-table>
+                >
+                    <el-table-column slot-scope = "scope" prop>
+                        <span>xxx</span>
+                    </el-table-column>
+                </fox-table>
             </el-table-bar>
         </el-row>
         <!--<el-row>
@@ -183,23 +187,48 @@
                         {
                             label: '操作',
                             width: 80,
-                            render(h,{row,$index}){
+                            prop : 'oper',
+                            slot : true,
+                            render : (h,{row,$index})=>{
                                 let btnInfo = [
                                     {
                                         content : '修改',
-                                        className : 'fa fa -fw fa-edit',
+                                        className : 'fa fa-fw fa-pencil',
                                         permission : 'menu:table:update',
                                         event : ()=>{
-                                            this.edit(row)
+                                            this.editMenu(row)
                                         }
                                     },
                                     {
-                                        content : '删除',
-                                        className : 'iconfont icon-wy-delete2',
-                                        permission : 'user:view',
-                                        event : ()=>{
-                                            this.view(row)
-                                        }
+                                        type : 'dropDown',
+                                        className : 'fa fa-fw fa-ellipsis-h',
+                                        dropDownItems : [
+                                            {
+                                                content: '详情',
+                                                className : '',
+                                                popover: false,
+                                                event : ()=>{
+                                                    this.handleDataRule(row)
+                                                }
+                                            },
+                                            {
+                                                content: '数据规则',
+                                                className : '',
+                                                popover: false,
+                                                event : ()=>{
+                                                    this.handleDataRule(row)
+                                                }
+                                            },
+                                            {
+                                                content: '删除',
+                                                className : '',
+                                                popover: true,
+                                                popText : '确定要删除吗',
+                                                event : ()=>{
+                                                    this.handleDel(row)
+                                                }
+                                            }
+                                        ],
                                     },
                                 ]
                                 return(
@@ -209,72 +238,6 @@
                         },
                     ]
                 },
-                /*table: {
-                    data: [],
-                    option: {
-                        ...table,
-                        column: [
-                            {
-                                label: '菜单名称',
-                                prop: 'name',
-                                align : 'left'
-                            },
-                            {
-                                label: '菜单类型',
-                                prop: 'menuType',
-                                slot : true
-                            },
-                            {
-                                label: '图标',
-                                prop: 'icon'
-                            },
-                            {
-                                label: '组件',
-                                prop: 'component',
-                                overHidden: true
-                            },
-                            {
-                                label: '路径',
-                                prop: 'url',
-                                overHidden: true
-                            },
-                            {
-                                label: '排序',
-                                prop: 'sortNo',
-                                width: 70
-                            },
-                            {
-                                label: '操作',
-                                prop: 'oper',
-                                slot: true,
-                                width: 80
-                            },
-                        ]
-                    },
-                    model: {},
-                    loading: false,
-                    selection: []
-                },*/
-                dropDownItem: [
-                    {
-                        label: '详情',
-                        icon: '',
-                        action: this.handleDetail,
-                        popover: false,
-                    },
-                    {
-                        label: '数据规则',
-                        icon: '',
-                        action: this.handleDataRule,
-                        popover: false,
-                    },
-                    {
-                        label: '删除',
-                        icon: '',
-                        action: this.handleDel,
-                        popover: true,
-                    },
-                ],
                 show: {
                     batch: false
                 },
@@ -305,12 +268,6 @@
                 getValidStatus: 'GET_VALID_STATUS',
                 getPermissionList: 'GET_PERMISSION_LIST'
             }),
-            headerCellClassName({row, column}) {
-                let {property} = column
-                if (property === 'name') {
-                    return 'text-center'
-                }
-            },
             selectionChange(selection) {
                 if (selection.length) {
                     this.show = {
@@ -333,7 +290,7 @@
                     ...this.drawer,
                     show: true,
                     name: 'addMenu',
-                    width: 500,
+                    width: '500px',
                     title: '新增',
                 }
                 this.component = {
@@ -348,12 +305,12 @@
                     this.$modal.show(name)
                 })
             },
-            editMenu({row}) {
+            editMenu(row) {
                 this.drawer = {
                     ...this.drawer,
                     show: true,
                     name: 'updateMenu',
-                    width: 500,
+                    width: '500px',
                     title: '修改',
                 }
                 this.component = {
@@ -370,12 +327,12 @@
                     this.$modal.show(name)
                 })
             },
-            handleDetail({row}) {
+            handleDetail(row) {
                 this.drawer = {
                     ...this.drawer,
                     show: true,
                     name: 'readMenu',
-                    width: 500,
+                    width: '500px',
                     title: '详情',
                 }
                 this.component = {
@@ -392,7 +349,7 @@
                     this.$modal.show(name)
                 })
             },
-            handleDataRule({row}) {
+            handleDataRule(row) {
                 this.drawer = {
                     ...this.drawer,
                     show: true,

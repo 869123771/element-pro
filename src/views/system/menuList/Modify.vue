@@ -104,6 +104,7 @@
     import {http, apiList, constant, sweetAlert} from '@/utils'
     import Icons from './icon/Icons'
     import DragDialog from '@/components/dragDialog'
+    import {isEmpty} from '30-seconds-of-code'
 
     let customParams = {}
 
@@ -162,7 +163,7 @@
         watch : {
             data : {
                 handler(props) {
-                    if (!this.validatenull(props)) {
+                    if (!isEmpty(props)) {
                         let {menuType} = props
                         this.form = {
                             ...this.form,

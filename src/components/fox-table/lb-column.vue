@@ -9,12 +9,7 @@
 */
 
 <template>
-
-    <div v-if="column.slot">
-        <slot></slot>
-    </div>
     <el-table-column
-            v-else
             v-bind="$attrs"
             v-on="$listeners"
             :prop="column.prop"
