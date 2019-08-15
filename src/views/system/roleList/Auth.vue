@@ -53,14 +53,14 @@
                 }
             },
             selectAll(){        //全选
-                let {form:{model:{menuAssign:{ids}}}} = this.getMenuRef()
+                let {menuAssign:{ids}} = this.getMenuRef()
                 this.getTreeRef().setCheckedKeys(ids);
             },
             selectNone(){       //全不选
                 this.getTreeRef().setCheckedKeys([]);
             },
             expandAll(){        //展开全部
-                let {form:{model:{menuAssign:{ids}}}} = this.getMenuRef()
+                let {menuAssign:{ids}} = this.getMenuRef()
                 this.menuSearch = {
                     ...this.menuSearch,
                     defaultExpandKes : [...ids],

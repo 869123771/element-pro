@@ -38,49 +38,11 @@
             </el-table-bar>
         </el-row>
 
-        <!--<avue-crud
-                :data="table.data"
-                :option="table.option"
-                :page="page"
-                :table-loading="table.loading"
-                @on-load="queryList"
-                @size-change="sizeChange"
-                @current-change="currentChange"
-                @selection-change="selectionChange"
-        >
-            <template slot="menuLeft">
-                <el-button plain type="primary" icon="el-icon-plus" @click="addUser">用户录入</el-button>
-                <el-button plain icon="el-icon-plus" @click="addUserHas">添加已有用户</el-button>
-                <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
-                    <el-button plain>
-                        批量操作<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i>
-                    </el-button>
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item @click.native="deleteBatch"><i class="el-icon-delete"></i>删除
-                        </el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-            </template>
-            <template slot="oper" slot-scope="{row}">
-                <span class = "flex justify-center">
-                     <span class="text-blue-500 text-base cursor-pointer">
-                        <i class="fa fa-fw fa-pencil" @click="edit(row)"></i>
-                    </span>
-                    <span class="text-blue-500 text-base cursor-pointer">
-                        <popover-confirm @confirm="confirmDelete(row.id)">
-                            <div slot="popover-content">
-                                <i class="fa iconfont icon-wy-delete2"></i>
-                            </div>
-                        </popover-confirm>
-                    </span>
-                </span>
-            </template>
-        </avue-crud>-->
         <drag-drawer v-model="drawer.show"
                      :draggable="drawer.draggable"
                      :title="drawer.title"
                      :width.sync="drawer.width"
-                     :placement="drawer.placement"
+                     :direction="drawer.direction"
                      :scrollable="true"
         >
             <component :is="component.type" :data="component.data" @closeFlush="closeFlush"></component>
@@ -129,11 +91,11 @@
                             label: '操作',
                             prop: 'oper',
                             width: 80,
-                            render(h,{row,$index}){
+                            render : (h,{row,$index})=>{
                                 let btnInfo = [
                                     {
                                         content : '修改',
-                                        className : 'fa fa -fw fa-edit',
+                                        className : 'fa fa -fw fa-pencil',
                                         permission : 'user:update',
                                         event : ()=>{
                                             this.edit(row)
@@ -141,10 +103,12 @@
                                     },
                                     {
                                         content : '删除',
+                                        popover : true,
+                                        popText: '确定要删除吗',
                                         className : 'iconfont icon-wy-delete2',
                                         permission : 'user:view',
                                         event : ()=>{
-                                            this.view(row)
+                                            this.confirmDelete(row.id,$index)
                                         }
                                     },
                                 ]
@@ -178,7 +142,7 @@
                 },
                 drawer: {
                     show: false,
-                    placement: 'right',
+                    direction: 'rtl',
                     draggable: true,
                     data: {}
                 },
@@ -225,7 +189,7 @@
                 this.drawer = {
                     ...this.drawer,
                     title: '添加用户',
-                    width: 500,
+                    width: '500px',
                     show: true
                 }
                 this.component = {
@@ -237,16 +201,20 @@
                 }
             },
             edit(row) {
+                let {id} = this.userInfo
                 this.drawer = {
                     ...this.drawer,
                     title: '修改用户',
-                    width: 500,
+                    width: '500px',
                     show: true
                 }
                 this.component = {
                     ...this.component,
                     type: Modify,
-                    data: row
+                    data: {
+                        ...row,
+                        deptId : id
+                    }
                 }
             },
             addUserHas(){
@@ -310,7 +278,7 @@
                     sweetAlert.error(message)
                 }
             },
-            async confirmDelete(userId) {
+            async confirmDelete(userId,index) {
                 let {id : depId} = this.userInfo
                 let params = {
                     userId,
@@ -319,6 +287,7 @@
                 let {success, message} = await http.delete(apiList.sys_user_delete_dept_user, params)
                 if (success) {
                     sweetAlert.successWithTimer(message)
+                    this.$refs[index].doClose();
                     this.queryList()
                 } else {
                     sweetAlert.error(message)

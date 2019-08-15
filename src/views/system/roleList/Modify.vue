@@ -1,12 +1,29 @@
 <template>
     <div class = "modify">
-        <avue-form v-model="form.model" :option="form.option" ref="form">
-        </avue-form>
+        <el-form ref = "form" :model = "form" label-width="80px" :rules = "rules">
+            <el-form-item label = "角色名称" prop = "roleName">
+                <el-input v-model = "form.roleName" placeholder = "角色名称" clearable></el-input>
+            </el-form-item>
+            <el-form-item label = "角色编码" prop = "roleCode">
+                <el-input v-model = "form.roleCode" placeholder = "角色编码" clearable :disabled="data.id"></el-input>
+            </el-form-item>
+            <el-form-item label = "描述" prop = "description">
+                <el-input
+                        type = "textarea"
+                        v-model = "form.description"
+                        placeholder = "描述"
+                        clearable
+                        maxlength = "100"
+                        showWordLimit
+                ></el-input>
+            </el-form-item>
+        </el-form>
     </div>
 </template>
 
 <script>
     import {http, apiList, constant,sweetAlert} from '@/utils'
+    import {isEmpty} from '30-seconds-of-code'
 
     export default {
         name: "Modify",
@@ -16,7 +33,6 @@
             }
         },
         data(){
-            let {id} = this.data
             const checkUnique = async (rule, value, callback)=>{
                 let {flag,message} = await this.uniqueCheck(value)
                 if(!flag){
@@ -25,53 +41,31 @@
                     callback();
                 }
             }
-            const codeDisabled = id ? true : false
+
             return {
                 form: {
-                    option: {
-                        menuBtn: false,
-                        column: [
-                            {
-                                label : '角色名称',
-                                prop: 'roleName',
-                                span: 24,
-                                rules : [
-                                    {required : true,message:'必填',trigger:'change'}
-                                ]
-                            },
-                            {
-                                label : '角色编码',
-                                prop: 'roleCode',
-                                span: 24,
-                                disabled : codeDisabled,
-                                rules : [
-                                    {required : true,message:'必填',trigger:'change',},
-                                    {validator : checkUnique}
-                                ]
-                            },
-                            {
-                                label : '描述',
-                                prop: 'description',
-                                type : 'textarea',
-                                span: 24
-                            },
-                        ]
-                    },
-                    model: {}
-                }
+                    roleNam : '',
+                    roleCode : '',
+                    description : '',
+                },
+                rules : {
+                    ruleName : [
+                        {required : true, message : '必填', trigger : 'change'}
+                    ],
+                    roleCode : [
+                        {required : true, message : '必填', trigger : 'change'},
+                        {validator : checkUnique}
+                    ]
+                },
             }
         },
         watch : {
             data : {
                 handler(props) {
-                    if (!this.validatenull(props)) {
-                        let {model} = this.form
+                    if (!isEmpty(props)) {
                         this.form = {
                             ...this.form,
-                            model : {
-                                ...model,
-                                ...props
-                            }
+                            ...props
                         }
                     }
                 },

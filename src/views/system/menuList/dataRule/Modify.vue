@@ -1,20 +1,37 @@
 <template>
     <div class = "modify">
-        <avue-form v-model="form.model" :option="form.option" ref="form">
-            <template slot = "status" slot-scope = "{value}">
-                <el-radio-group v-model = "form.model.status">
+        <el-form ref = "form" :model = "form" :status-icon="true" label-width="80px" :rules = "rules">
+            <el-form-item label = "规则名称" prop = "ruleName">
+                <el-input v-model = "form.ruleName" placeholder = "规则名称" clearable ></el-input>
+            </el-form-item>
+            <el-form-item label = "规则字段" prop = "ruleColumn">
+                <el-input v-model = "form.ruleColumn" placeholder = "规则字段" clearable ></el-input>
+            </el-form-item>
+            <el-form-item label = "条件规则" prop = "ruleConditions">
+                <el-select v-model = "form.ruleConditions" placeholder = "条件规则" clearable filterable class = "w-full">
+                    <template v-for = "item in ruleConditions">
+                        <el-option :value = "item.itemValue" :label = "item.itemText"></el-option>
+                    </template>
+                </el-select>
+            </el-form-item>
+            <el-form-item label = "规则值" prop = "ruleValue">
+                <el-input v-model = "form.ruleValue" placeholder = "规则值" clearable ></el-input>
+            </el-form-item>
+            <el-form-item label = "状态" prop = "status">
+                <el-radio-group v-model = "form.status">
                     <template v-for = "item in validStatus">
                         <el-radio-button :label = "item.itemValue">{{item.itemText}}</el-radio-button>
                     </template>
                 </el-radio-group>
-            </template>
-        </avue-form>
+            </el-form-item>
+        </el-form>
     </div>
 </template>
 
 <script>
     import {mapState} from 'vuex'
     import {http,apiList,sweetAlert} from '@/utils'
+    import {isEmpty} from '30-seconds-of-code'
     export default {
         name: "Modify",
         props : {
@@ -25,57 +42,16 @@
         data(){
             return {
                 form: {
-                    option: {
-                        menuBtn: false,
-                        labelWidth: 80,
-                        props : {
-                            label : 'itemText',
-                            value : 'itemValue'
-                        },
-                        column: [
-                            {
-                                label: '规则名称',
-                                prop: 'ruleName',
-                                span: 24,
-                                rules : [
-                                    {required : true, message : '必填',trigger : 'change'}
-                                ]
-                            },
-                            {
-                                label: '规则字段',
-                                prop: 'ruleColumn',
-                                span: 24,
-                            },
-                            {
-                                label: '条件规则',
-                                prop: 'ruleConditions',
-                                type : 'select',
-                                span: 24,
-                                rules : [
-                                    {required : true, message : '必填',trigger : 'change'}
-                                ]
-                            },
-                            {
-                                label: '规则值',
-                                prop: 'ruleValue',
-                                span: 24,
-                                rules : [
-                                    {required : true, message : '必填',trigger : 'change'}
-                                ]
-                            },
-                            {
-                                label : '状态',
-                                prop: 'status',
-                                formslot : true,
-                                type : 'radio',
-                                span: 24
-                            }
-                        ]
-                    },
-                    model: {
-                        status : '1'
-                    }
+                    status : 1
                 },
+                rules : {
+                    ruleName : [
+                        {required : true, message : '必填',trigger : 'change'}
+                    ],
+                    ruleConditions : [
+                        {required : true, message : '必填',trigger : 'change'}
+                    ]
+                }
             }
         },
         computed : {
@@ -87,14 +63,10 @@
         watch : {
             data : {
                 handler(props) {
-                    if (!this.validatenull(props)) {
-                        let {model} = this.form
+                    if (!isEmpty(props)) {
                         this.form = {
                             ...this.form,
-                            model : {
-                                ...model,
-                                ...props
-                            }
+                            ...props
                         }
                     }
                 },
@@ -102,14 +74,10 @@
             },
         },
         methods : {
-            setRuleConditions(){
-                this.$refs.form.updateDic('ruleConditions', this.ruleConditions)
-            },
             saveData(){
                 let {id,permissionId} = this.data
-                let {model} = this.form
                 let params = {
-                    ...model,
+                    ...this.form,
                     permissionId,
                 }
                 if(id){
@@ -138,7 +106,7 @@
             }
         },
         mounted(){
-            this.setRuleConditions()
+
         }
     }
 </script>

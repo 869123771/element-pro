@@ -25,74 +25,15 @@
                         :data="table.data"
                         @selection-change="selectionChange"
                 >
-                    <el-table-column slot-scope = "scope" prop>
-                        <span>xxx</span>
-                    </el-table-column>
                 </fox-table>
             </el-table-bar>
         </el-row>
-        <!--<el-row>
-            <avue-crud
-                    :data="table.data"
-                    :option="table.option"
-                    :table-loading="table.loading"
-                    v-model="table.model"
-                    @on-load="queryList"
-                    @selection-change="selectionChange"
-                    :header-cell-class-name = "headerCellClassName"
-            >
-                <template slot="menuLeft">
-                    <el-button plain type="primary" icon="el-icon-plus" @click="addMenu">新增</el-button>
-                    <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
-                        <el-button plain>
-                            批量操作<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i>
-                        </el-button>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item @click.native="deleteBatch"><i class="el-icon-delete"></i>删除
-                            </el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
-                </template>
-                <template slot = "menuType" slot-scope = "{row}">
-                    <div>
-                        {{menuType.length ? menuType.find(item=>item.itemValue == row.menuType).itemText : ''}}
-                    </div>
-                </template>
-                <template slot="oper" slot-scope="scope">
-                    <span>
-                         <span class="text-blue-500 text-base cursor-pointer">
-                            <i class="fa fa-fw fa-pencil" @click="editMenu(scope)"></i>
-                        </span>
-                        <el-dropdown placement="bottom" className="dropdown">
-                            <span class="text-blue-500 text-base">
-                              <i class="fa fa-fw fa-ellipsis-h"></i>
-                            </span>
-                            <el-dropdown-menu slot="dropdown">
-                                <template v-for="item in dropDownItem">
-                                    <template v-if="item.popover">
-                                        <popover-confirm @confirm = "item.action(scope)">
-                                            <div slot="popover-content">
-                                                <el-dropdown-item>{{item.label}}</el-dropdown-item>
-                                            </div>
-                                        </popover-confirm>
-                                    </template>
-                                    <template v-else>
-                                         <el-dropdown-item
-                                                 @click.native="()=>{item.action(scope)}">{{item.label}}</el-dropdown-item>
-                                    </template>
-                                </template>
-                            </el-dropdown-menu>
-                        </el-dropdown>
-                    </span>
-                </template>
-            </avue-crud>
-        </el-row>-->
 
         <drag-drawer v-model="drawer.show"
                      :draggable="drawer.draggable"
                      :title="drawer.title"
                      :width.sync="drawer.width"
-                     :placement="drawer.placement"
+                     :direction="drawer.direction"
         >
             <component :is="component.type" :ref="component.ref" :data="component.data"
                        @successClose="successClose"></component>
@@ -188,7 +129,6 @@
                             label: '操作',
                             width: 80,
                             prop : 'oper',
-                            slot : true,
                             render : (h,{row,$index})=>{
                                 let btnInfo = [
                                     {
@@ -208,7 +148,7 @@
                                                 className : '',
                                                 popover: false,
                                                 event : ()=>{
-                                                    this.handleDataRule(row)
+                                                    this.handleDetail(row)
                                                 }
                                             },
                                             {
@@ -243,7 +183,7 @@
                 },
                 drawer: {
                     show: false,
-                    placement: 'right',
+                    direction: 'rtl',
                     draggable: true,
                     data: {}
                 },
@@ -354,7 +294,7 @@
                     ...this.drawer,
                     show: true,
                     name: 'dataRule',
-                    width: 600,
+                    width: '600px',
                     title: '数据权限规则',
                 }
                 this.component = {

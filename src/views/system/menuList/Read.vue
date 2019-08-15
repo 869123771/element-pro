@@ -69,6 +69,7 @@
 
 <script>
     import {mapState} from 'vuex'
+    import {isEmpty} from '30-seconds-of-code'
     let customParams = {
         flag : true,
         menuName : ''
@@ -111,7 +112,7 @@
         watch : {
             data : {
                 handler(props) {
-                    if (!this.validatenull(props)) {
+                    if (!isEmpty(props)) {
                         let {menuType} = props
                         this.form = {
                             ...this.form,

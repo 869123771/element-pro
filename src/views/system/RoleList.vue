@@ -1,65 +1,69 @@
 <template>
     <div class="role bg-white p-3 m-3">
         <el-row>
-            <avue-form :option="form.option" v-model="form.model" ref="form">
-                <template slot-scope="scope" slot="searchBtn">
-                    <div>
+            <el-form ref = "form" :model = "form" label-width="80px">
+                <el-col :md = "6" :sm = "8">
+                    <el-form-item label = "名称" prop = "roleName">
+                        <el-input v-model = "form.roleName" clearable></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :md = "6" :sm = "8">
+                    <el-form-item label = "开始时间" prop = "createTime">
+                        <el-date-picker
+                                class = "w-full"
+                                v-model = "form.createTime"
+                                type = "datetimerange"
+                                start-placeholder="开始日期"
+                                end-placeholder="结束日期"
+                                value-format="yyyy-MM-dd hh:mm:ss"
+                        ></el-date-picker>
+                    </el-form-item>
+                </el-col>
+                <el-col :md = "6" :sm = "8">
+                    <div class = "pl-3">
                         <el-button type="primary" icon="el-icon-search" @click="search">查询</el-button>
                         <el-button plain icon="el-icon-refresh-left" @click="reset">重置</el-button>
                     </div>
-                </template>
-            </avue-form>
+                </el-col>
+            </el-form>
         </el-row>
-        <el-row>
 
-            <avue-crud
-                    ref="crud"
+        <el-row class = "my-3">
+            <el-button plain type="primary" icon="el-icon-plus" @click="addRole">新增</el-button>
+            <el-button plain icon="iconfont icon-wy-upload" @click="fileImport">导入</el-button>
+            <el-button plain icon="iconfont icon-wy-download" @click="fileExport">导出</el-button>
+            <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
+                <el-button plain>
+                    批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item @click.native="deleteBatch"><i class="el-icon-delete"></i>删除
+                    </el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+        </el-row>
+
+        <el-row>
+            <fox-table
+                    border
+                    stripe
+                    align="center"
+                    highlight-current-row
+                    v-loading="table.loading"
+                    :column="table.column"
                     :data="table.data"
-                    :option="table.option"
-                    :page="page"
-                    :table-loading="table.loading"
-                    @on-load="queryList"
+                    pagination
+                    background
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :page-sizes="[5, 10, 20, 30]"
+                    :page-count="10"
+                    :current-page.sync="page.pageNum"
+                    :total="page.total"
+                    :page-size="page.pageSize"
                     @size-change="sizeChange"
-                    @current-change="currentChange"
-                    @selection-change="selectionChange"
-                    @cell-click="cellClick"
-            >
-                <template slot="menuLeft">
-                    <el-button plain type="primary" icon="el-icon-plus" @click="addRole">新增</el-button>
-                    <el-button plain icon="iconfont icon-wy-upload" @click="fileImport">导入</el-button>
-                    <el-button plain icon="iconfont icon-wy-download" @click="fileExport">导出</el-button>
-                    <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
-                        <el-button plain>
-                            批量操作<i class="el-icon-arrow-down el-icon--right"></i>
-                        </el-button>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item @click.native="deleteBatch"><i class="el-icon-delete"></i>删除
-                            </el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
-                </template>
-                <template slot="oper" slot-scope="{row}">
-                    <span>
-                         <span class="text-blue-500 text-base cursor-pointer">
-                            <i class="fa fa-fw fa-pencil" @click="edit(row)"></i>
-                        </span>
-                        <el-dropdown placement="bottom" class="dropdown">
-                            <span class="text-blue-500 text-base">
-                              <i class="fa fa-fw fa-ellipsis-h"></i>
-                            </span>
-                            <el-dropdown-menu slot="dropdown">
-                                <popover-confirm @confirm="handleDel(row)">
-                                    <div slot="popover-content">
-                                        <el-dropdown-item>删除</el-dropdown-item>
-                                    </div>
-                                </popover-confirm>
-                                <el-dropdown-item
-                                        @click.native="handleAuth(row)">授权</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
-                    </span>
-                </template>
-            </avue-crud>
+                    @p-current-change="currentChange"
+                    @cell-click = "cellClick">
+            </fox-table>
         </el-row>
         <el-row>
             <role-maintenance :data="role.data" v-show="role.show"></role-maintenance>
@@ -68,7 +72,7 @@
                      :draggable="drawer.draggable"
                      :title="drawer.title"
                      :width.sync="drawer.width"
-                     :placement="drawer.placement"
+                     :direction="drawer.direction"
         >
             <component :is="component.type" :ref="component.ref" :data="component.data"
                        @changeDialogWidth="changeDialogWidth"></component>
@@ -107,6 +111,8 @@
     import {downloadFile} from '@/utils/modules/tools'
     import DragDrawer from '@/components/dragDrawer'
     import DragDialog from '@/components/dragDialog'
+    import foxTable from '@/components/fox-table'
+    import OperBtn from '@/components/table/OperBtn'
     import FileUpload from '@/components/fileUpload'
     import TreeOperation from '@/views/common/TreeOperation'
     import Modify from './roleList/Modify'
@@ -127,92 +133,102 @@
             DragDrawer,
             DragDialog,
             FileUpload,
+            foxTable,
             TreeOperation,
             Modify,
             RoleMaintenance,
             PopoverConfirm
         },
         data() {
-            let {table} = constant
             return {
                 form: {
-                    option: {
-                        menuBtn: false,
-                        column: [
-                            {
-                                label: '名称',
-                                prop: 'roleName',
-                                span: 6,
-                            },
-                            {
-                                label: "开始时间",
-                                prop: 'createTime',
-                                type: 'datetimerange',
-                                span: 12,
-                                startPlaceholder: '请输入开始时间',
-                                endPlaceholder: '请输入结束时间',
-                                valueFormat: 'yyyy-MM-dd hh:mm:ss',
-                            },
-                            {
-                                labelWidth: '0',
-                                prop: 'searchBtn',
-                                formslot: true,
-                                span: 6,
-                            }
-                        ]
-                    },
-                    modal: {}
+                    roleName : '',
+                    createTime : [],
                 },
                 table: {
                     data: [],
-                    option: {
-                        ...table,
-                        highlightCurrentRow: true,
-                        column: [
-                            {
-                                label: '操作',
-                                prop: 'oper',
-                                slot: true,
-                                width: 80
-                            },
-                            {
-                                label: '角色名称',
-                                prop: 'roleName'
-                            },
-                            {
-                                label: '角色编码',
-                                prop: 'roleCode'
-                            },
+                    column: [
+                        {
+                            label: '操作',
+                            prop: 'oper',
+                            slot: true,
+                            width: 80,
+                            render : (h,{row,$index})=>{
+                                let btnInfo = [
+                                    {
+                                        content : '修改',
+                                        className : 'fa fa-fw fa-pencil',
+                                        permission : 'menu:table:update',
+                                        event : ()=>{
+                                            this.edit(row)
+                                        }
+                                    },
+                                    {
+                                        type : 'dropDown',
+                                        className : 'fa fa-fw fa-ellipsis-h',
+                                        dropDownItems : [
+                                            {
+                                                content: '授权',
+                                                className : '',
+                                                popover: false,
+                                                event : ()=>{
+                                                    this.handleAuth(row)
+                                                }
+                                            },
+                                            {
+                                                content: '删除',
+                                                className : '',
+                                                popover: true,
+                                                popText : '确定要删除吗',
+                                                event : ()=>{
+                                                    this.handleDel(row)
+                                                }
+                                            }
+                                        ],
+                                    },
+                                ]
+                                return(
+                                    <OperBtn btnInfo = {btnInfo}></OperBtn>
+                                )
+                            }
+                        },
+                        {
+                            label: '角色名称',
+                            prop: 'roleName'
+                        },
+                        {
+                            label: '角色编码',
+                            prop: 'roleCode'
+                        },
 
-                            {
-                                label: '备注',
-                                prop: 'description'
-                            },
-                            {
-                                label: '创建时间',
-                                prop: 'createTime',
-                                sortable: true,
-                            },
-                            {
-                                label: '更新时间',
-                                prop: 'updateTime',
-                                sortable: true,
-                            },
-                        ]
-                    },
+                        {
+                            label: '备注',
+                            prop: 'description'
+                        },
+                        {
+                            label: '创建时间',
+                            prop: 'createTime',
+                            sortable: true,
+                        },
+                        {
+                            label: '更新时间',
+                            prop: 'updateTime',
+                            sortable: true,
+                        },
+                    ],
                     loading: false,
                     selection: []
                 },
                 page: {
-                    currentPage: 1,
+                    pageNum: 1,
                     pageSize: 10,
                     total: 0
                 },
                 drawer: {
                     show: false,
-                    placement: 'right',
+                    direction: 'rtl',
                     draggable: true,
-                    width: drawerDefaultWidth,
+                    width: drawerDefaultWidth + 'px',
                     data: {}
                 },
                 component: {
@@ -257,7 +273,7 @@
                 this.queryList()
             },
             reset() {
-                this.$refs.form.resetForm()
+                this.$refs.form.resetFields()
             },
             connect() {
                 let {ref} = this.component
@@ -286,17 +302,17 @@
             changeDialogWidth(flag) {
                 let {width} = this.drawer
                 if (flag) {
-                    if (width !== drawerDefaultWidth) {
+                    if (parseInt(width) !== drawerDefaultWidth) {
                         this.drawer = {
                             ...this.drawer,
-                            width: drawerDefaultWidth
+                            width: drawerDefaultWidth + 'px'
                         }
                     }
                 } else {
-                    if (width === drawerDefaultWidth) {
+                    if (parseInt(width) === drawerDefaultWidth) {
                         this.drawer = {
                             ...this.drawer,
-                            width: width + 200
+                            width: parseInt(width) + 200 + 'px'
                         }
                     }
                 }
@@ -406,7 +422,7 @@
                 this.drawer = {
                     ...this.drawer,
                     title: '角色权限配置',
-                    width: drawerDefaultWidth,
+                    width: drawerDefaultWidth + 'px',
                     show: true
                 }
                 this.component = {
@@ -426,13 +442,12 @@
                         data: row,
                         show: true
                     }
-                    this.$refs.crud.setCurrentRow(row)
                 }
             },
-            currentChange(currentPage) {
+            currentChange(pageNum) {
                 this.page = {
                     ...this.page,
-                    currentPage
+                    pageNum
                 }
                 this.queryList()
             },
@@ -475,15 +490,14 @@
                 }
             },
             async queryList() {
-                let {model: {createTime: [createTime_begin, createTime_end], ...res}} = this.form
-                let {currentPage: pageNo, pageSize} = this.page
+                debugger;
+                let {createTime: [createTime_begin, createTime_end], ...res} = this.form
+                let {pageNum: pageNo, pageSize} = this.page
                 this.table = {
                     ...this.table,
                     loading: true
                 }
                 let params = {
-                    order: 'desc',
-                    column: 'createTime',
                     pageNo,
                     pageSize,
                     ...res,
@@ -507,9 +521,9 @@
                     }
                 }
             },
-            mounted() {
-
-            }
+        },
+        mounted() {
+            this.queryList()
         }
     }
 </script>

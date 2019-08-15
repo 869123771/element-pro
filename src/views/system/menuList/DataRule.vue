@@ -1,49 +1,52 @@
 <template>
     <div class="data-rule">
-        <avue-form v-model="form.model" :option="form.option" ref="form">
-            <template slot-scope="scope" slot="operBtn">
-                <div class="text-center">
-                    <el-button type="primary" icon="el-icon-search" @click="search">查询</el-button>
-                    <el-button plain icon="el-icon-refresh-left" @click="reset">重置</el-button>
-                </div>
-            </template>
-        </avue-form>
-        <avue-crud
-                :data="table.data"
-                :option="table.option"
-                :page="page"
-                :table-loading="table.loading"
-                v-model="table.model"
-                @on-load="queryList"
-                @current-change="currentChange"
-        >
-            <template slot="menuLeft">
-                <el-button plain type="primary" icon="el-icon-plus" @click="addRule">新增</el-button>
-            </template>
-            <template slot="oper" slot-scope="{row}">
-                    <span>
-                         <span class="text-blue-500 text-base cursor-pointer">
-                            <i class="fa fa-fw fa-pencil" @click="edit(row)"></i>
-                        </span>
-                        <span class="text-blue-500 text-base cursor-pointer px-1">
-                             <el-popover placement="top"
-                                         width="160"
-                                         :ref="row.id"
-                             >
-                                 <p class="pb-3">确定要删除吗</p>
-                                 <div class="text-right">
-                                    <el-button size="mini" type="text" @click="closePopover(row.id)">取消
-                                    </el-button>
-                                    <el-button type="primary" size="mini"
-                                               @click="confirmDeleteBatch(row.id)">确定
-                                    </el-button>
-                                </div>
-                                 <i slot="reference" class="iconfont icon-wy-delete2"></i>
-                             </el-popover>
-                        </span>
-                    </span>
-            </template>
-        </avue-crud>
+        <el-row>
+            <el-form :model="form" label-width="80px">
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="规则名称" prop="ruleName">
+                            <el-input v-model="form.ruleName" placeholder="规则名称" clearable></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="规则值" prop="ruleValue">
+                            <el-input v-model="form.ruleValue" placeholder="规则值" clearable></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row class="text-center">
+                    <el-form-item label-width="0px">
+                        <el-button type="primary" icon="el-icon-search" @click="search">查询</el-button>
+                        <el-button plain icon="el-icon-refresh-left" @click="reset">重置</el-button>
+                    </el-form-item>
+                </el-row>
+            </el-form>
+        </el-row>
+        <el-row class = "mb-3">
+            <el-button plain type="primary" icon="el-icon-plus" @click="addRule">新增</el-button>
+        </el-row>
+        <el-row>
+            <fox-table
+                    border
+                    stripe
+                    fit
+                    align="center"
+                    v-loading="table.loading"
+                    :column="table.column"
+                    :data="table.data"
+                    pagination
+                    background
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :page-sizes="[5, 10, 20, 30]"
+                    :page-count="10"
+                    :current-page.sync="page.pageNum"
+                    :total="page.total"
+                    :page-size="page.pageSize"
+                    @size-change="sizeChange"
+                    @p-current-change="currentChange"
+            ></fox-table>
+        </el-row>
+
         <drag-dialog :drag-dialog="dialog" @confirm="confirmAdd">
             <modify :data="modify.data" ref="modify" @modifySuccess="modifySuccess"></modify>
         </drag-dialog>
@@ -54,81 +57,76 @@
     import {mapActions} from 'vuex'
     import {http, apiList, constant, sweetAlert} from '@/utils'
     import DragDialog from '@/components/dragDialog'
+    import foxTable from '@/components/fox-table/'
+    import OperBtn from '@/components/table/OperBtn'
     import Modify from './dataRule/Modify'
 
     export default {
         name: "DataRule",
-        props : {
-            data : {
-                type : Object
+        props: {
+            data: {
+                type: Object
             }
         },
-        components : {
+        components: {
             DragDialog,
-            Modify
+            Modify,
+            foxTable
         },
         data() {
-            let {table} = constant
             return {
-                form: {
-                    option: {
-                        menuBtn: false,
-                        labelWidth: 70,
-                        column: [
-                            {
-                                label: '规则名称',
-                                prop: 'ruleName',
-                                span: 12
-                            },
-                            {
-                                label: '规则值',
-                                prop: 'ruleValue',
-                                span: 12
-                            },
-                            {
-                                prop: 'operBtn',
-                                formslot: true,
-                                span: 24
-                            }
-                        ]
-                    },
-                    model: {}
-                },
+                form: {},
                 table: {
                     data: [],
-                    option: {
-                        ...table,
-                        index: false,
-                        selection: false,
-                        column: [
-                            {
-                                label: '操作',
-                                prop: 'oper',
-                                slot: true,
-                                width: 80
-                            },
-                            {
-                                label: '规则名称',
-                                prop: 'ruleName',
-                                overHidden: true
-                            },
-                            {
-                                label: '规则字段',
-                                prop: 'ruleColumn',
-                                overHidden: true
-                            },
-                            {
-                                label: '规则值',
-                                prop: 'ruleValue',
-                                overHidden: true
-                            },
-                        ]
-                    },
-                    model: {},
-                    loading: false,
+                    column: [
+                        {
+                            label: '操作',
+                            prop: 'oper',
+                            width: 80,
+                            render: (h, {row, $index}) => {
+                                let btnInfo = [
+                                    {
+                                        content: '修改',
+                                        className: 'fa fa-fw fa-pencil',
+                                        permission: 'menu:table:update',
+                                        event: () => {
+                                            this.edit(row)
+                                        }
+                                    },
+                                    {
+                                        content: '删除',
+                                        className: 'iconfont icon-wy-delete2',
+                                        popover: true,
+                                        popText: '确定要删除吗',
+                                        event: () => {
+                                            this.confirmDeleteBatch(row.id)
+                                        }
+                                    }
+                                ]
+                                return(
+                                    <OperBtn btnInfo = {btnInfo}></OperBtn>
+                                )
+                            }
+                        },
+                        {
+                            label: '规则名称',
+                            prop: 'ruleName',
+                            showOverflowTooltip: true,
+                        },
+                        {
+                            label: '规则字段',
+                            prop: 'ruleColumn',
+                            showOverflowTooltip: true,
+                        },
+                        {
+                            label: '规则值',
+                            prop: 'ruleValue',
+                            showOverflowTooltip: true,
+                        },
+                    ],
                 },
                 page: {
-                    currentPage: 1,
+                    pageNum: 1,
                     pageSize: 10,
                     total: 0
                 },
@@ -144,7 +142,7 @@
         },
         methods: {
             ...mapActions({
-                getRuleConditions : 'GET_RULE_CONDITIONS'
+                getRuleConditions: 'GET_RULE_CONDITIONS'
             }),
             search() {
                 this.page = {
@@ -154,7 +152,7 @@
                 this.queryList()
             },
             reset() {
-                this.$refs.form.resetForm()
+                this.$refs.form.resetFields()
             },
             currentChange(currentPage) {
                 this.page = {
@@ -170,7 +168,7 @@
                 }
                 this.queryList()
             },
-            closePopover(id){
+            closePopover(id) {
                 this.$refs[id].doClose();
             },
             addRule() {
@@ -210,7 +208,7 @@
                     this.$modal.show(name)
                 })
             },
-            confirmAdd(){
+            confirmAdd() {
                 let modifyRef = this.$refs.modify
                 modifyRef.$refs.form.validate(valid => {
                     if (valid) {
@@ -226,7 +224,7 @@
                     }
                 })
             },
-            modifySuccess(){
+            modifySuccess() {
                 let {name} = this.dialog
                 this.$modal.hide(name)
                 this.queryList()
@@ -241,8 +239,7 @@
                 }
             },
             async queryList() {
-                let {currentPage: pageNo, pageSize} = this.page
-                let {model} = this.form
+                let {pageNum: pageNo, pageSize} = this.page
                 let {id} = this.data
                 this.table = {
                     ...this.table,
@@ -251,8 +248,8 @@
                 let params = {
                     pageNo,
                     pageSize,
-                    ...model,
-                    permissionId : id
+                    ...this.form,
+                    permissionId: id
                 }
                 let {success, result} = await http.get(apiList.sys_menu_query_data_rule, params)
                 if (success) {
@@ -271,8 +268,9 @@
                 }
             },
         },
-        mounted(){
+        mounted() {
             this.getRuleConditions()
+            this.queryList()
         }
     }
 </script>

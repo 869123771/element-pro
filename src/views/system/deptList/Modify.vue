@@ -1,8 +1,34 @@
 <template>
     <div class="add">
-        <avue-form :option="form.option" v-model="form.model" ref="form">
-
-        </avue-form>
+        <el-form ref = "form" :model = "form" label-width="80px" :status-icon="true" :rules = "rules">
+            <el-form-item label = "机构名称" prop = "departName">
+                <el-input v-model = "form.departName" placeholder = "机构名称" clearable></el-input>
+            </el-form-item>
+            <template v-if = "data.flag">
+                <el-form-item label = "上级部门" prop = "parentId">
+                    <el-input v-model = "form.parentId" placeholder = "上级部门" readonly></el-input>
+                </el-form-item>
+                <el-form-item label = "机构编码" prop = "orgCode">
+                    <el-input v-model = "form.orgCode" placeholder = "机构编码" disabled></el-input>
+                </el-form-item>
+            </template>
+            <el-form-item label = "手机号" prop = "mobile">
+                <el-input v-model = "form.mobile" placeholder = "手机号" clearable></el-input>
+            </el-form-item>
+            <el-form-item label = "传真" prop = "fax">
+                <el-input v-model = "form.fax" placeholder = "传真" clearable></el-input>
+            </el-form-item>
+            <el-form-item label = "地址" prop = "address">
+                <el-input v-model = "form.address" placeholder = "地址" clearable></el-input>
+            </el-form-item>
+            <el-form-item label = "排序" prop = "departOrder">
+                <el-input-number :min = "0" v-model = "form.departOrder" placeholder = "排序" clearable class="w-full"></el-input-number>
+            </el-form-item>
+            <el-form-item label = "备注" prop = "memo">
+                <el-input type = "textarea" v-model = "form.memo" placeholder = "备注" clearable maxlength="100"
+                          show-word-limit></el-input>
+            </el-form-item>
+        </el-form>
     </div>
 </template>
 
@@ -10,6 +36,7 @@
     import {mapState, mapActions} from 'vuex'
     import {phoneCheck} from '@/utils/modules/validate'
     import {http, apiList, constant, sweetAlert} from '@/utils'
+    import {isEmpty} from '30-seconds-of-code'
 
     let customParams = {}
 
@@ -21,75 +48,16 @@
             }
         },
         data() {
-            let {flag} = this.data
-            let handleData = flag ?
-                [{
-                    label: '上级部门',
-                    prop: 'parentId',
-                    readonly: true,
-                    span: 24
-                },
-                {
-                    label: '机构编码',
-                    prop: 'orgCode',
-                    disabled: true,
-                    span: 24
-                }] :
-                [{
-                    label: '上级部门',
-                    prop: 'parentId',
-                    disabled: true,
-                    span: 24
-                }]
-
             return {
-                form: {
-                    option: {
-                        menuBtn: false,
-                        column: [
-                            {
-                                label: '机构名称',
-                                prop: 'departName',
-                                span: 24,
-                                rules: [
-                                    {required: true, message: '必填', trigger: 'change'}
-                                ]
-                            },
-                            ...handleData,
-                            {
-                                label: '手机号',
-                                prop: 'mobile',
-                                span: 24,
-                                rules: [
-                                    {validator: phoneCheck, trigger: 'change'}
-                                ]
-                            },
-                            {
-                                label: '传真',
-                                prop: 'fax',
-                                span: 24
-                            },
-                            {
-                                label: '地址',
-                                prop: 'address',
-                                span: 24
-                            },
-                            {
-                                label: '排序',
-                                prop: 'departOrder',
-                                type: 'number',
-                                span: 24
-                            },
-                            {
-                                label: '备注',
-                                prop: 'memo',
-                                type: 'textarea',
-                                span: 24
-                            },
-                        ]
-                    },
-                    model: {}
-                }
+                form: {},
+                rules : {
+                    departName : [
+                        {required: true, message: '必填', trigger: 'change'}
+                    ],
+                    mobile : [
+                        {validator: phoneCheck, trigger: 'change'}
+                    ],
+                },
             }
         },
         computed: {
@@ -100,17 +68,14 @@
         watch: {
             data: {
                 handler(props) {
-                    if (!this.validatenull(props)) {
-                        let {model} = this.form
+                    if (!isEmpty(props)) {
                         let {id,departName,flag,parentId} = props
                         if(flag){
                             let {parentIdName} =  props
                             this.form = {
                                 ...this.form,
-                                model: {
-                                    ...props,
-                                    parentId : parentIdName
-                                }
+                                ...props,
+                                parentId : parentIdName
                             }
                             customParams = {
                                 ...customParams,
@@ -119,14 +84,12 @@
                         }else{
                             this.form = {
                                 ...this.form,
-                                model: {
-                                    ...model,
-                                    ...props,
-                                    departName : '',
-                                    address : '',
-                                    memo : '',
-                                    parentId : departName
-                                }
+                                ...model,
+                                ...props,
+                                departName : '',
+                                address : '',
+                                memo : '',
+                                parentId : departName
                             }
                             customParams = {
                                 ...customParams,
@@ -157,7 +120,7 @@
                 }
             },
             async saveAdd(){
-                let {model:{departName,mobile,fax,address,departOrder,memo}} = this.form
+                let {departName,mobile,fax,address,departOrder,memo} = this.form
                 let {parentId} = customParams
                 let params = {
                     departName,mobile,fax,address,departOrder,memo,
@@ -172,9 +135,8 @@
                 }
             },
             async saveEdit(){
-                let {model} = this.form
                 let params = {
-                    ...model,
+                    ...this.form,
                     parentId: customParams.parentId
                 }
                 let {success, message} = await http.put(apiList.sys_dept_edit, params)

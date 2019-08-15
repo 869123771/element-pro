@@ -1,15 +1,6 @@
 <template>
-    <avue-crud
-            :data="table.data"
-            :option="table.option"
-            :page="page"
-            :table-loading="table.loading"
-            @on-load="queryList"
-            @size-change="sizeChange"
-            @current-change="currentChange"
-            @selection-change="selectionChange"
-    >
-        <template slot="menuLeft">
+    <div>
+        <el-row>
             <el-form inline>
                 <el-form-item label = "姓名">
                     <el-input v-model = "table.name" placeholder = "请输入姓名" clearable></el-input>
@@ -18,12 +9,35 @@
                     <el-button type = "primary" icon="el-icon-search" @click="search">查询</el-button>
                 </el-form-item>
             </el-form>
-        </template>
-    </avue-crud>
+        </el-row>
+        <el-row class = "my-3">
+            <fox-table
+                    border
+                    stripe
+                    fit
+                    align="center"
+                    v-loading="table.loading"
+                    :column="table.column"
+                    :data="table.data"
+                    pagination
+                    background
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :page-sizes="[5, 10, 20, 30]"
+                    :page-count="10"
+                    :current-page.sync="page.currentPage"
+                    :total="page.total"
+                    :page-size="page.pageSize"
+                    @size-change="handleSizeChange"
+                    @p-current-change="handleCurrentChange"
+                    @selection-change="selectionChange"
+            ></fox-table>
+        </el-row>
+    </div>
 </template>
 
 <script>
     import {http,apiList,sweetAlert,constant} from '@/utils'
+    import foxTable from '@/components/fox-table/'
 
     export default {
         name: "AddUser",
@@ -32,28 +46,30 @@
                 type : Object
             }
         },
+        components : {
+            foxTable
+        },
         data() {
-            let {table} = constant
             return {
                 table: {
                     data: [],
-                    option: {
-                        ...table,
-                        column: [
-                            {
-                                label: '用户账号',
-                                prop: 'username'
-                            },
-                            {
-                                label: '用户名称',
-                                prop: 'realname'
-                            },
-                            {
-                                label: '状态',
-                                prop: 'status_dictText'
-                            },
-                        ]
-                    },
+                    column: [
+                        {
+                          type : 'selection'
+                        },
+                        {
+                            label: '用户账号',
+                            prop: 'username'
+                        },
+                        {
+                            label: '用户名称',
+                            prop: 'realname'
+                        },
+                        {
+                            label: '状态',
+                            prop: 'status_dictText'
+                        },
+                    ],
                     name : '',
                     loading: false,
                     selection: []
@@ -75,14 +91,14 @@
             search() {
                 this.page = {
                     ...this.page,
-                    currentPage: 1
+                    pageNum : 1
                 }
                 this.queryList()
             },
-            currentChange(currentPage) {
+            currentChange(pageNum) {
                 this.page = {
                     ...this.page,
-                    currentPage
+                    pageNum
                 }
                 this.queryList()
             },
@@ -108,7 +124,7 @@
                 }
             },
             async queryList() {
-                let {currentPage: pageNo, pageSize} = this.page
+                let {pageNum: pageNo, pageSize} = this.page
                 let {name} = this.table
                 this.table = {
                     ...this.table,
@@ -136,6 +152,9 @@
                     }
                 }
             },
+        },
+        mounted(){
+            this.queryList()
         }
     }
 </script>

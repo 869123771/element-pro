@@ -1,22 +1,29 @@
 <template>
-    <avue-crud
+    <fox-table
+            border
+            stripe
+            align="center"
+            v-loading="table.loading"
+            :column="table.column"
             :data="table.data"
-            :option="table.option"
-            :page="page"
-            :table-loading="table.loading"
-            @on-load="queryList"
+            pagination
+            background
+            layout="total, sizes, prev, pager, next, jumper"
+            :page-sizes="[5, 10, 20, 30]"
+            :page-count="10"
+            :current-page.sync="page.pageNum"
+            :total="page.total"
+            :page-size="page.pageSize"
             @size-change="sizeChange"
-            @current-change="currentChange"
+            @p-current-change="currentChange"
             @selection-change="selectionChange"
     >
-        <template slot="menuLeft">
-
-        </template>
-    </avue-crud>
+    </fox-table>
 </template>
 
 <script>
     import {http,apiList,sweetAlert,constant} from '@/utils'
+    import foxTable from '@/components/fox-table'
 
     export default {
         name: "AddUser",
@@ -25,28 +32,33 @@
               type : Object
           }
         },
+        components : {
+            foxTable
+        },
         data() {
-            let {table} = constant
             return {
                 table: {
                     data: [],
-                    option: {
-                        ...table,
-                        column: [
-                            {
-                                label: '用户账号',
-                                prop: 'username'
-                            },
-                            {
-                                label: '用户名称',
-                                prop: 'realname'
-                            },
-                            {
-                                label: '状态',
-                                prop: 'status_dictText'
-                            },
-                        ]
-                    },
+                    column: [
+                        {
+                          type : 'selection'
+                        },
+                        {
+                            type : 'index'
+                        },
+                        {
+                            label: '用户账号',
+                            prop: 'username'
+                        },
+                        {
+                            label: '用户名称',
+                            prop: 'realname'
+                        },
+                        {
+                            label: '状态',
+                            prop: 'status_dictText'
+                        },
+                    ],
                     loading: false,
                     selection: []
                 },
@@ -64,10 +76,10 @@
                     selection
                 }
             },
-            currentChange(currentPage) {
+            currentChange(pageNum) {
                 this.page = {
                     ...this.page,
-                    currentPage
+                    pageNum
                 }
                 this.queryList()
             },
@@ -93,7 +105,7 @@
                 }
             },
             async queryList() {
-                let {currentPage: pageNo, pageSize} = this.page
+                let {pageNum: pageNo, pageSize} = this.page
                 this.table = {
                     ...this.table,
                     loading: true
@@ -119,6 +131,9 @@
                     }
                 }
             },
+        },
+        mounted(){
+            this.queryList()
         }
     }
 </script>

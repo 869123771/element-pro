@@ -46,7 +46,7 @@
                                                                 <span class="px-1 text-orange-500 font-mono">
                                                                     <i class="el-icon-warning"></i>
                                                                 </span>
-                                                                    <slot name="popover-title">确定删除吗</slot>
+                                                                    <slot name="popover-title">{item.popText}</slot>
                                                                 </div>
                                                                 <div class="text-right">
                                                                     <el-button size="mini" type="text"
@@ -75,18 +75,18 @@
                                                                 <span class="px-1 text-orange-500 font-mono">
                                                                     <i class="el-icon-warning"></i>
                                                                 </span>
-                                                <slot name="popover-title">确定删除吗</slot>
+                                                <slot name="popover-title">{popText}</slot>
                                             </div>
                                             <div class="text-right">
                                                 <el-button size="mini" type="text"
                                                            onClick={()=>this.cancel(index)}>取消
                                                 </el-button>
                                                 <el-button type="primary" size="mini"
-                                                           onClick={()=>{item.event()}}>确定
+                                                           onClick={()=>{event()}}>确定
                                                 </el-button>
                                             </div>
-                                            <span class = "text-blue-500 text-base">
-                                                <i {...props} class ={className} onClick={() => event()}></i>
+                                            <span class = "text-blue-500 text-base" slot="reference">
+                                                <i {...props} class = {className}></i>
                                             </span>
                                         </el-popover>
                                     :

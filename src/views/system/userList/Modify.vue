@@ -8,7 +8,7 @@
                           :readonly="data.id?true:false"
                 ></el-input>
             </el-form-item>
-            <template v-if="!data.id">
+            <template v-if ="!data.id">
                 <el-form-item label="登陆密码" prop="password">
                     <el-input type="password" v-model="form.password" placeholder="登陆密码" clearable></el-input>
                 </el-form-item>
@@ -114,17 +114,25 @@
             }
         },
         data() {
-            let {id, deptId} = this.data
-            let isUserUniqueCheck = id ? [] : [{validator: uniqueUserCheck}]
-
+            //let {id, deptId} = this.data
+           // let isUserUniqueCheck = id || id && deptId ? [] : [{validator: uniqueUserCheck}]
             return {
                 form: {
+                    username : '',                      //用户账号
+                    password : '',                      //用户密码
+                    confirmpassword : '',               //确认密码
+                    realname : '',                      //用户名字
+                    selectedroles : [],                 //角色分配
+                    deptName : '',                      //部门分配
                     activitiSync: '1'
                 },
                 rules: {
                     username: [
                         {required: true, message: '必填', trigger: 'change'},
-                        ...isUserUniqueCheck
+                        {validator: uniqueUserCheck}
+                    ],
+                    realname : [
+                        {required: true, message: '必填', trigger: 'change'},
                     ],
                     password: [
                         {required: true, message: '必填', trigger: 'change'},
@@ -174,20 +182,35 @@
         watch: {
             data: {
                 handler(props) {
+                    debugger;
                     if (!isEmpty(props)) {
                         let {config: {baseUrl: {imgDomainURL}}} = constant
                         let {id, sex, avatar} = props
-                        this.form = {
-                            ...this.form,
-                            ...props,
-                            sex: sex ? sex.toString() : '',
+                        if (id) {
+                            this.form = {
+                                ...props,
+                                sex: sex ? sex.toString() : '',
+                            }
+                            this.upload = {
+                                ...this.upload,
+                                imageUrl: `${imgDomainURL}/${avatar}`
+                            }
+                            this.getUserRole(id)
+                            this.getUserDept(id)
+
+                            this.$nextTick(()=>{
+                                this.$refs.modify.clearValidate('username')
+                            })
+
+                        } else {
+                            this.$nextTick(()=>{
+                                this.$refs.modify.resetFields()
+                            })
                         }
-                        this.upload = {
-                            ...this.upload,
-                            imageUrl: `${imgDomainURL}/${avatar}`
-                        }
-                        this.getUserRole(id)
-                        this.getUserDept(id)
+                    }else{
+                        this.$nextTick(()=>{
+                            this.$refs.modify.resetFields()
+                        })
                     }
                 },
                 immediate: true
@@ -195,7 +218,6 @@
         },
         methods: {
             selectDept() {
-                debugger;
                 let {name} = this.dialog
                 let {deptName} = this.form
                 if (deptName) {

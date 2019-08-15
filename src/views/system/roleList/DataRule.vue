@@ -1,6 +1,8 @@
 <template>
    <div class = "dataRule px-2">
-       <avue-tabs :option="tabs.option"></avue-tabs>
+       <el-tabs v-model = "tabs.active">
+           <el-tab-pane :label = "tabs.label" :name = "tabs.name"></el-tab-pane>
+       </el-tabs>
        <el-row>
            <el-checkbox-group v-model = "dataRule.dataRuleIds">
                <template v-for = "{id,ruleName} in dataRule.list">
@@ -28,15 +30,9 @@
         data(){
             return {
                 tabs : {
-                    option : {
-                        column: [
-                            {
-                                icon:'el-icon-info',
-                                label: '数据规则',
-                                prop: 'dataRule',
-                            }
-                        ]
-                    }
+                    active : '',
+                    label : '数据规则',
+                    name : 'dataRule',
                 },
                 dataRule : {
                     dataRuleIds : [],

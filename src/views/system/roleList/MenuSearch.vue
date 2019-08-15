@@ -1,30 +1,30 @@
 <template>
     <div>
-        <avue-form :option="form.option" v-model="form.model">
-            <template slot="menuAssign" slot-scope="{value}">
+        <el-form :model = "form" label-width = "100px">
+            <el-form-item label = "所拥有的权限">
                 <el-tree
                         ref="tree"
                         show-checkbox
                         node-key="key"
                         :expand-on-click-node="false"
-                        :default-expanded-keys="value.defaultExpandKes"
-                        :check-strictly="value.checkStrict"
-                        :data="value.data"
-                        :props="value.defaultProps"
-                        :default-checked-keys="value.defaultCheckedkeys"
+                        :default-expanded-keys="menuAssign.defaultExpandKes"
+                        :check-strictly="menuAssign.checkStrict"
+                        :data="menuAssign.data"
+                        :props="menuAssign.defaultProps"
+                        :default-checked-keys="menuAssign.defaultCheckedkeys"
                 >
                 <span class="mt-1" slot-scope="{ node, data}" @click="dataRule(node,data)">
                     <span>{{ node.label }}</span>
                     <span v-if="data.ruleFlag" class="fa fa-fw fa-align-left text-red-600 pl-1"></span>
                 </span>
                 </el-tree>
-            </template>
-        </avue-form>
+            </el-form-item>
+        </el-form>
         <drag-drawer v-model="drawer.show"
                      :draggable="drawer.draggable"
                      :title="drawer.title"
                      :width.sync="drawer.width"
-                     :placement="drawer.placement"
+                     :direction="drawer.direction"
                      :closeOnClickModal="drawer.closeOnClickModal"
                      @close="close"
         >
@@ -38,6 +38,7 @@
     import {mapState} from 'vuex'
     import DragDrawer from '@/components/dragDrawer'
     import DataRule from './DataRule'
+    import {isEmpty} from '30-seconds-of-code'
 
     export default {
         name: "MenuSearch",
@@ -53,39 +54,24 @@
         inject: {},
         data() {
             return {
-                form: {
-                    model: {
-                        menuAssign: {
-                            data: [],
-                            defaultProps: {
-                                children: 'children',
-                                label: 'slotTitle'
-                            },
-                            defaultCheckedkeys: [],
-                            defaultExpandKes: [],
-                            checkStrict: true,
-                            ids: []
-                        }
+                form: {},
+                menuAssign: {
+                    data: [],
+                    defaultProps: {
+                        children: 'children',
+                        label: 'slotTitle'
                     },
-                    option: {
-                        menuBtn: false,
-                        labelWidth: 100,
-                        column: [
-                            {
-                                label: '所拥有的权限',
-                                prop: 'menuAssign',
-                                type: 'tree',
-                                formslot: true,
-                                span: 24,
-                            },
-                        ]
-                    }
+                    defaultCheckedkeys: [],
+                    defaultExpandKes: [],
+                    checkStrict: true,
+                    ids: []
                 },
                 drawer: {
                     show: false,
                     placement: 'right',
                     title: '数据规则/按钮权限配置',
-                    width: 350,
+                    width: '350px',
+                    direction : 'rtl',
                     closeOnClickModal: true,
                     draggable: false,
                 },
@@ -95,18 +81,11 @@
         watch: {
             menuSearch: {
                 handler(props) {
-                    if (!this.validatenull(props)) {
-                        let {model, model: {menuAssign}} = this.form
+                    if (!isEmpty(props)) {
                         let {roleId, ...res} = props
-                        this.form = {
-                            ...this.form,
-                            model: {
-                                ...model,
-                                menuAssign: {
-                                    ...menuAssign,
-                                    ...res
-                                }
-                            }
+                        this.menuAssign = {
+                            ...this.menuAssign,
+                            ...res
                         }
                         this.dataRuleProps = {
                             ...this.dataRuleProps,
@@ -141,18 +120,11 @@
                 let {success, result} = await http.get(apiList.sys_role_query_tree_list)
                 if (success) {
                     let {ids, treeList} = result
-                    let {model, model: {menuAssign}} = this.form
-                    this.form = {
-                        ...this.form,
-                        model: {
-                            ...model,
-                            menuAssign: {
-                                ...menuAssign,
-                                data: treeList,
-                                ids,
-                                defaultExpandKes: ids
-                            }
-                        }
+                    this.menuAssign = {
+                        ...this.menuAssign,
+                        data: treeList,
+                        ids,
+                        defaultExpandKes: ids
                     }
                 }
             }
