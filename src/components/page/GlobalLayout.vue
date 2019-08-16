@@ -20,6 +20,7 @@
     import SideMenu from "@/components/menu/SideMenu";
     import GlobalHeader from "./GlobalHeader"
     import navPanel from './nav/NavPanel'
+    import {localRead} from '@/utils/modules/tools'
 
     export default {
         name: 'GlobalLayout',
@@ -41,7 +42,7 @@
         },
         mounted(){
             // 设置初始语言
-            this.setLang(this.$i18n.locale)
+            this.setLang(localRead('lang') || this.$i18n.locale)
         }
     }
 </script>

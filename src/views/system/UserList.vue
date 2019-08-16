@@ -5,7 +5,7 @@
                 <form-query @search="search" @reset="reset">
                     <template slot="show">
                         <el-col :md="6" :sm="8">
-                            <el-form-item label="账号:" prop="username">
+                            <el-form-item :label="$t('sys_user_account')" prop="username">
                                 <el-input v-model="form.username" clearable></el-input>
                             </el-form-item>
                         </el-col>
@@ -61,28 +61,55 @@
             </el-dropdown>
         </el-row>
         <el-row>
-            <el-table-bar>
-                <fox-table
-                        border
-                        stripe
-                        fit
-                        align="center"
-                        v-loading="table.loading"
-                        :column="table.column"
-                        :data="table.data"
-                        pagination
-                        background
-                        layout="total, sizes, prev, pager, next, jumper"
-                        :page-sizes="[5, 10, 20, 30]"
-                        :page-count="5"
-                        :current-page.sync="page.currentPage"
-                        :total="page.total"
-                        :page-size="page.pageSize"
-                        @size-change="handleSizeChange"
-                        @p-current-change="handleCurrentChange"
-                        @selection-change="checked"
-                ></fox-table>
-            </el-table-bar>
+            <elx-table
+                    border
+                    stripe
+                    :data="table.data"
+                    :show-pagination="true"
+                    :pagination="page"
+                    @pagination-size-change="handleSizeChange"
+                    @pagination-current-change="handleCurrentChange">
+                <el-table-column align="center" type="selection" fixed></el-table-column>
+                <el-table-column align="center" label="操作" width = "80">
+                    <template slot-scope="scope">
+                        <pop-dropdown
+                                @edit="edit(scope)"
+                                @handleDetail="handleDetail(scope)"
+                                @handlePwd="handlePwd(scope)"
+                                @handleDel="handleDel(scope)"
+                                @frozen="frozen(scope)"
+                                @proxyMan="proxyMan(scope)"
+                        >
+
+                        </pop-dropdown>
+                    </template>
+                </el-table-column>
+                <el-table-column align="center" :label="$t('sys_user_account')" prop="username"
+                                 :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column align="center" label="真实姓名" prop="realname"
+                                 :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column align="center" label="头像" prop="avatar" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                        <el-image size="26" :src="getAvatarView(scope)"
+                                  :preview-src-list="[getAvatarView(scope)]"
+                        >
+                            <div slot="error" class="cursor-pointer">
+                                <i class="el-icon-picture-outline"></i>
+                            </div>
+                        </el-image>
+                    </template>
+                </el-table-column>
+                <el-table-column align="center" label="性别" prop="sex_dictText" width="70"></el-table-column>
+                <el-table-column align="center" label="真实姓名" prop="realname"
+                                 :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column align="center" label="生日" prop="birthday"
+                                 :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column align="center" label="手机号码" prop="phone"
+                                 :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column align="center" label="邮箱" prop="email" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column align="center" label="状态" prop="status_dictText"
+                                 :show-overflow-tooltip="true"></el-table-column>
+            </elx-table>
         </el-row>
         <drag-drawer v-model="drawer.show"
                      :draggable="drawer.draggable"
@@ -94,7 +121,7 @@
 
             <component :ref="component.ref" :is="component.type" :data="component.data"
                        @closeFlush="closeFlush"></component>
-            <div class="dialog-footer p-2 w-full" v-show = "drawer.showFooter">
+            <div class="dialog-footer p-2 w-full" v-show="drawer.showFooter">
                 <div class="flex justify-end">
                     <popover-confirm @confirm="popoverConfirm" class="mx-2">
                         <div slot="popover-title">确定要关闭吗</div>
@@ -172,7 +199,7 @@
                     show: false,
                     direction: 'rtl',
                     draggable: true,
-                    showFooter : true,
+                    showFooter: true,
                     data: {}
                 },
                 dialog: {
@@ -194,80 +221,13 @@
                     proxyMan: {}
                 },
                 table: {
-                    column: [
-                        {type: 'selection', fixed: true},
-                        {
-                            label: '操作',
-                            prop: 'oper',
-                            width: '100',
-                            render: (h, scope) => {
-                                return (
-                                    h(PopDropdown, {
-                                        on: {
-                                            edit: () => {
-                                                this.edit(scope)
-                                            },
-                                            handleDetail: () => {
-                                                this.handleDetail(scope)
-                                            },
-                                            handlePwd: () => {
-                                                this.handlePwd(scope)
-                                            },
-                                            handleDel: () => {
-                                                this.handleDel(scope)
-                                            },
-                                            frozen: () => {
-                                                this.frozen(scope)
-                                            },
-                                            proxyMan: () => {
-                                                this.proxyMan(scope)
-                                            }
-                                        }
-                                    })
-                                )
-                            },
-                        },
-                        {
-                            label: '用户账号',
-                            prop: 'username',
-                        },
-                        {
-                            label: '真实姓名',
-                            prop: 'realname',
-                        },
-                        {
-                            label: '头像',
-                            width: '70',
-                            prop: 'avatar',
-                            render: (h, scope) => {
-                                let imgPath = this.getAvatarView(scope)
-                                debugger;
-                                return (
-                                    <el-image size={26} src={imgPath}
-                                              preview-src-list={[imgPath]}
-                                    >
-                                        <div slot="error" class="cursor-pointer">
-                                            <i class="el-icon-picture-outline"></i>
-                                        </div>
-                                    </el-image>
-                                )
-                            }
-                        },
-                        {
-                            label: '性别',
-                            prop: 'sex_dictText',
-                            width: '70'
-                        },
-                        {label: '生日', prop: 'birthday', showOverflowTooltip: true},
-                        {label: '手机号码', prop: 'phone', showOverflowTooltip: true},
-                        {label: '邮箱', prop: 'email', showOverflowTooltip: true},
-                        {label: '状态', prop: 'status_dictText', width: '70', showOverflowTooltip: true},
-                    ],
                     data: [],
                     selection: [],
                     loading: false
                 },
                 page: {
+                    background: true,
+                    layout: "total, sizes, prev, pager, next, jumper",
                     currentPage: 1,
                     pageSize: 10,
                     total: 0
@@ -334,7 +294,7 @@
                     ...this.drawer,
                     title: '添加用户',
                     width: '500px',
-                    showFooter : true,
+                    showFooter: true,
                     show: true
                 }
                 this.component = {
@@ -349,7 +309,7 @@
                     ...this.drawer,
                     title: '修改用户',
                     width: '500px',
-                    showFooter : true,
+                    showFooter: true,
                     show: true
                 }
                 this.component = {
@@ -422,7 +382,7 @@
                 this.show = {
                     ...this.show,
                     proxyManConfig: true,
-                    resetPwd : false
+                    resetPwd: false
                 }
                 this.props = {
                     ...this.props,
@@ -474,13 +434,13 @@
                     ...this.drawer,
                     width: '450px',
                     title: '详情',
-                    showFooter : false,
+                    showFooter: false,
                     show: true,
                 }
                 this.component = {
                     ...this.component,
                     type: Read,
-                    ref : 'read',
+                    ref: 'read',
                     data: row
                 }
             }
@@ -497,7 +457,7 @@
                 this.show = {
                     ...this.show,
                     resetPwd: true,
-                    proxyManConfig : false,
+                    proxyManConfig: false,
                 }
                 this.props = {
                     ...this.props,

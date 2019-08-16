@@ -97,7 +97,7 @@
                 if (pass) {
                     let params = {
                         ...this.form,
-                        password: aesEncrypt(password, key, iv)
+                        //password: aesEncrypt(password, key, iv)
                     }
                     let {success, message, result} = await http.post(apiList.login, params)
                     if (success) {
