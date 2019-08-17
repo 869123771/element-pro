@@ -1,13 +1,28 @@
 <template>
     <div class = "modify">
-        <avue-form v-model="form.model" :option="form.option" ref="form">
-        </avue-form>
+        <el-form ref = "form" :model = "form" :status-icon="true" label-width="80px" :rules = "rules">
+            <el-form-item :label = "$t('sys_dict_name')" prop = "dictName">
+                <el-input v-model = "form.dictName" :placeholder = "$t('sys_dict_name')" clearable ></el-input>
+            </el-form-item>
+            <el-form-item :label = "$t('sys_dict_code')" prop = "dictCode">
+                <el-input v-model = "form.dictCode" :placeholder = "$t('sys_dict_code')" clearable ></el-input>
+            </el-form-item>
+            <el-form-item :label = "$t('sys_dict_description')" prop = "description">
+                <el-input
+                        type = "textarea"
+                        v-model = "form.description"
+                        :placeholder = "$t('sys_dict_description')"
+                        maxlength = "100"
+                        showWordLimit
+                ></el-input>
+            </el-form-item>
+        </el-form>
     </div>
 </template>
 
 <script>
     import {http, apiList, constant,sweetAlert} from '@/utils'
-
+    import {isEmpty} from '30-seconds-of-code'
     export default {
         name: "Modify",
         props : {
@@ -25,49 +40,25 @@
                 }
             }
             return {
-                form: {
-                    option: {
-                        menuBtn: false,
-                        column: [
-                            {
-                                label : '字典名称',
-                                prop: 'dictName',
-                                span: 24,
-                                rules : [
-                                    {required : true,message:'必填',trigger:'change'}
-                                ]
-                            },
-                            {
-                                label : '字典编码',
-                                prop: 'dictCode',
-                                span: 24,
-                                rules : [
-                                    {required : true,message:'必填',trigger:'change',},
-                                    {validator : checkUnique}
-                                ]
-                            },
-                            {
-                                label : '描述',
-                                prop: 'description',
-                                span: 24
-                            },
-                        ]
-                    },
-                    model: {}
+                form: {},
+                rules : {
+                    dictName : [
+                        {required : true,message:'必填',trigger:'change'}
+                    ],
+                    dictCode : [
+                        {required : true,message:'必填',trigger:'change',},
+                        {validator : checkUnique}
+                    ]
                 }
             }
         },
         watch : {
             data : {
                 handler(props) {
-                    if (!this.validatenull(props)) {
-                        let {model} = this.form
+                    if (!isEmpty(props)) {
                         this.form = {
                             ...this.form,
-                            model : {
-                                ...model,
-                                ...props
-                            }
+                            ...props
                         }
                     }
                 },
@@ -99,9 +90,8 @@
             },
             saveData(){
                 let {id} = this.data
-                let {model} = this.form
                 let params = {
-                    ...model
+                    ...this.form
                 }
                 if(id){
                     this.updateDict(params)

@@ -27,7 +27,7 @@
                             :sort-orders="item.sortOrders"
                             :resizable="item.resizable || true"
                             :formatter="item.formatter"
-                            :show-overflow-tooltip="item.showOverflowTooltip || false"
+                            :show-overflow-tooltip="item.showOverflowTooltip || true"
                             :align="item.align || 'center'"
                             :header-align="item.headerAlign || item.align  || 'center'"
                             :class-name="item.className"

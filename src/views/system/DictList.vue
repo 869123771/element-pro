@@ -192,7 +192,7 @@
             addDict() {
                 this.dialog = {
                     ...this.dialog,
-                    title: '新增字典',
+                    title: this.$t('common_add'),
                     name: 'addDict',
                 }
                 this.modify = {
@@ -207,7 +207,7 @@
             edit(row) {
                 this.dialog = {
                     ...this.dialog,
-                    title: '编辑字典',
+                    title: this.$t('common_edit'),
                     name: 'updateDict',
                 }
                 this.modify = {
@@ -226,7 +226,7 @@
                     ...this.drawer,
                     show: true,
                     name: 'dictConfig',
-                    title: '字典配置',
+                    title: this.$t('sys_dict_dict_config'),
                 }
                 this.component = {
                     ...this.component,

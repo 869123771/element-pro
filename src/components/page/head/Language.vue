@@ -1,17 +1,15 @@
 <template>
-    <el-dropdown>
-        <div class = "avatar flex items-center">
-            <a href="javascript:void(0)">
-                {{ title }}
-                <i class="el-icon-arrow-down el-icon--right"></i>
-            </a>
-        </div>
-        <el-dropdown-menu>
-            <el-dropdown-item v-for="(value, key) in localList" :name="key" :key="`lang-${key}`" @click.native = "selectLang(key)">
-                {{value}}
-            </el-dropdown-item>
-        </el-dropdown-menu>
-    </el-dropdown>
+
+    <div class="lang">
+        <el-menu mode="horizontal">
+            <el-submenu index="" popper-class="menu-lang" :popper-append-to-body="false">
+                <template slot="title">{{ title }}</template>
+                <el-menu-item :index="key" v-for="(value, key) in localList" @click.native="selectLang(key)">
+                    {{value}}
+                </el-menu-item>
+            </el-submenu>
+        </el-menu>
+    </div>
 </template>
 
 <script>
@@ -20,7 +18,7 @@
         props: {
             lang: String
         },
-        data () {
+        data() {
             return {
                 langList: {
                     'zh-CN': '语言',
@@ -35,23 +33,32 @@
             }
         },
         watch: {
-            lang (lang) {
+            lang(lang) {
                 this.$i18n.locale = lang
             }
         },
         computed: {
-            title () {
+            title() {
                 return this.langList[this.lang]
             }
         },
         methods: {
-            selectLang (name) {
+            selectLang(name) {
                 this.$emit('on-lang-change', name)
             }
         }
     }
 </script>
 
-<style scoped>
-
+<style scoped lang="less">
+    .lang {
+        /deep/ .el-menu--horizontal > .el-submenu .el-submenu__title {
+            height: 50px;
+            line-height: 50px;
+            border-bottom: none;
+        }
+        /deep/ .el-menu--popup, .el-menu-item {
+            min-width: inherit !important;
+        }
+    }
 </style>

@@ -17,7 +17,7 @@
             :sort-orders="column.sortOrders"
             :resizable="column.resizable || true"
             :formatter="column.formatter"
-            :show-overflow-tooltip="column.showOverflowTooltip || false"
+            :show-overflow-tooltip="column.showOverflowTooltip || true"
             :align="column.align || align || 'center'"
             :header-align="column.headerAlign || headerAlign || column.align || align || 'center'"
             :class-name="column.className"

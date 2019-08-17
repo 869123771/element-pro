@@ -65,9 +65,6 @@
         <el-row>
             <fox-table
                     v-if="table.show"
-                    border
-                    stripe
-                    align="center"
                     v-loading="table.loading"
                     :column="table.column"
                     :data="table.data"

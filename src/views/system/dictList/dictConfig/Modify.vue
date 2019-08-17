@@ -1,21 +1,43 @@
 <template>
     <div class = "modify">
-        <avue-form v-model="form.model" :option="form.option" ref="form">
-            <template slot = "status" slot-scope = "scope">
-                <el-radio-group v-model = "form.model.status">
+        <el-form ref = "form" :model = "form" :status-icon="true" label-width="80px" :rules = "rules">
+            <el-form-item :label = "$t('sys_dict_item_name')" prop = "itemText">
+                <el-input v-model = "form.itemText" :placeholder = "$t('sys_dict_item_name')" clearable ></el-input>
+            </el-form-item>
+            <el-form-item :label = "$t('sys_dict_item_value')" prop = "itemValue">
+                <el-input v-model = "form.itemValue" :placeholder = "$t('sys_dict_item_value')" clearable ></el-input>
+            </el-form-item>
+            <el-form-item :label = "$t('sys_dict_order_value')" prop = "sortOrder">
+                <el-input-number :min = "0"
+                                 v-model = "form.sortOrder"
+                                 :placeholder = "$t('sys_dict_order_value')"
+                                 class = "w-full"
+                ></el-input-number>
+            </el-form-item>
+            <el-form-item :label = "$t('sys_dict_description')" prop = "description">
+                <el-input
+                        type = "textarea"
+                        v-model = "form.description"
+                        :placeholder = "$t('sys_dict_description')"
+                        maxlength = "100"
+                        showWordLimit
+                ></el-input>
+            </el-form-item>
+            <el-form-item :label = "$t('sys_dict_is_open')" prop = "status">
+                <el-radio-group v-model = "form.status">
                     <template v-for = "item in dictItemStatus">
                         <el-radio-button :label = "item.itemValue">{{item.itemText}}</el-radio-button>
                     </template>
                 </el-radio-group>
-            </template>
-        </avue-form>
+            </el-form-item>
+        </el-form>
     </div>
 </template>
 
 <script>
     import {mapState} from 'vuex'
     import {http, apiList, constant,sweetAlert} from '@/utils'
-
+    import {isEmpty} from '30-seconds-of-code'
     export default {
         name: "Modify",
         props : {
@@ -26,47 +48,15 @@
         data(){
             return {
                 form: {
-                    option: {
-                        menuBtn: false,
-                        column: [
-                            {
-                                label : '名称',
-                                prop: 'itemText',
-                                span: 24,
-                                rules : [
-                                    {required : true,message:'必填',trigger:'change'}
-                                ]
-                            },
-                            {
-                                label : '数据值',
-                                prop: 'itemValue',
-                                span: 24,
-                                rules : [
-                                    {required : true,message:'必填',trigger:'change',}
-                                ]
-                            },
-                            {
-                                label : '描述',
-                                prop: 'description',
-                                span: 24
-                            },
-                            {
-                                label : '排序值',
-                                type : 'number',
-                                prop: 'sortOrder',
-                                span: 24
-                            },
-                            {
-                                label : '是否启用',
-                                prop: 'status',
-                                formslot : true,
-                                span: 24
-                            },
-                        ]
-                    },
-                    model: {
-                        status : '1'
-                    }
+                    status : '1'
+                },
+                rules : {
+                    itemText: [
+                        {required : true,message:'必填',trigger:'change',}
+                    ],
+                    itemValue: [
+                        {required : true,message:'必填',trigger:'change',}
+                    ]
                 }
             }
         },
@@ -78,14 +68,10 @@
         watch : {
             data : {
                 handler(props) {
-                    if (!this.validatenull(props)) {
-                        let {model} = this.form
+                    if (isEmpty(props)) {
                         this.form = {
                             ...this.form,
-                            model : {
-                                ...model,
-                                ...props
-                            }
+                            ...props
                         }
                     }
                 },
@@ -95,9 +81,8 @@
         methods : {
             saveData(){
                 let {id} = this.data
-                let {model} = this.form
                 let params = {
-                    ...model
+                    ...this.form
                 }
                 if(id){
                     this.updateDictItem(params)
