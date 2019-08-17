@@ -1,14 +1,47 @@
 export const common_zh_cn = {
-    common_import : '导入',
-    common_export : '导出'
+    common_add: '新增',
+    common_edit: '编辑',
+    common_delete: '删除',
+    common_import: '导入',
+    common_export: '导出',
+    common_operate: '操作',
+    common_query: '查询',
+    common_reset: '重置',
+    common_expand: '展开',
+    common_fold: '收起',
+    common_confirm_del : '确定删除吗',
+    common_cancel : '取消',
+    common_confirm : '确定',
 }
 
 export const common_en_us = {
-    common_import : 'import',
-    common_export : 'export'
+    common_add: 'add',
+    common_edit: 'edit',
+    common_delete: 'delete',
+    common_import: 'import',
+    common_export: 'export',
+    common_operate: 'operate',
+    common_query: 'query',
+    common_reset: 'reset',
+    common_expand: 'expand',
+    common_fold: 'fold',
+    common_confirm_del : 'are you sure',
+    common_cancel : 'cancel',
+    common_confirm : 'ok',
 }
 
 export const common_zh_tw = {
-    common_import : '導入',
-    common_export : '導出'
+    common_add: '新增',
+    common_edit: '編輯',
+    common_delete: '刪除',
+    common_import: '導入',
+    common_export: '導出',
+    common_operate: '操作',
+    common_query: '查询',
+    common_reset: '重置',
+    common_expand: '展開',
+    common_fold: '收起',
+    common_confirm_del : '確定刪除嗎',
+    common_cancel : '取消',
+    common_confirm : '確定',
 }

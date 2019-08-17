@@ -10,12 +10,6 @@ Vue.config.productionTip = false
 import Element from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
 
-import ElementPatch from 'element-patch';
-import 'element-patch/index.css';
-
-import ELTableBar from 'el-table-bar-base'
-import 'el-table-bar-base/lib/ElTableBar.css'
-
 import VModal from 'vue-js-modal'
 
 //import './vxeTable'
@@ -43,9 +37,7 @@ Vue.use(Element, {
     i18n: (key, value) => i18n.t(key, value)
 });
 
-Vue.use(ElementPatch);
 Vue.use(hasPermission)
-Vue.use(ELTableBar)
 
 Vue.use(VModal, {
     dialog: true,

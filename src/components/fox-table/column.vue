@@ -1,13 +1,3 @@
-/*
-* FileName: lb-column.vue
-* Remark: element-column
-* Project: lb-element-table
-* Author:
-* File Created: Tuesday, 19th March 2019 9:58:23 am
-* Last Modified: Tuesday, 19th March 2019 10:14:42 am
-* Modified By:
-*/
-
 <template>
     <el-table-column
             v-bind="$attrs"
@@ -28,8 +18,8 @@
             :resizable="column.resizable || true"
             :formatter="column.formatter"
             :show-overflow-tooltip="column.showOverflowTooltip || false"
-            :align="column.align || align || 'left'"
-            :header-align="column.headerAlign || headerAlign || column.align || align || 'left'"
+            :align="column.align || align || 'center'"
+            :header-align="column.headerAlign || headerAlign || column.align || align || 'center'"
             :class-name="column.className"
             :label-class-name="column.labelClassName"
             :selectable="column.selectable"
@@ -42,41 +32,41 @@
 
         <template slot="header"
                   slot-scope="scope">
-            <lb-render :prop-column="column"
+            <render :prop-column="column"
                        :scope="scope"
                        :render="column.renderHeader">
-            </lb-render>
+            </render>
         </template>
 
         <template slot-scope="scope">
-            <lb-render :prop-column="column"
+            <render :prop-column="column"
                        :scope="scope"
                        :render="column.render">
-            </lb-render>
+            </render>
         </template>
 
         <template v-if="column.children">
-            <lb-column v-for="(col, index) in column.children"
+            <column v-for="(col, index) in column.children"
                        :key="index"
                        :column="col">
-            </lb-column>
+            </column>
         </template>
     </el-table-column>
 </template>
 
 <script>
-    import LbRender from './lb-render'
+    import render from './render'
     import forced from './forced.js'
 
     export default {
-        name: 'LbColumn',
+        name: 'column',
         props: {
             column: Object,
             headerAlign: String,
             align: String
         },
         components: {
-            LbRender
+            render
         },
         created() {
             if (this.column.type) {

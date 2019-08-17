@@ -1,2 +1,2 @@
-import foxTable from './lb-table'
+import foxTable from './table'
 export default foxTable

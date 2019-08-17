@@ -1,56 +1,53 @@
 <template>
     <div class="dict bg-white p-3 m-3">
         <el-row>
-            <avue-form :option="form.option" v-model="form.model" ref="form">
-                <template slot-scope="scope" slot="searchBtn">
-                    <div>
-                        <el-button type="primary" icon="el-icon-search" @click="search">查询</el-button>
-                        <el-button plain icon="el-icon-refresh-left" @click="reset">重置</el-button>
-                    </div>
-                </template>
-            </avue-form>
+            <el-form ref="form" :model="form" label-width="80px">
+                <el-col :span="7" prop="dictName">
+                    <el-form-item :label="$t('sys_dict_name')">
+                        <el-input v-model="form.dictName" clearable :placeholder="$t('sys_dict_name')"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="7">
+                    <el-form-item :label="$t('sys_dict_code')" prop="dictCode">
+                        <el-input v-model="form.dictCode" clearable :placeholder="$t('sys_dict_code')"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="7" class="pl-3">
+                    <el-button type="primary" icon="el-icon-search" @click="search">{{$t('common_query')}}</el-button>
+                    <el-button plain icon="el-icon-refresh-left" @click="reset">{{$t('common_reset')}}</el-button>
+                </el-col>
+            </el-form>
         </el-row>
+
         <el-row>
-            <avue-crud
+            <el-button plain type="primary" icon="el-icon-plus" @click="addDict">{{$t('common_add')}}</el-button>
+            <el-button plain icon="iconfont icon-wy-upload" @click="fileImport">{{$t('common_import')}}</el-button>
+            <el-button plain icon="iconfont icon-wy-download" @click="fileExport">{{$t('common_export')}}</el-button>
+        </el-row>
+        <el-row class="my-3">
+            <fox-table
+                    v-if="table.show"
+                    v-loading="table.loading"
+                    :column="table.column"
                     :data="table.data"
-                    :option="table.option"
-                    :page="page"
-                    :table-loading="table.loading"
-                    @on-load="queryList"
+                    pagination
+                    background
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :page-sizes="[5, 10, 20, 30]"
+                    :page-count="5"
+                    :current-page.sync="page.currentPage"
+                    :total="page.total"
+                    :page-size="page.pageSize"
                     @size-change="sizeChange"
-                    @current-change="currentChange"
+                    @p-current-change="currentChange"
             >
-                <template slot="menuLeft">
-                    <el-button plain type="primary" icon="el-icon-plus" @click="addDict">新增</el-button>
-                    <el-button plain icon="iconfont icon-wy-upload" @click="fileImport">导入</el-button>
-                    <el-button plain icon="iconfont icon-wy-download" @click="fileExport">导出</el-button>
-                </template>
-                <template slot="oper" slot-scope="{row}">
-                    <span class = "flex">
-                         <el-tooltip content="编辑" placement="top">
-                             <span class="text-blue-500 text-base cursor-pointer">
-                                 <i class="fa fa-fw fa-pencil" @click="edit(row)"></i>
-                            </span>
-                         </el-tooltip>
-                        <el-tooltip content="字典配置" placement="top">
-                             <span class="text-blue-500 text-base cursor-pointer">
-                                <i class="fa-fw el-icon-s-tools" @click="dictConfig(row)"></i>
-                            </span>
-                        </el-tooltip>
-                        <popover-confirm @confirm="confirmDeleteBatch(row.id)">
-                            <div slot="popover-content" class="text-blue-500 text-base cursor-pointer">
-                                <i class="icon iconfont icon-wy-delete2"></i>
-                            </div>
-                        </popover-confirm>
-                    </span>
-                </template>
-            </avue-crud>
+            </fox-table>
         </el-row>
         <drag-drawer v-model="drawer.show"
                      :draggable="drawer.draggable"
                      :title="drawer.title"
                      :width.sync="drawer.width"
-                     :placement="drawer.placement"
+                     :direction="drawer.direction"
         >
             <component :is="component.type" :ref="component.ref" :data="component.data"></component>
         </drag-drawer>
@@ -68,6 +65,8 @@
     import DragDrawer from '@/components/dragDrawer'
     import DragDialog from '@/components/dragDialog'
     import FileUpload from '@/components/fileUpload'
+    import foxTable from '@/components/fox-table'
+    import OperBtn from '@/components/table/OperBtn'
     import PopoverConfirm from '@/components/popoverConfirm'
     import DictConfig from './dictList/DictConfig'
     import Modify from './dictList/Modify'
@@ -83,74 +82,35 @@
             DragDrawer,
             DragDialog,
             FileUpload,
+            foxTable,
             PopoverConfirm,
             Modify,
         },
         data() {
-            let {table} = constant
             return {
                 form: {
-                    option: {
-                        menuBtn: false,
-                        column: [
-                            {
-                                label: '字典名称',
-                                prop: 'dictName',
-                                span: 7,
-                            },
-                            {
-                                label: "字典编号",
-                                prop: 'dictCode',
-                                span: 7,
-                            },
-                            {
-                                labelWidth: '0',
-                                prop: 'searchBtn',
-                                formslot: true,
-                                span: 6,
-                            }
-                        ]
-                    },
-                    model: {}
+                    dictName: '',      //字典名称
+                    dictCode: '',      //字典编号
                 },
                 table: {
+                    show: true,
+                    column: [],
                     data: [],
-                    option: {
-                        ...table,
-                        column: [
-                            {
-                                label: '操作',
-                                prop: 'oper',
-                                slot: true,
-                                width: 80
-                            },
-                            {
-                                label: '字典名称',
-                                prop: 'dictName'
-                            },
-                            {
-                                label: '字典编号',
-                                prop: 'dictCode'
-                            },
-                            {
-                                label: '描述',
-                                prop: 'description'
-                            },
-                        ]
-                    },
                     loading: false,
                     selection: []
                 },
                 page: {
+                    background: true,
+                    layout: "total, sizes, prev, pager, next, jumper",
                     currentPage: 1,
                     pageSize: 10,
                     total: 0
                 },
                 drawer: {
                     show: false,
-                    placement: 'right',
+                    direction: 'rtl',
                     draggable: true,
-                    width: 600,
+                    width: '600px',
                     data: {}
                 },
                 component: {
@@ -164,12 +124,18 @@
                     name: 'addRole',
                     showFooter: true,
                 },
-                modify : {
-                    data : {}
+                modify: {
+                    data: {}
                 },
                 fileUpload: {
                     action: uploadAction()
                 },
+            }
+        },
+        watch: {
+            '$i18n.locale'() {
+                this.setI18n()
+                this.queryList()
             }
         },
         methods: {
@@ -181,7 +147,7 @@
                 this.queryList()
             },
             reset() {
-                this.$refs.form.resetForm()
+                this.$refs.form.resetFields()
             },
             modifySuccess() {
                 let {name} = this.dialog
@@ -238,7 +204,7 @@
                     this.$modal.show(name)
                 })
             },
-            edit(row){
+            edit(row) {
                 this.dialog = {
                     ...this.dialog,
                     title: '编辑字典',
@@ -255,18 +221,18 @@
                     this.$modal.show(name)
                 })
             },
-            dictConfig(row){
+            dictConfig(row) {
                 this.drawer = {
                     ...this.drawer,
                     show: true,
-                    name : 'dictConfig',
+                    name: 'dictConfig',
                     title: '字典配置',
                 }
                 this.component = {
                     ...this.component,
                     type: DictConfig,
                     ref: 'dictConfig',
-                    showFooter : true,
+                    showFooter: true,
                     data: {
                         ...row
                     }
@@ -301,7 +267,6 @@
             },
             async queryList() {
                 let {currentPage: pageNo, pageSize} = this.page
-                let {model} = this.form
                 this.table = {
                     ...this.table,
                     loading: true
@@ -309,7 +274,7 @@
                 let params = {
                     pageNo,
                     pageSize,
-                    ...model
+                    ...this.form
                 }
                 let {success, result} = await http.get(apiList.sys_dict_query_list, params)
                 if (success) {
@@ -328,7 +293,80 @@
                     }
                 }
             },
-        }
+            setI18n() {
+                this.table = {
+                    ...this.table,
+                    show: false,
+                    column: [
+                        {
+                            type: 'selection',
+                            fixed: true
+                        },
+                        {
+                            label: this.$t('common_operate'),
+                            prop: 'oper',
+                            width: '100',
+                            render: (h, {row}) => {
+                                let btnInfo = [
+                                    {
+                                        content: this.$t('common_edit'),
+                                        className: 'fa fa-fw fa-pencil',
+                                        permission: 'menu:table:update',
+                                        event: () => {
+                                            this.edit(row)
+                                        }
+                                    },
+                                    {
+                                        content: this.$t('sys_dict_dict_config'),
+                                        className: 'fa-fw el-icon-s-tools',
+                                        permission: 'menu:table:update',
+                                        event: () => {
+                                            this.dictConfig(row)
+                                        }
+                                    },
+                                    {
+                                        content: this.$t('common_delete'),
+                                        className: 'iconfont icon-wy-delete2',
+                                        popover: true,
+                                        popText: this.$t('common_confirm_del'),
+                                        event: () => {
+                                            this.confirmDeleteBatch(row.id)
+                                        }
+                                    },
+                                ]
+                                return (
+                                    <OperBtn btnInfo={btnInfo}></OperBtn>
+                                )
+                            },
+                        },
+                        {
+                            label: this.$t('sys_dict_name'),
+                            prop: 'dictName',
+                        },
+                        {
+                            label: this.$t('sys_dict_code'),
+                            prop: 'dictCode',
+                        },
+                        {
+                            label: this.$t('sys_dict_description'),
+                            prop: 'description',
+                        },
+                    ]
+                }
+                this.$nextTick(() => {
+                    this.table = {
+                        ...this.table,
+                        show: true
+                    }
+                })
+            }
+        },
+        created() {
+            this.setI18n()
+        },
+        mounted() {
+            this.queryList()
+        },
     }
 </script>
 

@@ -10,7 +10,7 @@
                             </el-form-item>
                         </el-col>
                         <el-col :md="6" :sm="8">
-                            <el-form-item label="性别:" prop="sex">
+                            <el-form-item :label="$t('sys_user_sex')" prop="sex">
                                 <el-select v-model="form.sex" clearable filterable class="w-full">
                                     <template v-for="item in sex">
                                         <el-option :value="item.itemValue" :label="item.itemText"></el-option>
@@ -21,17 +21,17 @@
                     </template>
                     <template slot="hide">
                         <el-col :md="6" :sm="8">
-                            <el-form-item label="邮箱:" prop="email">
+                            <el-form-item :label="$t('sys_user_email')" prop="email">
                                 <el-input v-model="form.email" clearable></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :md="6" :sm="8">
-                            <el-form-item label="手机号码:" prop="phone">
+                            <el-form-item :label="$t('sys_user_phone')" prop="phone">
                                 <el-input v-model="form.phone" clearable></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :md="6" :sm="8">
-                            <el-form-item label="状态:" prop="status">
+                            <el-form-item :label="$t('sys_user_status')" prop="status">
                                 <el-select v-model="form.status" clearable filterable class="w-full">
                                     <template v-for="item in userStatus">
                                         <el-option :value="item.itemValue" :label="item.itemText"></el-option>
@@ -44,7 +44,9 @@
             </el-form>
         </el-row>
         <el-row class="my-3">
-            <el-button plain type="primary" icon="el-icon-plus" @click="addUser" v-has="'user:add'">添加用户</el-button>
+            <el-button plain type="primary" icon="el-icon-plus" @click="addUser" v-has="'user:add'">
+                {{$t('sys_user_add')}}
+            </el-button>
             <el-button plain icon="iconfont icon-wy-upload" v-has="'user:import'" @click="fileImport">
                 {{$t('common_import')}}
             </el-button>
@@ -61,55 +63,37 @@
             </el-dropdown>
         </el-row>
         <el-row>
-            <elx-table
+            <fox-table
+                    v-if="table.show"
                     border
                     stripe
+                    align="center"
+                    v-loading="table.loading"
+                    :column="table.column"
                     :data="table.data"
-                    :show-pagination="true"
-                    :pagination="page"
-                    @pagination-size-change="handleSizeChange"
-                    @pagination-current-change="handleCurrentChange">
-                <el-table-column align="center" type="selection" fixed></el-table-column>
-                <el-table-column align="center" label="操作" width = "80">
-                    <template slot-scope="scope">
-                        <pop-dropdown
-                                @edit="edit(scope)"
-                                @handleDetail="handleDetail(scope)"
-                                @handlePwd="handlePwd(scope)"
-                                @handleDel="handleDel(scope)"
-                                @frozen="frozen(scope)"
-                                @proxyMan="proxyMan(scope)"
-                        >
-
-                        </pop-dropdown>
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" :label="$t('sys_user_account')" prop="username"
-                                 :show-overflow-tooltip="true"></el-table-column>
-                <el-table-column align="center" label="真实姓名" prop="realname"
-                                 :show-overflow-tooltip="true"></el-table-column>
-                <el-table-column align="center" label="头像" prop="avatar" :show-overflow-tooltip="true">
-                    <template slot-scope="scope">
-                        <el-image size="26" :src="getAvatarView(scope)"
-                                  :preview-src-list="[getAvatarView(scope)]"
-                        >
-                            <div slot="error" class="cursor-pointer">
-                                <i class="el-icon-picture-outline"></i>
-                            </div>
-                        </el-image>
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" label="性别" prop="sex_dictText" width="70"></el-table-column>
-                <el-table-column align="center" label="真实姓名" prop="realname"
-                                 :show-overflow-tooltip="true"></el-table-column>
-                <el-table-column align="center" label="生日" prop="birthday"
-                                 :show-overflow-tooltip="true"></el-table-column>
-                <el-table-column align="center" label="手机号码" prop="phone"
-                                 :show-overflow-tooltip="true"></el-table-column>
-                <el-table-column align="center" label="邮箱" prop="email" :show-overflow-tooltip="true"></el-table-column>
-                <el-table-column align="center" label="状态" prop="status_dictText"
-                                 :show-overflow-tooltip="true"></el-table-column>
-            </elx-table>
+                    pagination
+                    background
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :page-sizes="[5, 10, 20, 30]"
+                    :page-count="5"
+                    :current-page.sync="page.currentPage"
+                    :total="page.total"
+                    :page-size="page.pageSize"
+                    @size-change="sizeChange"
+                    @p-current-change="currentChange"
+                    @selection-change="selection"
+            >
+                <template slot="avatar" slot-scope="scope">
+                    <!--<el-image size="26" :src="getAvatarView(scope)"
+                              :preview-src-list="[getAvatarView(scope)]"
+                    >
+                        <div slot="error" class="cursor-pointer">
+                            <i class="el-icon-picture-outline"></i>
+                        </div>
+                    </el-image>-->
+                    <!-- <span>{{scope}}123</span>-->
+                </template>
+            </fox-table>
         </el-row>
         <drag-drawer v-model="drawer.show"
                      :draggable="drawer.draggable"
@@ -221,13 +205,13 @@
                     proxyMan: {}
                 },
                 table: {
+                    column: [],
                     data: [],
                     selection: [],
-                    loading: false
+                    loading: false,
+                    show: true
                 },
                 page: {
-                    background: true,
-                    layout: "total, sizes, prev, pager, next, jumper",
                     currentPage: 1,
                     pageSize: 10,
                     total: 0
@@ -239,6 +223,12 @@
                 sex: ({dict}) => dict.sex,
                 userStatus: ({dict}) => dict.userStatus,
             })
+        },
+        watch: {
+            '$i18n.locale'() {
+                this.setI18n()
+                this.queryList()
+            }
         },
         methods: {
             ...mapActions({
@@ -492,7 +482,7 @@
             reset() {
                 this.$refs.form.resetFields()
             },
-            checked(selection) {
+            selection(selection) {
                 if (selection.length) {
                     this.show = {
                         ...this.show,
@@ -508,24 +498,21 @@
                     ...this.table,
                     selection
                 }
-            }
-            ,
-            handleCurrentChange(currentPage) {
+            },
+            currentChange(currentPage) {
                 this.page = {
                     ...this.page,
                     currentPage
                 }
                 this.queryList()
-            }
-            ,
-            handleSizeChange(pageSize) {
+            },
+            sizeChange(pageSize) {
                 this.page = {
                     ...this.page,
                     pageSize
                 }
                 this.queryList()
-            }
-            ,
+            },
             async queryList() {
                 this.table = {
                     ...this.table,
@@ -549,7 +536,98 @@
                         total
                     }
                 }
+            },
+            setI18n() {
+                this.table = {
+                    ...this.table,
+                    show: false,
+                    column: [
+                        {type: 'selection', fixed: true},
+                        {
+                            label: this.$t('common_operate'),
+                            prop: 'oper',
+                            width: '100',
+                            render: (h, scope) => {
+                                return (
+                                    h(PopDropdown, {
+                                        on: {
+                                            edit: () => {
+                                                this.edit(scope)
+                                            },
+                                            handleDetail: () => {
+                                                this.handleDetail(scope)
+                                            },
+                                            handlePwd: () => {
+                                                this.handlePwd(scope)
+                                            },
+                                            handleDel: () => {
+                                                this.handleDel(scope)
+                                            },
+                                            frozen: () => {
+                                                this.frozen(scope)
+                                            },
+                                            proxyMan: () => {
+                                                this.proxyMan(scope)
+                                            }
+                                        }
+                                    })
+                                )
+                            },
+                        },
+                        {
+                            label: this.$t('sys_user_account'),
+                            prop: 'username',
+                        },
+                        {
+                            label: this.$t('sys_user_name'),
+                            prop: 'realname',
+                        },
+                        {
+                            label: this.$t('sys_user_avatar'),
+                            width: '70',
+                            prop: 'avatar',
+                            slot: true,
+                            render: (h, scope) => {
+                                let imgPath = this.getAvatarView(scope)
+                                debugger;
+                                return (
+                                    <el-image size={26} src={imgPath}
+                                              preview-src-list={[imgPath]}
+                                    >
+                                        <div slot="error" class="cursor-pointer">
+                                            <i class="el-icon-picture-outline"></i>
+                                        </div>
+                                    </el-image>
+                                )
+                            }
+                        },
+                        {
+                            label: this.$t('sys_user_sex'),
+                            prop: 'sex_dictText',
+                            width: '70'
+                        },
+                        {label: this.$t('sys_user_birthday'), prop: 'birthday', showOverflowTooltip: true},
+                        {label: this.$t('sys_user_phone'), prop: 'phone', showOverflowTooltip: true},
+                        {label: this.$t('sys_user_email'), prop: 'email', showOverflowTooltip: true},
+                        {
+                            label: this.$t('sys_user_status'),
+                            prop: 'status_dictText',
+                            width: '70',
+                            showOverflowTooltip: true
+                        },
+                    ]
+                }
+                this.$nextTick(() => {
+                    this.table = {
+                        ...this.table,
+                        show: true
+                    }
+                })
             }
+
+        },
+        created() {
+            this.setI18n()
         },
         mounted() {
             this.queryList()

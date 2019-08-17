@@ -50,10 +50,10 @@
                                                                 </div>
                                                                 <div class="text-right">
                                                                     <el-button size="mini" type="text"
-                                                                               onClick={()=>this.cancel(index)}>取消
+                                                                               onClick={()=>this.cancel(index)}>{this.$t('common_cancel')}
                                                                     </el-button>
                                                                     <el-button type="primary" size="mini"
-                                                                               onClick={()=>{item.event()}}>确定
+                                                                               onClick={()=>{item.event()}}>{this.$t('common_confirm')}
                                                                     </el-button>
                                                                 </div>
                                                                 <el-dropdown-item
@@ -79,22 +79,22 @@
                                             </div>
                                             <div class="text-right">
                                                 <el-button size="mini" type="text"
-                                                           onClick={()=>this.cancel(index)}>取消
+                                                           onClick={()=>this.cancel(index)}>{this.$t('common_cancel')}
                                                 </el-button>
                                                 <el-button type="primary" size="mini"
-                                                           onClick={()=>{event()}}>确定
+                                                           onClick={()=>{event()}}>{this.$t('common_confirm')}
                                                 </el-button>
                                             </div>
                                             <span class = "text-blue-500 text-base" slot="reference">
                                                 <i {...props} class = {className}></i>
                                             </span>
                                         </el-popover>
-                                    :
-                                    <el-tooltip placement="top" content={content}>
+                                        :
+                                        <el-tooltip placement="top" content={content}>
                                         <span class ="text-blue-500 text-base">
                                             <i {...props} class = {className} onClick={() => event()}></i>
                                         </span>
-                                    </el-tooltip>
+                                        </el-tooltip>
                             )
                         })
                     }

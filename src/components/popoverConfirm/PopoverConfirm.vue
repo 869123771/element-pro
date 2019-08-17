@@ -7,13 +7,13 @@
             <span class = "px-1 text-orange-500 font-mono">
                 <i class = "el-icon-warning"></i>
             </span>
-            <slot name = "popover-title">确定删除吗</slot>
+            <slot name = "popover-title">{{$t('common_confirm_del')}}</slot>
         </div>
         <div class="text-right">
-            <el-button size="mini" type="text" @click="cancel">取消
+            <el-button size="mini" type="text" @click="cancel">{{$t('common_cancel')}}
             </el-button>
             <el-button type="primary" size="mini"
-                       @click="confirm">确定
+                       @click="confirm">{{$t('common_confirm')}}
             </el-button>
         </div>
 
