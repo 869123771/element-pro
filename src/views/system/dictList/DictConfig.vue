@@ -208,10 +208,11 @@
                 this.$modal.hide(name)
                 this.queryList()
             },
-            async confirmDeleteBatch(id) {
+            async confirmDeleteBatch(id,event,index) {
                 let {success, message} = await http.delete(apiList.sys_dict_item_delete, {id})
                 if (success) {
                     sweetAlert.successWithTimer(message)
+                    event(index)                        //关闭popover
                     this.queryList()
                 } else {
                     sweetAlert.error(message)
@@ -271,8 +272,8 @@
                                         className: 'iconfont icon-wy-delete2',
                                         popover: true,
                                         popText: this.$t('common_confirm_del'),
-                                        event: () => {
-                                            this.confirmDeleteBatch(row.id)
+                                        event: (event,index) => {
+                                            this.confirmDeleteBatch(row.id,event,index)
                                         }
                                     },
                                 ]

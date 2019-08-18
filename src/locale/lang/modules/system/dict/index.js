@@ -8,6 +8,7 @@ export const system_dict_zh_cn = {
     sys_dict_item_value : '数据值',
     sys_dict_order_value : '排序值',
     sys_dict_is_open : '是否启用',
+    sys_dict_order_value_tip : '值越小越靠前，支持小数'
 }
 
 export const system_dict_en_us = {
@@ -20,6 +21,7 @@ export const system_dict_en_us = {
     sys_dict_item_value : 'data value',
     sys_dict_order_value : 'order value',
     sys_dict_is_open : 'is open',
+    sys_dict_order_value_tip : 'The smaller the value, the higher the support for decimal'
 }
 
 export const system_dict_zh_tw = {
@@ -32,4 +34,5 @@ export const system_dict_zh_tw = {
     sys_dict_item_value : '數據值',
     sys_dict_order_value : '排序值',
     sys_dict_is_open : '是否启用',
+    sys_dict_order_value_tip : '值越小越靠前，支持小數'
 }

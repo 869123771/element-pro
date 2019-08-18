@@ -1,43 +1,44 @@
 <template>
     <div class="role bg-white p-3 m-3">
         <el-row>
-            <el-form ref = "form" :model = "form" label-width="80px">
-                <el-col :md = "6" :sm = "8">
-                    <el-form-item label = "名称" prop = "roleName">
-                        <el-input v-model = "form.roleName" clearable></el-input>
+            <el-form ref="form" :model="form" label-width="80px">
+                <el-col :md="6" :sm="8">
+                    <el-form-item :label="$t('sys_role_name')" prop="roleName">
+                        <el-input v-model="form.roleName" clearable></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :md = "6" :sm = "8">
-                    <el-form-item label = "开始时间" prop = "createTime">
+                <el-col :md="6" :sm="8">
+                    <el-form-item :label="$t('sys_role_start_time')" prop="createTime">
                         <el-date-picker
-                                class = "w-full"
-                                v-model = "form.createTime"
-                                type = "datetimerange"
-                                start-placeholder="开始日期"
-                                end-placeholder="结束日期"
+                                class="w-full"
+                                v-model="form.createTime"
+                                type="datetimerange"
+                                :start-placeholder="$t('sys_role_time_start')"
+                                :end-placeholder="$t('sys_role_time_end')"
                                 value-format="yyyy-MM-dd hh:mm:ss"
                         ></el-date-picker>
                     </el-form-item>
                 </el-col>
-                <el-col :md = "6" :sm = "8">
-                    <div class = "pl-3">
-                        <el-button type="primary" icon="el-icon-search" @click="search">查询</el-button>
-                        <el-button plain icon="el-icon-refresh-left" @click="reset">重置</el-button>
+                <el-col :md="6" :sm="8">
+                    <div class="pl-3">
+                        <el-button type="primary" icon="el-icon-search" @click="search">{{$t('common_query')}}
+                        </el-button>
+                        <el-button plain icon="el-icon-refresh-left" @click="reset">{{$t('common_reset')}}</el-button>
                     </div>
                 </el-col>
             </el-form>
         </el-row>
 
-        <el-row class = "my-3">
-            <el-button plain type="primary" icon="el-icon-plus" @click="addRole">新增</el-button>
-            <el-button plain icon="iconfont icon-wy-upload" @click="fileImport">导入</el-button>
-            <el-button plain icon="iconfont icon-wy-download" @click="fileExport">导出</el-button>
+        <el-row class="my-3">
+            <el-button plain type="primary" icon="el-icon-plus" @click="addRole">{{$t('common_add')}}</el-button>
+            <el-button plain icon="iconfont icon-wy-upload" @click="fileImport">{{$t('common_import')}}</el-button>
+            <el-button plain icon="iconfont icon-wy-download" @click="fileExport">{{$t('common_export')}}</el-button>
             <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
                 <el-button plain>
-                    批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+                    {{$t('common_batch_operate')}}<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item @click.native="deleteBatch"><i class="el-icon-delete"></i>删除
+                    <el-dropdown-item @click.native="deleteBatch"><i class="el-icon-delete"></i>{{$t('common_delete')}}
                     </el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
@@ -45,9 +46,7 @@
 
         <el-row>
             <fox-table
-                    border
-                    stripe
-                    align="center"
+                    v-if="table.show"
                     highlight-current-row
                     v-loading="table.loading"
                     :column="table.column"
@@ -62,7 +61,8 @@
                     :page-size="page.pageSize"
                     @size-change="sizeChange"
                     @p-current-change="currentChange"
-                    @cell-click = "cellClick">
+                    @selection-change="selection"
+                    @cell-click="cellClick">
             </fox-table>
         </el-row>
         <el-row>
@@ -142,80 +142,13 @@
         data() {
             return {
                 form: {
-                    roleName : '',
-                    createTime : [],
+                    roleName: '',
+                    createTime: [],
                 },
                 table: {
+                    show: true,
                     data: [],
-                    column: [
-                        {
-                            label: '操作',
-                            prop: 'oper',
-                            slot: true,
-                            width: 80,
-                            render : (h,{row,$index})=>{
-                                let btnInfo = [
-                                    {
-                                        content : '修改',
-                                        className : 'fa fa-fw fa-pencil',
-                                        permission : 'menu:table:update',
-                                        event : ()=>{
-                                            this.edit(row)
-                                        }
-                                    },
-                                    {
-                                        type : 'dropDown',
-                                        className : 'fa fa-fw fa-ellipsis-h',
-                                        dropDownItems : [
-                                            {
-                                                content: '授权',
-                                                className : '',
-                                                popover: false,
-                                                event : ()=>{
-                                                    this.handleAuth(row)
-                                                }
-                                            },
-                                            {
-                                                content: '删除',
-                                                className : '',
-                                                popover: true,
-                                                popText : '确定要删除吗',
-                                                event : ()=>{
-                                                    this.handleDel(row)
-                                                }
-                                            }
-                                        ],
-                                    },
-                                ]
-                                return(
-                                    <OperBtn btnInfo = {btnInfo}></OperBtn>
-                                )
-                            }
-                        },
-                        {
-                            label: '角色名称',
-                            prop: 'roleName'
-                        },
-                        {
-                            label: '角色编码',
-                            prop: 'roleCode'
-                        },
-
-                        {
-                            label: '备注',
-                            prop: 'description'
-                        },
-                        {
-                            label: '创建时间',
-                            prop: 'createTime',
-                            sortable: true,
-                        },
-                        {
-                            label: '更新时间',
-                            prop: 'updateTime',
-                            sortable: true,
-                        },
-                    ],
+                    column: [],
                     loading: false,
                     selection: []
                 },
@@ -261,6 +194,12 @@
             }
         },
         computed: {},
+        watch: {
+            '$i18n.locale'() {
+                this.setI18n()
+                this.queryList()
+            }
+        },
         methods: {
             ...mapActions({
                 getPermissionList: 'GET_PERMISSION_LIST'
@@ -458,7 +397,7 @@
                 }
                 this.queryList()
             },
-            selectionChange(selection) {
+            selection(selection) {
                 if (selection.length) {
                     this.show = {
                         ...this.show,
@@ -490,7 +429,6 @@
                 }
             },
             async queryList() {
-                debugger;
                 let {createTime: [createTime_begin, createTime_end], ...res} = this.form
                 let {pageNum: pageNo, pageSize} = this.page
                 this.table = {
@@ -521,6 +459,93 @@
                     }
                 }
             },
+            setI18n() {
+                this.table = {
+                    ...this.table,
+                    show: false,
+                    column: [
+                        {
+                            type: 'selection',
+                            fixed: true
+                        },
+                        {
+                            label: '操作',
+                            prop: 'oper',
+                            width: 80,
+                            render: (h, {row, $index}) => {
+                                let btnInfo = [
+                                    {
+                                        content: '修改',
+                                        className: 'fa fa-fw fa-pencil',
+                                        permission: 'menu:table:update',
+                                        event: () => {
+                                            this.edit(row)
+                                        }
+                                    },
+                                    {
+                                        type: 'dropDown',
+                                        className: 'fa fa-fw fa-ellipsis-h',
+                                        dropDownItems: [
+                                            {
+                                                content: '授权',
+                                                className: '',
+                                                popover: false,
+                                                event: () => {
+                                                    this.handleAuth(row)
+                                                }
+                                            },
+                                            {
+                                                content: '删除',
+                                                className: '',
+                                                popover: true,
+                                                popText: '确定要删除吗',
+                                                event: () => {
+                                                    this.handleDel(row)
+                                                }
+                                            }
+                                        ],
+                                    },
+                                ]
+                                return (
+                                    <OperBtn btnInfo={btnInfo}></OperBtn>
+                                )
+                            }
+                        },
+                        {
+                            label: '角色名称',
+                            prop: 'roleName'
+                        },
+                        {
+                            label: '角色编码',
+                            prop: 'roleCode'
+                        },
+
+                        {
+                            label: '备注',
+                            prop: 'description'
+                        },
+                        {
+                            label: '创建时间',
+                            prop: 'createTime',
+                            sortable: true,
+                        },
+                        {
+                            label: '更新时间',
+                            prop: 'updateTime',
+                            sortable: true,
+                        },
+                    ],
+                }
+                this.$nextTick(() => {
+                    this.table = {
+                        ...this.table,
+                        show: true
+                    }
+                })
+            }
+        },
+        created() {
+            this.setI18n()
         },
         mounted() {
             this.queryList()

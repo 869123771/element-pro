@@ -256,10 +256,13 @@
                 }
                 this.queryList()
             },
-            async confirmDeleteBatch(id) {
+            async confirmDeleteBatch(id,event,index) {
+                debugger;
                 let {success, message} = await http.delete(apiList.sys_dict_delete, {id})
                 if (success) {
+                    debugger;
                     sweetAlert.successWithTimer(message)
+                    event(index)                        //关闭popover
                     this.queryList()
                 } else {
                     sweetAlert.error(message)
@@ -306,7 +309,7 @@
                             label: this.$t('common_operate'),
                             prop: 'oper',
                             width: '100',
-                            render: (h, {row}) => {
+                            render: (h, {row,$index}) => {
                                 let btnInfo = [
                                     {
                                         content: this.$t('common_edit'),
@@ -329,13 +332,14 @@
                                         className: 'iconfont icon-wy-delete2',
                                         popover: true,
                                         popText: this.$t('common_confirm_del'),
-                                        event: () => {
-                                            this.confirmDeleteBatch(row.id)
+                                        event: (event,index) => {
+                                            this.confirmDeleteBatch(row.id,event,index)
                                         }
                                     },
                                 ]
                                 return (
                                     <OperBtn btnInfo={btnInfo}></OperBtn>
+
                                 )
                             },
                         },

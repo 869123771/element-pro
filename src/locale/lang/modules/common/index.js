@@ -1,6 +1,7 @@
 export const common_zh_cn = {
     common_add: '新增',
     common_edit: '编辑',
+    common_batch_operate: '批量操作',
     common_delete: '删除',
     common_import: '导入',
     common_export: '导出',
@@ -17,6 +18,7 @@ export const common_zh_cn = {
 export const common_en_us = {
     common_add: 'add',
     common_edit: 'edit',
+    common_batch_operate: 'batch operate',
     common_delete: 'delete',
     common_import: 'import',
     common_export: 'export',
@@ -33,6 +35,7 @@ export const common_en_us = {
 export const common_zh_tw = {
     common_add: '新增',
     common_edit: '編輯',
+    common_batch_operate: '批量操作',
     common_delete: '刪除',
     common_import: '導入',
     common_export: '導出',

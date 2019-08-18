@@ -80,15 +80,14 @@
                     @p-current-change="currentChange"
                     @selection-change="selection"
             >
-                <template slot="avatar" slot-scope="scope">
-                    <!--<el-image size="26" :src="getAvatarView(scope)"
+                <template slot="avatar" slot-scope="{scope}">
+                    <el-image size="26" :src="getAvatarView(scope)"
                               :preview-src-list="[getAvatarView(scope)]"
                     >
                         <div slot="error" class="cursor-pointer">
                             <i class="el-icon-picture-outline"></i>
                         </div>
-                    </el-image>-->
-                    <!-- <span>{{scope}}123</span>-->
+                    </el-image>
                 </template>
             </fox-table>
         </el-row>

@@ -82,7 +82,7 @@
                                                            onClick={()=>this.cancel(index)}>{this.$t('common_cancel')}
                                                 </el-button>
                                                 <el-button type="primary" size="mini"
-                                                           onClick={()=>{event()}}>{this.$t('common_confirm')}
+                                                           onClick={()=>{event(this.cancel,index)}}>{this.$t('common_confirm')}
                                                 </el-button>
                                             </div>
                                             <span class = "text-blue-500 text-base" slot="reference">

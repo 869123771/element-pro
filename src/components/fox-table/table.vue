@@ -40,7 +40,7 @@
                             :filter-method="item.filterMethod"
                             :filtered-value="item.filteredValue">
                         <template slot-scope="scope">
-                            <slot :name="item.prop" scope=""></slot>
+                            <slot :name="item.prop" :scope="handleScope(scope)"></slot>
                         </template>
                     </el-table-column>
                 </template>
@@ -103,6 +103,9 @@
             }
         },
         methods: {
+            handleScope({row,$index,column}){
+               return {row,$index,column}
+            },
             clearSelection() {
                 this.$refs.elTable.clearSelection()
             },

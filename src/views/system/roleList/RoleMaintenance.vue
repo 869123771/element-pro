@@ -15,9 +15,6 @@
         </el-row>
         <el-row>
             <fox-table
-                    border
-                    stripe
-                    align="center"
                     v-loading="table.loading"
                     :column="table.column"
                     :data="table.data"
@@ -81,6 +78,10 @@
                     data: [],
                     column: [
                         {
+                          type : 'selection',
+                          fixed : true
+                        },
+                        {
                             label: '操作',
                             prop: 'oper',
                             width: 80,
@@ -99,8 +100,8 @@
                                         className : 'iconfont icon-wy-delete2',
                                         popover: true,
                                         popText : '确定要删除吗',
-                                        event : ()=>{
-                                            this.confirmDelete(row.id)
+                                        event : (event,index)=>{
+                                            this.confirmDelete(row.id,event,index)
                                         }
                                     }
                                 ]
@@ -255,7 +256,7 @@
                     sweetAlert.error(message)
                 }
             },
-            async confirmDelete(userId) {
+            async confirmDelete(userId,event,index) {
                 let {id : roleId} = this.data
                 let params = {
                     userId,
@@ -264,6 +265,7 @@
                 let {success, message} = await http.delete(apiList.sys_role_delete_user_role, params)
                 if (success) {
                     sweetAlert.successWithTimer(message)
+                    event(index)
                     this.queryList()
                 } else {
                     sweetAlert.error(message)
