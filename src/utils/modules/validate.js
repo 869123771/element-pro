@@ -69,11 +69,13 @@ export const phoneCheck = (rule, value, callback) => {
 }
 
 export const uniqueUserCheck = async (rule, username, callback) => {
-    let {success, message} = await http.get(apiList.sys_user_unique_user_check, {username})
-    if (success) {
-        callback();
-    } else {
-        callback(new Error(message));
+    if(username){
+        let {success, message} = await http.get(apiList.sys_user_unique_user_check, {username})
+        if (success) {
+            callback();
+        } else {
+            callback(new Error(message));
+        }
     }
 };
 

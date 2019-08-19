@@ -12,9 +12,7 @@
         </el-row>
         <el-row class = "my-3">
             <fox-table
-                    border
-                    stripe
-                    fit
+                    v-if = "table.show"
                     align="center"
                     v-loading="table.loading"
                     :column="table.column"
@@ -27,9 +25,9 @@
                     :current-page.sync="page.currentPage"
                     :total="page.total"
                     :page-size="page.pageSize"
-                    @size-change="handleSizeChange"
-                    @p-current-change="handleCurrentChange"
-                    @selection-change="selectionChange"
+                    @size-change="sizeChange"
+                    @p-current-change="currentChange"
+                    @selection-change="selection"
             ></fox-table>
         </el-row>
     </div>
@@ -53,24 +51,9 @@
             return {
                 table: {
                     data: [],
-                    column: [
-                        {
-                          type : 'selection'
-                        },
-                        {
-                            label: '用户账号',
-                            prop: 'username'
-                        },
-                        {
-                            label: '用户名称',
-                            prop: 'realname'
-                        },
-                        {
-                            label: '状态',
-                            prop: 'status_dictText'
-                        },
-                    ],
+                    column: [],
                     name : '',
+                    show : true,
                     loading: false,
                     selection: []
                 },
@@ -81,8 +64,14 @@
                 },
             }
         },
+        watch: {
+            '$i18n.locale'() {
+                this.setI18n()
+                this.queryList()
+            }
+        },
         methods : {
-            selectionChange(selection) {
+            selection(selection) {
                 this.table = {
                     ...this.table,
                     selection
@@ -152,6 +141,38 @@
                     }
                 }
             },
+            setI18n(){
+                this.table = {
+                    ...this.table,
+                    show : false,
+                    column : [
+                        {
+                            type : 'selection'
+                        },
+                        {
+                            label: '用户账号',
+                            prop: 'username'
+                        },
+                        {
+                            label: '用户名称',
+                            prop: 'realname'
+                        },
+                        {
+                            label: '状态',
+                            prop: 'status_dictText'
+                        },
+                    ],
+                }
+                this.$nextTick(()=>{
+                    this.table = {
+                        ...this.table,
+                        show : true
+                    }
+                })
+            }
+        },
+        created(){
+            this.setI18n()
         },
         mounted(){
             this.queryList()

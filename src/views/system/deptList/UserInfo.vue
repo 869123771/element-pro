@@ -1,5 +1,5 @@
 <template>
-    <div class = "role-maintenance">
+    <div class="role-maintenance">
         <el-row>
             <el-button plain type="primary" icon="el-icon-plus" @click="addUser">用户录入</el-button>
             <el-button plain icon="el-icon-plus" @click="addUserHas">添加已有用户</el-button>
@@ -13,29 +13,27 @@
                 </el-dropdown-menu>
             </el-dropdown>
         </el-row>
-        <el-row class = "my-3">
-            <el-table-bar>
-                <fox-table
-                        border
-                        stripe
-                        fit
-                        align="center"
-                        v-loading="table.loading"
-                        :column="table.column"
-                        :data="table.data"
-                        pagination
-                        background
-                        layout="total, sizes, prev, pager, next, jumper"
-                        :page-sizes="[5, 10, 20, 30]"
-                        :page-count="10"
-                        :current-page="page.currentPage"
-                        :total="page.total"
-                        :page-size="page.pageSize"
-                        @size-change="sizeChange"
-                        @p-current-change="currentChange"
-                        @selection-change="selectionChange"
-                ></fox-table>
-            </el-table-bar>
+        <el-row class="my-3">
+            <fox-table
+                    border
+                    stripe
+                    fit
+                    align="center"
+                    v-loading="table.loading"
+                    :column="table.column"
+                    :data="table.data"
+                    pagination
+                    background
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :page-sizes="[5, 10, 20, 30]"
+                    :page-count="10"
+                    :current-page="page.currentPage"
+                    :total="page.total"
+                    :page-size="page.pageSize"
+                    @size-change="sizeChange"
+                    @p-current-change="currentChange"
+                    @selection-change="selectionChange"
+            ></fox-table>
         </el-row>
 
         <drag-drawer v-model="drawer.show"
@@ -48,14 +46,14 @@
             <component :is="component.type" :data="component.data" @closeFlush="closeFlush"></component>
         </drag-drawer>
         <drag-dialog :drag-dialog="dialog" @confirm="confirmAdd">
-            <add-user :ref = "user.ref" :data = "user.data" @handleSuccess = "handleSuccess"></add-user>
+            <add-user :ref="user.ref" :data="user.data" @handleSuccess="handleSuccess"></add-user>
         </drag-dialog>
     </div>
 </template>
 
 <script>
     import {mapActions} from 'vuex'
-    import {http,apiList,sweetAlert,constant} from '@/utils'
+    import {http, apiList, sweetAlert, constant} from '@/utils'
     import foxTable from '@/components/fox-table'
     import OperBtn from '@/components/table/OperBtn'
     import DragDrawer from '@/components/dragDrawer'
@@ -67,53 +65,53 @@
 
     export default {
         name: "UserInfo",
-        props : {
-            userInfo : {
-                type : Object
+        props: {
+            userInfo: {
+                type: Object
             },
         },
-        components : {
+        components: {
             foxTable,
             DragDrawer,
             DragDialog,
             AddUser,
             PopoverConfirm
         },
-        data(){
+        data() {
             return {
-                table : {
+                table: {
                     loading: false,
                     selection: [],
-                    data : [],
+                    data: [],
                     column: [
                         {type: 'selection', fixed: true},
                         {
                             label: '操作',
                             prop: 'oper',
                             width: 80,
-                            render : (h,{row,$index})=>{
+                            render: (h, {row, $index}) => {
                                 let btnInfo = [
                                     {
-                                        content : '修改',
-                                        className : 'fa fa -fw fa-pencil',
-                                        permission : 'user:update',
-                                        event : ()=>{
+                                        content: '修改',
+                                        className: 'fa fa -fw fa-pencil',
+                                        permission: 'user:update',
+                                        event: () => {
                                             this.edit(row)
                                         }
                                     },
                                     {
-                                        content : '删除',
-                                        popover : true,
+                                        content: '删除',
+                                        popover: true,
                                         popText: '确定要删除吗',
-                                        className : 'iconfont icon-wy-delete2',
-                                        permission : 'user:view',
-                                        event : ()=>{
-                                            this.confirmDelete(row.id,$index)
+                                        className: 'iconfont icon-wy-delete2',
+                                        permission: 'user:view',
+                                        event: () => {
+                                            this.confirmDelete(row.id, $index)
                                         }
                                     },
                                 ]
-                                return(
-                                    <OperBtn btnInfo = {btnInfo}></OperBtn>
+                                return (
+                                    <OperBtn btnInfo={btnInfo}></OperBtn>
                                 )
                             }
                         },
@@ -137,8 +135,8 @@
                     pageSize: 10,
                     total: 0
                 },
-                show : {
-                    batch : false,
+                show: {
+                    batch: false,
                 },
                 drawer: {
                     show: false,
@@ -154,25 +152,25 @@
                     width: 300,
                     height: 300,
                     name: 'addUserHas',
-                    showFooter : true
+                    showFooter: true
                 },
-                user : {
-                    ref : 'user',
-                    data : {}
+                user: {
+                    ref: 'user',
+                    data: {}
                 }
             }
         },
-        watch : {
-            userInfo : {
+        watch: {
+            userInfo: {
                 handler(props) {
                     if (!isEmpty(props)) {
                         this.queryList()
                     }
                 },
-                immediate : true
+                immediate: true
             },
         },
-        methods : {
+        methods: {
             ...mapActions({
                 getSex: 'GET_SEX',
                 getUserStatus: 'GET_USER_STATUS',
@@ -182,7 +180,7 @@
             }),
             addUser() {
                 let {id} = this.userInfo
-                if(!id){
+                if (!id) {
                     sweetAlert.warnWithTimer('请选择一个部门')
                     return
                 }
@@ -196,7 +194,7 @@
                     ...this.component,
                     type: Modify,
                     data: {
-                        deptId : id
+                        deptId: id
                     }
                 }
             },
@@ -213,13 +211,13 @@
                     type: Modify,
                     data: {
                         ...row,
-                        deptId : id
+                        deptId: id
                     }
                 }
             },
-            addUserHas(){
+            addUserHas() {
                 let {id} = this.userInfo
-                if(!id){
+                if (!id) {
                     sweetAlert.warnWithTimer('请选择一个部门')
                     return
                 }
@@ -227,8 +225,8 @@
                 this.$modal.show(name)
                 this.dialog = {
                     ...this.dialog,
-                    width : 70,
-                    height : 85,
+                    width: 70,
+                    height: 85,
                     title: '添加已有用户'
                 }
             },
@@ -264,8 +262,8 @@
                 let ids = selection.map(item => item.id).join(',')
                 sweetAlert.confirm('删除', '确认要删除吗', this.confirmDeleteBatch, ids)
             },
-            async confirmDeleteBatch(userIds){
-                let {id : depId} = this.userInfo
+            async confirmDeleteBatch(userIds) {
+                let {id: depId} = this.userInfo
                 let params = {
                     userIds,
                     depId
@@ -278,8 +276,8 @@
                     sweetAlert.error(message)
                 }
             },
-            async confirmDelete(userId,index) {
-                let {id : depId} = this.userInfo
+            async confirmDelete(userId, index) {
+                let {id: depId} = this.userInfo
                 let params = {
                     userId,
                     depId
@@ -300,7 +298,7 @@
                 }
                 this.queryList()
             },
-            handleSuccess(){
+            handleSuccess() {
                 let {name} = this.dialog
                 this.$modal.hide(name)
                 this.queryList()
@@ -329,7 +327,7 @@
                 let params = {
                     pageNo,
                     pageSize,
-                    depId : id
+                    depId: id
                 }
                 let {success, result} = await http.get(apiList.sys_user_query_user_by_dept, params)
                 if (success) {
@@ -349,7 +347,7 @@
                 }
             },
         },
-        mounted(){
+        mounted() {
             this.getSex()
             this.getUserStatus()
             this.getAllRoles()

@@ -8,7 +8,7 @@
                           :readonly="data.id?true:false"
                 ></el-input>
             </el-form-item>
-            <template v-if ="!data.id">
+            <template v-if="!data.id">
                 <el-form-item label="登陆密码" prop="password">
                     <el-input type="password" v-model="form.password" placeholder="登陆密码" clearable></el-input>
                 </el-form-item>
@@ -114,24 +114,21 @@
             }
         },
         data() {
-            //let {id, deptId} = this.data
-           // let isUserUniqueCheck = id || id && deptId ? [] : [{validator: uniqueUserCheck}]
             return {
                 form: {
-                    username : '',                      //用户账号
-                    password : '',                      //用户密码
-                    confirmpassword : '',               //确认密码
-                    realname : '',                      //用户名字
-                    selectedroles : [],                 //角色分配
-                    deptName : '',                      //部门分配
+                    username: '',                      //用户账号
+                    password: '',                      //用户密码
+                    confirmpassword: '',               //确认密码
+                    realname: '',                      //用户名字
+                    selectedroles: [],                 //角色分配
+                    deptName: '',                      //部门分配
                     activitiSync: '1'
                 },
                 rules: {
                     username: [
                         {required: true, message: '必填', trigger: 'change'},
-                        {validator: uniqueUserCheck}
                     ],
-                    realname : [
+                    realname: [
                         {required: true, message: '必填', trigger: 'change'},
                     ],
                     password: [
@@ -182,11 +179,11 @@
         watch: {
             data: {
                 handler(props) {
-                    debugger;
+                    this.userUniqueCheck(props)
                     if (!isEmpty(props)) {
                         let {config: {baseUrl: {imgDomainURL}}} = constant
-                        let {id, sex, avatar} = props
-                        if (id) {
+                        let {id, deptId,sex, avatar} = props
+                        if (id || id && deptId) {
                             this.form = {
                                 ...props,
                                 sex: sex ? sex.toString() : '',
@@ -197,18 +194,31 @@
                             }
                             this.getUserRole(id)
                             this.getUserDept(id)
-
-                            this.$nextTick(()=>{
-                                this.$refs.modify.clearValidate('username')
-                            })
-
                         } else {
-                            this.$nextTick(()=>{
+                            this.form = {
+                                ...this.form,
+                                username : '',
+                                password : '',
+                            }
+                            this.upload = {
+                                ...this.upload,
+                                imageUrl : ''
+                            }
+                            this.$nextTick(() => {
                                 this.$refs.modify.resetFields()
                             })
                         }
-                    }else{
-                        this.$nextTick(()=>{
+                    } else {
+                        this.form = {
+                            ...this.form,
+                            username : '',
+                            password : '',
+                        }
+                        this.upload = {
+                            ...this.upload,
+                            imageUrl : ''
+                        }
+                        this.$nextTick(() => {
                             this.$refs.modify.resetFields()
                         })
                     }
@@ -217,6 +227,35 @@
             },
         },
         methods: {
+            userUniqueCheck(props) {
+                if (!isEmpty(props)) {
+                    let {id, deptId} = props
+                    if (id || id && deptId) {
+                        this.rules = {
+                            ...this.rules,
+                            username: [
+                                {required: true, message: '必填'},
+                            ]
+                        }
+                    } else {
+                        this.rules = {
+                            ...this.rules,
+                            username: [
+                                {required: true, message: '必填'},
+                                {validator: uniqueUserCheck}
+                            ]
+                        }
+                    }
+                } else {
+                    this.rules = {
+                        ...this.rules,
+                        username: [
+                            {required: true, message: '必填'},
+                            {validator: uniqueUserCheck}
+                        ]
+                    }
+                }
+            },
             selectDept() {
                 let {name} = this.dialog
                 let {deptName} = this.form

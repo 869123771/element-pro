@@ -13,20 +13,18 @@
             </el-dropdown>
         </el-row>
         <el-row class="my-3">
-            <el-table-bar>
-                <fox-table
-                        border
-                        stripe
-                        align="center"
-                        row-key="id"
-                        :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-                        v-loading="table.loading"
-                        :column="table.column"
-                        :data="table.data"
-                        @selection-change="selectionChange"
-                >
-                </fox-table>
-            </el-table-bar>
+            <fox-table
+                    border
+                    stripe
+                    align="center"
+                    row-key="id"
+                    :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+                    v-loading="table.loading"
+                    :column="table.column"
+                    :data="table.data"
+                    @selection-change="selectionChange"
+            >
+            </fox-table>
         </el-row>
 
         <drag-drawer v-model="drawer.show"
@@ -81,8 +79,8 @@
                     data: [],
                     column: [
                         {
-                            type : 'index',
-                            width : 70
+                            type: 'index',
+                            width: 70
                         },
                         {
                             label: '菜单名称',
@@ -128,51 +126,51 @@
                         {
                             label: '操作',
                             width: 80,
-                            prop : 'oper',
-                            render : (h,{row,$index})=>{
+                            prop: 'oper',
+                            render: (h, {row, $index}) => {
                                 let btnInfo = [
                                     {
-                                        content : '修改',
-                                        className : 'fa fa-fw fa-pencil',
-                                        permission : 'menu:table:update',
-                                        event : ()=>{
+                                        content: '修改',
+                                        className: 'fa fa-fw fa-pencil',
+                                        permission: 'menu:table:update',
+                                        event: () => {
                                             this.editMenu(row)
                                         }
                                     },
                                     {
-                                        type : 'dropDown',
-                                        className : 'fa fa-fw fa-ellipsis-h',
-                                        dropDownItems : [
+                                        type: 'dropDown',
+                                        className: 'fa fa-fw fa-ellipsis-h',
+                                        dropDownItems: [
                                             {
                                                 content: '详情',
-                                                className : '',
+                                                className: '',
                                                 popover: false,
-                                                event : ()=>{
+                                                event: () => {
                                                     this.handleDetail(row)
                                                 }
                                             },
                                             {
                                                 content: '数据规则',
-                                                className : '',
+                                                className: '',
                                                 popover: false,
-                                                event : ()=>{
+                                                event: () => {
                                                     this.handleDataRule(row)
                                                 }
                                             },
                                             {
                                                 content: '删除',
-                                                className : '',
+                                                className: '',
                                                 popover: true,
-                                                popText : '确定要删除吗',
-                                                event : ()=>{
+                                                popText: '确定要删除吗',
+                                                event: () => {
                                                     this.handleDel(row)
                                                 }
                                             }
                                         ],
                                     },
                                 ]
-                                return(
-                                    <OperBtn btnInfo = {btnInfo}></OperBtn>
+                                return (
+                                    <OperBtn btnInfo={btnInfo}></OperBtn>
                                 )
                             }
                         },
