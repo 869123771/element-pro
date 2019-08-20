@@ -72,7 +72,7 @@
                     background
                     layout="total, sizes, prev, pager, next, jumper"
                     :page-sizes="[5, 10, 20, 30]"
-                    :page-count="5"
+                    :page-count="10"
                     :current-page.sync="page.currentPage"
                     :total="page.total"
                     :page-size="page.pageSize"

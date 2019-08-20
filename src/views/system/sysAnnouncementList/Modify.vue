@@ -1,19 +1,41 @@
 <template>
     <div class="modify">
-        <avue-form v-model="form.model" :option="form.option" ref="form">
-            <template slot="msgContent" slot-scope="{value}">
-                <wang-editor ref="wangEditor" :editorContent="value"></wang-editor>
-            </template>
-            <template slot="userIds" slot-scope="{value}">
+        <el-form ref="form" :model="form" label-width="110px" :status-icon="true" :rules="rules">
+            <el-form-item label="标题" prop="titile">
+                <el-input v-model="form.titile" placeholder="标题" clearable></el-input>
+            </el-form-item>
+            <el-form-item label="消息类型" prop="msgCategory">
+                <el-select v-model="form.msgCategory" placeholder="消息类型" clearable filterable class="w-full">
+                    <template v-for="item in msgCategory">
+                        <el-option :value="item.itemValue" :label="item.itemText"></el-option>
+                    </template>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="优先级" prop="priority">
+                <el-select v-model="form.priority" placeholder="优先级" clearable filterable class="w-full">
+                    <template v-for="item in priority">
+                        <el-option :value="item.itemValue" :label="item.itemText"></el-option>
+                    </template>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="通告对象类型" prop="msgType">
+                <el-select v-model="form.msgType" placeholder="通告对象类型" clearable filterable class="w-full">
+                    <template v-for="item in msgType">
+                        <el-option :value="item.itemValue" :label="item.itemText"></el-option>
+                    </template>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="指定用户" prop="userIds" v-show="form.msgType === 'USER'">
                 <el-select
-                        placeholder="请输入关键词"
-                        v-model="form.model.userIds"
+                        v-model="form.userIds"
+                        placeholder="指定用户"
                         multiple
                         filterable
                         remote
                         :remote-method="findUser"
                         :loading="select.loading"
                         value-key="username"
+                        class="w-full"
                 >
                     <el-option v-show="select.users.length" value="">
                         <div class="flex">
@@ -38,8 +60,19 @@
                         </div>
                     </el-option>
                 </el-select>
-            </template>
-        </avue-form>
+            </el-form-item>
+            <el-form-item label="开始时间" prop="startTime">
+                <el-date-picker type="datetime" v-model="form.startTime" value-format="yyyy-MM-dd hh:mm:ss"
+                                placeholder="开始时间" class="w-full"></el-date-picker>
+            </el-form-item>
+            <el-form-item label="结束时间" prop="endTime">
+                <el-date-picker type="datetime" v-model="form.endTime" value-format="yyyy-MM-dd hh:mm:ss"
+                                placeholder="结束时间" class="w-full"></el-date-picker>
+            </el-form-item>
+            <el-form-item label="内容" prop="msgContent">
+                <wang-editor ref="wangEditor" :editorContent="form.msgContent"></wang-editor>
+            </el-form-item>
+        </el-form>
     </div>
 </template>
 
@@ -47,6 +80,7 @@
     import {mapState} from 'vuex'
     import {http, apiList, constant, sweetAlert} from '@/utils'
     import WangEditor from '@/components/editor/WangEditor'
+    import {isEmpty} from '30-seconds-of-code'
 
     export default {
         name: "Modify",
@@ -59,93 +93,15 @@
             }
         },
         data() {
-            let {id} = this.data
-            let column = [
-                {
-                    label: '标题',
-                    prop: 'titile',
-                    span: 24,
-                    rules: [
-                        {required: true, message: '必填', trigger: 'change'}
-                    ]
-                },
-                {
-                    label: '消息类型',
-                    prop: 'msgCategory',
-                    type: 'select',
-                    span: 24,
-                    dictData: [],
-                    rules: [
-                        {required: true, message: '必填', trigger: 'change',},
-                    ]
-                },
-                {
-                    label: '优先级',
-                    prop: 'priority',
-                    type: 'select',
-                    span: 24
-                },
-                {
-                    label: '通告对象类型',
-                    prop: 'msgType',
-                    type: 'select',
-                    span: 24,
-                    rules: [
-                        {required: true, message: '必填', trigger: 'change',},
-                    ],
-                    change: ({value}) => {
-                        this.$nextTick(() => {
-                            let index = this.$refs.form.findColumnIndex('userIds');
-                            let column = this.form.option.column[index];
-                            if (value === 'USER') {
-                                column.display = true
-                            } else {
-                                column.display = false
-                            }
-                        })
-                    }
-                },
-                {
-                    label: '指定用户',
-                    prop: 'userIds',
-                    formslot: true,
-                    span: 24,
-                    display: false
-                },
-                {
-                    label: '开始时间',
-                    prop: 'startTime',
-                    type: 'datetime',
-                    valueFormat: 'yyyy-MM-dd hh:mm:ss',
-                    span: 24
-                },
-                {
-                    label: '结束时间',
-                    prop: 'endTime',
-                    type: 'datetime',
-                    valueFormat: 'yyyy-MM-dd hh:mm:ss',
-                    span: 24
-                },
-                {
-                    label: '内容',
-                    prop: 'msgContent',
-                    formslot: true,
-                    span: 24
-                },
-            ]
             return {
-                form: {
-                    option: {
-                        props: {
-                            value: 'itemValue',
-                            label: 'itemText'
-                        },
-                        prop: 'form',
-                        labelWidth: '110',
-                        menuBtn: false,
-                        column
-                    },
-                    model: {}
+                form: {},
+                rules: {
+                    titile: [
+                        {required: true, message: '必填', trigger: 'change'}
+                    ],
+                    msgCategory: [
+                        {required: true, message: '必填', trigger: 'change',},
+                    ]
                 },
                 select: {
                     loading: false,
@@ -164,16 +120,12 @@
         watch: {
             data: {
                 handler(props) {
-                    if (!this.validatenull(props)) {
-                        let {model} = this.form
+                    if (!isEmpty(props)) {
                         let {userIds} = props
                         this.form = {
                             ...this.form,
-                            model: {
-                                ...model,
-                                ...props,
-                                userIds : userIds.split(',')
-                            }
+                            ...props,
+                            userIds: userIds.split(',')
                         }
                         this.findUser()
                     }
@@ -190,15 +142,6 @@
             })
         },
         methods: {
-            setMsgCategory() {
-                this.$refs.form.updateDic('msgCategory', this.msgCategory)
-            },
-            setMsgType() {
-                this.$refs.form.updateDic('msgType', this.msgType)
-            },
-            setPriority() {
-                this.$refs.form.updateDic('priority', this.priority)
-            },
             async findUser(username) {
                 console.log(username)
                 this.select = {
@@ -219,10 +162,11 @@
             },
 
             saveData() {
+                debugger
                 let {id} = this.data
-                let {model, model: {msgType,userIds}} = this.form
+                let {msgType, userIds} = this.form
                 let params = {
-                    ...model,
+                    ...this.form,
                     msgContent: this.$refs.wangEditor.content,
                     userIds: msgType === 'USER' ? userIds.join(',') : ''
                 }
@@ -252,9 +196,7 @@
             }
         },
         mounted() {
-            this.setMsgCategory()
-            this.setMsgType()
-            this.setPriority()
+
         }
     }
 </script>

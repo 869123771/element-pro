@@ -2,22 +2,24 @@
     <div class="announce bg-white p-3 m-3">
         <el-row>
             <el-form ref="form" :model="form" label-width="90px">
-                <el-row>
-                    <el-col :md="6" :sm="8">
-                        <el-form-item label="标题:" prop="titile">
-                            <el-input v-model="form.titile" clearable></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :md="6" :sm="8">
-                        <el-form-item label="消息类型:" prop="msgCategory">
-                            <el-select v-model="form.msgCategory" clearable filterable class="w-full">
-                                <template v-for="item in msgCategory">
-                                    <el-option :value="item.itemValue" :label="item.itemText"></el-option>
-                                </template>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <div v-show="show.collapse">
+                <form-query @search="search" @reset="reset">
+                    <template slot="show">
+                        <el-col :md="6" :sm="8">
+                            <el-form-item label="标题:" prop="titile">
+                                <el-input v-model="form.titile" clearable></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :md="6" :sm="8">
+                            <el-form-item label="消息类型:" prop="msgCategory">
+                                <el-select v-model="form.msgCategory" clearable filterable class="w-full">
+                                    <template v-for="item in msgCategory">
+                                        <el-option :value="item.itemValue" :label="item.itemText"></el-option>
+                                    </template>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                    </template>
+                    <template slot="hide">
                         <el-col :md="6" :sm="8">
                             <el-form-item label="发布人:" prop="sender">
                                 <el-input v-model="form.sender" clearable></el-input>
@@ -32,7 +34,7 @@
                                 </el-select>
                             </el-form-item>
                         </el-col>
-                        <el-col :md = "6" :sm = "8">
+                        <el-col :md="6" :sm="8">
                             <el-form-item label="优先级:" prop="priority">
                                 <el-select v-model="form.priority" clearable filterable class="w-full">
                                     <template v-for="item in priority">
@@ -41,53 +43,43 @@
                                 </el-select>
                             </el-form-item>
                         </el-col>
-                    </div>
-                    <el-col :md="6" :sm="8">
-                        <el-form-item label-width="20px">
-                            <el-button type="primary" icon="el-icon-search" @click="search">查询</el-button>
-                            <el-button plain icon="el-icon-refresh-left" @click="reset">重置</el-button>
-                            <span class="cursor-pointer inline-block text-blue-500 pl-2" @click="arrowClick">
-                            <span v-if="!show.collapse">
-                                <span>展开</span>
-                                <i class="el-icon-arrow-down pl-1"></i>
-                            </span>
-                            <span v-else>
-                                <span>收起</span>
-                                <i class="el-icon-arrow-up pl-1"></i>
-                            </span>
-                        </span>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
+                    </template>
+                </form-query>
             </el-form>
         </el-row>
         <el-row>
-            <avue-crud
-                    ref="crud"
+            <el-button plain type="primary" icon="el-icon-plus" @click="add">{{$t('common_add')}}</el-button>
+            <el-button plain icon="iconfont icon-wy-upload" @click="fileImport">{{$t('common_import')}}</el-button>
+            <el-button plain icon="iconfont icon-wy-download" @click="fileExport">{{$t('common_export')}}</el-button>
+            <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
+                <el-button plain>
+                    {{$t('common_batch_operate')}}<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i>
+                </el-button>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item @click.native="deleteBatch"><i class="el-icon-delete"></i>{{$t('common_delete')}}
+                    </el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+        </el-row>
+        <el-row class="my-3">
+            <fox-table
+                    v-if="table.show"
+                    v-loading="table.loading"
+                    :column="table.column"
                     :data="table.data"
-                    :option="table.option"
-                    :page="page"
-                    :table-loading="table.loading"
-                    @on-load="queryList"
+                    pagination
+                    background
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :page-sizes="[5, 10, 20, 30]"
+                    :page-count="10"
+                    :current-page.sync="page.pageNum"
+                    :total="page.total"
+                    :page-size="page.pageSize"
                     @size-change="sizeChange"
-                    @current-change="currentChange"
+                    @p-current-change="currentChange"
                     @selection-change="selectionChange"
             >
-                <template slot="menuLeft">
-                    <el-button plain type="primary" icon="el-icon-plus" @click="add">新增</el-button>
-                    <el-button plain icon="iconfont icon-wy-upload" @click="fileImport">导入</el-button>
-                    <el-button plain icon="iconfont icon-wy-download" @click="fileExport">导出</el-button>
-                    <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
-                        <el-button plain>
-                            批量操作<i class="el-icon-arrow-down el-icon--right"></i>
-                        </el-button>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item @click.native="deleteBatch"><i class="el-icon-delete"></i>删除
-                            </el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
-                </template>
-                <template slot="oper" slot-scope="{row}">
+                <template slot="oper" slot-scope="{scope:{row}}">
                     <span class="flex">
                         <el-tooltip content="编辑" placement="top">
                             <span class="text-blue-500 text-base cursor-pointer">
@@ -115,21 +107,21 @@
                         </popover-confirm>
                     </span>
                 </template>
-            </avue-crud>
+            </fox-table>
         </el-row>
         <drag-drawer v-model="drawer.show"
                      :draggable="drawer.draggable"
                      :title="drawer.title"
                      :width.sync="drawer.width"
-                     :placement="drawer.placement"
+                     :direction="drawer.direction"
         >
             <modify :data="modify.data" ref="modify" @modifySuccess="modifySuccess"></modify>
             <div class="dialog-footer p-2 w-full flex justify-end">
-                <div class = "flex">
-                    <popover-confirm @confirm = "popoverConfirm" class="mx-2">
-                        <div slot = "popover-title">确定要关闭吗</div>
+                <div class="flex">
+                    <popover-confirm @confirm="popoverConfirm" class="mx-2">
+                        <div slot="popover-title">确定要关闭吗</div>
                         <div slot="popover-content">
-                            <el-button plain >取消</el-button>
+                            <el-button plain>取消</el-button>
                         </div>
                     </popover-confirm>
                     <el-button type="primary" @click="submit">提交</el-button>
@@ -148,6 +140,8 @@
     import Modify from './sysAnnouncementList/Modify'
     import DragDrawer from '@/components/dragDrawer'
     import FileUpload from '@/components/fileUpload'
+    import foxTable from '@/components/fox-table/'
+    import FormQuery from '@/components/form/query'
 
     const uploadAction = () => {
         let {config: {baseUrl: {proxyURL}}} = constant
@@ -160,83 +154,39 @@
             DragDrawer,
             FileUpload,
             PopoverConfirm,
-            Modify
+            Modify,
+            foxTable,
+            FormQuery
         },
         data() {
-            let {table} = constant
             return {
                 form: {
                     titile: '',                                    //标题
                     msgCategory: '',                               //消息类型
                     sender: '',                                    //发布人
                     sendStatus: '',                                //发布状态
-                    priority : '',                                  //优先级
+                    priority: '',                                  //优先级
                 },
                 show: {
-                    collapse: false,
                     batch: false
                 },
                 table: {
                     data: [],
-                    option: {
-                        ...table,
-                        column: [
-                            {
-                                label: '操作',
-                                prop: 'oper',
-                                slot: true,
-                                width: 80
-                            },
-                            {
-                                label: '标题',
-                                prop: 'titile',
-                                width: 150,
-                                overHidden: true
-                            },
-                            {
-                                label: '消息类型',
-                                prop: 'msgCategory_dictText',
-                            },
-                            {
-                                label: '发布人',
-                                prop: 'sender'
-                            },
-                            {
-                                label: '优先级',
-                                prop: 'priority_dictText'
-                            },
-                            {
-                                label: '通告对象',
-                                prop: 'msgType_dictText'
-                            },
-                            {
-                                label: '发布状态',
-                                prop: 'sendStatus_dictText'
-                            },
-                            {
-                                label: '发布时间',
-                                prop: 'sendTime',
-                                sortable: true,
-                            },
-                            {
-                                label: '撤销时间',
-                                prop: 'endTime'
-                            },
-                        ]
-                    },
+                    column: [],
                     loading: false,
+                    show: false,
                     selection: []
                 },
                 page: {
-                    currentPage: 1,
+                    pageNum: 1,
                     pageSize: 10,
                     total: 0
                 },
                 drawer: {
                     show: false,
-                    placement: 'right',
+                    direction: 'rtl',
                     draggable: true,
-                    width: 900,
+                    width: '900px',
                     data: {}
                 },
                 modify: {
@@ -254,6 +204,12 @@
                 sendStatus: ({dict}) => dict.sendStatus,
             })
         },
+        watch: {
+            '$i18n.locale'() {
+                this.setI18n()
+                this.queryList()
+            }
+        },
         methods: {
             ...mapActions({
                 getMsgCategory: 'GET_MSG_CATEGORY',
@@ -264,7 +220,7 @@
             search() {
                 this.page = {
                     ...this.page,
-                    currentPage: 1
+                    pageNum: 1
                 }
                 this.queryList()
             },
@@ -285,7 +241,7 @@
                 }
             },
             async handleRelease({id}) {
-                let {success,message} = await http.get(apiList.sys_sys_announcement_release,{id})
+                let {success, message} = await http.get(apiList.sys_sys_announcement_release, {id})
                 if (success) {
                     sweetAlert.successWithTimer(message)
                     this.queryList()
@@ -294,7 +250,7 @@
                 }
             },
             async handleReply({id}) {
-                let {success,message} = await http.get(apiList.sys_sys_announcement_revoke,{id})
+                let {success, message} = await http.get(apiList.sys_sys_announcement_revoke, {id})
                 if (success) {
                     sweetAlert.successWithTimer(message)
                     this.queryList()
@@ -305,7 +261,7 @@
             add() {
                 this.drawer = {
                     ...this.drawer,
-                    show : true,
+                    show: true,
                     title: '新增',
                 }
                 this.modify = {
@@ -406,10 +362,10 @@
                     collapse: !collapse
                 }
             },
-            currentChange(currentPage) {
+            currentChange(pageNum) {
                 this.page = {
                     ...this.page,
-                    currentPage
+                    pageNum
                 }
                 this.queryList()
             },
@@ -421,8 +377,8 @@
                 this.queryList()
             },
             async queryList() {
-                let {currentPage: pageNo, pageSize} = this.page
-                let {titile, msgCategory, sender, sendStatus,priority} = this.form
+                let {pageNum: pageNo, pageSize} = this.page
+                let {titile, msgCategory, sender, sendStatus, priority} = this.form
                 this.table = {
                     ...this.table,
                     loading: true
@@ -430,11 +386,11 @@
                 let params = {
                     pageNo,
                     pageSize,
-                    titile : titile ? titile : undefined,
-                    msgCategory : msgCategory ? msgCategory : undefined,
-                    sender : sender ? sender : undefined ,
-                    sendStatus : sendStatus ? sendStatus : undefined,
-                    priority : priority ? priority : undefined,
+                    titile: titile ? titile : undefined,
+                    msgCategory: msgCategory ? msgCategory : undefined,
+                    sender: sender ? sender : undefined,
+                    sendStatus: sendStatus ? sendStatus : undefined,
+                    priority: priority ? priority : undefined,
                 }
                 let {success, result} = await http.get(apiList.sys_sys_announcement_query_list, params)
                 if (success) {
@@ -453,12 +409,77 @@
                     }
                 }
             },
+            setI18n() {
+                this.table = {
+                    ...this.table,
+                    show: false,
+                    column: [
+                        {
+                          type : 'selection',
+                        },
+                        {
+                            type : 'index',
+                        },
+                        {
+                            label: '操作',
+                            prop: 'oper',
+                            width: 80,
+                            slot: true,
+                        },
+                        {
+                            label: '标题',
+                            prop: 'titile',
+                            width: 150,
+                        },
+                        {
+                            label: '消息类型',
+                            prop: 'msgCategory_dictText',
+                        },
+                        {
+                            label: '发布人',
+                            prop: 'sender'
+                        },
+                        {
+                            label: '优先级',
+                            prop: 'priority_dictText'
+                        },
+                        {
+                            label: '通告对象',
+                            prop: 'msgType_dictText'
+                        },
+                        {
+                            label: '发布状态',
+                            prop: 'sendStatus_dictText'
+                        },
+                        {
+                            label: '发布时间',
+                            prop: 'sendTime',
+                            sortable: true,
+                        },
+                        {
+                            label: '撤销时间',
+                            prop: 'endTime'
+                        },
+
+                    ]
+                }
+                this.$nextTick(() => {
+                    this.table = {
+                        ...this.table,
+                        show: true
+                    }
+                })
+            }
+        },
+        created() {
+            this.setI18n()
         },
         mounted() {
             this.getMsgCategory()
             this.getPriority()
             this.getSendStatus()
             this.getMsgType()
+            this.queryList()
         }
     }
 </script>

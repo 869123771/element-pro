@@ -1,47 +1,51 @@
 <template>
     <div class = "message bg-white p-3 m-3">
         <el-row>
-            <avue-form :option="form.option" v-model="form.model" ref="form">
-                <template slot-scope="scope" slot="searchBtn">
-                    <div>
-                        <el-button type="primary" icon="el-icon-search" @click="search">查询</el-button>
-                        <el-button plain icon="el-icon-refresh-left" @click="reset">重置</el-button>
-                    </div>
-                </template>
-            </avue-form>
+            <el-form ref="form" :model="form" label-width="90px">
+                <el-col :md="6" :sm="8">
+                    <el-form-item label="标题" prop="titile">
+                        <el-input v-model="form.titile" placeholder="标题" clearable></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :md="6" :sm="8">
+                    <el-form-item label="发布人:" prop="sender">
+                        <el-input v-model="form.sender" clearable></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :md="6" :sm="8" class = "px-3">
+                    <el-button type="primary" icon="el-icon-search" @click="search">查询</el-button>
+                    <el-button plain icon="el-icon-refresh-left" @click="reset">重置</el-button>
+                </el-col>
+            </el-form>
+        </el-row>
+        <el-row class = "my-3">
+            <el-button plain type="primary" icon="fa fa-fw fa-eye" @click="noteReadAll">全部标记已读</el-button>
         </el-row>
         <el-row>
-            <avue-crud
-                    ref = "crud"
+            <fox-table
+                    v-if="table.show"
+                    v-loading="table.loading"
+                    :column="table.column"
                     :data="table.data"
-                    :option="table.option"
-                    :page="page"
-                    :table-loading="table.loading"
-                    @on-load="queryList"
+                    pagination
+                    background
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :page-sizes="[5, 10, 20, 30]"
+                    :page-count="10"
+                    :current-page.sync="page.pageNum"
+                    :total="page.total"
+                    :page-size="page.pageSize"
                     @size-change="sizeChange"
-                    @current-change="currentChange"
+                    @p-current-change="currentChange"
             >
-                <template slot="menuLeft">
-                    <el-button plain type="primary" icon="fa fa-fw fa-eye" @click="noteReadAll">全部标记已读</el-button>
-                </template>
-                <template slot="oper" slot-scope="{row}">
+                <template slot="oper" slot-scope="{scope:{row}}">
                     <span>
                          <span class="text-blue-500 text-base cursor-pointer">
                             <i class="fa fa-fw fa-eye" @click="read(row)"></i>
                         </span>
                     </span>
                 </template>
-                <template slot="msgCategory" slot-scope="{row}">
-                    {{msgCategory.length ? msgCategory.find(item=>item.itemValue == row.msgCategory).itemText : ''}}
-                </template>
-                <template slot="priority" slot-scope="{row}">
-                    {{priority.length ? priority.find(item=>item.itemValue == row.priority).itemText : ''}}
-                </template>
-                <template slot="readFlag" slot-scope="{row}">
-                    <span class = "text-green-500" v-if = "Number(row.readFlag)">已读</span>
-                    <span class = "text-pink-500" v-else>未读</span>
-                </template>
-            </avue-crud>
+            </fox-table>
         </el-row>
         <drag-dialog :drag-dialog="dialog">
             <div class = "message-head text-gray-500 text-sm pb-3 border-b border-solid border-gray-200">
@@ -61,88 +65,31 @@
     import {mapState, mapActions} from 'vuex'
     import {http, apiList, constant, sweetAlert} from '@/utils'
     import DragDialog from '@/components/dragDialog'
+    import foxTable from '@/components/fox-table/'
+    import OperBtn from '@/components/table/OperBtn'
 
     export default {
         name: "UserAnnouncementList",
         components : {
-            DragDialog
+            DragDialog,
+            foxTable,
+            OperBtn
         },
         data(){
-            let {table} = constant
             return {
                 form: {
-                    option: {
-                        menuBtn: false,
-                        column: [
-                            {
-                                label: '标题',
-                                prop: 'titile',
-                                span: 6,
-                            },
-                            {
-                                label: "发布人",
-                                prop: 'sender',
-                                span: 6,
-                            },
-                            {
-                                labelWidth: '0',
-                                prop: 'searchBtn',
-                                formslot: true,
-                                span: 6,
-                            }
-                        ]
-                    },
-                    modal: {}
+                    titile : '',                        //标题
+                    sender : '',                        //发布人
                 },
                 table: {
                     data: [],
-                    option: {
-                        ...table,
-                        selection : false,
-                        column: [
-                            {
-                                label: '操作',
-                                prop: 'oper',
-                                slot: true,
-                                width: 80
-                            },
-                            {
-                                label: '标题',
-                                prop: 'titile',
-                                width : 150,
-                                overHidden: true
-                            },
-                            {
-                                label: '消息类型',
-                                prop: 'msgCategory',
-                                slot : true
-                            },
-                            {
-                                label: '发布人',
-                                prop: 'sender'
-                            },
-                            {
-                                label: '发布时间',
-                                prop: 'sendTime',
-                                sortable: true,
-                            },
-                            {
-                                label: '优先级',
-                                prop: 'priority',
-                                slot : true
-                            },
-                            {
-                                label: '阅读状态',
-                                prop: 'readFlag',
-                                slot : true
-                            },
-                        ]
-                    },
+                    column : [],
+                    show : true,
                     loading: false,
                     selection: []
                 },
                 page: {
-                    currentPage: 1,
+                    pageNum: 1,
                     pageSize: 10,
                     total: 0
                 },
@@ -159,6 +106,12 @@
                 priority : ({dict}) => dict.priority,
             })
         },
+        watch: {
+            '$i18n.locale'() {
+                this.setI18n()
+                this.queryList()
+            }
+        },
         methods : {
             ...mapActions({
                 getMsgCategory : 'GET_MSG_CATEGORY',
@@ -167,12 +120,12 @@
             search() {
                 this.page = {
                     ...this.page,
-                    currentPage: 1
+                    pageNum: 1
                 }
                 this.queryList()
             },
             reset() {
-                this.$refs.form.resetForm()
+                this.$refs.form.resetFields()
             },
             async noteReadAll(){
                 let {success,message} = await http.put(apiList.sys_my_message_note_read_all)
@@ -202,10 +155,10 @@
                 })
                 this.noteReadOne(row.id)
             },
-            currentChange(currentPage) {
+            currentChange(pageNum) {
                 this.page = {
                     ...this.page,
-                    currentPage
+                    pageNum
                 }
                 this.queryList()
             },
@@ -217,8 +170,7 @@
                 this.queryList()
             },
             async queryList() {
-                let {model} = this.form
-                let {currentPage: pageNo, pageSize} = this.page
+                let {pageNum: pageNo, pageSize} = this.page
                 this.table = {
                     ...this.table,
                     loading: true
@@ -226,7 +178,7 @@
                 let params = {
                     pageNo,
                     pageSize,
-                    ...model,
+                    ...this.form,
                 }
                 let {success, result} = await http.get(apiList.sys_my_message_query_list, params)
                 if (success) {
@@ -245,10 +197,108 @@
                     }
                 }
             },
+            setI18n() {
+                this.table = {
+                    ...this.table,
+                    show: false,
+                    column: [
+                        {
+                            label: '操作',
+                            prop: 'oper',
+                            width: 80,
+                            render : (h,{row})=>{
+                                let {readFlag} = row
+                                let btnInfo = []
+                                if(Number(readFlag)){
+                                    btnInfo = [
+                                        ...btnInfo,
+                                        {
+                                            content: '已读',
+                                            className: 'fa fa-fw fa-eye',
+                                            permission: '',
+                                            event: () => {
+                                                this.read(row)
+                                            }
+                                        },
+                                    ]
+                                }else{
+                                    btnInfo = [
+                                        ...btnInfo,
+                                        {
+                                            content: '未读',
+                                            className: 'fa fa-fw fa-eye-slash',
+                                            permission: '',
+                                            event: () => {
+                                                this.read(row)
+                                            }
+                                        },
+                                    ]
+                                }
+                                return (
+                                    <OperBtn btnInfo={btnInfo}></OperBtn>
+                                )
+                            }
+                        },
+                        {
+                            label: '标题',
+                            prop: 'titile',
+                            width : 150,
+                        },
+                        {
+                            label: '消息类型',
+                            prop: 'msgCategory',
+                            render : (h,{row:{msgCategory}})=>{
+                                return (
+                                    <span>{msgCategory && this.msgCategory ? this.msgCategory.find(item=>item.itemValue === msgCategory).itemText : ''}</span>
+                                )
+                            }
+                        },
+                        {
+                            label: '发布人',
+                            prop: 'sender'
+                        },
+                        {
+                            label: '发布时间',
+                            prop: 'sendTime',
+                            sortable: true,
+                        },
+                        {
+                            label: '优先级',
+                            prop: 'priority',
+                            render : (h,{row:{priority}})=>{
+                                return (
+                                    <span>{priority && this.priority ? this.priority.find(item=>item.itemValue === priority).itemText : ''}</span>
+                                )
+                            }
+                        },
+                        {
+                            label: '阅读状态',
+                            prop: 'readFlag',
+                            render : (h,{row:{readFlag}})=>{
+                                return (
+                                    <span>{
+                                        Number(readFlag) ? '已读' : '未读'
+                                    }</span>
+                                )
+                            }
+                        },
+                    ]
+                }
+                this.$nextTick(() => {
+                    this.table = {
+                        ...this.table,
+                        show: true
+                    }
+                })
+            }
+        },
+        created(){
+            this.setI18n()
         },
         mounted(){
             this.getMsgCategory()
             this.getPriority()
+            this.queryList()
         }
     }
 </script>

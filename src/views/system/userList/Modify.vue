@@ -122,6 +122,10 @@
                     realname: '',                      //用户名字
                     selectedroles: [],                 //角色分配
                     deptName: '',                      //部门分配
+                    birthday : '',
+                    sex : '',
+                    email : '',
+                    phone : '',
                     activitiSync: '1'
                 },
                 rules: {
@@ -195,11 +199,6 @@
                             this.getUserRole(id)
                             this.getUserDept(id)
                         } else {
-                            this.form = {
-                                ...this.form,
-                                username : '',
-                                password : '',
-                            }
                             this.upload = {
                                 ...this.upload,
                                 imageUrl : ''
@@ -209,11 +208,6 @@
                             })
                         }
                     } else {
-                        this.form = {
-                            ...this.form,
-                            username : '',
-                            password : '',
-                        }
                         this.upload = {
                             ...this.upload,
                             imageUrl : ''

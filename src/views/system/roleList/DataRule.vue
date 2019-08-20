@@ -20,6 +20,8 @@
 
 <script>
     import {http,apiList,sweetAlert} from '@/utils'
+    import {isEmpty} from '30-seconds-of-code'
+
     export default {
         name: "DataRule",
         props : {
@@ -43,7 +45,7 @@
         watch : {
             dataRuleProps : {
                 handler(props){
-                   if(!this.validatenull(props)){
+                   if(!isEmpty(props)){
                        let {dataRuleId,roleId} = props
                        this.loadDataRule(dataRuleId,roleId)
                    }
@@ -79,6 +81,11 @@
                     this.dataRule = {
                         ...this.dataRule,
                         list
+                    }
+                }else{
+                    this.dataRule = {
+                        ...this.dataRule,
+                        list : []
                     }
                 }
             }
