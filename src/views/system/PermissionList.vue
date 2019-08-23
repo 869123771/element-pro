@@ -14,9 +14,6 @@
         </el-row>
         <el-row class="my-3">
             <fox-table
-                    border
-                    stripe
-                    align="center"
                     row-key="id"
                     :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
                     v-loading="table.loading"

@@ -1,4 +1,5 @@
 import Swal from 'sweetalert2'
+import i18n from '@/locale'
 
 let alertConf = {
     width: '25rem',
@@ -67,8 +68,8 @@ export default {
             text,
             type: 'warning',
             showCancelButton: true,
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
+            confirmButtonText: i18n.t('common_confirm'),
+            cancelButtonText: i18n.t('common_cancel'),
             ...alertConf,
             preConfirm: () => {
                 oper(params)

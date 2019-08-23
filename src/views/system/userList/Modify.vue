@@ -122,10 +122,10 @@
                     realname: '',                      //用户名字
                     selectedroles: [],                 //角色分配
                     deptName: '',                      //部门分配
-                    birthday : '',
-                    sex : '',
-                    email : '',
-                    phone : '',
+                    birthday: '',
+                    sex: '',
+                    email: '',
+                    phone: '',
                     activitiSync: '1'
                 },
                 rules: {
@@ -183,10 +183,12 @@
         watch: {
             data: {
                 handler(props) {
+                    debugger;
+                    this.resetForm()
                     this.userUniqueCheck(props)
                     if (!isEmpty(props)) {
                         let {config: {baseUrl: {imgDomainURL}}} = constant
-                        let {id, deptId,sex, avatar} = props
+                        let {id, deptId, sex, avatar} = props
                         if (id || id && deptId) {
                             this.form = {
                                 ...props,
@@ -199,20 +201,14 @@
                             this.getUserRole(id)
                             this.getUserDept(id)
                         } else {
-                            this.upload = {
-                                ...this.upload,
-                                imageUrl : ''
-                            }
                             this.$nextTick(() => {
+                                this.resetForm()
                                 this.$refs.modify.resetFields()
                             })
                         }
                     } else {
-                        this.upload = {
-                            ...this.upload,
-                            imageUrl : ''
-                        }
                         this.$nextTick(() => {
+                            this.resetForm()
                             this.$refs.modify.resetFields()
                         })
                     }
@@ -221,6 +217,25 @@
             },
         },
         methods: {
+            resetForm() {
+                this.form = {
+                    username: '',                      //用户账号
+                    password: '',                      //用户密码
+                    confirmpassword: '',               //确认密码
+                    realname: '',                      //用户名字
+                    selectedroles: [],                 //角色分配
+                    deptName: '',                      //部门分配
+                    birthday: '',
+                    sex: '',
+                    email: '',
+                    phone: '',
+                    activitiSync: '1'
+                }
+                this.upload = {
+                    ...this.upload,
+                    imageUrl: ''
+                }
+            },
             userUniqueCheck(props) {
                 if (!isEmpty(props)) {
                     let {id, deptId} = props

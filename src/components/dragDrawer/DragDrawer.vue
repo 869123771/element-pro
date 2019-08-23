@@ -8,6 +8,7 @@
                :class="outerClasses"
                :wrapperClosable="closeOnClickModal"
                :show-close="showClose"
+               :destroy-on-close = "true"
                :before-close="handleClose"
     >
         <!-- 所有插槽内容显示在这里 ↓ -->
@@ -133,9 +134,18 @@
                 }
             }
         },
+        watch : {
+            value : {
+                handler(value){
+                    if(!value){
+                        this.$emit('close')
+                    }
+                },
+                immediate : true
+            },
+        },
         methods: {
             handleClose() {
-                this.$emit('close')
                 this.handleInput(false)
             },
             handleInput(status) {

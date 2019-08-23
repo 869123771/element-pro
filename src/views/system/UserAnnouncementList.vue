@@ -249,7 +249,7 @@
                             prop: 'msgCategory',
                             render : (h,{row:{msgCategory}})=>{
                                 return (
-                                    <span>{msgCategory && this.msgCategory ? this.msgCategory.find(item=>item.itemValue === msgCategory).itemText : ''}</span>
+                                    <span>{msgCategory && this.msgCategory.length ? this.msgCategory.find(item=>item.itemValue === msgCategory).itemText : ''}</span>
                                 )
                             }
                         },
@@ -267,7 +267,7 @@
                             prop: 'priority',
                             render : (h,{row:{priority}})=>{
                                 return (
-                                    <span>{priority && this.priority ? this.priority.find(item=>item.itemValue === priority).itemText : ''}</span>
+                                    <span>{priority && this.priority.length ? this.priority.filter(item=>item.itemValue === priority).map(item=>item.itemText).join('') : ''}</span>
                                 )
                             }
                         },
@@ -294,10 +294,10 @@
         },
         created(){
             this.setI18n()
-        },
-        mounted(){
             this.getMsgCategory()
             this.getPriority()
+        },
+        mounted(){
             this.queryList()
         }
     }

@@ -44,6 +44,17 @@
                      :scrollable="true"
         >
             <component :is="component.type" :data="component.data" @closeFlush="closeFlush"></component>
+            <div class="dialog-footer p-2 w-full" v-show="drawer.showFooter">
+                <div class="flex justify-end">
+                    <popover-confirm @confirm="popoverConfirm" class="mx-2">
+                        <div slot="popover-title">确定要关闭吗</div>
+                        <div slot="popover-content">
+                            <el-button plain>取消</el-button>
+                        </div>
+                    </popover-confirm>
+                    <el-button type="primary" @click="submit">提交</el-button>
+                </div>
+            </div>
         </drag-drawer>
         <drag-dialog :drag-dialog="dialog" @confirm="confirmAdd">
             <add-user :ref="user.ref" :data="user.data" @handleSuccess="handleSuccess"></add-user>
@@ -53,7 +64,7 @@
 
 <script>
     import {mapActions} from 'vuex'
-    import {http, apiList, sweetAlert, constant} from '@/utils'
+    import {http, apiList, sweetAlert, constant,mixin} from '@/utils'
     import foxTable from '@/components/fox-table'
     import OperBtn from '@/components/table/OperBtn'
     import DragDrawer from '@/components/dragDrawer'
@@ -77,6 +88,7 @@
             AddUser,
             PopoverConfirm
         },
+        mixins: [mixin],
         data() {
             return {
                 table: {
@@ -142,6 +154,7 @@
                     show: false,
                     direction: 'rtl',
                     draggable: true,
+                    showFooter : true,
                     data: {}
                 },
                 component: {
@@ -235,6 +248,19 @@
                 let {id} = this.userInfo
 
                 this.$refs[ref].saveData(id)
+                this.dialog = {
+                    ...this.dialog,
+                    loading: false
+                }
+            },
+            submit() {
+                let {ref} = this.component
+                let modifyRef = this.$refs[ref]
+                modifyRef.$refs.modify.validate(valid => {
+                    if (valid) {
+                        modifyRef.commitData()
+                    }
+                })
                 this.dialog = {
                     ...this.dialog,
                     loading: false

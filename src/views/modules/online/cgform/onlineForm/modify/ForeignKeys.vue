@@ -1,27 +1,21 @@
 <template>
     <div>
-        <avue-crud
-                ref="crud"
-                :data="table.data"
-                :option="table.option"
-                :table-loading="table.loading"
-        >
-            <template slot="menuLeft">
-
-            </template>
-            <template slot="dbFieldName" slot-scope="{row}">
-                <el-input v-model="row.dbFieldName" placeholder = "字段名称" size = "mini" disabled></el-input>
-            </template>
-            <template slot="dbFieldTxt" slot-scope="{row}">
-                <el-input v-model="row.dbFieldTxt" placeholder = "字段备注" size = "mini" disabled></el-input>
-            </template>
-        </avue-crud>
+        <el-row>
+            <fox-table
+                    v-if="table.show"
+                    v-loading="table.loading"
+                    :column="table.column"
+                    :data="table.data"
+            >
+            </fox-table>
+        </el-row>
     </div>
 </template>
 
 <script>
     import {mapState} from 'vuex'
     import {http, apiList, sweetAlert, constant} from '@/utils'
+    import foxTable from '@/components/fox-table/'
 
     export default {
         name: "ForeignKeys",
@@ -30,72 +24,106 @@
                 type: Array,
             },
         },
+        components : {
+            foxTable
+        },
         data() {
-            const {table} = constant
             return {
                 table: {
-                    data: [],
-                    option: {
-                        ...table,
-                        page: false,
-                        selection : false,
-                        props: {
-                            label: 'itemText',
-                            value: 'itemValue'
-                        },
-                        column: [
-                            {
-                                label: '字段名称',
-                                prop: 'dbFieldName',
-                                slot : true
-                            },
-                            {
-                                label: '字段备注',
-                                prop: 'dbFieldTxt',
-                                slot : true,
-                            },
-                            {
-                                label: '主表名',
-                                prop: 'mainTable',
-                                cell: true,
-                                clearable : true
-                            },
-                            {
-                                label: '主表字段',
-                                prop: 'mainField',
-                                cell: true,
-                                clearable : true
-                            },
-                        ]
-                    },
+                    data: this.data,
+                    column : [],
+                    show : true,
                     loading: false,
                 },
             }
         },
-        methods: {
-            setForeignKeys() {
-                this.table = {
-                    ...this.table,
-                    loading: true
-                }
-                this.table = {
-                    ...this.table,
-                    data: this.data
-                }
-                this.$nextTick(() => {
-                    this.data.forEach((item, index) => {
-                        this.$refs.crud.rowCell(item, index)
-                    })
-                })
-                this.table = {
-                    ...this.table,
-                    loading: false
-                }
+        watch: {
+            '$i18n.locale'() {
+                this.setI18n()
             }
         },
-        mounted() {
-            this.setForeignKeys()
-        }
+        methods: {
+            setI18n(){
+                this.table = {
+                    ...this.table,
+                    show : true,
+                    column : [
+                        {type : 'index'},
+                        {
+                            label: '字段名称',
+                            prop: 'dbFieldName',
+                            render : (h,scope)=>{
+                                return (
+                                    <el-input
+                                        vModel = {scope.row.dbFieldName}
+                                        placeholder = '字段名称'
+                                        clearable = {true}
+                                        disabled = {true}
+                                        size = "mini"
+                                    ></el-input>
+                                )
+                            }
+                        },
+                        {
+                            label: '字段备注',
+                            prop: 'dbFieldTxt',
+                            render : (h,scope)=>{
+                                return (
+                                    <el-input
+                                        vModel = {scope.row.dbFieldTxt}
+                                        placeholder = '字段备注'
+                                        clearable = {true}
+                                        disabled = {true}
+                                        size = "mini"
+                                    ></el-input>
+                                )
+                            }
+                        },
+                        {
+                            label: '主表名',
+                            prop: 'mainTable',
+                            render : (h,scope)=>{
+                                let {row:{dbIsKey}} = scope
+                                return (
+                                    <el-input
+                                        vModel = {scope.row.mainTable}
+                                        placeholder = '主表名'
+                                        clearable = {true}
+                                        disabled = {dbIsKey ? true : false}
+                                        size = "mini"
+                                    ></el-input>
+                                )
+                            }
+                        },
+                        {
+                            label: '主表字段',
+                            prop: 'mainField',
+                            render : (h,scope)=>{
+                                let {row:{dbIsKey}} = scope
+                                return (
+                                    <el-input
+                                        vModel = {scope.row.mainField}
+                                        placeholder = '主表字段'
+                                        clearable = {true}
+                                        disabled = {dbIsKey ? true : false}
+                                        size = "mini"
+                                    ></el-input>
+                                )
+                            }
+                        },
+                    ]
+                }
+                this.$nextTick(()=>{
+                    this.table = {
+                        ...this.table,
+                        show : true
+                    }
+                })
+            },
+        },
+        created(){
+            this.setI18n()
+        },
     }
 </script>
 

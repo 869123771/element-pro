@@ -1,108 +1,92 @@
 <template>
     <div class="m-3 p-3 bg-white">
         <el-row>
-            <avue-form v-model="form.model" :option="form.option" ref="form">
-                <template slot-scope="scope" slot="operBtn">
-                    <div>
-                        <el-button type="primary" icon="el-icon-search" @click="search">查询</el-button>
-                        <el-button plain icon="el-icon-refresh-left" @click="reset">重置</el-button>
-                    </div>
-                </template>
-            </avue-form>
+            <el-form :model="form" label-width="80px">
+                <el-col :md="6" :sm="8">
+                    <el-form-item label="表名" prop="tableName">
+                        <el-input v-model="form.label" placeholder="表名" clearable></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :md="6" :sm="8">
+                    <el-form-item label="表类型" prop="tableType">
+                        <el-select v-model="form.tableType" placeholder="表类型" clearable filterable class="w-full">
+                            <template v-for="item in formTableType">
+                                <el-option :value="item.itemValue" :label="item.itemText"></el-option>
+                            </template>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :md="6" :sm="8" class="px-3">
+                    <el-button type="primary" icon="el-icon-search" @click="search">{{$t('common_query')}}</el-button>
+                    <el-button plain icon="el-icon-refresh-left" @click="reset">{{$t('common_reset')}}</el-button>
+                </el-col>
+            </el-form>
+        </el-row>
+        <el-row class="my-3">
+            <el-button plain type="primary" icon="el-icon-plus" @click="add">新增</el-button>
+            <el-button plain @click="customButton">
+                <span class="fa fa-fw fa-circle-o"></span>
+                <span>自定义按钮</span>
+            </el-button>
+            <el-button plain @click="customButton">
+                <span class="fa fa-fw fa-scribd"></span>
+                <span>js增强</span>
+            </el-button>
+            <el-button plain @click="customButton">
+                <span class="fa fa-fw fa-coffee"></span>
+                <span>java增强</span>
+            </el-button>
+            <el-button plain @click="customButton">
+                <span class="fa fa-fw fa-database"></span>
+                <span>从数据库导入表单</span>
+            </el-button>
+            <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
+                <el-button plain>
+                    批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item @click.native="deleteBatch"><i class="el-icon-delete"></i>删除
+                    </el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
         </el-row>
         <el-row>
-            <avue-crud
+            <fox-table
+                    v-if="table.show"
+                    v-loading="table.loading"
+                    :column="table.column"
                     :data="table.data"
-                    :option="table.option"
-                    :page="page"
-                    :table-loading="table.loading"
-                    v-model="table.model"
-                    @on-load="queryList"
-                    @selection-change="selectionChange"
-                    @current-change="currentChange"
+                    pagination
+                    background
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :page-sizes="[5, 10, 20, 30]"
+                    :page-count="10"
+                    :current-page.sync="page.currentPage"
+                    :total="page.total"
+                    :page-size="page.pageSize"
+                    @size-change="sizeChange"
+                    @p-current-change="currentChange"
+                    @selection-change="selection"
             >
-                <template slot="menuLeft">
-                    <el-button plain type="primary" icon="el-icon-plus" @click="add">新增</el-button>
-                    <el-button plain @click="customButton">
-                        <span class="fa fa-fw fa-circle-o"></span>
-                        <span>自定义按钮</span>
-                    </el-button>
-                    <el-button plain @click="customButton">
-                        <span class="fa fa-fw fa-scribd"></span>
-                        <span>js增强</span>
-                    </el-button>
-                    <el-button plain @click="customButton">
-                        <span class="fa fa-fw fa-coffee"></span>
-                        <span>java增强</span>
-                    </el-button>
-                    <el-button plain @click="customButton">
-                        <span class="fa fa-fw fa-database"></span>
-                        <span>从数据库导入表单</span>
-                    </el-button>
-                    <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
-                        <el-button plain>
-                            批量操作<i class="el-icon-arrow-down el-icon--right"></i>
-                        </el-button>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item @click.native="deleteBatch"><i class="el-icon-delete"></i>删除
-                            </el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
-                </template>
-                <template slot="oper" slot-scope="{row}">
-                    <!-- <span class = "flex">
-                          <span class="text-blue-500 text-base cursor-pointer">
-                             <i class="fa fa-fw fa-pencil" @click="edit(row)"></i>
-                         </span>
-                         <span class="text-blue-500 text-base cursor-pointer px-1">
-                              <popover-confirm @confirm="deleteOne(row.id)">
-                                 <div slot="popover-content">
-                                    <i slot="reference" class="iconfont icon-wy-delete2"></i>
-                                 </div>
-                             </popover-confirm>
-                         </span>
-                         <template v-if = "row.isDbSynch === 'Y'">
-                             <span class="text-blue-500 text-base cursor-pointer px-1">
-                             <el-tooltip content = "配置地址" placement="top">
-                                 <i class = "fa fa-fw fa-location-arrow"></i>
-                             </el-tooltip>
-                         </span>
-                          <span class="text-blue-500 text-base cursor-pointer px-1">
-                             <el-tooltip content = "功能测试" placement="top">
-                                 <i class = "fa fa-fw fa-bug"></i>
-                             </el-tooltip>
-                         </span>
-                         </template>
-                         <template v-else>
-                             <span class="text-blue-500 text-base cursor-pointer px-1">
-                             <el-tooltip content = "同步数据库" placement="top">
-                                 <i class = "fa fa-fw fa-exchange"></i>
-                             </el-tooltip>
-                         </span>
-                         </template>
-                     </span>-->
+                <template slot="oper" slot-scope="{scope:{row}}">
                     <pop-dropdown
                             :pop-dropdown-props="row"
                             @edit="()=>edit(row)"
                             @functionalTest="()=>functionalTest(row)"
                             @addressConfig="()=>addressConfig(row)"
-                            @handleRemove = "()=>handleRemove(row)"
+                            @handleRemove="()=>handleRemove(row)"
                             @handleDel="()=>handleDel(row)"
-                            @syncDb = "()=>syncDb(row)"
+                            @syncDb="()=>syncDb(row)"
                     ></pop-dropdown>
                 </template>
-                <template slot="isDbSynch" slot-scope="{row}">
-                    <div v-if="row.isDbSynch === 'Y'" class="text-green-500">已同步</div>
-                    <div v-else class="text-red-500">未同步</div>
-                </template>
-            </avue-crud>
+            </fox-table>
         </el-row>
         <drag-dialog :drag-dialog="dialog" @confirm="confirm">
             <component
                     :is="component.is"
                     :ref="component.ref"
                     :data="component.data"
-                    @closeDialog="closeDialog"></component>
+                    @modifySuccess="modifySuccess"></component>
         </drag-dialog>
     </div>
 </template>
@@ -110,6 +94,7 @@
 <script>
     import {mapState, mapActions} from 'vuex'
     import {http, apiList, constant, sweetAlert} from '@/utils'
+    import foxTable from '@/components/fox-table/'
     import PopoverConfirm from '@/components/popoverConfirm'
     import DragDialog from '@/components/dragDialog'
     import PopDropdown from './onlineForm/PopDropdown'
@@ -118,92 +103,23 @@
     export default {
         name: "OnlCgformHeadList",
         components: {
+            foxTable,
             PopoverConfirm,
             DragDialog,
             PopDropdown
         },
         data() {
-            let {table} = constant
             return {
-                form: {
-                    option: {
-                        menuBtn: false,
-                        labelWidth: 70,
-                        column: [
-                            {
-                                label: '表名',
-                                prop: 'tableName',
-                                span: 6
-                            },
-                            {
-                                label: '表类型',
-                                prop: 'tableType',
-                                type: 'select',
-                                props: {
-                                    label: 'itemText',
-                                    value: 'itemValue'
-                                },
-                                span: 6
-                            },
-                            {
-                                prop: 'operBtn',
-                                labelWidth: 20,
-                                formslot: true,
-                                span: 6
-                            }
-                        ]
-                    },
-                    model: {}
-                },
+                form: {},
                 table: {
                     data: [],
-                    option: {
-                        ...table,
-                        index: false,
-                        column: [
-                            {
-                                label: '操作',
-                                prop: 'oper',
-                                slot: true,
-                                width: 80
-                            },
-                            {
-                                label: '表类型',
-                                prop: 'tableType',
-                                overHidden: true,
-                                formatter: (row, value, label, column) => {
-                                    if(this.formTableType.length){
-                                        return this.formTableType.find(item => item.itemValue === value.toString()).itemText
-                                    }
-                                }
-                            },
-                            {
-                                label: '表名',
-                                prop: 'tableName',
-                                overHidden: true
-                            },
-                            {
-                                label: '表描述',
-                                prop: 'tableTxt',
-                                overHidden: true
-                            },
-                            {
-                                label: '版本',
-                                prop: 'tableVersion',
-                                overHidden: true
-                            },
-                            {
-                                label: '同步数据库状态',
-                                prop: 'isDbSynch',
-                                slot: true
-                            },
-                        ]
-                    },
-                    model: {},
+                    column: [],
+                    show: true,
+                    selection: [],
                     loading: false,
                 },
                 page: {
-                    currentPage: 1,
+                    pageNum: 1,
                     pageSize: 10,
                     total: 0
                 },
@@ -229,8 +145,9 @@
             })
         },
         watch: {
-            formTableType(datas) {
-                this.$refs.form.updateDic('tableType', datas)
+            '$i18n.locale'() {
+                this.setI18n()
+                this.queryList()
             }
         },
         methods: {
@@ -248,35 +165,56 @@
                 this.$refs.form.resetForm()
             },
             add() {
+                this.dialog = {
+                    ...this.dialog,
+                    title: '新增',
+                    width: 90,
+                    height: 90,
+                    name: 'add'
+                }
+                this.component = {
+                    ...this.component,
+                    is: Modify,
+                    ref: 'add',
+                    data: {
+                        formInfo: {
 
+                        },
+                        tableInfo: []
+                    }
+                }
+                let {name} = this.dialog
+                this.$nextTick(() => {
+                    this.$modal.show(name)
+                })
             },
             customButton() {
 
             },
             async edit(row) {
                 let {id} = row
-                let {success,result} = await this.queryHeadInfoById(id)
-                if(success){
+                let {success, result} = await this.queryHeadInfoById(id)
+                if (success) {
                     this.dialog = {
                         ...this.dialog,
                         title: '修改',
-                        width : 90,
-                        height : 90,
-                        name : 'update'
+                        width: 90,
+                        height: 90,
+                        name: 'update'
                     }
                     this.component = {
                         ...this.component,
-                        is : Modify,
-                        ref : 'modify',
+                        is: Modify,
+                        ref: 'modify',
                         data: {
-                            formInfo : {
+                            formInfo: {
                                 ...row
                             },
-                            tableInfo : result
+                            tableInfo: result
                         }
                     }
                     let {name} = this.dialog
-                    this.$nextTick(()=>{
+                    this.$nextTick(() => {
                         this.$modal.show(name)
                     })
                 }
@@ -287,16 +225,32 @@
             addressConfig(scope) {
 
             },
-            confirm(){
-
+            confirm() {
+                let {ref} = this.component
+                let modifyRef = this.$refs[ref]
+                modifyRef.$refs.form.validate(valid => {
+                    if (valid) {
+                        this.dialog = {
+                            ...this.dialog,
+                            loading: true
+                        }
+                        modifyRef.saveData()
+                    }
+                    this.dialog = {
+                        ...this.dialog,
+                        loading: false
+                    }
+                })
             },
-            closeDialog(){
-
+            modifySuccess() {
+                let {name} = this.dialog
+                this.$modal.hide(name)
+                this.queryList()
             },
             async queryHeadInfoById(headId) {
                 return await http.get(apiList.online_form_head_query_by_id, {headId})
             },
-            async handleRemove({id}){
+            async handleRemove({id}) {
                 let {success, message} = await http.delete(apiList.online_form_head_remove, {id})
                 if (success) {
                     sweetAlert.successWithTimer(message)
@@ -305,7 +259,7 @@
                     sweetAlert.error(message)
                 }
             },
-            async handleDel({id}){
+            async handleDel({id}) {
                 let {success, message} = await http.delete(apiList.online_form_head_delete, {id})
                 if (success) {
                     sweetAlert.successWithTimer(message)
@@ -314,8 +268,8 @@
                     sweetAlert.error(message)
                 }
             },
-            syncDb(scope){
-              debugger;
+            syncDb(scope) {
+                debugger;
             },
             deleteBatch() {
                 let {selection} = this.table
@@ -335,7 +289,7 @@
                     sweetAlert.error(message)
                 }
             },
-            selectionChange(selection) {
+            selection(selection) {
                 if (selection.length) {
                     this.show = {
                         ...this.show,
@@ -352,10 +306,10 @@
                     selection
                 }
             },
-            currentChange(currentPage) {
+            currentChange(pageNum) {
                 this.page = {
                     ...this.page,
-                    currentPage
+                    pageNum
                 }
                 this.queryList()
             },
@@ -367,8 +321,7 @@
                 this.queryList()
             },
             async queryList() {
-                let {currentPage: pageNo, pageSize} = this.page
-                let {model} = this.form
+                let {pageNum: pageNo, pageSize} = this.page
                 this.table = {
                     ...this.table,
                     loading: true
@@ -376,7 +329,7 @@
                 let params = {
                     pageNo,
                     pageSize,
-                    ...model,
+                    ...this.form,
                 }
                 let {success, result: {records, total}} = await http.get(apiList.online_form_head_query_list, params)
                 if (success) {
@@ -394,12 +347,72 @@
                     }
                 }
             },
+            setI18n() {
+                this.table = {
+                    ...this.table,
+                    show: false,
+                    column: [
+                        {
+                            label: '操作',
+                            prop: 'oper',
+                            slot: true,
+                            width: 80
+                        },
+                        {
+                            label: '表类型',
+                            prop: 'tableType',
+                            render: (h, {row: {tableType}}) => {
+                                return (
+                                    <span>
+                                            {
+                                                this.formTableType.filter(item => item.itemValue === tableType.toString()).map(item => item.itemText).join('')
+                                            }
+                                        </span>
+                                )
+                            }
+                        },
+                        {
+                            label: '表名',
+                            prop: 'tableName',
+                        },
+                        {
+                            label: '表描述',
+                            prop: 'tableTxt',
+                        },
+                        {
+                            label: '版本',
+                            prop: 'tableVersion',
+                        },
+                        {
+                            label: '同步数据库状态',
+                            prop: 'isDbSynch',
+                            render: (h, {row: {isDbSynch}}) => {
+                                return (
+                                    <span>
+                                        {
+                                            isDbSynch === 'Y' ? <span class="text-green-500">已同步</span> :
+                                                <span class="text-red-500">未同步</span>
+                                        }
+                                    </span>
+                                )
+                            }
+                        },
+                    ]
+                }
+                this.$nextTick(() => {
+                    this.table = {
+                        ...this.table,
+                        show: true
+                    }
+                })
+            }
         },
         created() {
-
+            this.setI18n()
+            this.getFormTableType()
         },
         mounted() {
-            this.getFormTableType()
+            this.queryList()
         }
     }
 </script>

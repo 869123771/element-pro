@@ -32,6 +32,7 @@
 
 <script>
     import PopoverConfirm from '@/components/popoverConfirm'
+    import {isEmpty} from '30-seconds-of-code'
 
     export default {
         name: "PopDropdown",
@@ -51,7 +52,7 @@
         watch : {
             popDropdownProps : {
                 handler(props){
-                    if(!this.validatenull(props)){
+                    if(!isEmpty(props)){
                         let attachTableItem = [
                             {
                                 label: '移出',

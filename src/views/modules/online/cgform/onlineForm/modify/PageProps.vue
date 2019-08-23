@@ -1,36 +1,21 @@
 <template>
     <div>
-        <avue-crud
-                ref="crud"
-                :data="table.data"
-                :option="table.option"
-                :table-loading="table.loading"
-        >
-            <template slot="menuLeft">
-
-            </template>
-            <template slot="dbFieldName" slot-scope="{row}">
-                <el-input v-model="row.dbFieldName" placeholder = "字段名称" size = "mini" disabled></el-input>
-            </template>
-            <template slot="dbFieldTxt" slot-scope="{row}">
-                <el-input v-model="row.dbFieldTxt" placeholder = "字段备注" size = "mini" disabled></el-input>
-            </template>
-            <template slot="isShowForm" slot-scope="{row}">
-                <el-checkbox v-model="row.isShowForm" :true-label="1" :false-label="0"></el-checkbox>
-            </template>
-            <template slot="isShowList" slot-scope="{row}">
-                <el-checkbox v-model="row.isShowList" :true-label="1" :false-label="0"></el-checkbox>
-            </template>
-            <template slot="isQuery" slot-scope="{row}">
-                <el-checkbox v-model="row.isQuery" :true-label="1" :false-label="0"></el-checkbox>
-            </template>
-        </avue-crud>
+        <el-row>
+            <fox-table
+                    v-if="table.show"
+                    v-loading="table.loading"
+                    :column="table.column"
+                    :data="table.data"
+            >
+            </fox-table>
+        </el-row>
     </div>
 </template>
 
 <script>
     import {mapState} from 'vuex'
     import {http, apiList, sweetAlert, constant} from '@/utils'
+    import foxTable from '@/components/fox-table/'
 
     export default {
         name: "PageProps",
@@ -39,48 +24,90 @@
                 type: Array,
             },
         },
+        components : {
+            foxTable,
+        },
         data() {
-            const {table} = constant
             return {
                 table: {
-                    data: [],
-                    option: {
-                        ...table,
-                        page: false,
-                        selection : false,
-                        props: {
-                            label: 'itemText',
-                            value: 'itemValue'
+                    data: this.data,
+                    column : [],
+                    show : true,
+                    loading: false,
+                },
+            }
+        },
+        watch: {
+            '$i18n.locale'() {
+                this.setI18n()
+            }
+        },
+        methods: {
+            setI18n(){
+                this.table = {
+                    ...this.table,
+                    show : false,
+                    column : [
+                        {type : 'index'},
+                        {
+                            label: '字段名称',
+                            prop: 'dbFieldName',
+                            render : (h,scope)=>{
+                                let {row:{dbIsKey}} = scope
+                                return (
+                                    <el-input
+                                        vModel = {scope.row.dbFieldName}
+                                        placeholder = '字段名称'
+                                        clearable = {true}
+                                        disabled = {true}
+                                        size = "mini"
+                                    ></el-input>
+                                )
+                            }
                         },
-                        column: [
-                            {
-                                label: '字段名称',
-                                prop: 'dbFieldName',
-                                slot : true
-                            },
-                            {
-                                label: '字段备注',
-                                prop: 'dbFieldTxt',
-                                slot : true,
-                            },
-                            {
-                                label: '表单显示',
-                                prop: 'isShowForm',
-                                cell: true,
-                                slot : true
-                            },
-                            {
-                                label: '列表显示',
-                                prop: 'isShowList',
-                                cell: true,
-                                slot : true
-                            },
-                            {
-                                label: '控件类型',
-                                prop: 'fieldShowType',
-                                cell: true,
-                                type : 'select',
-                                dicData : [
+                        {
+                            label: '字段备注',
+                            prop: 'dbFieldTxt',
+                            render : (h,scope)=>{
+                                let {row:{dbIsKey}} = scope
+                                return (
+                                    <el-input
+                                        vModel = {scope.row.dbFieldTxt}
+                                        placeholder = '字段备注'
+                                        clearable = {true}
+                                        disabled = {true}
+                                        size = "mini"
+                                    ></el-input>
+                                )
+                            }
+                        },
+                        {
+                            label: '表单显示',
+                            prop: 'isShowForm',
+                            render : (h,scope)=>{
+                                let {row:{dbIsKey}} = scope
+                                return (
+                                    <el-checkbox vModel = {scope.row.isShowForm} true-label = {1} false-lable = {0} disabled = {dbIsKey ? true : false}></el-checkbox>
+                                )
+                            }
+                        },
+                        {
+                            label: '列表显示',
+                            prop: 'isShowList',
+                            width : 80,
+                            render : (h,scope)=>{
+                                let {row:{dbIsKey}} = scope
+                                return (
+                                    <el-checkbox vModel = {scope.row.isShowList} true-label = {1} false-lable = {0} disabled = {dbIsKey ? true : false}></el-checkbox>
+                                )
+                            }
+                        },
+                        {
+                            label: '控件类型',
+                            prop: 'fieldShowType',
+                            render : (h,scope)=>{
+                                let {row:{dbIsKey}} = scope
+                                let options = [
                                     {itemText:'文本框',itemValue:'text'},
                                     {itemText:'密码',itemValue:'password'},
                                     {itemText:'单选框',itemValue:'radio'},
@@ -96,70 +123,128 @@
                                     {itemText:'图片',itemValue:'image'},
                                     {itemText:'富文本编辑器',itemValue:'umeditor'},
                                 ]
-                            },
-                            {
-                                label: '控件长度',
-                                prop: 'fieldLength',
-                                type: 'number',
-                                cell: true,
-                            },
-                            {
-                                label: '是否查询',
-                                prop: 'isQuery',
-                                cell: true,
-                                slot : true
-                            },
-                            {
-                                label: '查询类型',
-                                prop: 'queryMode',
-                                type : 'select',
-                                cell : true,
-                                dicData : [
+                                return (
+                                    <el-select
+                                        vModel = {scope.row.fieldShowType}
+                                        placeholder = '控件类型'
+                                        clearable = {true}
+                                        filterable = {true}
+                                        size = {'mini'}
+                                        class = "w-full"
+                                        disabled = {dbIsKey ? true : false}>
+                                        {
+                                            options.map(({itemValue,itemText})=>{
+                                                return (
+                                                    <el-option value = {itemValue} label = {itemText}></el-option>
+                                                )
+                                            })
+                                        }
+                                    </el-select>
+                                )
+                            }
+                        },
+                        {
+                            label: '控件长度',
+                            prop: 'fieldLength',
+                            render : (h,scope)=>{
+                                let {row:{dbIsKey}} = scope
+                                return (
+                                    <el-input-number
+                                        vModel = {scope.row.fieldLength}
+                                        placeholder = '控件长度'
+                                        min = {0}
+                                        controls = {false}
+                                        disabled = {dbIsKey ? true : false}
+                                        size = "mini"
+                                        class = "w-full"
+                                    ></el-input-number>
+                                )
+                            }
+                        },
+                        {
+                            label: '是否查询',
+                            prop: 'isQuery',
+                            render : (h,scope)=>{
+                                let {row:{dbIsKey}} = scope
+                                return (
+                                    <el-checkbox vModel = {scope.row.isQuery} true-label = {1} false-lable = {0} disabled = {dbIsKey ? true : false}></el-checkbox>
+                                )
+                            }
+                        },
+                        {
+                            label: '查询类型',
+                            prop: 'queryMode',
+                            render : (h,scope)=>{
+                                let {row:{dbIsKey}} = scope
+                                let options = [
                                     {itemText : '普通查询',itemValue:'single'},
                                     {itemText : '范围查询',itemValue:'group'},
                                 ]
-                            },
-                            {
-                                label: '扩展参数',
-                                prop: 'fieldExtendJson',
-                                cell: true,
-                            },
-                            {
-                                label: '填值规则',
-                                prop: 'fieldValueRuleCode',
-                                cell: true,
-                            },
-                        ]
-                    },
-                    loading: false,
-                    selection: []
-                },
-            }
-        },
-        methods: {
-            setPageInfo() {
-                this.table = {
-                    ...this.table,
-                    loading: true
+                                return (
+                                    <el-select
+                                        vModel = {scope.row.queryMode}
+                                        placeholder = '查询类型'
+                                        clearable = {true}
+                                        filterable = {true}
+                                        size = {'mini'}
+                                        class = "w-full"
+                                        disabled = {dbIsKey ? true : false}>
+                                        {
+                                            options.map(({itemValue,itemText})=>{
+                                                return (
+                                                    <el-option value = {itemValue} label = {itemText}></el-option>
+                                                )
+                                            })
+                                        }
+                                    </el-select>
+                                )
+                            }
+                        },
+                        {
+                            label: '扩展参数',
+                            prop: 'fieldExtendJson',
+                            render : (h,scope)=>{
+                                let {row:{dbIsKey}} = scope
+                                return (
+                                    <el-input
+                                        vModel = {scope.row.fieldExtendJson}
+                                        placeholder = '扩展参数'
+                                        clearable = {true}
+                                        disabled = {dbIsKey ? true : false}
+                                        size = "mini"
+                                    ></el-input>
+                                )
+                            }
+                        },
+                        {
+                            label: '填值规则',
+                            prop: 'fieldValueRuleCode',
+                            render : (h,scope)=>{
+                                let {row:{dbIsKey}} = scope
+                                return (
+                                    <el-input
+                                        vModel = {scope.row.fieldValueRuleCode}
+                                        placeholder = '填值规则'
+                                        clearable = {true}
+                                        disabled = {dbIsKey ? true : false}
+                                        size = "mini"
+                                    ></el-input>
+                                )
+                            }
+                        },
+                    ]
                 }
-                this.table = {
-                    ...this.table,
-                    data: this.data
-                }
-                this.$nextTick(() => {
-                    this.data.forEach((item, index) => {
-                        this.$refs.crud.rowCell(item, index)
-                    })
+                this.$nextTick(()=>{
+                    this.table = {
+                        ...this.table,
+                        show : true
+                    }
                 })
-                this.table = {
-                    ...this.table,
-                    loading: false
-                }
-            }
+            },
         },
-        mounted() {
-            this.setPageInfo()
-        }
+        created(){
+            this.setI18n()
+        },
     }
 </script>
 
