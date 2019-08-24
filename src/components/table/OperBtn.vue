@@ -10,7 +10,7 @@
         },
         computed: {
             ...mapState({
-                permissions: ({user}) => user.permissions
+                allAuth: ({user}) => user.allAuth
             })
         },
         render(h) {
@@ -22,44 +22,94 @@
                     paddingRight: '0.25rem',
                 }
             }
+            let showToolTip = ({permission, content, className, event}) => {
+                if (this.hasPermission(permission)) {
+                    return (
+                        <el-tooltip placement="top" content={content}>
+                            <span class="text-blue-500 text-base">
+                                <i {...props} class={className} onClick={() => event()}></i>
+                            </span>
+                        </el-tooltip>
+                    )
+                }
+                return ''
+            }
+
+            let showPopover = ({index, popText, permission, className, event}) => {
+            debugger;
+                if (this.hasPermission(permission)) {
+                    return (
+                        <el-popover placement="top"
+                                    width="160"
+                                    ref={index}
+                        >
+                            <div className="pb-3 flex">
+                                    <span className="px-1 text-orange-500 font-mono">
+                                        <i className="el-icon-warning"></i>
+                                    </span>
+                                <slot name="popover-title">{popText}</slot>
+                            </div>
+                            <div className="text-right">
+                                <el-button size="mini" type="text"
+                                           onClick={() => this.cancel(index)}>{this.$t('common_cancel')}
+                                </el-button>
+                                <el-button type="primary" size="mini"
+                                           onClick={() => {
+                                               event(this.cancel, index)
+                                           }}>{this.$t('common_confirm')}
+                                </el-button>
+                            </div>
+                            <span class="text-blue-500 text-base" slot="reference">
+                                <i {...props} class={className}></i>
+                            </span>
+                        </el-popover>
+                    )
+                }
+                return ''
+            }
+
             return (
                 <div>
                     {
-                        btnInfo.map(({type, dropDownItems, popover, popText, content, className, permission, event},index) => {
-                            debugger;
+                        btnInfo.map(({type, dropDownItems, popover, popText, content, className, permission, event}, index) => {
                             return (
                                 type === 'dropDown' ?
                                     <el-dropdown placement="bottom">
-                                        <span class = "text-blue-500 text-base">
+                                        <span class="text-blue-500 text-base">
                                           <i class={className}></i>
                                        </span>
                                         <el-dropdown-menu slot="dropdown">
                                             {
                                                 dropDownItems.map((item, index) => {
                                                     return (
-                                                        item.popover ?
-                                                            <el-popover placement="top"
-                                                                        width="160"
-                                                                        ref={index}
-                                                            >
-                                                                <div class="pb-3 flex">
+                                                        this.hasPermission(item.permission) ?
+                                                            item.popover ?
+                                                                <el-popover placement="top"
+                                                                            width="160"
+                                                                            ref={index}
+                                                                >
+                                                                    <div class="pb-3 flex">
                                                                 <span class="px-1 text-orange-500 font-mono">
                                                                     <i class="el-icon-warning"></i>
                                                                 </span>
-                                                                    <slot name="popover-title">{item.popText}</slot>
-                                                                </div>
-                                                                <div class="text-right">
-                                                                    <el-button size="mini" type="text"
-                                                                               onClick={()=>this.cancel(index)}>{this.$t('common_cancel')}
-                                                                    </el-button>
-                                                                    <el-button type="primary" size="mini"
-                                                                               onClick={()=>{item.event()}}>{this.$t('common_confirm')}
-                                                                    </el-button>
-                                                                </div>
+                                                                        <slot name="popover-title">{item.popText}</slot>
+                                                                    </div>
+                                                                    <div class="text-right">
+                                                                        <el-button size="mini" type="text"
+                                                                                   onClick={() => this.cancel(index)}>{this.$t('common_cancel')}
+                                                                        </el-button>
+                                                                        <el-button type="primary" size="mini"
+                                                                                   onClick={() => {
+                                                                                       item.event()
+                                                                                   }}>{this.$t('common_confirm')}
+                                                                        </el-button>
+                                                                    </div>
+                                                                    <el-dropdown-item
+                                                                        slot="reference">{item.content}</el-dropdown-item>
+                                                                </el-popover> :
                                                                 <el-dropdown-item
-                                                                    slot="reference">{item.content}</el-dropdown-item>
-                                                            </el-popover> :
-                                                            <el-dropdown-item nativeOnclick = {()=> item.event()}>{item.content}</el-dropdown-item>
+                                                                    nativeOnclick={() => item.event()}>{item.content}</el-dropdown-item>
+                                                            : null
                                                     )
                                                 })
                                             }
@@ -67,43 +117,22 @@
                                     </el-dropdown>
                                     :
                                     popover ?
-                                        <el-popover placement="top"
-                                                    width="160"
-                                                    ref={index}
-                                        >
-                                            <div class="pb-3 flex">
-                                                                <span class="px-1 text-orange-500 font-mono">
-                                                                    <i class="el-icon-warning"></i>
-                                                                </span>
-                                                <slot name="popover-title">{popText}</slot>
-                                            </div>
-                                            <div class="text-right">
-                                                <el-button size="mini" type="text"
-                                                           onClick={()=>this.cancel(index)}>{this.$t('common_cancel')}
-                                                </el-button>
-                                                <el-button type="primary" size="mini"
-                                                           onClick={()=>{event(this.cancel,index)}}>{this.$t('common_confirm')}
-                                                </el-button>
-                                            </div>
-                                            <span class = "text-blue-500 text-base" slot="reference">
-                                                <i {...props} class = {className}></i>
-                                            </span>
-                                        </el-popover>
+                                        showPopover({index, popText, permission, className, event})
                                         :
-                                        <el-tooltip placement="top" content={content}>
-                                        <span class ="text-blue-500 text-base">
-                                            <i {...props} class = {className} onClick={() => event()}></i>
-                                        </span>
-                                        </el-tooltip>
+                                        showToolTip({permission, content, className, event})
                             )
                         })
                     }
                 </div>
             )
         },
-        methods : {
-            cancel(index){
+        methods: {
+            cancel(index) {
                 this.$refs[index].doClose();
+            },
+            hasPermission(permission) {
+                console.log(permission)
+                return this.allAuth.find(item => item.action === permission) && this.allAuth.find(item => item.action === permission).type !== '2'
             }
         }
     }

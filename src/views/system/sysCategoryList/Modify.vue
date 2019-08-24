@@ -96,9 +96,10 @@
             },
             async saveData(){
                 let {id} = this.data
+                let {value : pid} = this.tree
                 let params = {
                     ...this.form,
-                    pid : this.tree.value
+                    pid
                 }
                 let res = {}
                 if(id){
@@ -109,7 +110,7 @@
                 let {success, message} = res
                 if (success) {
                     sweetAlert.successWithTimer(message)
-                    this.$emit('modifySuccess')
+                    this.$emit('modifySuccess',{pid})
                 } else {
                     sweetAlert.error(message)
                 }

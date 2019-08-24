@@ -106,7 +106,7 @@
                                     {
                                         content: '修改',
                                         className: 'fa fa -fw fa-pencil',
-                                        permission: 'user:update',
+                                        permission: 'dept:user:edit',
                                         event: () => {
                                             this.edit(row)
                                         }
@@ -116,7 +116,7 @@
                                         popover: true,
                                         popText: '确定要删除吗',
                                         className: 'iconfont icon-wy-delete2',
-                                        permission: 'user:view',
+                                        permission: 'dept:user:delete',
                                         event: () => {
                                             this.confirmDelete(row.id, $index)
                                         }

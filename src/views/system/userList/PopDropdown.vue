@@ -1,6 +1,6 @@
 <template>
     <div>
-        <span class="text-blue-500 text-base cursor-pointer">
+        <span class="text-blue-500 text-base cursor-pointer" v-has="'user:edit'">
             <i class="fa fa-fw fa-pencil" @click = "edit"></i>
         </span>
         <el-dropdown placement="bottom" class ="dropdown">
@@ -20,7 +20,10 @@
                         </popover-confirm>
                     </template>
                     <template v-else>
-                        <el-dropdown-item @click.native = "item.action">
+                        <el-dropdown-item @click.native = "item.action" v-if = "item.permission === 'user:password'" v-has = "'user:password'">
+                            {{item.label}}
+                        </el-dropdown-item>
+                        <el-dropdown-item @click.native = "item.action" v-else>
                             {{item.label}}
                         </el-dropdown-item>
                     </template>
@@ -52,6 +55,7 @@
                         icon: '',
                         action: this.handlePwd,
                         popover: false,
+                        permission : 'user:password'
                     },
                     {
                         label: '删除',

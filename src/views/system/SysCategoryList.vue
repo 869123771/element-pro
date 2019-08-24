@@ -181,7 +181,7 @@
                     loading: false
                 }
             },
-            modifySuccess(){
+            modifySuccess({pid}){
                 let {name} = this.dialog
                 this.$modal.hide(name)
                 this.queryList()
@@ -229,6 +229,7 @@
                 }
             },
             async queryList() {
+                debugger;
                 this.table = {
                     ...this.table,
                     loading: true
@@ -237,7 +238,7 @@
                 let params = {
                     ...this.form,
                     pageSize,
-                    pageNo
+                    pageNo,
                 }
                 let {success, result: {total, records: data}} = await http.get(apiList.sys_dict_category_query_list, params)
                 if (success) {

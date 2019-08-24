@@ -29,7 +29,8 @@
             </div>
         </div>
         <el-scrollbar>
-            <div class="modal-body" :style="{maxHeight:dialog.maxHeight + 'px'}">
+           <!-- <div class="modal-body" :style="{maxHeight:dialog.maxHeight + 'px'}">-->
+            <div class="modal-body" style=" max-height: calc(100vh - 200px)">
                 <slot></slot>
             </div>
         </el-scrollbar>

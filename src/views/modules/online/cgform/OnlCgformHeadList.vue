@@ -352,6 +352,8 @@
                     ...this.table,
                     show: false,
                     column: [
+                        {type:'selection'},
+                        {type : 'index'},
                         {
                             label: '操作',
                             prop: 'oper',

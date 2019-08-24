@@ -50,6 +50,7 @@
             <el-button plain icon="iconfont icon-wy-upload" v-has="'user:import'" @click="fileImport">
                 {{$t('common_import')}}
             </el-button>
+            <el-button plain icon="iconfont icon-wy-upload" @click="fileImport">{{$t('common_import')}}</el-button>
             <el-button plain icon="iconfont icon-wy-download" @click="fileExport">{{$t('common_export')}}</el-button>
             <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
                 <el-button plain>
@@ -142,11 +143,6 @@
     import PopoverConfirm from '@/components/popoverConfirm'
     import ProxyManConfig from './userList/ProxyManConfig'
 
-    const uploadAction = () => {
-        let {config: {baseUrl: {proxyURL}}} = constant
-        return `${proxyURL + apiList.sys_user_import}`
-    }
-
     export default {
         name: "UserList",
         components: {
@@ -189,7 +185,7 @@
                     title: '重设密码'
                 },
                 fileUpload: {
-                    action: uploadAction()
+                    action: apiList.sys_user_import
                 },
                 component: {
                     type: Read,

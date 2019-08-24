@@ -1,7 +1,7 @@
 <template>
     <div class="menu bg-white p-3 m-3">
         <el-row>
-            <el-button plain type="primary" icon="el-icon-plus" @click="addMenu">新增</el-button>
+            <el-button plain type="primary" icon="el-icon-plus" @click="addMenu" v-has = "'menu:add'">新增</el-button>
             <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
                 <el-button plain>
                     批量操作<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i>
@@ -129,7 +129,7 @@
                                     {
                                         content: '修改',
                                         className: 'fa fa-fw fa-pencil',
-                                        permission: 'menu:table:update',
+                                        permission: 'menu:edit',
                                         event: () => {
                                             this.editMenu(row)
                                         }
@@ -142,6 +142,7 @@
                                                 content: '详情',
                                                 className: '',
                                                 popover: false,
+                                                permission : 'menu:detail',
                                                 event: () => {
                                                     this.handleDetail(row)
                                                 }
@@ -150,6 +151,7 @@
                                                 content: '数据规则',
                                                 className: '',
                                                 popover: false,
+                                                permission : 'menu:dataRule',
                                                 event: () => {
                                                     this.handleDataRule(row)
                                                 }
@@ -159,6 +161,7 @@
                                                 className: '',
                                                 popover: true,
                                                 popText: '确定要删除吗',
+                                                permission : 'menu:delete',
                                                 event: () => {
                                                     this.handleDel(row)
                                                 }

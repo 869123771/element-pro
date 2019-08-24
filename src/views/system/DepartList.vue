@@ -120,8 +120,8 @@
                     },
                 },
                 dialog: {
-                    width: '30',
-                    height: '80',
+                    width: 30,
+                    height: 500,
                     title: '新增',
                     showFooter: true,
                 },
@@ -186,6 +186,8 @@
                 this.dialog = {
                     ...this.dialog,
                     title: '新增部门',
+                    width: 400,
+                    height: 500,
                     name : 'addTopDept'
                 }
                 this.component = {
@@ -202,6 +204,8 @@
                 this.dialog = {
                     ...this.dialog,
                     title: '新增子部门',
+                    width: 400,
+                    height: 500,
                     name : 'addChildDept'
                 }
                 this.component = {
@@ -221,6 +225,8 @@
                 this.dialog = {
                     ...this.dialog,
                     title: '编辑部门',
+                    width: 400,
+                    height: 600,
                     name : 'editDept'
                 }
                 this.component = {

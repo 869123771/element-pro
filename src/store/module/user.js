@@ -6,6 +6,8 @@ export default {
         token: getToken(),
         userInfo: localRead(USER_INFO),
         permissionList: [],
+        auth : [],
+        allAuth : [],
     },
     mutations: {
         SET_TOKEN(state, token) {
@@ -16,6 +18,12 @@ export default {
         },
         SET_PERMISSIONLIST: (state, permissionList) => {
             state.permissionList = permissionList
+        },
+        SET_AUTH : (state, auth) => {
+            state.auth = auth
+        },
+        SET_ALL_AUTH : (state, allAuth) => {
+            state.allAuth = allAuth
         },
     },
     actions: {
@@ -38,6 +46,8 @@ export default {
                 localSave(SYS_BUTTON_AUTH, allAuthData)
                 if (menuData && menuData.length) {
                     commit('SET_PERMISSIONLIST', menuData)
+                    commit('SET_AUTH', authData)
+                    commit('SET_ALL_AUTH', allAuthData)
                 }
             }
             return result
