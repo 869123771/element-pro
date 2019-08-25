@@ -1,10 +1,10 @@
 <template>
     <div class="m-3 p-3 bg-white">
         <el-row>
-            <el-form :model="form" label-width="80px">
+            <el-form ref="form" :model="form" label-width="80px">
                 <el-col :md="6" :sm="8">
                     <el-form-item label="表名" prop="tableName">
-                        <el-input v-model="form.label" placeholder="表名" clearable></el-input>
+                        <el-input v-model="form.tableName" placeholder="表名" clearable></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :md="6" :sm="8">
@@ -28,11 +28,11 @@
                 <span class="fa fa-fw fa-circle-o"></span>
                 <span>自定义按钮</span>
             </el-button>
-            <el-button plain @click="customButton">
+            <el-button plain @click="jsEnergize">
                 <span class="fa fa-fw fa-scribd"></span>
                 <span>js增强</span>
             </el-button>
-            <el-button plain @click="customButton">
+            <el-button plain @click="javaEnergize">
                 <span class="fa fa-fw fa-coffee"></span>
                 <span>java增强</span>
             </el-button>
@@ -99,6 +99,7 @@
     import DragDialog from '@/components/dragDialog'
     import PopDropdown from './onlineForm/PopDropdown'
     import Modify from './onlineForm/Modify'
+    import CustomButtom from "./onlineForm/CustomButtom";
 
     export default {
         name: "OnlCgformHeadList",
@@ -162,7 +163,7 @@
                 this.queryList()
             },
             reset() {
-                this.$refs.form.resetForm()
+                this.$refs.form.resetFields()
             },
             add() {
                 this.dialog = {
@@ -177,9 +178,7 @@
                     is: Modify,
                     ref: 'add',
                     data: {
-                        formInfo: {
-
-                        },
+                        formInfo: {},
                         tableInfo: []
                     }
                 }
@@ -188,8 +187,47 @@
                     this.$modal.show(name)
                 })
             },
+            selectOne() {
+                let flag = true
+                let {selection} = this.table
+                if (!selection.length) {
+                    sweetAlert.errorWithTimer('请选择一条记录')
+                    flag = false
+                }
+                return flag
+            },
             customButton() {
+                if(this.selectOne()){
+                    this.dialog = {
+                        ...this.dialog,
+                        title: '自定义按钮',
+                        width: 90,
+                        height: 90,
+                        name: 'customButton'
+                    }
+                    this.component = {
+                        ...this.component,
+                        is: CustomButtom,
+                        ref: 'customButton',
+                        data: {
 
+                        }
+                    }
+                    let {name} = this.dialog
+                    this.$nextTick(() => {
+                        this.$modal.show(name)
+                    })
+                }
+            },
+            jsEnergize() {
+                if(this.selectOne()){
+
+                }
+            },
+            javaEnergize() {
+                if(this.selectOne()){
+
+                }
             },
             async edit(row) {
                 let {id} = row
@@ -220,7 +258,7 @@
                 }
             },
             functionalTest(scope) {
-                debugger;
+            debugger;
             },
             addressConfig(scope) {
 
@@ -269,7 +307,7 @@
                 }
             },
             syncDb(scope) {
-                debugger;
+            debugger;
             },
             deleteBatch() {
                 let {selection} = this.table
@@ -352,8 +390,8 @@
                     ...this.table,
                     show: false,
                     column: [
-                        {type:'selection'},
-                        {type : 'index'},
+                        {type: 'selection'},
+                        {type: 'index'},
                         {
                             label: '操作',
                             prop: 'oper',

@@ -539,6 +539,7 @@
                             label: this.$t('common_operate'),
                             prop: 'oper',
                             width: '100',
+                            fixed : true,
                             render: (h, scope) => {
                                 return (
                                     h(PopDropdown, {
