@@ -144,9 +144,9 @@
                     hidden: false,                    //隐藏路由
                     keepAlive: false,              //是否缓存路由
                     alwaysShow: false,              //聚合路由
-                    permsType: '',                  //授权策略
+                    permsType: '1',                  //授权策略
                     perms: '',                      //授权标识
-                    status: ''                      //状态
+                    status: '1'                      //状态
                 },
                 rules: {
                     name: [
@@ -187,12 +187,36 @@
                             ...props,
                             menuType: menuType.toString()
                         }
+                    }else{
+                        this.resetFields()
+                        this.$nextTick(()=>{
+                            this.$refs.form.resetFields()
+                        })
                     }
                 },
                 immediate: true
             },
         },
         methods: {
+            resetFields(){
+                this.form = {
+                    menuType: '0',                  //菜单类型
+                    name: '',                      //菜单名称
+                    parentId: '',                  //父级菜单
+                    url: '',                       //菜单路径
+                    component: '',                 //前端组件
+                    redirect: '',                  //默认跳转地址
+                    icon: '',                      //菜单图标
+                    sortNo: '',                    //排序
+                    route: true,                    //是否路由
+                    hidden: false,                    //隐藏路由
+                    keepAlive: false,              //是否缓存路由
+                    alwaysShow: false,              //聚合路由
+                    permsType: '1',                  //授权策略
+                    perms: '',                      //授权标识
+                    status: '1'                      //状态
+                }
+            },
             checkIcons() {
                 let {name} = this.dialog
                 let {icon} = this.form

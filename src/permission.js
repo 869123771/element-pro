@@ -48,17 +48,6 @@ router.beforeEach((to, from, next) => {
                         })
                     })
             } else {
-                if (matched.length) {
-                    const {path, parent, name, meta: {title, icon}} = matched[matched.length - 1]
-                    const result = findOpenNames(parent)
-                    const activeName = path
-                    const openNames = result.map(item => item.path)
-                    result.unshift({path, name, title, icon})
-                    store.commit('ACTIVE_NAME', activeName)
-                    store.commit('OPEN_NAMES', openNames)
-                    store.commit('ACTIVE_NAV_TAG', {path, name, title})
-                    store.commit('ACTIVE_BREAD_CREAM', result.reverse())
-                }
                 next()
             }
         }
@@ -76,12 +65,3 @@ router.beforeEach((to, from, next) => {
 router.afterEach(() => {
     NProgress.done() // finish progress bar
 })
-
-const findOpenNames = (obj, resultList = []) => {
-    if (obj && obj.constructor === Object) {
-        let {path, name, meta: {title, icon}, parent} = obj
-        resultList.push({path, name, title, icon})
-        findOpenNames(parent, resultList)
-    }
-    return resultList.filter(item => Boolean(item.path))
-}

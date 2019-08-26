@@ -19,7 +19,7 @@ ajax.interceptors.request.use(config => {
         config.params = {
             _t: Date.parse(new Date()) / 1000,
             order: 'desc',
-            column: 'createTime',
+            //column: 'createTime',
             ...config.params
         }
     }

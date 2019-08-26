@@ -477,7 +477,7 @@
                                     {
                                         content: '修改',
                                         className: 'fa fa-fw fa-pencil',
-                                        permission: 'menu:table:update',
+                                        permission: 'role:edit',
                                         event: () => {
                                             this.edit(row)
                                         }
@@ -485,10 +485,12 @@
                                     {
                                         type: 'dropDown',
                                         className: 'fa fa-fw fa-ellipsis-h',
+                                        permission: 'role.grant',
                                         dropDownItems: [
                                             {
                                                 content: '授权',
                                                 className: '',
+                                                permission: 'role:grant',
                                                 popover: false,
                                                 event: () => {
                                                     this.handleAuth(row)
@@ -499,6 +501,7 @@
                                                 className: '',
                                                 popover: true,
                                                 popText: '确定要删除吗',
+                                                permission: 'role.delete',
                                                 event: () => {
                                                     this.handleDel(row)
                                                 }

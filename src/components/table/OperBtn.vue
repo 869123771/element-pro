@@ -44,8 +44,8 @@
                                     ref={index}
                         >
                             <div className="pb-3 flex">
-                                    <span className="px-1 text-orange-500 font-mono">
-                                        <i className="el-icon-warning"></i>
+                                    <span class ="px-1 text-orange-500 font-mono">
+                                        <i class ="el-icon-warning"></i>
                                     </span>
                                 <slot name="popover-title">{popText}</slot>
                             </div>
@@ -131,7 +131,6 @@
                 this.$refs[index].doClose();
             },
             hasPermission(permission) {
-                console.log(permission)
                 return this.allAuth.find(item => item.action === permission) && this.allAuth.find(item => item.action === permission).type !== '2'
             }
         }

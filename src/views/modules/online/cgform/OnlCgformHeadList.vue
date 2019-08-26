@@ -171,7 +171,8 @@
                     title: '新增',
                     width: 90,
                     height: 90,
-                    name: 'add'
+                    name: 'add',
+                    showFooter : true,
                 }
                 this.component = {
                     ...this.component,
@@ -190,28 +191,28 @@
             selectOne() {
                 let flag = true
                 let {selection} = this.table
-                if (!selection.length) {
+                if (selection.length !== 1) {
                     sweetAlert.errorWithTimer('请选择一条记录')
                     flag = false
                 }
                 return flag
             },
             customButton() {
+                let {selection} = this.table
                 if(this.selectOne()){
                     this.dialog = {
                         ...this.dialog,
                         title: '自定义按钮',
                         width: 90,
                         height: 90,
-                        name: 'customButton'
+                        name: 'customButton',
+                        showFooter : false,
                     }
                     this.component = {
                         ...this.component,
                         is: CustomButtom,
                         ref: 'customButton',
-                        data: {
-
-                        }
+                        data: selection[0]
                     }
                     let {name} = this.dialog
                     this.$nextTick(() => {
@@ -238,7 +239,8 @@
                         title: '修改',
                         width: 90,
                         height: 90,
-                        name: 'update'
+                        name: 'update',
+                        showFooter : true,
                     }
                     this.component = {
                         ...this.component,
