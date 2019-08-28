@@ -65,6 +65,7 @@
 <script>
     import column from './column'
     import render from './render'
+    import Sortable from 'sortablejs'
 
     export default {
         props: {
@@ -74,14 +75,6 @@
             pagination: {
                 type: Boolean,
                 default: false
-            },
-            paginationTop: {
-                type: String,
-                default: '15px'
-            },
-            paginationAlign: {
-                type: String,
-                default: 'right'
             },
             merge: Array,
         },
@@ -168,7 +161,20 @@
                         colspan: _col
                     }
                 }
-            }
+            },
+            //行拖拽
+            rowDrop() {
+                debugger;
+                const tbody = document.querySelector('.el-table__body-wrapper tbody')
+                const _this = this
+                Sortable.create(tbody, {
+                    onEnd({ newIndex, oldIndex }) {
+                        debugger;
+                        const [currRow] = _this.data.splice(oldIndex, 1)
+                        _this.data.splice(newIndex, 0, currRow)
+                    }
+                })
+            },
         },
         watch: {
             merge() {

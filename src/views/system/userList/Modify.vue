@@ -183,7 +183,6 @@
         watch: {
             data: {
                 handler(props) {
-                    debugger;
                     this.resetForm()
                     this.userUniqueCheck(props)
                     if (!isEmpty(props)) {

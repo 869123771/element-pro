@@ -65,6 +65,7 @@
         </el-row>
         <el-row>
             <fox-table
+                    ref = "table"
                     v-if="table.show"
                     v-loading="table.loading"
                     :column="table.column"
@@ -527,6 +528,7 @@
                         ...this.page,
                         total
                     }
+                    this.$refs.table.rowDrop()
                 }
             },
             setI18n() {

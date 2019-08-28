@@ -36,7 +36,7 @@
                 <span class="fa fa-fw fa-coffee"></span>
                 <span>java增强</span>
             </el-button>
-            <el-button plain @click="customButton">
+            <el-button plain @click="importFormFromDb">
                 <span class="fa fa-fw fa-database"></span>
                 <span>从数据库导入表单</span>
             </el-button>
@@ -100,6 +100,189 @@
     import PopDropdown from './onlineForm/PopDropdown'
     import Modify from './onlineForm/Modify'
     import CustomButtom from "./onlineForm/CustomButtom";
+    import JsEnergize from './onlineForm/JsEnergize'
+    import JavaEnergize from './onlineForm/JavaEnergize'
+    import ImportForm from './onlineForm/ImportForm'
+    import SyncDb from './onlineForm/SyncDb'
+
+    let tableInfo = [
+        {
+            dbDefaultVal: "",
+            dbFieldName: "id",
+            dbFieldTxt: "主键",
+            dbIsKey: 1,
+            dbIsNull: "0",
+            dbLength: "36",
+            dbPointLength: "0",
+            dbType: "string",
+            dictField: "",
+            dictTable: "",
+            dictText: "",
+            fieldExtendJson: "",
+            fieldHref: "",
+            fieldLength: "120",
+            fieldMustInput: "0",
+            fieldShowType: "text",
+            fieldValueRuleCode: "",
+            isQuery: "0",
+            isShowForm: "0",
+            isShowList: "0",
+            mainField: "",
+            mainTable: "",
+            orderNum: "1",
+            order_num: 0,
+            queryMode: "single",
+        },
+        {
+            dbDefaultVal: "",
+            dbFieldName: "create_by",
+            dbFieldTxt: "创建人",
+            dbIsKey: 0,
+            dbIsNull: "1",
+            dbLength: "50",
+            dbPointLength: "0",
+            dbType: "string",
+            dictField: "",
+            dictTable: "",
+            dictText: "",
+            fieldExtendJson: "",
+            fieldHref: "",
+            fieldLength: "120",
+            fieldMustInput: "0",
+            fieldShowType: "text",
+            fieldValueRuleCode: "",
+            isQuery: "0",
+            isShowForm: "0",
+            isShowList: "0",
+            mainField: "",
+            mainTable: "",
+            orderNum: "2",
+            order_num: 1,
+            queryMode: "single",
+        },
+        {
+            dbDefaultVal: "",
+            dbFieldName: "create_time",
+            dbFieldTxt: "创建日期",
+            dbIsKey: 0,
+            dbIsNull: "1",
+            dbLength: "20",
+            dbPointLength: "0",
+            dbType: "Date",
+            dictField: "",
+            dictTable: "",
+            dictText: "",
+            fieldExtendJson: "",
+            fieldHref: "",
+            fieldLength: "120",
+            fieldMustInput: "0",
+            fieldShowType: "datetime",
+            fieldValueRuleCode: "",
+            isQuery: "0",
+            isShowForm: "0",
+            isShowList: "0",
+            mainField: "",
+            mainTable: "",
+            orderNum: "3",
+            order_num: 2,
+            queryMode: "single",
+        },
+        {
+            dbDefaultVal: "",
+            dbFieldName: "update_by",
+            dbFieldTxt: "更新人",
+            dbIsKey: 0,
+            dbIsNull: "1",
+            dbLength: "50",
+            dbPointLength: "0",
+            dbType: "string",
+            dictField: "",
+            dictTable: "",
+            dictText: "",
+            fieldExtendJson: "",
+            fieldHref: "",
+            fieldLength: "120",
+            fieldMustInput: "0",
+            fieldShowType: "text",
+            fieldValueRuleCode: "",
+            isQuery: "0",
+            isShowForm: "0",
+            isShowList: "0",
+            mainField: "",
+            mainTable: "",
+            orderNum: "4",
+            order_num: 3,
+            queryMode: "single",
+        },
+        {
+            dbDefaultVal: "",
+            dbFieldName: "update_time",
+            dbFieldTxt: "更新日期",
+            dbIsKey: 0,
+            dbIsNull: "1",
+            dbLength: "20",
+            dbPointLength: "0",
+            dbType: "Date",
+            dictField: "",
+            dictTable: "",
+            dictText: "",
+            fieldExtendJson: "",
+            fieldHref: "",
+            fieldLength: "120",
+            fieldMustInput: "0",
+            fieldShowType: "datetime",
+            fieldValueRuleCode: "",
+            id: "15668933933735",
+            isQuery: "0",
+            isShowForm: "0",
+            isShowList: "0",
+            mainField: "",
+            mainTable: "",
+            orderNum: "5",
+            order_num: 4,
+            queryMode: "single",
+        },
+        {
+            dbDefaultVal: "",
+            dbFieldName: "sys_org_code",
+            dbFieldTxt: "所属部门",
+            dbIsKey: 0,
+            dbIsNull: "1",
+            dbLength: "64",
+            dbPointLength: "0",
+            dbType: "string",
+            dictField: "",
+            dictTable: "",
+            dictText: "",
+            fieldExtendJson: "",
+            fieldHref: "",
+            fieldLength: "120",
+            fieldMustInput: "0",
+            fieldShowType: "text",
+            fieldValueRuleCode: "",
+            isQuery: "0",
+            isShowForm: "0",
+            isShowList: "0",
+            mainField: "",
+            mainTable: "",
+            orderNum: "6",
+            order_num: 5,
+            queryMode: "single",
+        }
+    ]
+
+    let formInfo = {
+        formCategory: "bdfl_include",
+        formTemplate: "1",
+        idType: "UUID",
+        isCheckbox: "N",
+        isPage: "Y",
+        isTree: "N",
+        queryMode: "single",
+        tableName: "",
+        tableTxt: "",
+        tableType: 1
+    }
 
     export default {
         name: "OnlCgformHeadList",
@@ -179,8 +362,8 @@
                     is: Modify,
                     ref: 'add',
                     data: {
-                        formInfo: {},
-                        tableInfo: []
+                        formInfo,
+                        tableInfo
                     }
                 }
                 let {name} = this.dialog
@@ -203,8 +386,8 @@
                     this.dialog = {
                         ...this.dialog,
                         title: '自定义按钮',
-                        width: 90,
-                        height: 90,
+                        width: 80,
+                        height: 700,
                         name: 'customButton',
                         showFooter : false,
                     }
@@ -221,14 +404,70 @@
                 }
             },
             jsEnergize() {
+                let {selection} = this.table
                 if(this.selectOne()){
-
+                    this.dialog = {
+                        ...this.dialog,
+                        title: 'JS增強',
+                        width: 70,
+                        height: 700,
+                        name: 'jsEnergize',
+                        showFooter : true,
+                    }
+                    this.component = {
+                        ...this.component,
+                        is: JsEnergize,
+                        ref: 'jsEnergize',
+                        data: selection[0]
+                    }
+                    let {name} = this.dialog
+                    this.$nextTick(() => {
+                        this.$modal.show(name)
+                    })
                 }
             },
             javaEnergize() {
+                let {selection} = this.table
                 if(this.selectOne()){
-
+                    this.dialog = {
+                        ...this.dialog,
+                        title: 'Java增強',
+                        width: 25,
+                        height: 600,
+                        name: 'javaEnergize',
+                        showFooter : true,
+                    }
+                    this.component = {
+                        ...this.component,
+                        is: JavaEnergize,
+                        ref: 'javaEnergize',
+                        data: selection[0]
+                    }
+                    let {name} = this.dialog
+                    this.$nextTick(() => {
+                        this.$modal.show(name)
+                    })
                 }
+            },
+            importFormFromDb(){
+                this.dialog = {
+                    ...this.dialog,
+                    title: '从数据库导入表单',
+                    width: 25,
+                    height: 600,
+                    name: 'importForm',
+                    showFooter : true,
+                }
+                this.component = {
+                    ...this.component,
+                    is: ImportForm,
+                    ref: 'importForm',
+                    data: {}
+                }
+                let {name} = this.dialog
+                this.$nextTick(() => {
+                    this.$modal.show(name)
+                })
             },
             async edit(row) {
                 let {id} = row
@@ -268,19 +507,23 @@
             confirm() {
                 let {ref} = this.component
                 let modifyRef = this.$refs[ref]
-                modifyRef.$refs.form.validate(valid => {
-                    if (valid) {
+                if(modifyRef.$refs.form){
+                    modifyRef.$refs.form.validate(valid => {
+                        if (valid) {
+                            this.dialog = {
+                                ...this.dialog,
+                                loading: true
+                            }
+                            modifyRef.saveData()
+                        }
                         this.dialog = {
                             ...this.dialog,
-                            loading: true
+                            loading: false
                         }
-                        modifyRef.saveData()
-                    }
-                    this.dialog = {
-                        ...this.dialog,
-                        loading: false
-                    }
-                })
+                    })
+                }else{
+                    modifyRef.saveData()
+                }
             },
             modifySuccess() {
                 let {name} = this.dialog
@@ -308,8 +551,25 @@
                     sweetAlert.error(message)
                 }
             },
-            syncDb(scope) {
-            debugger;
+            syncDb(row) {
+                this.dialog = {
+                    ...this.dialog,
+                    title: '同步数据库',
+                    width: 400,
+                    height: 150,
+                    name: 'syncDb',
+                    showFooter : true,
+                }
+                this.component = {
+                    ...this.component,
+                    is: SyncDb,
+                    ref: 'syncDb',
+                    data: {...row}
+                }
+                let {name} = this.dialog
+                this.$nextTick(() => {
+                    this.$modal.show(name)
+                })
             },
             deleteBatch() {
                 let {selection} = this.table
