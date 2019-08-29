@@ -25,5 +25,5 @@ npm run test
 npm run lint
 ```
 下拉树组件
-https://github.com/869123771/element-pro/blob/master/screenshort/%E4%B8%8B%E6%8B%89%E6%A0%91.png
+![image](https://github.com/869123771/element-pro/blob/master/screenshort/%E4%B8%8B%E6%8B%89%E6%A0%91.png)
 
