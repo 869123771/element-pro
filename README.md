@@ -1,4 +1,4 @@
-# livedata
+# jeecg-boot element
 
 ## Project setup
 ```
