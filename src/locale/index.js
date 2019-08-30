@@ -17,7 +17,6 @@ const localLang = (navLang === 'zh-CN' || navLang === 'en-US') ? navLang : false
 let lang = localRead('lang') || localLang || 'zh-CN'
 
 console.log(customZhCn)
-debugger;
 // vue-i18n 6.x+写法
 Vue.locale = () => {}
 const messages = {

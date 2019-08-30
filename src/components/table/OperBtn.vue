@@ -36,7 +36,6 @@
             }
 
             let showPopover = ({index, popText, permission, className, event}) => {
-            debugger;
                 if (this.hasPermission(permission)) {
                     return (
                         <el-popover placement="top"

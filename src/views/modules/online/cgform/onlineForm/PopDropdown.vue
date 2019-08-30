@@ -53,7 +53,8 @@
             popDropdownProps : {
                 handler(props){
                     if(!isEmpty(props)){
-                        let attachTableItem = [
+                        let {isDbSynch,tableType} = props
+                        let dropDownItems = [
                             {
                                 label: '移出',
                                 icon: '',
@@ -70,39 +71,35 @@
                             },
                         ]
 
-                        let syncItems = [
-                            {
-                                label: '功能测试',
-                                icon: '',
-                                action: this.functionalTest,
-                                popover: false,
-                            },
-                            {
-                                label: '配置地址',
-                                icon: '',
-                                action: this.addressConfig,
-                                popover: false,
-                            },
-                            ...attachTableItem
-                        ]
-                        let asyncItem = [
-                            {
-                                label: '同步数据库',
-                                icon: '',
-                                action: this.syncDb,
-                                popover: false,
-                            },
-                            ...attachTableItem
-                        ]
-                        debugger;
-                        let {isDbSynch,tableType} = props
-                        if(tableType === 2){                            //附表
-                            this.dropDownItem = attachTableItem
-                        }else if(isDbSynch === 'Y'){                    //同步
-                            this.dropDownItem = syncItems
-                        }else{                                          //未同步
-                            this.dropDownItem = asyncItem
+                        if(isDbSynch !== 'Y'){
+                            dropDownItems = [
+                                {
+                                    label: '同步数据库',
+                                    icon: '',
+                                    action: this.syncDb,
+                                    popover: false,
+                                },
+                                ...dropDownItems,
+                            ]
                         }
+                        if(isDbSynch === 'Y' && tableType !==3){
+                            dropDownItems = [
+                                {
+                                    label: '功能测试',
+                                    icon: '',
+                                    action: this.functionalTest,
+                                    popover: false,
+                                },
+                                {
+                                    label: '配置地址',
+                                    icon: '',
+                                    action: this.addressConfig,
+                                    popover: false,
+                                },
+                                ...dropDownItems,
+                            ]
+                        }
+                        this.dropDownItem = dropDownItems
                     }
                 },
                 immediate : true
@@ -119,7 +116,6 @@
                 this.$emit('handleDel')
             },
             functionalTest(){
-                debugger;
                 this.$emit('functionalTest')
             },
             addressConfig(){

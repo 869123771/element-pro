@@ -43,7 +43,7 @@
                 layout="total, sizes, prev, pager, next, jumper"
                 :page-sizes="[5, 10, 20, 30]"
                 :page-count="5"
-                :current-page.sync="page.currentPage"
+                :current-page.sync="page.pageNum"
                 :total="page.total"
                 :page-size="page.pageSize"
                 @size-change="sizeChange"
@@ -86,7 +86,7 @@
                     loading: false,
                 },
                 page: {
-                    currentPage: 1,
+                    pageNum: 1,
                     pageSize: 10,
                     total: 0
                 },
@@ -126,17 +126,17 @@
             search() {
                 this.page = {
                     ...this.page,
-                    currentPage: 1
+                    pageNum: 1
                 }
                 this.queryList()
             },
             reset() {
                 this.$refs.form.resetFields()
             },
-            currentChange(currentPage) {
+            currentChange(pageNum) {
                 this.page = {
                     ...this.page,
-                    currentPage
+                    pageNum
                 }
                 this.queryList()
             },
@@ -219,7 +219,7 @@
                 }
             },
             async queryList() {
-                let {currentPage: pageNo, pageSize} = this.page
+                let {pageNum: pageNo, pageSize} = this.page
                 let {id} = this.data
                 this.table = {
                     ...this.table,

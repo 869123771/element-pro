@@ -335,7 +335,6 @@
                 }
             },
             async commitData() {
-                debugger;
                 let {selectedroles} = this.form
                 let {userId, avatar, checkedNodeIds} = customParams
                 let {id, deptId} = this.data || {}                   //部门管理用户录入

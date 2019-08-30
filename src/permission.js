@@ -48,7 +48,12 @@ router.beforeEach((to, from, next) => {
                         })
                     })
             } else {
-                next()
+                if(path.includes(':')){
+                    next({...from, replace: true})
+                    NProgress.done()
+                }else{
+                    next()
+                }
             }
         }
     } else {

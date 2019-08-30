@@ -60,7 +60,6 @@
             data : {
                 handler(props){
                     if(!isEmpty(props)){
-                        debugger;
                         let {pid} = props
                         this.form = {
                             ...this.form,

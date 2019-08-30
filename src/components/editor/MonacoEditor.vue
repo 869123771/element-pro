@@ -95,9 +95,7 @@
                 });
                 this.$emit('onMounted', this.monacoEditor);                      //编辑器创建完成回调
                 this.monacoEditor.onDidChangeModelContent((event) => {            //编辑器内容changge事件
-                    debugger;
                     console.log(this.monacoEditor)
-                    debugger;
                     this.editor = {
                         ...this.editor,
                         code: this.monacoEditor.getValue()

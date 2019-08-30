@@ -39,7 +39,6 @@
         watch: {
             '$route': {
                 handler(to, from) {
-                    debugger;
                     this.handleNav(to.matched)
                 },
                 immediate: true

@@ -48,7 +48,6 @@
             depts : {
                 handler(props){
                     if(!isEmpty(props)){
-                        debugger;
                         this.deptAssign = {
                             ...this.deptAssign,
                             data : props,

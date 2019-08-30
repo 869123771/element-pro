@@ -3,6 +3,11 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
 const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
 const MonacoEditorPlugin = require('monaco-editor-webpack-plugin')
 const CompressionWebpackPlugin = require("compression-webpack-plugin");
+
+const Dashboard = require('webpack-dashboard');
+const DashboardPlugin = require('webpack-dashboard/plugin');
+const dashboard = new Dashboard();
+
 // const zopfli = require("@gfx/zopfli");
 // const BrotliPlugin = require("brotli-webpack-plugin");
 const AliOssPlugin = require("webpack-oss");
@@ -13,6 +18,7 @@ const glob = require("glob-all");
 
 const resolve = dir => path.join(__dirname, dir);
 const IS_PROD = ["production", "prod"].includes(process.env.NODE_ENV);
+
 const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i;
 
 module.exports = {
@@ -32,6 +38,11 @@ module.exports = {
         //     'vuex': 'Vuex',
         //     'axios': 'axios'
         // }
+        config = {
+            ...config,
+            entry : ['@babel/polyfill','./src/main.js']
+        }
+
         const plugins = [];
         plugins.push(
             new MonacoEditorPlugin()
@@ -48,7 +59,7 @@ module.exports = {
                 })
             );*/
 
-            plugins.push(
+           /* plugins.push(
                 new ParallelUglifyPlugin({
                     // 传递给 UglifyJS的参数如下：
                     uglifyES: {
@@ -64,7 +75,9 @@ module.exports = {
                         }
                     },
                 }),
-            );
+            );*/
+
+            plugins.push(new DashboardPlugin(dashboard.setData))
 
             plugins.push(
                 new CompressionWebpackPlugin({
@@ -111,7 +124,7 @@ module.exports = {
             //     })
             // );
         }
-        config.plugins = [...config.plugins, ...plugins];
+        config.plugins = [...plugins];
     },
     chainWebpack: config => {
         // 修复HMR
@@ -205,9 +218,9 @@ module.exports = {
         proxy: {
             '/jeecg-boot': {
                 //target: process.env.VUE_APP_BASE_API || 'http://localhost:8080',
-                 //target: process.env.VUE_APP_BASE_API || 'http://10.149.10.50:8080',
+                 target: process.env.VUE_APP_BASE_API || 'http://10.149.10.50:8080',
                 //target: process.env.VUE_APP_BASE_API || 'http://47.105.36.102:8080',
-                target: process.env.VUE_APP_BASE_API || 'http://boot.jeecg.com/',
+                //target: process.env.VUE_APP_BASE_API || 'http://boot.jeecg.com/',
                 ws: false,
                 //secure: false,
                 changeOrigin: true

@@ -35,7 +35,7 @@
                     layout="total, sizes, prev, pager, next, jumper"
                     :page-sizes="[5, 10, 20, 30]"
                     :page-count="5"
-                    :current-page.sync="page.currentPage"
+                    :current-page.sync="page.pageNum"
                     :total="page.total"
                     :page-size="page.pageSize"
                     @size-change="sizeChange"
@@ -102,7 +102,7 @@
                 page: {
                     background: true,
                     layout: "total, sizes, prev, pager, next, jumper",
-                    currentPage: 1,
+                    pageNum : 1,
                     pageSize: 10,
                     total: 0
                 },
@@ -142,7 +142,7 @@
             search() {
                 this.page = {
                     ...this.page,
-                    currentPage: 1
+                    pageNum : 1
                 }
                 this.queryList()
             },
@@ -242,10 +242,10 @@
                     this.$modal.show(name)
                 })
             },
-            currentChange(currentPage) {
+            currentChange(pageNum) {
                 this.page = {
                     ...this.page,
-                    currentPage
+                    pageNum
                 }
                 this.queryList()
             },
@@ -257,10 +257,8 @@
                 this.queryList()
             },
             async confirmDeleteBatch(id,event,index) {
-                debugger;
                 let {success, message} = await http.delete(apiList.sys_dict_delete, {id})
                 if (success) {
-                    debugger;
                     sweetAlert.successWithTimer(message)
                     event(index)                        //关闭popover
                     this.queryList()
@@ -269,7 +267,7 @@
                 }
             },
             async queryList() {
-                let {currentPage: pageNo, pageSize} = this.page
+                let {pageNum : pageNo, pageSize} = this.page
                 this.table = {
                     ...this.table,
                     loading: true

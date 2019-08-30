@@ -63,7 +63,7 @@
                     selection: []
                 },
                 page: {
-                    currentPage: 1,
+                    pageNum : 1,
                     pageSize: 10,
                     total: 0
                 },

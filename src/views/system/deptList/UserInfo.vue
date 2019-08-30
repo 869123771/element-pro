@@ -27,7 +27,7 @@
                     layout="total, sizes, prev, pager, next, jumper"
                     :page-sizes="[5, 10, 20, 30]"
                     :page-count="10"
-                    :current-page="page.currentPage"
+                    :current-page="page.pageNum"
                     :total="page.total"
                     :page-size="page.pageSize"
                     @size-change="sizeChange"
@@ -344,7 +344,7 @@
                 this.queryList()
             },
             async queryList() {
-                let {currentPage: pageNo, pageSize} = this.page
+                let {pageNum: pageNo, pageSize} = this.page
                 let {id} = this.userInfo
                 this.table = {
                     ...this.table,

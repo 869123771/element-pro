@@ -8,7 +8,7 @@
                 </template>
                 <nav-menu :navMenus="navMenu.children"></nav-menu>
             </Submenu>
-            <MenuItem v-else :index="navMenu.path">
+            <MenuItem v-else :index="navMenu.path" v-show = "!navMenu.hidden">
                 <i class="anticon pr-1" :class="'icon-' + navMenu.meta.icon"></i>
                 <span slot="title" class="menu-item-title">{{navMenu.meta.title}}</span>
             </MenuItem>

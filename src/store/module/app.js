@@ -58,7 +58,6 @@ export default {
         REMOVE_NAV_TAG(state, removeNav) {
             let _30s = require('30-seconds-of-code');
             let {navTagList, currentNav} = state
-            debugger;
             navTagList = _30s.remove(navTagList, item => item.path !== removeNav);
             if (navTagList.length) {
                 let [{path: lastNav}] = navTagList.slice(-1)
@@ -69,7 +68,6 @@ export default {
             state.navTagList = [...navTagList]
         },
         SET_LANG(state, lang) {
-            debugger;
             localSave('lang', lang)
             state.lang = lang
         },

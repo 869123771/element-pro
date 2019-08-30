@@ -84,7 +84,7 @@
                 },
                 page: {
                     background: true,
-                    currentPage: 1,
+                    pageNum: 1,
                     pageSize: 10,
                     total: 0
                 },
@@ -218,7 +218,6 @@
                 this.queryList()
             },
             async load(tree, treeNode, resolve) {
-                debugger;
                 let {id} = tree
                 let params = {
                     pid : id
@@ -229,7 +228,6 @@
                 }
             },
             async queryList() {
-                debugger;
                 this.table = {
                     ...this.table,
                     loading: true

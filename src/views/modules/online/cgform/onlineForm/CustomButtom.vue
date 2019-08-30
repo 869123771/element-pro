@@ -24,7 +24,7 @@
                     layout="total, sizes, prev, pager, next, jumper"
                     :page-sizes="[5, 10, 20, 30]"
                     :page-count="10"
-                    :current-page.sync="page.currentPage"
+                    :current-page.sync="page.pageNum"
                     :total="page.total"
                     :page-size="page.pageSize"
                     @size-change="sizeChange"
@@ -91,7 +91,7 @@
                     show: true
                 },
                 page: {
-                    currentPage: 1,
+                    pageNum: 1,
                     pageSize: 10,
                     total: 0
                 },
@@ -193,10 +193,10 @@
                     selection
                 }
             },
-            currentChange(currentPage) {
+            currentChange(pageNum) {
                 this.page = {
                     ...this.page,
-                    currentPage
+                    pageNum
                 }
                 this.queryList()
             },
@@ -213,7 +213,7 @@
                     loading: true
                 }
                 let {id} = this.data
-                let {pageSize, currentPage: pageNo} = this.page
+                let {pageSize, pageNum: pageNo} = this.page
                 let params = {
                     pageSize,
                     pageNo

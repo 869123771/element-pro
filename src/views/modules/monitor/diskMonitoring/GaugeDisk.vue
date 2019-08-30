@@ -47,10 +47,8 @@
         },
         methods: {
             initChat() {
-                debugger;
                 let {value, name, max, rest} = this.datas
                 //let usePercentage = `${(rest/1024**3).toFixed()} / ${(max/1024**3).toFixed()}G`
-                debugger;
                 this.options = {
                     ...this.options,
                     gauge: {

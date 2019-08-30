@@ -162,7 +162,6 @@
             },
 
             saveData() {
-                debugger
                 let {id} = this.data
                 let {msgType, userIds} = this.form
                 let params = {

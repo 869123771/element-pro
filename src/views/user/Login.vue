@@ -44,11 +44,11 @@
         },
         data() {
             let checkCode = (rule, value, callback) => {
-                let randomStr = this.$refs.identifyCode.randomStr.toLowerCase()
+                let {checkCode:{code}} =  this.$refs.identifyCode
                 if (!value) {
                     callback(new Error('验证码不能为空'));
                 }
-                else if (value.toLowerCase() !== randomStr) {
+                else if (value.toUpperCase() !== code.toUpperCase()) {
                     callback(new Error('请输入正确的验证码'));
                 } else {
                     callback()
@@ -58,7 +58,7 @@
                 form: {
                     username: 'admin',
                     password: '123456',
-                    code: ''
+                    code: '',
                 },
                 loading: false,
                 rules: {
@@ -95,8 +95,11 @@
                 let {password} = this.form
                 let {success: pass, result: {iv, key}} = await http.get(apiList.login_encrypted)
                 if (pass) {
+                    let {checkCode:{code,key}} =  this.$refs.identifyCode
                     let params = {
                         ...this.form,
+                        captcha : code,
+                        checkKey : key
                         //password: aesEncrypt(password, key, iv)
                     }
                     let {success, message, result} = await http.post(apiList.login, params)

@@ -209,7 +209,6 @@
                 }
             },
             checkUniqueTable(id) {
-                debugger;
                 if (id) {
                     this.rules = {
                         ...this.rules,
@@ -228,7 +227,6 @@
                 }
             },
             async saveData() {
-                debugger;
                 let {table: {data: indexs}} = this.$refs.index
                 let {data: fields} = this.tabs
                 let {id} = this.form

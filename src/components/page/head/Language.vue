@@ -4,7 +4,7 @@
         <el-menu mode="horizontal">
             <el-submenu index="" popper-class="menu-lang" :popper-append-to-body="false">
                 <template slot="title">{{ title }}</template>
-                <el-menu-item :index="key" v-for="(value, key) in localList" @click.native="selectLang(key)">
+                <el-menu-item :index="key" :key = "value" v-for="(value, key) in localList" @click.native="selectLang(key)">
                     {{value}}
                 </el-menu-item>
             </el-submenu>

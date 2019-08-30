@@ -93,7 +93,6 @@
                 }
             },
             async setIndexs() {
-                debugger;
                 this.table = {
                     ...this.table,
                     loading: true

@@ -75,7 +75,7 @@
                     layout="total, sizes, prev, pager, next, jumper"
                     :page-sizes="[5, 10, 20, 30]"
                     :page-count="10"
-                    :current-page.sync="page.currentPage"
+                    :current-page.sync="page.pageNum"
                     :total="page.total"
                     :page-size="page.pageSize"
                     @size-change="sizeChange"
@@ -205,7 +205,7 @@
                     show: true
                 },
                 page: {
-                    currentPage: 1,
+                    pageNum: 1,
                     pageSize: 10,
                     total: 0
                 }
@@ -232,7 +232,6 @@
                 getActivitiSync: 'GET_ACTIVIYI_SYNC',
             }),
             closeFlush() {
-                debugger;
                 this.drawer = {
                     ...this.drawer,
                     show: false,
@@ -468,7 +467,7 @@
             search() {
                 this.page = {
                     ...this.page,
-                    currentPage: 1
+                    pageNum : 1
                 }
                 this.queryList()
             },
@@ -492,10 +491,10 @@
                     selection
                 }
             },
-            currentChange(currentPage) {
+            currentChange(pageNum) {
                 this.page = {
                     ...this.page,
-                    currentPage
+                    pageNum
                 }
                 this.queryList()
             },
@@ -511,7 +510,7 @@
                     ...this.table,
                     loading: true
                 }
-                let {pageSize, currentPage: pageNo} = this.page
+                let {pageSize, pageNum: pageNo} = this.page
                 let params = {
                     ...this.form,
                     pageSize,
@@ -584,7 +583,6 @@
                             slot: true,
                             render: (h, scope) => {
                                 let imgPath = this.getAvatarView(scope)
-                                debugger;
                                 return (
                                     <el-image size={26} src={imgPath}
                                               preview-src-list={[imgPath]}

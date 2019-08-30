@@ -15,4 +15,6 @@ export default {
     online_form_button_custom_edit : '/online/cgform/button/edit',
     online_form_head_form_import_from_db_query : '/online/cgform/head/queryTables/',
     online_form_db_sync : '/online/cgform/api/doDbSynch',
+    online_form_auto_online_form_get_columns : '/online/cgform/api/getColumns',
+    online_form_auto_online_form_get_datas : '/online/cgform/api/getData',
 }

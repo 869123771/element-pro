@@ -4,12 +4,14 @@
             <el-input v-model="form.code" size="large" clearable placeholder="请输入右侧验证码">
                 <i slot="prefix" class="el-input__icon el-icon-key"></i>
             </el-input>
-            <div class="slot-code" @click="getRandomStr">{{randomStr}}</div>
+            <div class="slot-code" @click="getCheckCode">{{checkCode.code}}</div>
         </el-form-item>
     </div>
 </template>
 
 <script>
+    import {http, constant, apiList, sweetAlert} from "@/utils";
+
     export default {
         name: "IdentifyCode",
         props: {
@@ -19,19 +21,30 @@
         },
         data() {
             return {
-                randomStr: ''
+                checkCode : {
+                    code : 'wywd',
+                    key : ''
+                }
             }
         },
         methods: {
-            getRandomStr() {
-                this.randomStr = Math.random().toString(36).slice(2, 6)
+            async getCheckCode() {
+                //this.randomStr = Math.random().toString(36).slice(2, 6)
+                let {success,result:{code,key}} = await http.get(apiList.login_check_code)
+                if(success){
+                    this.checkCode = {
+                        ...this.checkCode,
+                        code,
+                        key
+                    }
+                }
             },
             codeInput() {
 
             }
         },
         mounted() {
-            this.getRandomStr()
+            this.getCheckCode()
         }
     }
 </script>

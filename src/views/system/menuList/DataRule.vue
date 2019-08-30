@@ -147,17 +147,17 @@
             search() {
                 this.page = {
                     ...this.page,
-                    currentPage: 1
+                    pageNum : 1
                 }
                 this.queryList()
             },
             reset() {
                 this.$refs.form.resetFields()
             },
-            currentChange(currentPage) {
+            currentChange(pageNum) {
                 this.page = {
                     ...this.page,
-                    currentPage
+                    pageNum
                 }
                 this.queryList()
             },

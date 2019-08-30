@@ -207,7 +207,7 @@
             search() {
                 this.page = {
                     ...this.page,
-                    currentPage: 1
+                    pageNum: 1
                 }
                 this.queryList()
             },

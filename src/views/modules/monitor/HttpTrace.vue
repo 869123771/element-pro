@@ -100,7 +100,7 @@
                     selection: []
                 },
                 page: {
-                    currentPage: 1,
+                    pageNum: 1,
                     pageSize: 10,
                     total: 0
                 },
@@ -121,10 +121,10 @@
             refresh() {
                 this.queryList()
             },
-            currentChange(currentPage) {
+            currentChange(pageNum) {
                 this.page = {
                     ...this.page,
-                    currentPage
+                    pageNum
                 }
                 this.queryList()
             },
@@ -136,7 +136,7 @@
                 this.queryList()
             },
             async queryList() {
-                let {currentPage: pageNo, pageSize} = this.page
+                let {pageNum: pageNo, pageSize} = this.page
                 this.table = {
                     ...this.table,
                     loading: true
@@ -146,10 +146,8 @@
                     pageSize,
                 }
                 let {status, data: {traces}} = await http.ajax('get', apiList.monitor_performance_http_query, params)
-                debugger;
                 if (status === constant.SUCCESS) {
                     let chunkResult = chunk(traces,pageSize)
-                    debugger;
                     this.table = {
                         ...this.table,
                         data: chunkResult[pageNo-1]

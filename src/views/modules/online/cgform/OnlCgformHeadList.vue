@@ -61,7 +61,7 @@
                     layout="total, sizes, prev, pager, next, jumper"
                     :page-sizes="[5, 10, 20, 30]"
                     :page-count="10"
-                    :current-page.sync="page.currentPage"
+                    :current-page.sync="page.pageNum"
                     :total="page.total"
                     :page-size="page.pageSize"
                     @size-change="sizeChange"
@@ -341,7 +341,7 @@
             search() {
                 this.page = {
                     ...this.page,
-                    currentPage: 1
+                    pageNum: 1
                 }
                 this.queryList()
             },
@@ -355,7 +355,7 @@
                     width: 90,
                     height: 90,
                     name: 'add',
-                    showFooter : true,
+                    showFooter: true,
                 }
                 this.component = {
                     ...this.component,
@@ -382,14 +382,14 @@
             },
             customButton() {
                 let {selection} = this.table
-                if(this.selectOne()){
+                if (this.selectOne()) {
                     this.dialog = {
                         ...this.dialog,
                         title: '自定义按钮',
                         width: 80,
                         height: 700,
                         name: 'customButton',
-                        showFooter : false,
+                        showFooter: false,
                     }
                     this.component = {
                         ...this.component,
@@ -405,14 +405,14 @@
             },
             jsEnergize() {
                 let {selection} = this.table
-                if(this.selectOne()){
+                if (this.selectOne()) {
                     this.dialog = {
                         ...this.dialog,
                         title: 'JS增強',
                         width: 70,
                         height: 700,
                         name: 'jsEnergize',
-                        showFooter : true,
+                        showFooter: true,
                     }
                     this.component = {
                         ...this.component,
@@ -428,14 +428,14 @@
             },
             javaEnergize() {
                 let {selection} = this.table
-                if(this.selectOne()){
+                if (this.selectOne()) {
                     this.dialog = {
                         ...this.dialog,
                         title: 'Java增強',
                         width: 25,
                         height: 600,
                         name: 'javaEnergize',
-                        showFooter : true,
+                        showFooter: true,
                     }
                     this.component = {
                         ...this.component,
@@ -449,14 +449,14 @@
                     })
                 }
             },
-            importFormFromDb(){
+            importFormFromDb() {
                 this.dialog = {
                     ...this.dialog,
                     title: '从数据库导入表单',
                     width: 25,
                     height: 600,
                     name: 'importForm',
-                    showFooter : true,
+                    showFooter: true,
                 }
                 this.component = {
                     ...this.component,
@@ -479,7 +479,7 @@
                         width: 90,
                         height: 90,
                         name: 'update',
-                        showFooter : true,
+                        showFooter: true,
                     }
                     this.component = {
                         ...this.component,
@@ -498,8 +498,8 @@
                     })
                 }
             },
-            functionalTest(scope) {
-            debugger;
+            functionalTest(row) {
+                this.$router.push(`/online/cgformList/${row.id}`)
             },
             addressConfig(scope) {
 
@@ -507,7 +507,7 @@
             confirm() {
                 let {ref} = this.component
                 let modifyRef = this.$refs[ref]
-                if(modifyRef.$refs.form){
+                if (modifyRef.$refs.form) {
                     modifyRef.$refs.form.validate(valid => {
                         if (valid) {
                             this.dialog = {
@@ -521,7 +521,7 @@
                             loading: false
                         }
                     })
-                }else{
+                } else {
                     modifyRef.saveData()
                 }
             },
@@ -558,7 +558,7 @@
                     width: 400,
                     height: 150,
                     name: 'syncDb',
-                    showFooter : true,
+                    showFooter: true,
                 }
                 this.component = {
                     ...this.component,
