@@ -1,37 +1,26 @@
 <template>
     <div class="http-trace bg-white p-3 m-3">
+        <el-row class = "mb-3">
+            <el-button plain icon="el-icon-refresh" @click="refresh">刷新</el-button>
+        </el-row>
         <el-row>
-            <avue-crud
-                    ref="crud"
+            <fox-table
+                    v-if="table.show"
+                    v-loading="table.loading"
+                    :column="table.column"
                     :data="table.data"
-                    :option="table.option"
-                    :page="page"
-                    :table-loading="table.loading"
-                    @on-load="queryList"
+                    pagination
+                    background
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :page-sizes="[5, 10, 20, 30]"
+                    :page-count="10"
+                    :current-page.sync="page.pageNum"
+                    :total="page.total"
+                    :page-size="page.pageSize"
                     @size-change="sizeChange"
-                    @current-change="currentChange"
+                    @p-current-change="currentChange"
             >
-                <template slot="menuLeft">
-                    <el-button plain icon="el-icon-refresh" @click="refresh">刷新</el-button>
-                </template>
-                <template slot="method" slot-scope="{row}">
-                    <template v-for = "item in methodsArr">
-                        <span v-if = "row.request.method === item.label">
-                            <el-tag class = "w-16" effect="dark" :type = "item.type">{{item.label}}</el-tag>
-                        </span>
-                    </template>
-                </template>
-                <template slot="uri" slot-scope="{row}">
-                    {{row.request.uri}}
-                </template>
-                <template slot="status" slot-scope="{row}">
-                    <template v-for = "item in resStatusArr">
-                        <span v-if = "row.response.status === item.label">
-                            <el-tag effect="plain" :type = "item.type">{{item.label}}</el-tag>
-                        </span>
-                    </template>
-                </template>
-                <template slot="timeTaken" slot-scope="{row}">
+                <template slot="timeTaken" slot-scope="{scope:{row}}">
                     <span v-if = "row.timeTaken > 100">
                         <el-tag effect="plain" type = "danger">{{`${row.timeTaken}ms`}}</el-tag>
                     </span>
@@ -39,63 +28,27 @@
                          <el-tag effect="plain" type = "success">{{`${row.timeTaken}ms`}}</el-tag>
                     </span>
                 </template>
-            </avue-crud>
+            </fox-table>
         </el-row>
     </div>
 </template>
 
 <script>
     import {http, apiList, constant, sweetAlert} from '@/utils'
+    import foxTable from '@/components/fox-table/'
     import dayjs from 'dayjs'
     import {chunk} from '30-seconds-of-code'
 
     export default {
         name: 'HttpTrace',
+        components : {
+            foxTable
+        },
         data() {
-            let {table} = constant
             return {
                 table: {
                     data: [],
-                    option: {
-                        ...table,
-                        pageSize: 10,
-                        selection : false,
-                        column: [
-                            {
-                                label: '请求时间',
-                                prop: 'timestamp',
-                                //slot : true
-                                formatter(row,value,label,column){
-                                    return dayjs(value).format('YYYY-MM-DD HH:mm:ss')
-                                },
-                                width : 150,
-                            },
-                            {
-                                label: '请求方法',
-                                prop: 'method',
-                                slot : true,
-                                width : 120,
-                            },
-                            {
-                                label: '请求路径',
-                                prop: 'uri',
-                                slot : true,
-                                overHidden : true
-                            },
-                            {
-                                label: '响应状态',
-                                prop: 'status',
-                                slot : true,
-                                width : 100
-                            },
-                            {
-                                label: '请求耗时',
-                                prop: 'timeTaken',
-                                width : 100,
-                                slot : true
-                            },
-                        ]
-                    },
+                    column : [],
                     loading: false,
                     selection: []
                 },
@@ -162,9 +115,87 @@
                     }
                 }
             },
+            setI18n(){
+                this.table = {
+                    ...this.table,
+                    show : false,
+                    column: [
+                        {
+                            label: '请求时间',
+                            prop: 'timestamp',
+                            width : 150,
+                            render : (h,{row:{timestamp}})=>{
+                                return <span>{dayjs(timestamp).format('YYYY-MM-DD HH:mm:ss')}</span>
+                            }
+                        },
+                        {
+                            label: '请求方法',
+                            prop: 'method',
+                            width : 120,
+                            render : (h,{row:{request:{method}}})=>{
+                                return (
+                                    <span>
+                                        {
+                                            this.methodsArr.map(({label,type})=>{
+                                                if(label === method){
+                                                    return (
+                                                        <el-tag class = "w-16" effect="dark" type = {type}>{label}</el-tag>
+                                                    )
+                                                }
+                                            })
+                                        }
+                                    </span>
+                                )
+                            }
+                        },
+                        {
+                            label: '请求路径',
+                            prop: 'uri',
+                            render : (h,{row:{request:{uri}}})=>{
+                                return <span>{uri}</span>
+                            }
+                        },
+                        {
+                            label: '响应状态',
+                            prop: 'status',
+                            width : 100,
+                            render : (h,{row:{response:{status}}})=>{
+                                return (
+                                    <span>
+                                        {
+                                            this.resStatusArr.map(({label,type})=>{
+                                                if(label === status){
+                                                    return (
+                                                        <el-tag class = "w-16" effect="dark" type = {type}>{label}</el-tag>
+                                                    )
+                                                }
+                                            })
+                                        }
+                                    </span>
+                                )
+                            }
+                        },
+                        {
+                            label: '请求耗时',
+                            prop: 'timeTaken',
+                            width : 100,
+                            slot : true
+                        },
+                    ]
+                }
+                this.$nextTick(()=>{
+                    this.table = {
+                        ...this.table,
+                        show : true
+                    }
+                })
+            },
+        },
+        created(){
+            this.setI18n()
         },
         mounted() {
-
+            this.queryList()
         }
     }
 </script>

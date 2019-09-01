@@ -6,6 +6,7 @@
                     :fetch-suggestions = "querySearchAsync"
                     placeholder="请输入表名查询"
                     @select="handleSelect"
+                    clearable
                     class = "w-full"
             >
                 <i slot = "suffix" class = "el-input__icon el-icon-search"></i>
@@ -17,16 +18,6 @@
                     v-loading="table.loading"
                     :column="table.column"
                     :data="table.data"
-                    pagination
-                    background
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :page-sizes="[5, 10, 20, 30]"
-                    :page-count="10"
-                    :current-page.sync="page.pageNum"
-                    :total="page.total"
-                    :page-size="page.pageSize"
-                    @size-change="sizeChange"
-                    @p-current-change="currentChange"
                     @selection-change="selection"
             >
             </fox-table>
@@ -53,26 +44,49 @@
                     show: true,
                     tableName : ''
                 },
-                page: {
-                    pageNum: 1,
-                    pageSize: 10,
-                    total: 0
-                },
             }
         },
         methods : {
-            querySearchAsync(queryString, cb) {
-                /*var restaurants = this.restaurants;
-                var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
-
-                clearTimeout(this.timeout);
-                this.timeout = setTimeout(() => {
-                    cb(results);
-                }, 3000 * Math.random());*/
-
+            async querySearchAsync(queryString, cb) {
+                debugger;
+                let {result} = this.table
+                result.forEach(item=>{
+                    let {id} = item
+                    item.value = id
+                })
+                let filterItems = result.filter(item=>item.id.toUpperCase().includes(queryString.toUpperCase()))
+                this.table = {
+                    ...this.table,
+                    data : filterItems
+                }
+                cb(filterItems)
             },
-            handleSelect(item) {
-                console.log(item);
+            handleSelect(queryString) {
+                debugger;
+                let {result} = this.table
+                let filterItems = result.filter(item=>item.id.toUpperCase().includes(queryString.id.toUpperCase()))
+                this.table = {
+                    ...this.table,
+                    data : filterItems
+                }
+            },
+            saveData(){
+                let {selection} = this.table
+                if(selection.length){
+                    let tableNames = selection.map(item=>item.id).join(',')
+                    this.generateForm(tableNames)
+                }else{
+                    sweetAlert.errorWithTimer('请选择一张表')
+                }
+            },
+            async generateForm(names){
+                let {success,message} = await http.post(`${apiList.online_form_head_trans_table}/${names}`)
+                if (success) {
+                    sweetAlert.successWithTimer(message)
+                    this.$emit('modifySuccess')
+                } else {
+                    sweetAlert.error(message)
+                }
             },
             selection(selection) {
                 if (selection.length) {
@@ -91,38 +105,19 @@
                     selection
                 }
             },
-            currentChange(pageNum) {
-                this.page = {
-                    ...this.page,
-                    pageNum
-                }
-                this.queryList()
-            },
-            sizeChange(pageSize) {
-                this.page = {
-                    ...this.page,
-                    pageSize
-                }
-                this.queryList()
-            },
             async queryList() {
                 this.table = {
                     ...this.table,
                     loading: true
                 }
 
-                let {pageSize, pageNum: pageNo} = this.page
-                let params = {
-                    pageSize,
-                    pageNo
-                }
-                let {success, result} = await http.get(apiList.online_form_head_form_import_from_db_query, params)
+                let {success, result} = await http.get(apiList.online_form_head_form_import_from_db_query)
                 if (success) {
                     this.table = {
                         ...this.table,
-                        data : result
+                        data : result,
+                        result
                     }
-                    return result
                 }
                 this.table = {
                     ...this.table,
@@ -138,7 +133,7 @@
                         {type: 'index', fixed: true},
                         {
                             label: '表名',
-                            prop: 'tableName',
+                            prop: 'id',
                         },
 
                     ]

@@ -16,7 +16,7 @@
             :resizable="dialog.resizable"
     >
         <div class="modal-header">
-            <div class="modal-header-title">{{dialog.title}}</div>
+            <div class="modal-header-title" v-html = "dialog.title"></div>
             <div class="modal-header-control">
                 <div class="modal-header-control-screen">
                     <div class="iconfont icon-wy-compress handle-icon px-1 hover:color-blue-500 "
@@ -36,7 +36,7 @@
         </el-scrollbar>
         <div class="modal-footer text-center" v-if="dialog.showFooter">
             <el-button plain @click="close">{{$t('common_cancel')}}</el-button>
-            <el-button type="primary" :loading="dialog.loading" @click="confirm">{{$t('common_confirm')}}</el-button>
+            <el-button type="primary" :loading="dialog.loading" @click="confirm">{{dialog.confirmText || $t('common_confirm')}}</el-button>
         </div>
     </modal>
 </template>

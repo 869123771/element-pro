@@ -1,7 +1,7 @@
 <template>
     <div class="read">
         <el-row class = "pl-6">
-            <el-form :model="form" label-widht="120px">
+            <el-form :model="form" label-width="85px">
                 <el-form-item label="用户账号">
                     <span>{{form.username}}</span>
                 </el-form-item>
@@ -125,7 +125,5 @@
 </script>
 
 <style scoped>
-    /deep/ .el-tree-node__content>.el-checkbox{
-        margin-right: 8px;
-    }
+
 </style>

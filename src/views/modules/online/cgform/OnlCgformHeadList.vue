@@ -40,6 +40,10 @@
                 <span class="fa fa-fw fa-database"></span>
                 <span>从数据库导入表单</span>
             </el-button>
+            <el-button plain @click="codeGenerate">
+                <span class="fa fa-fw fa-code"></span>
+                <span>代码生成</span>
+            </el-button>
             <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
                 <el-button plain>
                     批量操作<i class="el-icon-arrow-down el-icon--right"></i>
@@ -104,6 +108,7 @@
     import JavaEnergize from './onlineForm/JavaEnergize'
     import ImportForm from './onlineForm/ImportForm'
     import SyncDb from './onlineForm/SyncDb'
+    import CodeGenerate from './onlineForm/CodeGenerate'
 
     let tableInfo = [
         {
@@ -350,7 +355,6 @@
             },
             add() {
                 this.dialog = {
-                    ...this.dialog,
                     title: '新增',
                     width: 90,
                     height: 90,
@@ -384,7 +388,6 @@
                 let {selection} = this.table
                 if (this.selectOne()) {
                     this.dialog = {
-                        ...this.dialog,
                         title: '自定义按钮',
                         width: 80,
                         height: 700,
@@ -407,7 +410,6 @@
                 let {selection} = this.table
                 if (this.selectOne()) {
                     this.dialog = {
-                        ...this.dialog,
                         title: 'JS增強',
                         width: 70,
                         height: 700,
@@ -430,7 +432,6 @@
                 let {selection} = this.table
                 if (this.selectOne()) {
                     this.dialog = {
-                        ...this.dialog,
                         title: 'Java增強',
                         width: 25,
                         height: 600,
@@ -451,11 +452,11 @@
             },
             importFormFromDb() {
                 this.dialog = {
-                    ...this.dialog,
                     title: '从数据库导入表单',
                     width: 25,
                     height: 600,
                     name: 'importForm',
+                    confirmText : '生成表单',
                     showFooter: true,
                 }
                 this.component = {
@@ -468,6 +469,39 @@
                 this.$nextTick(() => {
                     this.$modal.show(name)
                 })
+            },
+            codeGenerate(){
+                let {selection} = this.table
+                let [row] = selection
+                if (this.selectOne()) {
+                    if(!row.isDbSynch || row.isDbSynch === 'N'){
+                        sweetAlert.errorWithTimer('请先同步数据库')
+                        return
+                    }
+                    if(row.tableType === 3){
+                        sweetAlert.errorWithTimer('请选中该表对应的主表生成代码')
+                        return
+                    }
+                    else{
+                        this.dialog = {
+                            title: `代码生成<span class = "inline-block px-2 text-lg font-medium">[${row.tableName}]</span>`,
+                            width: 30,
+                            height: 700,
+                            name: 'codeGenerate',
+                            showFooter: true,
+                        }
+                        this.component = {
+                            ...this.component,
+                            is: CodeGenerate,
+                            ref: 'codeGenerate',
+                            data: row
+                        }
+                        let {name} = this.dialog
+                        this.$nextTick(() => {
+                            this.$modal.show(name)
+                        })
+                    }
+                }
             },
             async edit(row) {
                 let {id} = row
