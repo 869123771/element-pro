@@ -26,6 +26,17 @@
                 }
             }
         },
+        watch : {
+            data : {
+                handler(props){
+                    let {id} = props
+                    if(id){
+                        this.queryPermissionByRole(id)
+                    }
+                },
+            },
+            immediate : true
+        },
         methods : {
             getMenuRef(){
                 return this.$refs.menuSearch
@@ -72,8 +83,7 @@
                     defaultExpandKes : [],
                 }
             },
-            async queryPermissionByRole(){
-                let {id:roleId} = this.data
+            async queryPermissionByRole(roleId){
                 let params = {
                     roleId
                 }
@@ -88,7 +98,7 @@
             }
         },
         created(){
-            this.queryPermissionByRole()
+            //this.queryPermissionByRole()
         }
     }
 </script>

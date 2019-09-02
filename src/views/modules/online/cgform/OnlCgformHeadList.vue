@@ -109,6 +109,7 @@
     import ImportForm from './onlineForm/ImportForm'
     import SyncDb from './onlineForm/SyncDb'
     import CodeGenerate from './onlineForm/CodeGenerate'
+    import AddressConfig from './onlineForm/AddressConfig'
 
     let tableInfo = [
         {
@@ -535,8 +536,26 @@
             functionalTest(row) {
                 this.$router.push(`/online/cgformList/${row.id}`)
             },
-            addressConfig(scope) {
-
+            addressConfig(row) {
+                this.dialog = {
+                    title: `配置地址<span class = "inline-block px-2 text-lg font-medium">[${row.tableName}]</span>`,
+                    width: 25,
+                    height: 200,
+                    minHeight : 200,
+                    name: 'addressConf',
+                    confirmText : '复制',
+                    showFooter: true,
+                }
+                this.component = {
+                    ...this.component,
+                    is: AddressConfig,
+                    ref: 'addressConfig',
+                    data: {...row}
+                }
+                let {name} = this.dialog
+                this.$nextTick(() => {
+                    this.$modal.show(name)
+                })
             },
             confirm() {
                 let {ref} = this.component

@@ -91,6 +91,7 @@
                             ...this.dataRuleProps,
                             roleId
                         }
+                        this.queryTreeRole()
                     }
                 },
                 immediate: true
@@ -130,7 +131,7 @@
             }
         },
         created() {
-            this.queryTreeRole()
+            //this.queryTreeRole()
         }
     }
 </script>

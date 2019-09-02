@@ -34,7 +34,7 @@
     import {http, apiList, constant, mixin, sweetAlert} from '@/utils'
     import foxTable from '@/components/fox-table/'
     import OperBtn from '@/components/table/OperBtn'
-
+    import dayjs from 'dayjs'
 
     let oper = [
         {
@@ -129,6 +129,10 @@
             fileExport(){
 
             },
+            getAvatarView({row},prop) {
+                let {config: {baseUrl: {imgDomainURL}}} = constant
+                return `${imgDomainURL}/${row[prop]}`
+            },
             selection(selection) {
                 if (selection.length) {
                     this.show = {
@@ -168,11 +172,58 @@
                 let {code} = this.$route.params
                 let {success, result} = await http.get(`${apiList.online_form_auto_online_form_get_columns}/${code}`)
                 if (success) {
-                    let column = []
-                    let {columns} = result
+                    let column = [];
+                    let {columns,dictOptions} = result
                     columns.forEach(item=>{
-                        let {title:label,dataIndex:prop,align} = item
-                        column.push({align,label,prop})
+                        let {title:label,dataIndex:prop,align,sorter,customRender,scopedSlots = {}} = item
+                        debugger;
+                        let columnItem = {
+                            align,
+                            label,
+                            prop,
+                        };
+                        if(sorter){
+                            columnItem = {
+                                ...columnItem,
+                                sortable : true
+                            }
+                        }
+                        if(customRender){
+                            columnItem = {
+                                ...columnItem,
+                                render : (h,{row})=>{
+                                    return <span>{dictOptions[prop].find(item=>item.value === row[prop])}</span>
+                                }
+                            }
+                        }
+                        if(scopedSlots.customRender === 'dateSlot'){
+                            columnItem = {
+                                ...columnItem,
+                                render : (h,{row})=>{
+                                    console.log('row',row)
+                                    return <span>{dayjs(row[prop]).format('YYYY-MM-DD')}</span>
+                                }
+                            }
+                        }
+                        if(scopedSlots.customRender === 'imgSlot'){
+                            columnItem = {
+                                ...columnItem,
+                                render: (h, scope) => {
+                                    let imgPath = this.getAvatarView(scope,prop)
+                                    return (
+                                        <el-image size={26} src={imgPath}
+                                                  preview-src-list={[imgPath]}
+                                        >
+                                            <div slot="error" class="cursor-pointer">
+                                                <i class="el-icon-picture-outline"></i>
+                                            </div>
+                                        </el-image>
+                                    )
+                                }
+                            }
+                        }
+                        column.push(columnItem)
+
                     })
                     this.table = {
                         ...this.table,
