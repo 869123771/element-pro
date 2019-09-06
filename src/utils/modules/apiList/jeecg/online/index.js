@@ -22,4 +22,5 @@ export default {
     online_form_db_sync : '/online/cgform/api/doDbSynch',
     online_form_auto_online_form_get_columns : '/online/cgform/api/getColumns',
     online_form_auto_online_form_get_datas : '/online/cgform/api/getData',
+    online_report_head_list_query : '/online/cgreport/head/list'
 }
