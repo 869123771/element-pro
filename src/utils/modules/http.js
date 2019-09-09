@@ -181,7 +181,8 @@ export default {
             params,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
-            }
+            },
+            responseType : 'blob'
         }).then(response => {
             let desObj = {}
             let {data,headers} = response
