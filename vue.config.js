@@ -3,10 +3,10 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
 const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
 const MonacoEditorPlugin = require('monaco-editor-webpack-plugin')
 const CompressionWebpackPlugin = require("compression-webpack-plugin");
-
+/*
 const Dashboard = require('webpack-dashboard');
 const DashboardPlugin = require('webpack-dashboard/plugin');
-const dashboard = new Dashboard();
+const dashboard = new Dashboard();*/
 
 // const zopfli = require("@gfx/zopfli");
 // const BrotliPlugin = require("brotli-webpack-plugin");
@@ -28,6 +28,8 @@ module.exports = {
     lintOnSave: false,
     runtimeCompiler: true, // 是否使用包含运行时编译器的 Vue 构建版本
     productionSourceMap: false, // 生产环境的 source map
+    // 显式转义依赖
+    transpileDependencies: [],
 
     configureWebpack: config => {
         // cdn引用时配置externals
@@ -38,6 +40,7 @@ module.exports = {
         //     'vuex': 'Vuex',
         //     'axios': 'axios'
         // }
+        config.entry.app = ["babel-polyfill", "./src/main.js"];
         config = {
             ...config,
             entry : ['@babel/polyfill','./src/main.js']
@@ -77,7 +80,7 @@ module.exports = {
                 }),
             );*/
 
-            plugins.push(new DashboardPlugin(dashboard.setData))
+          //  plugins.push(new DashboardPlugin(dashboard.setData))
 
             plugins.push(
                 new CompressionWebpackPlugin({
@@ -127,6 +130,7 @@ module.exports = {
         config.plugins = [...plugins];
     },
     chainWebpack: config => {
+
         // 修复HMR
         config.resolve.symlinks(true);
 
