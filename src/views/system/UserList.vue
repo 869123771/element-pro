@@ -43,25 +43,28 @@
                 </form-query>
             </el-form>
         </el-row>
-        <el-row class="my-3">
-            <el-button plain type="primary" icon="el-icon-plus" @click="addUser" v-has="'user:add'">
-                {{$t('sys_user_add')}}
-            </el-button>
-            <el-button plain icon="iconfont icon-wy-upload" v-has="'user:import'" @click="fileImport">
-                {{$t('common_import')}}
-            </el-button>
-            <el-button plain icon="iconfont icon-wy-upload" @click="fileImport">{{$t('common_import')}}</el-button>
-            <el-button plain icon="iconfont icon-wy-download" @click="fileExport">{{$t('common_export')}}</el-button>
-            <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
-                <el-button plain>
-                    批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+        <el-row class="my-3" type = "flex" justify="space-between">
+            <div>
+                <el-button plain type="primary" icon="el-icon-plus" @click="addUser" v-has="'user:add'">
+                    {{$t('sys_user_add')}}
                 </el-button>
-                <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item @click.native="deleteBatch"><i class="el-icon-delete"></i>删除</el-dropdown-item>
-                    <el-dropdown-item @click.native="frozen()"><i class="el-icon-lock"></i>冻结</el-dropdown-item>
-                    <el-dropdown-item @click.native="frozen(1)"><i class="el-icon-unlock"></i>解冻</el-dropdown-item>
-                </el-dropdown-menu>
-            </el-dropdown>
+                <el-button plain icon="iconfont icon-wy-upload" v-has="'user:import'" @click="fileImport">
+                    {{$t('common_import')}}
+                </el-button>
+                <el-button plain icon="iconfont icon-wy-upload" @click="fileImport">{{$t('common_import')}}</el-button>
+                <el-button plain icon="iconfont icon-wy-download" @click="fileExport">{{$t('common_export')}}</el-button>
+                <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
+                    <el-button plain>
+                        批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+                    </el-button>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item @click.native="deleteBatch"><i class="el-icon-delete"></i>删除</el-dropdown-item>
+                        <el-dropdown-item @click.native="frozen()"><i class="el-icon-lock"></i>冻结</el-dropdown-item>
+                        <el-dropdown-item @click.native="frozen(1)"><i class="el-icon-unlock"></i>解冻</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+            </div>
+            <oper-menu @search = "queryList" @showColumn = "showColumn" :handle-menus = "table.handleMenus"></oper-menu>
         </el-row>
         <el-row>
             <fox-table
@@ -143,10 +146,12 @@
     import PopDropdown from './userList/PopDropdown'
     import PopoverConfirm from '@/components/popoverConfirm'
     import ProxyManConfig from './userList/ProxyManConfig'
+    import OperMenu from "@/components/table/OperMenu";
 
     export default {
         name: "UserList",
         components: {
+            OperMenu,
             DragDrawer,
             DragDialog,
             FileUpload,
@@ -201,6 +206,7 @@
                     column: [],
                     data: [],
                     selection: [],
+                    handleMenus : [],
                     loading: false,
                     show: true
                 },
@@ -530,85 +536,92 @@
                     this.$refs.table.rowDrop()
                 }
             },
+            showColumn(column){
+                this.table = {
+                    ...this.table,
+                    column
+                }
+            },
             setI18n() {
+                let column = [
+                    {type: 'selection', fixed: true},
+                    {
+                        label: this.$t('common_operate'),
+                        prop: 'oper',
+                        width: '100',
+                        fixed : true,
+                        render: (h, scope) => {
+                            return (
+                                h(PopDropdown, {
+                                    on: {
+                                        edit: () => {
+                                            this.edit(scope)
+                                        },
+                                        handleDetail: () => {
+                                            this.handleDetail(scope)
+                                        },
+                                        handlePwd: () => {
+                                            this.handlePwd(scope)
+                                        },
+                                        handleDel: () => {
+                                            this.handleDel(scope)
+                                        },
+                                        frozen: () => {
+                                            this.frozen(scope)
+                                        },
+                                        proxyMan: () => {
+                                            this.proxyMan(scope)
+                                        }
+                                    }
+                                })
+                            )
+                        },
+                    },
+                    {
+                        label: this.$t('sys_user_account'),
+                        prop: 'username',
+                    },
+                    {
+                        label: this.$t('sys_user_name'),
+                        prop: 'realname',
+                    },
+                    {
+                        label: this.$t('sys_user_avatar'),
+                        width: '70',
+                        prop: 'avatar',
+                        slot: true,
+                        render: (h, scope) => {
+                            let imgPath = this.getAvatarView(scope)
+                            return (
+                                <el-image size={26} src={imgPath}
+                                          preview-src-list={[imgPath]}
+                                >
+                                    <div slot="error" class="cursor-pointer">
+                                        <i class="el-icon-picture-outline"></i>
+                                    </div>
+                                </el-image>
+                            )
+                        }
+                    },
+                    {
+                        label: this.$t('sys_user_sex'),
+                        prop: 'sex_dictText',
+                        width: '70'
+                    },
+                    {label: this.$t('sys_user_birthday'), prop: 'birthday'},
+                    {label: this.$t('sys_user_phone'), prop: 'phone',},
+                    {label: this.$t('sys_user_email'), prop: 'email',},
+                    {
+                        label: this.$t('sys_user_status'),
+                        prop: 'status_dictText',
+                        width: '70',
+                    },
+                ]
                 this.table = {
                     ...this.table,
                     show: false,
-                    column: [
-                        {type: 'selection', fixed: true},
-                        {
-                            label: this.$t('common_operate'),
-                            prop: 'oper',
-                            width: '100',
-                            fixed : true,
-                            render: (h, scope) => {
-                                return (
-                                    h(PopDropdown, {
-                                        on: {
-                                            edit: () => {
-                                                this.edit(scope)
-                                            },
-                                            handleDetail: () => {
-                                                this.handleDetail(scope)
-                                            },
-                                            handlePwd: () => {
-                                                this.handlePwd(scope)
-                                            },
-                                            handleDel: () => {
-                                                this.handleDel(scope)
-                                            },
-                                            frozen: () => {
-                                                this.frozen(scope)
-                                            },
-                                            proxyMan: () => {
-                                                this.proxyMan(scope)
-                                            }
-                                        }
-                                    })
-                                )
-                            },
-                        },
-                        {
-                            label: this.$t('sys_user_account'),
-                            prop: 'username',
-                        },
-                        {
-                            label: this.$t('sys_user_name'),
-                            prop: 'realname',
-                        },
-                        {
-                            label: this.$t('sys_user_avatar'),
-                            width: '70',
-                            prop: 'avatar',
-                            slot: true,
-                            render: (h, scope) => {
-                                let imgPath = this.getAvatarView(scope)
-                                return (
-                                    <el-image size={26} src={imgPath}
-                                              preview-src-list={[imgPath]}
-                                    >
-                                        <div slot="error" class="cursor-pointer">
-                                            <i class="el-icon-picture-outline"></i>
-                                        </div>
-                                    </el-image>
-                                )
-                            }
-                        },
-                        {
-                            label: this.$t('sys_user_sex'),
-                            prop: 'sex_dictText',
-                            width: '70'
-                        },
-                        {label: this.$t('sys_user_birthday'), prop: 'birthday', showOverflowTooltip: true},
-                        {label: this.$t('sys_user_phone'), prop: 'phone', showOverflowTooltip: true},
-                        {label: this.$t('sys_user_email'), prop: 'email', showOverflowTooltip: true},
-                        {
-                            label: this.$t('sys_user_status'),
-                            prop: 'status_dictText',
-                            width: '70',
-                            showOverflowTooltip: true
-                        },
-                    ]
+                    column,
+                    handleMenus : column
                 }
                 this.$nextTick(() => {
                     this.table = {
