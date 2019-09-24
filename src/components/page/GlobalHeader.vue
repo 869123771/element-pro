@@ -12,6 +12,7 @@
         </div>
 
         <div class="float-right flex items-center self-stretch">
+            <color-picker></color-picker>
             <div class = "px-2 flex items-center">
                 <language @on-lang-change="setLang" :lang="lang"></language>
             </div>
@@ -27,12 +28,14 @@
     import NavTag from './head/NavTag'
     import Avatar from "./head/Avatar";
     import Language from './head/Language'
+    import ColorPicker from "./head/ColorPicker";
 
     export default {
         name: 'GlobalHeader',
         components: {
             Avatar,
-            LevelBar, BreadCrumb, NavTag, Language
+            LevelBar, BreadCrumb, NavTag, Language,
+            ColorPicker
         },
         computed: {
             ...mapState({

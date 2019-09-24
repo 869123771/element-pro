@@ -29,7 +29,10 @@ module.exports = {
     runtimeCompiler: true, // 是否使用包含运行时编译器的 Vue 构建版本
     productionSourceMap: false, // 生产环境的 source map
     // 显式转义依赖
-    transpileDependencies: [],
+    transpileDependencies: [
+        'vue-echarts',
+        'resize-detector'
+    ],
 
     configureWebpack: config => {
         // cdn引用时配置externals
