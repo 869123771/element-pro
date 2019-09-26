@@ -64,7 +64,7 @@
 
 <script>
     import {mapActions} from 'vuex'
-    import {http, apiList, sweetAlert, constant,mixin} from '@/utils'
+    import {http, apiList, sweetAlert, constant,mainPageModel} from '@/utils'
     import foxTable from '@/components/fox-table'
     import OperBtn from '@/components/table/OperBtn'
     import DragDrawer from '@/components/dragDrawer'
@@ -88,7 +88,7 @@
             AddUser,
             PopoverConfirm
         },
-        mixins: [mixin],
+        mixins: [mainPageModel],
         data() {
             return {
                 table: {

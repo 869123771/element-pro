@@ -4,6 +4,6 @@ import apiList from './modules/apiList'
 import tableUtils from './modules/tableUtils'
 import sweetAlert from './modules/sweetAlert'
 import hasPermission from './hasPermission'
-import mixin from './mixin'
+import mainPageModel from './mixins/mainPageModel'
 
-export {http,constant,apiList,tableUtils,hasPermission,mixin,sweetAlert}
+export {http,constant,apiList,tableUtils,hasPermission,mainPageModel,sweetAlert}

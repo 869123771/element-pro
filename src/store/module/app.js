@@ -11,6 +11,11 @@ export default {
         navTagList: [],
         currentNav: '',
         lang: localRead('lang'),
+        themeColor : localRead('themeColor'),
+        controlShow : {
+            themeColor : localRead('themeColorShow') || false,
+            shrinkBar : localRead('shrinkBar') || false,
+        }
     },
     mutations: {
         SHRINK_MENU(state) {
@@ -70,6 +75,25 @@ export default {
         SET_LANG(state, lang) {
             localSave('lang', lang)
             state.lang = lang
+        },
+        SET_THEME(state,themeColor){
+            localSave('themeColor', themeColor)
+            state.themeColor = themeColor
+        },
+        SET_THEME_COLOR_SHOW(state,themeColor){
+            debugger
+            localSave('themeColorShow', themeColor)
+            state.controlShow = {
+                ...state.controlShow,
+                themeColor
+            }
+        },
+        SET_SHRINK_BAR(state,shrinkBar){
+            localSave('shrinkBar', shrinkBar)
+            state.controlShow = {
+                ...state.controlShow,
+                shrinkBar
+            }
         },
     },
     actions: {}

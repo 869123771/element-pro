@@ -16,6 +16,9 @@ import 'element-ui/lib/theme-chalk/index.css';
 
 import VModal from 'vue-js-modal'
 
+import SlideOut from '@hyjiacan/vue-slideout'
+import '@hyjiacan/vue-slideout/lib/slideout.css'
+
 //import './vxeTable'
 
 import i18n from '@/locale'
@@ -50,6 +53,10 @@ Vue.use(VModal, {
     dynamicDefaults: {
         clickToClose: false
     }
+})
+
+Vue.use(SlideOut, {
+    // set props here
 })
 
 new Vue({

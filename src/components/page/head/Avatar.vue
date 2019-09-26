@@ -1,9 +1,9 @@
 <template>
-    <div>
+    <div class = "flex">
         <el-dropdown>
             <div class = "avatar flex items-center">
                 <div class = "flex px-1">
-                    <el-avatar :size = "36":src = "getAvatarView(userInfo.avatar)"></el-avatar>
+                    <el-avatar :size = "32":src = "getAvatarView(userInfo.avatar)"></el-avatar>
                 </div>
                 <div class = "flex items-center">
                     <span class = "px-1">{{userInfo.username}}</span>

@@ -137,7 +137,7 @@
     import FileUpload from '@/components/fileUpload'
     import FormQuery from '@/components/form/query'
     import {mapState, mapActions} from 'vuex'
-    import {http, apiList, constant, mixin, sweetAlert} from '@/utils'
+    import {http, apiList, constant, mainPageModel, sweetAlert} from '@/utils'
     import {downloadFile} from '@/utils/modules/tools'
     import foxTable from '@/components/fox-table/'
     import Read from './userList/Read'
@@ -162,7 +162,7 @@
             PopoverConfirm,
             ProxyManConfig
         },
-        mixins: [mixin],
+        mixins: [mainPageModel],
         data() {
             return {
                 form: {

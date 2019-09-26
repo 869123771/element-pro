@@ -30,7 +30,7 @@
 <script>
   import GlobalLayout from '@/components/page/GlobalLayout'
   import Contextmenu from '@/components/menu/Contextmenu'
-  import { mixin, mixinDevice } from '@/utils/mixin.js'
+  import { mixin, mixinDevice } from '@/utils/mainPageModel.js'
 
   const indexKey = '/dashboard/analysis'
 
