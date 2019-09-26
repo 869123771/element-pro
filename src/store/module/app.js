@@ -15,6 +15,8 @@ export default {
         controlShow : {
             themeColor : localRead('themeColorShow') || false,
             shrinkBar : localRead('shrinkBar') || false,
+            breadcrumb : localRead('breadcrumb') || false,
+            navTag : localRead('navTag') || false,
         }
     },
     mutations: {
@@ -93,6 +95,20 @@ export default {
             state.controlShow = {
                 ...state.controlShow,
                 shrinkBar
+            }
+        },
+        SET_BREADCRUMB(state,breadcrumb){
+            localSave('breadcrumb', breadcrumb)
+            state.controlShow = {
+                ...state.controlShow,
+                breadcrumb
+            }
+        },
+        SET_NAV_TAG(state,navTag){
+            localSave('navTag', navTag)
+            state.controlShow = {
+                ...state.controlShow,
+                navTag
             }
         },
     },

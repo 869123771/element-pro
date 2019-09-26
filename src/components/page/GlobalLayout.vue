@@ -9,7 +9,6 @@
                 <global-header></global-header>
             </el-header>
             <el-main class="layout-main" :style="{marginLeft : menuProps.collapse ? '64px' : '240px'}">
-                <nav-panel></nav-panel>
                 <router-view></router-view>
             </el-main>
         </el-container>
@@ -20,13 +19,12 @@
     import {mapState, mapMutations} from 'vuex'
     import SideMenu from "@/components/menu/SideMenu";
     import GlobalHeader from "./GlobalHeader"
-    import navPanel from './nav/NavPanel'
     import {localRead} from '@/utils/modules/tools'
 
     export default {
         name: 'GlobalLayout',
         components: {
-            SideMenu, GlobalHeader, navPanel
+            SideMenu, GlobalHeader,
         },
         computed: {
             ...mapState({
@@ -90,8 +88,8 @@
             height: 100vh;
         }
         &-header {
-            height: 50px !important;
-            padding: 0 1rem;
+            height: auto !important;
+            padding: 0px;
         }
         &-main {
             padding: 0px;

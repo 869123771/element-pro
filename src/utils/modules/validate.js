@@ -13,15 +13,31 @@ export const isEmail = (s) => {
  * @param {*} s
  */
 export const isMobile = (s) => {
-    return /^1[0-9]{10}$/.test(s)
+    return /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-7|9])|(?:5[0-3|5-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[1|8|9]))\d{8}$/.test(s)
 }
 
 /**
- * 电话号码
+ * 国内座机号码
  * @param {*} s
  */
 export const isPhone = (s) => {
-    return /^([0-9]{3,4}-)?[0-9]{7,8}$/.test(s)
+    return /\d{3}-\d{8}|\d{4}-\d{7}/.test(s)
+}
+
+/**
+ * 身份证号码
+ * @param {*} s
+ */
+export const isID = (s) => {
+    return /(^\d{8}(0\d|10|11|12)([0-2]\d|30|31)\d{3}$)|(^\d{6}(18|19|20)\d{2}(0\d|10|11|12)([0-2]\d|30|31)\d{3}(\d|X|x)$)/.test(s)
+}
+
+/**
+ * 银行卡号
+ * @param {*} s
+ */
+export const isPayCard = (s) => {
+    return /^[1-9]\d{9,29}$/.test(s)
 }
 
 /**

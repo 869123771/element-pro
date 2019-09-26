@@ -1,32 +1,4 @@
 <template>
-    <!--<drag-drawer v-model="drawer.show"
-                 :draggable="drawer.draggable"
-                 :title="drawer.title"
-                 :width.sync="drawer.width"
-                 :direction="drawer.direction"
-                 :scrollable="true"
-    >
-
-        <el-form label-width = "100px">
-            <el-form-item label = "显示主题色">
-                <el-switch v-model="controlShow.themeColor" @change="setThemeColor"></el-switch>
-            </el-form-item>
-            <el-form-item label = "显示收缩条">
-                <el-switch v-model="controlShow.shrinkBar" @change="setShrinkBar"></el-switch>
-            </el-form-item>
-        </el-form>
-        <div class="dialog-footer p-2 w-full" v-show="drawer.showFooter">
-            <div class="flex justify-end">
-                <popover-confirm @confirm="popoverConfirm" class="mx-2">
-                    <div slot="popover-title">确定要关闭吗</div>
-                    <div slot="popover-content">
-                        <el-button plain>取消</el-button>
-                    </div>
-                </popover-confirm>
-                <el-button type="primary" @click="popoverConfirm">提交</el-button>
-            </div>
-        </div>
-    </drag-drawer>-->
     <slide-out
             :visible.sync="drawer.show"
             :dock="drawer.placement"
@@ -42,6 +14,12 @@
             </el-form-item>
             <el-form-item label = "显示收缩条">
                 <el-switch v-model="controlShow.shrinkBar" @change="setShrinkBar"></el-switch>
+            </el-form-item>
+            <el-form-item label = "显示面包屑">
+                <el-switch v-model="controlShow.breadcrumb" @change="setBreadcrumb"></el-switch>
+            </el-form-item>
+            <el-form-item label = "显示导航条">
+                <el-switch v-model="controlShow.navTag" @change="setNavTag"></el-switch>
             </el-form-item>
         </el-form>
        <!-- <div slot="footer">{{text.footer}}</div>-->
@@ -78,6 +56,8 @@
             ...mapMutations({
                 setThemeColor : 'SET_THEME_COLOR_SHOW',
                 setShrinkBar : 'SET_SHRINK_BAR',
+                setBreadcrumb : 'SET_BREADCRUMB',
+                setNavTag : 'SET_NAV_TAG',
             }),
             open(){
                 this.drawer = {

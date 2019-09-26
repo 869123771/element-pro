@@ -7,6 +7,7 @@ const CompressionWebpackPlugin = require("compression-webpack-plugin");
 const Dashboard = require('webpack-dashboard');
 const DashboardPlugin = require('webpack-dashboard/plugin');
 const dashboard = new Dashboard();*/
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 
 // const zopfli = require("@gfx/zopfli");
 // const BrotliPlugin = require("brotli-webpack-plugin");
@@ -84,6 +85,10 @@ module.exports = {
             );*/
 
           //  plugins.push(new DashboardPlugin(dashboard.setData))
+
+            plugins.push(
+                new HardSourceWebpackPlugin()
+            );
 
             plugins.push(
                 new CompressionWebpackPlugin({
