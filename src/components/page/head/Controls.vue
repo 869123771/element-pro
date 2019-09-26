@@ -21,6 +21,18 @@
             <el-form-item label = "显示导航条">
                 <el-switch v-model="controlShow.navTag" @change="setNavTag"></el-switch>
             </el-form-item>
+            <el-form-item label = "菜单主题">
+                <el-select :value ="menuProps.theme.default" class = "w-full" filterable @change="setMenuTheme">
+                    <template v-for = "{label,value,color} in select.menuTheme">
+                        <el-option :value = "value" :label = "label">
+                            <div class = "flex items-center justify-between">
+                                <div>{{label}}</div>
+                                <div class = "w-4 h-4" :style = "{backgroundColor:color}"></div>
+                            </div>
+                        </el-option>
+                    </template>
+                </el-select>
+            </el-form-item>
         </el-form>
        <!-- <div slot="footer">{{text.footer}}</div>-->
     </slide-out>
@@ -45,11 +57,21 @@
                     title : '',
                     width : '400px'
                 },
+                form : {
+                   theme : 'gray'
+                },
+                select : {
+                    menuTheme : [
+                        {value : 'white',label:'白色',color:'rgba(0, 0, 0, 0.1)'},
+                        {value : 'gray',label:'灰色',color : '#545c64'},
+                    ]
+                }
             }
         },
         computed : {
             ...mapState({
                 controlShow : ({app}) => app.controlShow,
+                menuProps : ({app}) => app.menuProps
             })
         },
         methods : {
@@ -58,6 +80,7 @@
                 setShrinkBar : 'SET_SHRINK_BAR',
                 setBreadcrumb : 'SET_BREADCRUMB',
                 setNavTag : 'SET_NAV_TAG',
+                setMenuTheme : 'SET_MENU_THEME',
             }),
             open(){
                 this.drawer = {

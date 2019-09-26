@@ -6,6 +6,19 @@ export default {
             collapse: false,
             activeName: '',
             openNames: [],
+            theme : {
+                default : localRead('menuTheme') || 'gray',
+                white : {
+                    backgroundColor : '',
+                    textColor : '',
+                    activeTextColor :''
+                },
+                gray : {
+                    backgroundColor : '#545c64',
+                    textColor : '#fff',
+                    activeTextColor :'#ffd04b'
+                }
+            }
         },
         navBreadcrumbList: [],
         navTagList: [],
@@ -109,6 +122,17 @@ export default {
             state.controlShow = {
                 ...state.controlShow,
                 navTag
+            }
+        },
+        SET_MENU_THEME(state,menuTheme){
+            localSave('menuTheme', menuTheme)
+            let {menuProps:{theme}} = state
+            state.menuProps = {
+                ...state.menuProps,
+                theme : {
+                    ...theme,
+                    default: menuTheme
+                }
             }
         },
     },

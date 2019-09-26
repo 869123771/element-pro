@@ -9,6 +9,9 @@
                     :collapse-transition="false"
                     :default-active="menuProps.activeName"
                     :default-openeds="menuProps.openNames"
+                    :background-color="menuProps.theme[menuProps.theme.default].backgroundColor"
+                    :text-color="menuProps.theme[menuProps.theme.default].textColor"
+                    :active-text-color="menuProps.theme[menuProps.theme.default].activeTextColor"
             >
                 <nav-menu :nav-menus="permissionList"></nav-menu>
             </el-menu>
