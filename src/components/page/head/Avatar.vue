@@ -41,5 +41,7 @@
 </script>
 
 <style scoped>
-
+    /deep/ .el-dropdown{
+        color : inherit;
+    }
 </style>

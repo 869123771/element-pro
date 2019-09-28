@@ -1,11 +1,15 @@
 <template>
     <el-tabs v-model="tabs" closable @tab-click="clickTab" @tab-remove="removeTab">
         <el-tab-pane
-                v-for="item in navTagList"
-                :key="item.name"
-                :label="item.title"
-                :name="item.path"
+                v-for="{name,title,path,icon} in navTagList"
+                :key="name"
+                :name="path"
         >
+            <span slot="label">
+                <template v-if = "controlShow.navTagShowIcon">
+                     <i class="anticon" :class = "'icon-' + icon"></i>
+                </template>
+                {{title}}</span>
         </el-tab-pane>
     </el-tabs>
 </template>
@@ -23,7 +27,8 @@
         computed: {
             ...mapState({
                 navTagList: ({app}) => app.navTagList,
-                currentNav: ({app}) => app.currentNav
+                currentNav: ({app}) => app.currentNav,
+                controlShow: ({app}) => app.controlShow,
             })
         },
         watch: {
@@ -51,9 +56,35 @@
 
 <style scoped lang="less">
     .el-tabs {
-        padding: 0px 1rem;
+        padding: 0.25rem 0.75rem;
         /deep/ .el-tabs__header {
             margin: 0px;
         }
+        /deep/ &__item:not(:first-child){
+            margin-left: 0px;
+        }
+        /deep/ &__item{
+            background: #fff;
+            margin: 4px;
+            padding: 0 12px;
+            height: 32px;
+            line-height: 32px;
+        }
+        /deep/ &__active-bar {
+            display: none;
+        }
+
+    }
+    .el-tabs--top {
+        /deep/ .el-tabs__item.is-top:nth-child(2){
+            padding-left: 12px !important;
+        }
+        /deep/ .el-tabs__item.is-top:last-child {
+            padding-right: 12px !important;
+        }
+    }
+    /deep/ .el-tabs__nav-wrap::after{
+        height : 0px !important;
+        display: none;
     }
 </style>

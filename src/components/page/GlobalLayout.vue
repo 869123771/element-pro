@@ -5,11 +5,16 @@
         </el-aside>
         <el-container>
             <el-header class="layout-header border-b bg-white"
-                       :style="{marginLeft : menuProps.collapse ? '64px' : '240px'}">
+                       :style="{
+                            marginLeft : menuProps.collapse ? '64px' : '240px',
+                            background : headProps.theme[headProps.theme.default].backgroundColor,
+                            color : headProps.theme[headProps.theme.default].textColor
+                       }"
+            >
                 <global-header></global-header>
             </el-header>
             <el-main class="layout-main" :style="{marginLeft : menuProps.collapse ? '64px' : '240px'}">
-                <router-view></router-view>
+                <router-view v-if="isRouterAlive"></router-view>
             </el-main>
         </el-container>
     </el-container>
@@ -26,13 +31,21 @@
         components: {
             SideMenu, GlobalHeader,
         },
+        provide() {
+            return {
+                reload: this.reload
+            }
+        },
         computed: {
             ...mapState({
-                menuProps: ({app}) => app.menuProps
+                menuProps: ({app}) => app.menuProps,
+                headProps: ({app}) => app.headProps
             })
         },
         data() {
-            return {}
+            return {
+                isRouterAlive : true
+            }
         },
         watch: {
             '$route': {
@@ -45,12 +58,18 @@
         methods: {
             ...mapMutations({
                 setLang: 'SET_LANG',
-                setActiveName : 'ACTIVE_NAME',
-                setOpenNames : 'OPEN_NAMES',
-                setActiveNavTag : 'ACTIVE_NAV_TAG',
-                setActiveBreadCream : 'ACTIVE_BREAD_CREAM',
+                setActiveName: 'ACTIVE_NAME',
+                setOpenNames: 'OPEN_NAMES',
+                setActiveNavTag: 'ACTIVE_NAV_TAG',
+                setActiveBreadCream: 'ACTIVE_BREAD_CREAM',
             }),
-            handleNav(matched){
+            reload() {
+                this.isRouterAlive = false;
+                this.$nextTick(() => {
+                    this.isRouterAlive = true;
+                })
+            },
+            handleNav(matched) {
                 if (matched.length) {
                     const {path, parent, name, meta: {title, icon}} = matched[matched.length - 1]
                     const result = this.findOpenNames(parent)
@@ -59,12 +78,12 @@
                     result.unshift({path, name, title, icon})
                     this.setActiveName(activeName)
                     this.setOpenNames(openNames)
-                    this.setActiveNavTag({path, name, title})
+                    this.setActiveNavTag({path, name, title,icon})
                     this.setActiveBreadCream(result.reverse())
 
                 }
             },
-            findOpenNames (obj, resultList = []) {
+            findOpenNames(obj, resultList = []) {
                 if (obj && obj.constructor === Object) {
                     let {path, name, meta: {title, icon}, parent} = obj
                     resultList.push({path, name, title, icon})

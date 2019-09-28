@@ -6,17 +6,38 @@ export default {
             collapse: false,
             activeName: '',
             openNames: [],
+            uniqueOpened : localRead('uniqueOpened') || false,
             theme : {
-                default : localRead('menuTheme') || 'gray',
+                default : localRead('menuTheme') || 'dark',
                 white : {
                     backgroundColor : '',
                     textColor : '',
                     activeTextColor :''
                 },
-                gray : {
-                    backgroundColor : '#545c64',
+                dark : {
+                    backgroundColor : '#191a23',
                     textColor : '#fff',
-                    activeTextColor :'#ffd04b'
+                    activeTextColor :'#2d8cf0'
+                }
+            }
+        },
+        headProps : {
+            theme : {
+                default : localRead('headerTheme') || 'white',
+                white : {
+                    backgroundColor : '',
+                    textColor : '',
+                    activeTextColor :''
+                },
+                dark : {
+                    backgroundColor : '#191a23',
+                    textColor : '#fff',
+                    activeTextColor :'#fff'
+                },
+                blue : {
+                    backgroundColor : '#1f54bd',
+                    textColor : '#fff',
+                    activeTextColor :'#fff'
                 }
             }
         },
@@ -30,6 +51,8 @@ export default {
             shrinkBar : localRead('shrinkBar') || false,
             breadcrumb : localRead('breadcrumb') || false,
             navTag : localRead('navTag') || false,
+            reload : localRead('reload') || false,
+            navTagShowIcon : localRead('navTagShowIcon') || false,
         }
     },
     mutations: {
@@ -54,22 +77,29 @@ export default {
                 openNames
             }
         },
+        OPEN_UNIQUE(state, uniqueOpened) {
+            let {menuProps} = state
+            state.menuProps = {
+                ...menuProps,
+                uniqueOpened
+            }
+        },
         ACTIVE_BREAD_CREAM(state, activeBreadcream) {
             state.navBreadcrumbList = activeBreadcream
         },
-        ACTIVE_NAV_TAG(state, {path, title, name}) {
+        ACTIVE_NAV_TAG(state, {path, title, name,icon}) {
             let {navTagList} = state
             if (navTagList.length) {
                 if (!navTagList.map(item => item.path).includes(path)) {
                     navTagList = [
                         ...navTagList,
-                        {path, name, title}
+                        {path, name, title,icon}
                     ]
                 }
             } else {
                 navTagList = [
                     ...navTagList,
-                    {path, name, title}
+                    {path, name, title,icon}
                 ]
             }
             state.navTagList = [...navTagList]
@@ -124,6 +154,20 @@ export default {
                 navTag
             }
         },
+        SET_NAV_TAG_SHOW_ICON(state,navTagShowIcon){
+            localSave('navTagShowIcon', navTagShowIcon)
+            state.controlShow = {
+                ...state.controlShow,
+                navTagShowIcon
+            }
+        },
+        SET_RELOAD(state,reload){
+            localSave('reload', reload)
+            state.controlShow = {
+                ...state.controlShow,
+                reload
+            }
+        },
         SET_MENU_THEME(state,menuTheme){
             localSave('menuTheme', menuTheme)
             let {menuProps:{theme}} = state
@@ -132,6 +176,17 @@ export default {
                 theme : {
                     ...theme,
                     default: menuTheme
+                }
+            }
+        },
+        SET_HEADER_THEME(state,headerTheme){
+            localSave('headerTheme', headerTheme)
+            let {headProps:{theme}} = state
+            state.headProps = {
+                ...state.menuProps,
+                theme : {
+                    ...theme,
+                    default: headerTheme
                 }
             }
         },

@@ -3,8 +3,8 @@
         <el-scrollbar>
             <el-menu
                     class="h-screen"
-                    unique-opened
                     :router="true"
+                    :unique-opened = "menuProps.uniqueOpened"
                     :collapse="menuProps.collapse"
                     :collapse-transition="false"
                     :default-active="menuProps.activeName"

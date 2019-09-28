@@ -16,7 +16,7 @@ export default {
         SET_USER_INFO(state, userInfo) {
             state.userInfo = userInfo
         },
-        SET_PERMISSIONLIST: (state, permissionList) => {
+        SET_PERMISSION_LIST: (state, permissionList) => {
             state.permissionList = permissionList
         },
         SET_AUTH : (state, auth) => {
@@ -45,7 +45,7 @@ export default {
                 localSave(USER_AUTH, authData)
                 localSave(SYS_BUTTON_AUTH, allAuthData)
                 if (menuData && menuData.length) {
-                    commit('SET_PERMISSIONLIST', menuData)
+                    commit('SET_PERMISSION_LIST', menuData)
                     commit('SET_AUTH', authData)
                     commit('SET_ALL_AUTH', allAuthData)
                 }
@@ -57,7 +57,7 @@ export default {
         async LOGIN_OUT({commit, state}) {
             let logoutToken = state.token;
             commit('SET_TOKEN', '')
-            commit('SET_PERMISSIONLIST', [])
+            commit('SET_PERMISSION_LIST', [])
             setToken('')
             //await http.post(apiList.login_out,logoutToken)
             location.href = "/"

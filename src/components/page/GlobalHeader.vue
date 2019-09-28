@@ -1,13 +1,17 @@
 <template>
     <div class="head">
         <div class="h-full flex items-center justify-between head-top">
-            <div class="floal-left flex items-center self-stretch">
+            <div class="flex items-center self-stretch">
                 <div class="pr-3">
                     <template v-if="controlShow.shrinkBar">
                         <level-bar></level-bar>
                     </template>
                 </div>
-
+                <div>
+                    <template v-if = "controlShow.reload">
+                        <i class = "el-icon-refresh-right cursor-pointer pr-2" @click="refresh"></i>
+                    </template>
+                </div>
                 <div>
                     <template v-if="controlShow.breadcrumb">
                         <bread-crumb></bread-crumb>
@@ -44,6 +48,7 @@
 
     export default {
         name: 'GlobalHeader',
+        inject: ['reload'],
         components: {
             Avatar,
             LevelBar, BreadCrumb, Language,
@@ -64,7 +69,10 @@
         methods: {
             ...mapMutations({
                 setLang: 'SET_LANG'
-            })
+            }),
+            refresh(){
+                this.reload()
+            }
         }
     }
 </script>

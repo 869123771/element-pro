@@ -1,7 +1,11 @@
 <template>
-
     <div class="lang">
-        <el-menu mode="horizontal">
+        <el-menu
+                mode="horizontal"
+                :background-color="headProps.theme[headProps.theme.default].backgroundColor"
+                :text-color="headProps.theme[headProps.theme.default].textColor"
+                :active-text-color="headProps.theme[headProps.theme.default].activeTextColor"
+        >
             <el-submenu index="" popper-class="menu-lang" :popper-append-to-body="false">
                 <template slot="title">{{ title }}</template>
                 <el-menu-item :index="key" :key = "value" v-for="(value, key) in localList" @click.native="selectLang(key)">
@@ -13,6 +17,7 @@
 </template>
 
 <script>
+    import {mapState} from 'vuex'
     export default {
         name: "Language",
         props: {
@@ -38,6 +43,9 @@
             }
         },
         computed: {
+            ...mapState({
+                headProps : ({app}) => app.headProps
+            }),
             title() {
                 return this.langList[this.lang]
             }
@@ -56,9 +64,13 @@
             height: 50px;
             line-height: 50px;
             border-bottom: none;
+            color : inherit;
         }
         /deep/ .el-menu--popup, .el-menu-item {
             min-width: inherit !important;
+        }
+        /deep/ .el-menu.el-menu--horizontal{
+            border : none;
         }
     }
 </style>
