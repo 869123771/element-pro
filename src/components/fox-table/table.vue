@@ -173,6 +173,19 @@
                     }
                 })
             },
+            //列拖拽
+            columnDrop() {
+                const thead = document.querySelector('.el-table__header-wrapper tr')
+                this.sortable = Sortable.create(thead, {
+                    animation: 180,
+                    delay: 0,
+                    onEnd : ({newIndex,oldIndex}) => {
+                        const oldItem = this.column[oldIndex]
+                        this.column.splice(oldIndex, 1)
+                        this.column.splice(newIndex, 0, oldItem)
+                    }
+                })
+            }
         },
         watch: {
             merge() {

@@ -63,6 +63,7 @@
         </el-row>
         <el-row class="my-3">
             <fox-table
+                    ref = "table"
                     v-if="table.show"
                     v-loading="table.loading"
                     :column="table.column"
@@ -403,10 +404,12 @@
                         ...this.page,
                         total
                     }
-                    this.table = {
-                        ...this.table,
-                        loading: false
-                    }
+                    this.$refs.table.rowDrop()
+                    this.$refs.table.columnDrop()
+                }
+                this.table = {
+                    ...this.table,
+                    loading: false
                 }
             },
             setI18n() {
