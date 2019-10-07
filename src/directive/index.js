@@ -1,4 +1,5 @@
 import directive from './directives'
+import './module/waves'
 
 const importDirective = Vue => {
   /**

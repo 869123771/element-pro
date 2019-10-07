@@ -45,7 +45,7 @@
         </el-row>
         <el-row class="my-3" type = "flex" justify="space-between">
             <div>
-                <el-button plain type="primary" icon="el-icon-plus" @click="addUser" v-has="'user:add'">
+                <el-button plain type="primary" icon="el-icon-plus" @click="addUser" v-has="'user:add'" v-waves>
                     {{$t('sys_user_add')}}
                 </el-button>
                 <el-button plain icon="iconfont icon-wy-upload" v-has="'user:import'" @click="fileImport">

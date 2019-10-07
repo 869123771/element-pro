@@ -5,8 +5,6 @@ import App from './App.vue'
 import router from './router'
 import {store} from './store'
 
-
-
 import './permission'
 import importDirective from '@/directive'
 
@@ -18,6 +16,7 @@ import VModal from 'vue-js-modal'
 
 import SlideOut from '@hyjiacan/vue-slideout'
 import '@hyjiacan/vue-slideout/lib/slideout.css'
+
 
 //import './vxeTable'
 
