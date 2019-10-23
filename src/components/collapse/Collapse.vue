@@ -10,6 +10,8 @@
 </template>
 
 <script>
+    import {isEmpty} from '30-seconds-of-code'
+
     export default {
         name: "Collapse",
         props: {
@@ -20,7 +22,7 @@
         watch: {
             collapseProps: {
                 handler(props) {
-                    if (!this.validatenull(props)) {
+                    if (!isEmpty(props)) {
                         let {activeNames} = this.collapse
                         let {title, name} = props
                         if (name) {
@@ -61,10 +63,21 @@
                 color: #1c2438;
                 font-weight: 700;
                 white-space: nowrap;
-                padding-left: 0.5rem;
+                display : block;
+                border-left: 4px solid #66b1ff;
+                background: #f0f2f5;
+                text-align:center;
+                height : 42px;
+                line-height: 42px;
+                /deep/ .el-collapse-item__arrow{
+                    display: none;
+                }
             }
             &__header.is-active{
                 border-bottom-color : inherit;
+            }
+            &__content{
+                padding-bottom: 0px !important;
             }
         }
     }

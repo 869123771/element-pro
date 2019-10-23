@@ -45,25 +45,32 @@
         </el-row>
 
         <el-row>
-            <fox-table
-                    v-if="table.show"
-                    highlight-current-row
-                    v-loading="table.loading"
-                    :column="table.column"
-                    :data="table.data"
-                    pagination
-                    background
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :page-sizes="[5, 10, 20, 30]"
-                    :page-count="10"
-                    :current-page.sync="page.pageNum"
-                    :total="page.total"
-                    :page-size="page.pageSize"
-                    @size-change="sizeChange"
-                    @p-current-change="currentChange"
-                    @selection-change="selection"
-                    @cell-click="cellClick">
-            </fox-table>
+            <collapse :collapse-props = "collapse">
+                <div slot = "collapse-title">
+                    <span>部门信息</span>
+                </div>
+                <div slot = "collapse-content">
+                    <fox-table
+                            v-if="table.show"
+                            highlight-current-row
+                            v-loading="table.loading"
+                            :column="table.column"
+                            :data="table.data"
+                            pagination
+                            background
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :page-sizes="[5, 10, 20, 30]"
+                            :page-count="10"
+                            :current-page.sync="page.pageNum"
+                            :total="page.total"
+                            :page-size="page.pageSize"
+                            @size-change="sizeChange"
+                            @p-current-change="currentChange"
+                            @selection-change="selection"
+                            @cell-click="cellClick">
+                    </fox-table>
+                </div>
+            </collapse>
         </el-row>
         <el-row>
             <role-maintenance :data="role.data" v-show="role.show"></role-maintenance>
@@ -111,6 +118,7 @@
     import {downloadFile} from '@/utils/modules/tools'
     import DragDrawer from '@/components/dragDrawer'
     import DragDialog from '@/components/dragDialog'
+    import Collapse from '@/components/collapse/Collapse'
     import foxTable from '@/components/fox-table'
     import OperBtn from '@/components/table/OperBtn'
     import FileUpload from '@/components/fileUpload'
@@ -130,6 +138,7 @@
     export default {
         name: "RoleList",
         components: {
+            Collapse,
             DragDrawer,
             DragDialog,
             FileUpload,
@@ -144,6 +153,9 @@
                 form: {
                     roleName: '',
                     createTime: [],
+                },
+                collapse : {
+                    name : 'deptInfo'
                 },
                 table: {
                     show: true,

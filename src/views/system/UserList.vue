@@ -67,34 +67,41 @@
             <oper-menu @search = "queryList" @showColumn = "showColumn" :handle-menus = "table.handleMenus"></oper-menu>
         </el-row>
         <el-row>
-            <fox-table
-                    ref = "table"
-                    v-if="table.show"
-                    v-loading="table.loading"
-                    :column="table.column"
-                    :data="table.data"
-                    pagination
-                    background
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :page-sizes="[5, 10, 20, 30]"
-                    :page-count="10"
-                    :current-page.sync="page.pageNum"
-                    :total="page.total"
-                    :page-size="page.pageSize"
-                    @size-change="sizeChange"
-                    @p-current-change="currentChange"
-                    @selection-change="selection"
-            >
-                <template slot="avatar" slot-scope="{scope}">
-                    <el-image size="26" :src="getAvatarView(scope)"
-                              :preview-src-list="[getAvatarView(scope)]"
+            <collapse :collapse-props = "collapse">
+                <div slot = "collapse-title">
+                    <span>用户信息</span>
+                </div>
+                <div slot = "collapse-content">
+                    <fox-table
+                            ref = "table"
+                            v-if="table.show"
+                            v-loading="table.loading"
+                            :column="table.column"
+                            :data="table.data"
+                            pagination
+                            background
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :page-sizes="[5, 10, 20, 30]"
+                            :page-count="10"
+                            :current-page.sync="page.pageNum"
+                            :total="page.total"
+                            :page-size="page.pageSize"
+                            @size-change="sizeChange"
+                            @p-current-change="currentChange"
+                            @selection-change="selection"
                     >
-                        <div slot="error" class="cursor-pointer">
-                            <i class="el-icon-picture-outline"></i>
-                        </div>
-                    </el-image>
-                </template>
-            </fox-table>
+                        <template slot="avatar" slot-scope="{scope}">
+                            <el-image size="26" :src="getAvatarView(scope)"
+                                      :preview-src-list="[getAvatarView(scope)]"
+                            >
+                                <div slot="error" class="cursor-pointer">
+                                    <i class="el-icon-picture-outline"></i>
+                                </div>
+                            </el-image>
+                        </template>
+                    </fox-table>
+                </div>
+            </collapse>
         </el-row>
         <drag-drawer v-model="drawer.show"
                      :draggable="drawer.draggable"
@@ -139,7 +146,8 @@
     import {mapState, mapActions} from 'vuex'
     import {http, apiList, constant, mainPageModel, sweetAlert} from '@/utils'
     import {downloadFile} from '@/utils/modules/tools'
-    import foxTable from '@/components/fox-table/'
+    import foxTable from '@/components/fox-table'
+    import Collapse from '@/components/collapse/Collapse'
     import Read from './userList/Read'
     import Modify from './userList/Modify'
     import ResetPwd from './userList/ResetPwd'
@@ -155,6 +163,7 @@
             DragDrawer,
             DragDialog,
             FileUpload,
+            Collapse,
             FormQuery,
             foxTable,
             ResetPwd,
@@ -176,6 +185,9 @@
                     batch: false,
                     resetPwd: false,
                     proxyManConfig: false,
+                },
+                collapse : {
+                    name : 'userInfo'
                 },
                 drawer: {
                     show: false,

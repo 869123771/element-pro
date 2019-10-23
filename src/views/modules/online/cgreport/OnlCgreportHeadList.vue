@@ -28,8 +28,6 @@
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item @click.native="deleteBatch"><i class="el-icon-delete"></i>删除</el-dropdown-item>
-                    <el-dropdown-item @click.native="frozen()"><i class="el-icon-lock"></i>冻结</el-dropdown-item>
-                    <el-dropdown-item @click.native="frozen(1)"><i class="el-icon-unlock"></i>解冻</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
         </el-row>
