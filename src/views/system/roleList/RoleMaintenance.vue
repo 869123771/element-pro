@@ -172,7 +172,7 @@
                 getUserStatus: 'GET_USER_STATUS',
                 getAllRoles: 'GET_ALL_ROLES',
                 getAllDepts: 'GET_ALL_DEPTS',
-                getActivitiSync: 'GET_ACTIVIYI_SYNC',
+                getActivitySync: 'GET_ACTIVITY_SYNC',
             }),
             addUser() {
                 this.drawer = {
@@ -332,7 +332,7 @@
             this.getUserStatus()
             this.getAllRoles()
             this.getAllDepts()
-            this.getActivitiSync()
+            this.getActivitySync()
             this.queryList()
         }
     }

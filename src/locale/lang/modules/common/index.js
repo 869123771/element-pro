@@ -10,9 +10,11 @@ export const common_zh_cn = {
     common_reset: '重置',
     common_expand: '展开',
     common_fold: '收起',
+    common_sure_to_close_popover : '确定要关闭吗',
     common_confirm_del : '确定删除吗',
     common_cancel : '取消',
     common_confirm : '确定',
+    common_submit : '提交',
 }
 
 export const common_en_us = {
@@ -27,9 +29,11 @@ export const common_en_us = {
     common_reset: 'reset',
     common_expand: 'expand',
     common_fold: 'fold',
+    common_sure_to_close_popover : 'Are you sure to close it',
     common_confirm_del : 'are you sure',
     common_cancel : 'cancel',
     common_confirm : 'ok',
+    common_submit : 'submit',
 }
 
 export const common_zh_tw = {
@@ -44,7 +48,9 @@ export const common_zh_tw = {
     common_reset: '重置',
     common_expand: '展開',
     common_fold: '收起',
+    common_sure_to_close_popover : '確定要關閉嗎',
     common_confirm_del : '確定刪除嗎',
     common_cancel : '取消',
     common_confirm : '確定',
+    common_submit : '提交',
 }

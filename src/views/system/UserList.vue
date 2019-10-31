@@ -103,28 +103,28 @@
                 </div>
             </collapse>
         </el-row>
-        <drag-drawer v-model="drawer.show"
-                     :draggable="drawer.draggable"
-                     :title="drawer.title"
-                     :width.sync="drawer.width"
-                     :direction="drawer.direction"
-                     :scrollable="true"
+        <slide-out :visible.sync="drawer.show"
+                   :dock ="drawer.direction"
+                   :title="drawer.title"
+                   :size="drawer.width"
+                   :close-on-mask-click = "false"
+                   allow-resize
         >
 
             <component :ref="component.ref" :is="component.type" :data="component.data"
                        @closeFlush="closeFlush"></component>
-            <div class="dialog-footer p-2 w-full" v-show="drawer.showFooter">
+            <div slot = "footer" v-if = "drawer.showFooter">
                 <div class="flex justify-end">
                     <popover-confirm @confirm="popoverConfirm" class="mx-2">
-                        <div slot="popover-title">确定要关闭吗</div>
+                        <div slot="popover-title">{{$t('common_sure_to_close_popover')}}</div>
                         <div slot="popover-content">
-                            <el-button plain>取消</el-button>
+                            <el-button plain>{{$t('common_cancel')}}</el-button>
                         </div>
                     </popover-confirm>
-                    <el-button type="primary" @click="submit">提交</el-button>
+                    <el-button type="primary" @click="submit">{{$t('common_submit')}}</el-button>
                 </div>
             </div>
-        </drag-drawer>
+        </slide-out>
         <drag-dialog :drag-dialog="dialog" @confirm="confirm">
             <reset-pwd v-if="show.resetPwd" :reset-pwd="props.resetPwd" @change-pwd-ok="changePwdOk"></reset-pwd>
             <proxy-man-config
@@ -191,10 +191,9 @@
                 },
                 drawer: {
                     show: false,
-                    direction: 'rtl',
-                    draggable: true,
+                    direction: 'right',
+                    width : '500px',
                     showFooter: true,
-                    data: {}
                 },
                 dialog: {
                     width: '300',
@@ -247,7 +246,7 @@
                 getUserStatus: 'GET_USER_STATUS',
                 getAllRoles: 'GET_ALL_ROLES',
                 getAllDepts: 'GET_ALL_DEPTS',
-                getActivitiSync: 'GET_ACTIVIYI_SYNC',
+                getActivitySync: 'GET_ACTIVITY_SYNC',
             }),
             closeFlush() {
                 this.drawer = {
@@ -653,7 +652,7 @@
             this.getUserStatus()
             this.getAllRoles()
             this.getAllDepts()
-            this.getActivitiSync()
+            this.getActivitySync()
         }
     }
 </script>

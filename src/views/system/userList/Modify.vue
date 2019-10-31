@@ -1,5 +1,5 @@
 <template>
-    <div class="modify">
+    <div class="modify py-2">
         <el-form ref="modify" :model="form" label-width="100px" :status-icon="true" :rules="rules">
             <el-form-item label="用户账号" prop="username">
                 <el-input v-model="form.username"
@@ -59,7 +59,9 @@
                 <el-date-picker type="date"
                                 v-model="form.birthday"
                                 value-format="yyyy-MM-dd"
-                                class="w-full"></el-date-picker>
+                                class="w-full"
+                    :picker-options="pickerOptions"
+                ></el-date-picker>
             </el-form-item>
             <el-form-item label="性别" prop="sex">
                 <el-select v-model="form.sex" placeholder="性别" clearable filterable class="w-full">
@@ -73,6 +75,9 @@
             </el-form-item>
             <el-form-item label="手机号码" prop="phone">
                 <el-input v-model="form.phone" placeholder="手机号码" clearable></el-input>
+            </el-form-item>
+            <el-form-item label="座机号码" prop="telephone">
+                <el-input v-model="form.telephone" placeholder="座机号码" clearable></el-input>
             </el-form-item>
             <el-form-item label="工作流引擎" prop="activitiSync">
                 <el-radio-group v-model="form.activitiSync">
@@ -92,7 +97,7 @@
     import {mapState} from 'vuex'
     import {http, apiList, constant, sweetAlert} from '@/utils'
     import {getToken} from '@/utils/modules/tools'
-    import {uniqueUserCheck, pwdCheck, confirmPwdCheck, emailCheck, phoneCheck} from '@/utils/modules/validate'
+    import {uniqueUserCheck, pwdCheck, confirmPwdCheck, emailCheck, phoneCheck,telephoneCheck} from '@/utils/modules/validate'
     import dragDialog from '@/components/dragDialog'
     import DeptSearch from './DeptSearch'
     import {isEmpty} from '30-seconds-of-code'
@@ -126,7 +131,13 @@
                     sex: '',
                     email: '',
                     phone: '',
+                    telephone : '',
                     activitiSync: '1'
+                },
+                pickerOptions: {
+                    disabledDate(time) {
+                        return time.getTime() > Date.now();
+                    },
                 },
                 rules: {
                     username: [
@@ -152,6 +163,9 @@
                     ],
                     phone: [
                         {validator: phoneCheck}
+                    ],
+                    telephone : [
+                        {validator : telephoneCheck}
                     ]
                 },
                 deptCheckedIds: [],

@@ -1,5 +1,5 @@
 <template>
-    <div class="read">
+    <div class="read my-4">
         <el-row class = "pl-6">
             <el-form :model="form" label-width="85px">
                 <el-form-item label="用户账号">

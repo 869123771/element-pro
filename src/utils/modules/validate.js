@@ -84,6 +84,14 @@ export const phoneCheck = (rule, value, callback) => {
     }
 }
 
+export const telephoneCheck = (rule, value, callback) => {
+    if (value && !isPhone(value)) {
+        callback(new Error('请输入正确的座机号码'));
+    } else {
+        callback();
+    }
+}
+
 export const uniqueUserCheck = async (rule, username, callback) => {
     if(username){
         let {success, message} = await http.get(apiList.sys_user_unique_user_check, {username})
