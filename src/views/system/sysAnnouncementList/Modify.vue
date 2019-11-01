@@ -125,7 +125,7 @@
                         this.form = {
                             ...this.form,
                             ...props,
-                            userIds: userIds.split(',')
+                            userIds: userIds ? userIds.split(',') : ''
                         }
                         this.findUser()
                     }

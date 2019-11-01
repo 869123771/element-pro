@@ -30,7 +30,7 @@
         </div>
         <el-scrollbar>
            <!-- <div class="modal-body" :style="{maxHeight:dialog.maxHeight + 'px'}">-->
-            <div class="modal-body" style=" max-height: calc(100vh - 200px)">
+            <div class="modal-body" style=" max-height: calc(100vh - 100px)">
                 <slot></slot>
             </div>
         </el-scrollbar>
@@ -155,6 +155,7 @@
         }
         &-body {
             padding: 0 1rem;
+            overflow: scroll;
         }
         &-footer {
             position: absolute;

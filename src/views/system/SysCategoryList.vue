@@ -14,37 +14,44 @@
             </el-dropdown>
         </el-row>
         <el-row>
-            <fox-table
-                    v-if="table.show"
-                    v-loading="table.loading"
-                    :column="table.column"
-                    :data="table.data"
-                    row-key="id"
-                    lazy
-                    :load="load"
-                    :tree-props="{hasChildren: 'hasChild'}"
-                    pagination
-                    background
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :page-sizes="[5, 10, 20, 30]"
-                    :page-count="10"
-                    :current-page.sync="page.pageNum"
-                    :total="page.total"
-                    :page-size="page.pageSize"
-                    @size-change="sizeChange"
-                    @p-current-change="currentChange"
-                    @selection-change="selection"
-            >
-                <template slot="avatar" slot-scope="{scope}">
-                    <el-image size="26" :src="getAvatarView(scope)"
-                              :preview-src-list="[getAvatarView(scope)]"
+            <collapse :collapse-props="collapse">
+                <div slot="collapse-title">
+                    <span>字典分类信息</span>
+                </div>
+                <div slot="collapse-content">
+                    <fox-table
+                            v-if="table.show"
+                            v-loading="table.loading"
+                            :column="table.column"
+                            :data="table.data"
+                            row-key="id"
+                            lazy
+                            :load="load"
+                            :tree-props="{hasChildren: 'hasChild'}"
+                            pagination
+                            background
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :page-sizes="[5, 10, 20, 30]"
+                            :page-count="10"
+                            :current-page.sync="page.pageNum"
+                            :total="page.total"
+                            :page-size="page.pageSize"
+                            @size-change="sizeChange"
+                            @p-current-change="currentChange"
+                            @selection-change="selection"
                     >
-                        <div slot="error" class="cursor-pointer">
-                            <i class="el-icon-picture-outline"></i>
-                        </div>
-                    </el-image>
-                </template>
-            </fox-table>
+                        <template slot="avatar" slot-scope="{scope}">
+                            <el-image size="26" :src="getAvatarView(scope)"
+                                      :preview-src-list="[getAvatarView(scope)]"
+                            >
+                                <div slot="error" class="cursor-pointer">
+                                    <i class="el-icon-picture-outline"></i>
+                                </div>
+                            </el-image>
+                        </template>
+                    </fox-table>
+                </div>
+            </collapse>
         </el-row>
         <drag-dialog :drag-dialog="dialog" @confirm="confirm">
             <component :is = "component.is" :ref = "component.ref" :data = "component.data" @modifySuccess = "modifySuccess"></component>
@@ -54,6 +61,7 @@
 
 <script>
     import {http, apiList, constant, sweetAlert} from '@/utils'
+    import Collapse from '@/components/collapse/Collapse'
     import DragDialog from '@/components/dragDialog'
     import foxTable from '@/components/fox-table/'
     import OperBtn from '@/components/table/OperBtn'
@@ -62,6 +70,7 @@
     export default {
         name: "SysCategoryList",
         components : {
+            Collapse,
             DragDialog,
             foxTable,
             OperBtn,
@@ -69,6 +78,9 @@
         },
         data(){
             return {
+                collapse : {
+                    name : 'dictCategoryInfo'
+                },
                 form : {
 
                 },

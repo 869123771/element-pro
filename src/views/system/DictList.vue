@@ -25,23 +25,30 @@
             <el-button plain icon="iconfont icon-wy-download" @click="fileExport">{{$t('common_export')}}</el-button>
         </el-row>
         <el-row class="my-3">
-            <fox-table
-                    v-if="table.show"
-                    v-loading="table.loading"
-                    :column="table.column"
-                    :data="table.data"
-                    pagination
-                    background
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :page-sizes="[5, 10, 20, 30]"
-                    :page-count="5"
-                    :current-page.sync="page.pageNum"
-                    :total="page.total"
-                    :page-size="page.pageSize"
-                    @size-change="sizeChange"
-                    @p-current-change="currentChange"
-            >
-            </fox-table>
+            <collapse :collapse-props = "collapse">
+                <div slot = "collapse-title">
+                    <span>{{$t('sys_dict_info')}}</span>
+                </div>
+                <div slot = "collapse-content">
+                    <fox-table
+                            v-if="table.show"
+                            v-loading="table.loading"
+                            :column="table.column"
+                            :data="table.data"
+                            pagination
+                            background
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :page-sizes="[5, 10, 20, 30]"
+                            :page-count="5"
+                            :current-page.sync="page.pageNum"
+                            :total="page.total"
+                            :page-size="page.pageSize"
+                            @size-change="sizeChange"
+                            @p-current-change="currentChange"
+                    >
+                    </fox-table>
+                </div>
+            </collapse>
         </el-row>
         <drag-drawer v-model="drawer.show"
                      :draggable="drawer.draggable"
@@ -62,6 +69,7 @@
     import {mapState, mapActions} from 'vuex'
     import {http, apiList, constant, sweetAlert} from '@/utils'
     import {downloadFile} from '@/utils/modules/tools'
+    import Collapse from '@/components/collapse/Collapse'
     import DragDrawer from '@/components/dragDrawer'
     import DragDialog from '@/components/dragDialog'
     import FileUpload from '@/components/fileUpload'
@@ -79,6 +87,7 @@
     export default {
         name: "DictList",
         components: {
+            Collapse,
             DragDrawer,
             DragDialog,
             FileUpload,
@@ -88,6 +97,9 @@
         },
         data() {
             return {
+                collapse : {
+                    name : 'dataDict',
+                },
                 form: {
                     dictName: '',      //字典名称
                     dictCode: '',      //字典编号

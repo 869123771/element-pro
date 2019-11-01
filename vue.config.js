@@ -66,7 +66,7 @@ module.exports = {
                 })
             );*/
 
-           /* plugins.push(
+            plugins.push(
                 new ParallelUglifyPlugin({
                     // 传递给 UglifyJS的参数如下：
                     uglifyES: {
@@ -82,7 +82,7 @@ module.exports = {
                         }
                     },
                 }),
-            );*/
+            );
 
           //  plugins.push(new DashboardPlugin(dashboard.setData))
 

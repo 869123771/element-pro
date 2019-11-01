@@ -23,6 +23,9 @@
                 <template v-if="controlShow.themeColor">
                     <color-picker></color-picker>
                 </template>
+                <div class = "pr-2">
+                    <message></message>
+                </div>
                 <div class="px-2 flex items-center">
                     <language @on-lang-change="setLang" :lang="lang"></language>
                 </div>
@@ -42,7 +45,8 @@
     import BreadCrumb from './head/BreadCrumb'
     import Avatar from "./head/Avatar";
     import Language from './head/Language'
-    import ColorPicker from "./head/ColorPicker";
+    import Message from './head/Message'
+    import ColorPicker from "./head/ColorPicker"
     import Controls from './head/Controls'
     import navPanel from './nav/NavPanel'
 
@@ -51,7 +55,7 @@
         inject: ['reload'],
         components: {
             Avatar,
-            LevelBar, BreadCrumb, Language,
+            LevelBar, BreadCrumb, Language,Message,
             ColorPicker,
             navPanel,
             Controls

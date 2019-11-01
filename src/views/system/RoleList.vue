@@ -47,7 +47,7 @@
         <el-row>
             <collapse :collapse-props = "collapse">
                 <div slot = "collapse-title">
-                    <span>部门信息</span>
+                    <span>角色信息</span>
                 </div>
                 <div slot = "collapse-content">
                     <fox-table

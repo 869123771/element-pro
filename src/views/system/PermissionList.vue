@@ -1,7 +1,7 @@
 <template>
     <div class="menu bg-white p-3 m-3">
         <el-row>
-            <el-button plain type="primary" icon="el-icon-plus" @click="addMenu" v-has = "'menu:add'">新增</el-button>
+            <el-button plain type="primary" icon="el-icon-plus" @click="addMenu" v-has="'menu:add'">新增</el-button>
             <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
                 <el-button plain>
                     批量操作<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i>
@@ -13,15 +13,22 @@
             </el-dropdown>
         </el-row>
         <el-row class="my-3">
-            <fox-table
-                    row-key="id"
-                    :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-                    v-loading="table.loading"
-                    :column="table.column"
-                    :data="table.data"
-                    @selection-change="selectionChange"
-            >
-            </fox-table>
+            <collapse :collapse-props="collapse">
+                <div slot="collapse-title">
+                    <span>菜单信息</span>
+                </div>
+                <div slot="collapse-content">
+                    <fox-table
+                            row-key="id"
+                            :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+                            v-loading="table.loading"
+                            :column="table.column"
+                            :data="table.data"
+                            @selection-change="selectionChange"
+                    >
+                    </fox-table>
+                </div>
+            </collapse>
         </el-row>
 
         <drag-drawer v-model="drawer.show"
@@ -51,6 +58,7 @@
 <script>
     import {mapState, mapActions} from 'vuex'
     import {http, apiList, constant, sweetAlert} from '@/utils'
+    import Collapse from '@/components/collapse/Collapse'
     import DragDrawer from '@/components/dragDrawer'
     import DragDialog from '@/components/dragDialog'
     import foxTable from '@/components/fox-table/'
@@ -63,6 +71,7 @@
     export default {
         name: "PermissionList",
         components: {
+            Collapse,
             DragDrawer,
             DragDialog,
             foxTable,
@@ -70,6 +79,9 @@
         },
         data() {
             return {
+                collapse : {
+                    name : 'menuInfo',
+                },
                 table: {
                     loading: false,
                     selection: [],
@@ -142,7 +154,7 @@
                                                 content: '详情',
                                                 className: '',
                                                 popover: false,
-                                                permission : 'menu:detail',
+                                                permission: 'menu:detail',
                                                 event: () => {
                                                     this.handleDetail(row)
                                                 }
@@ -151,7 +163,7 @@
                                                 content: '数据规则',
                                                 className: '',
                                                 popover: false,
-                                                permission : 'menu:dataRule',
+                                                permission: 'menu:dataRule',
                                                 event: () => {
                                                     this.handleDataRule(row)
                                                 }
@@ -161,7 +173,7 @@
                                                 className: '',
                                                 popover: true,
                                                 popText: '确定要删除吗',
-                                                permission : 'menu:delete',
+                                                permission: 'menu:delete',
                                                 event: () => {
                                                     this.handleDel(row)
                                                 }

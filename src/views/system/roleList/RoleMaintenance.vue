@@ -1,6 +1,6 @@
 <template>
     <div class = "role-maintenance">
-        <el-row class = "my-3">
+        <el-row class = "my-3 pt-3">
             <el-button plain type="primary" icon="el-icon-plus" @click="addUser">用户录入</el-button>
             <el-button plain icon="iconfont icon-wy-upload" @click="addUserHas">添加已有用户</el-button>
             <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
@@ -14,21 +14,29 @@
             </el-dropdown>
         </el-row>
         <el-row>
-            <fox-table
-                    v-loading="table.loading"
-                    :column="table.column"
-                    :data="table.data"
-                    pagination
-                    background
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :page-sizes="[5, 10, 20, 30]"
-                    :current-page.sync="page.pageNum"
-                    :total="page.total"
-                    :page-size="page.pageSize"
-                    @size-change="sizeChange"
-                    @p-current-change="currentChange"
-                    @selection-change="selectionChange">
-            </fox-table>
+            <collapse :collapse-props = "collapse">
+                <div slot = "collapse-title">
+                    <span>角色人员信息</span>
+                </div>
+                <div slot = "collapse-content">
+                    <fox-table
+                            v-loading="table.loading"
+                            :column="table.column"
+                            :data="table.data"
+                            pagination
+                            background
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :page-sizes="[5, 10, 20, 30]"
+                            :current-page.sync="page.pageNum"
+                            :total="page.total"
+                            :page-size="page.pageSize"
+                            @size-change="sizeChange"
+                            @p-current-change="currentChange"
+                            @selection-change="selectionChange">
+                    </fox-table>
+                </div>
+            </collapse>
+
         </el-row>
         <drag-drawer v-model="drawer.show"
                      :draggable="drawer.draggable"
@@ -48,6 +56,7 @@
 <script>
     import {mapActions} from 'vuex'
     import {http,apiList,sweetAlert,constant} from '@/utils'
+    import Collapse from '@/components/collapse/Collapse'
     import DragDrawer from '@/components/dragDrawer'
     import DragDialog from '@/components/dragDialog'
     import foxTable from '@/components/fox-table'
@@ -65,6 +74,7 @@
            }
         },
         components : {
+            Collapse,
             DragDrawer,
             DragDialog,
             foxTable,
@@ -72,8 +82,10 @@
             PopoverConfirm
         },
         data(){
-            let {table} = constant
             return {
+                collapse : {
+                    name : 'userRole'
+                },
                 table: {
                     data: [],
                     column: [

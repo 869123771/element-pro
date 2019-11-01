@@ -62,25 +62,30 @@
             </el-dropdown>
         </el-row>
         <el-row class="my-3">
-            <fox-table
-                    ref = "table"
-                    v-if="table.show"
-                    v-loading="table.loading"
-                    :column="table.column"
-                    :data="table.data"
-                    pagination
-                    background
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :page-sizes="[5, 10, 20, 30]"
-                    :page-count="10"
-                    :current-page.sync="page.pageNum"
-                    :total="page.total"
-                    :page-size="page.pageSize"
-                    @size-change="sizeChange"
-                    @p-current-change="currentChange"
-                    @selection-change="selectionChange"
-            >
-                <template slot="oper" slot-scope="{scope:{row}}">
+            <collapse :collapse-props="collapse">
+                <div slot="collapse-title">
+                    <span>系统通告信息</span>
+                </div>
+                <div slot="collapse-content">
+                    <fox-table
+                            ref = "table"
+                            v-if="table.show"
+                            v-loading="table.loading"
+                            :column="table.column"
+                            :data="table.data"
+                            pagination
+                            background
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :page-sizes="[5, 10, 20, 30]"
+                            :page-count="10"
+                            :current-page.sync="page.pageNum"
+                            :total="page.total"
+                            :page-size="page.pageSize"
+                            @size-change="sizeChange"
+                            @p-current-change="currentChange"
+                            @selection-change="selectionChange"
+                    >
+                        <template slot="oper" slot-scope="{scope:{row}}">
                     <span class="flex">
                         <el-tooltip content="编辑" placement="top">
                             <span class="text-blue-500 text-base cursor-pointer">
@@ -107,8 +112,10 @@
                             </div>
                         </popover-confirm>
                     </span>
-                </template>
-            </fox-table>
+                        </template>
+                    </fox-table>
+                </div>
+            </collapse>
         </el-row>
         <drag-drawer v-model="drawer.show"
                      :draggable="drawer.draggable"
@@ -137,6 +144,7 @@
     import {mapState, mapActions} from 'vuex'
     import {http, apiList, constant, sweetAlert} from '@/utils'
     import {downloadFile} from '@/utils/modules/tools'
+    import Collapse from '@/components/collapse/Collapse'
     import PopoverConfirm from '@/components/popoverConfirm'
     import Modify from './sysAnnouncementList/Modify'
     import DragDrawer from '@/components/dragDrawer'
@@ -152,6 +160,7 @@
     export default {
         name: "SysAnnouncementList",
         components: {
+            Collapse,
             DragDrawer,
             FileUpload,
             PopoverConfirm,
@@ -161,6 +170,9 @@
         },
         data() {
             return {
+                collapse : {
+                    name : 'sysAnnounce',
+                },
                 form: {
                     titile: '',                                    //标题
                     msgCategory: '',                               //消息类型
@@ -285,7 +297,7 @@
             deleteBatch() {
                 let {selection} = this.table
                 let ids = selection.map(item => item.id).join(',')
-                sweetAlert.confirm('删除', '确认要删除吗', this.confirmDeleteBatch, ids)
+                sweetAlert.confirm(this.$t('common_delete'), this.$t('common_confirm_del'), this.confirmDeleteBatch, ids)
             },
             async confirmDeleteBatch(ids) {
                 let {success, message} = await http.delete(apiList.sys_sys_announcement_delete_batch, {ids})
