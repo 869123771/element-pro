@@ -1,4 +1,5 @@
 import {localSave, localRead} from '@/utils/modules/tools'
+import {isBoolean} from '30-seconds-of-code'
 
 export default {
     state: {
@@ -47,12 +48,12 @@ export default {
         lang: localRead('lang'),
         themeColor : localRead('themeColor'),
         controlShow : {
-            themeColor : localRead('themeColorShow') || false,
-            shrinkBar : localRead('shrinkBar') || false,
-            breadcrumb : localRead('breadcrumb') || false,
-            navTag : localRead('navTag') || false,
-            reload : localRead('reload') || false,
-            navTagShowIcon : localRead('navTagShowIcon') || false,
+            themeColor : isBoolean(localRead('themeColorShow')) ? localRead('themeColorShow') : true,
+            shrinkBar : isBoolean(localRead('shrinkBar')) ? localRead('shrinkBar') : true,
+            breadcrumb : isBoolean(localRead('breadcrumb')) ? localRead('breadcrumb') : true,
+            navTag : isBoolean(localRead('navTag')) ? localRead('navTag') : true,
+            reload : isBoolean(localRead('reload')) ? localRead('reload') : true,
+            navTagShowIcon : isBoolean(localRead('navTagShowIcon')) ? localRead('navTagShowIcon') : true,
         }
     },
     mutations: {

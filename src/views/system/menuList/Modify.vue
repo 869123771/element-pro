@@ -285,5 +285,5 @@
 </script>
 
 <style scoped>
-    @import '../../../views/iconfont/iconfont.css';
+
 </style>

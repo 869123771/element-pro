@@ -56,6 +56,7 @@
 </template>
 <script>
     import {sweetAlert} from '@/utils'
+    import {isEmpty} from '30-seconds-of-code'
 
     const directionIcons = ['stepbackward', 'stepforward', 'fastbackward', 'fastforward', 'shrink', 'arrowsalt', 'down', 'up', 'left', 'right', 'caretup', 'caretdown', 'caretleft', 'caretright', 'upcircle', 'downcircle', 'leftcircle', 'rightcircle', 'upcircleo', 'downcircleo', 'rightcircleo', 'leftcircleo', 'doubleright', 'doubleleft', 'verticleleft', 'verticleright', 'forward', 'back', 'enter', 'retweet', 'swap', 'swapleft', 'swapright', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'playcircleo', 'upsquare', 'downsquare', 'leftsquare', 'rightsquare', 'leftsquareo', 'rightsquareo', 'login', 'logout', 'menufold']
     const suggestionIcons = ['question', 'questioncircle', 'plus', 'pluscircle', 'pause', 'pausecircle', 'minus', 'minuscircle', 'plussquare', 'minussquare', 'info', 'exclamation', 'exclamationcircle', 'close', 'closecircle', 'closesquare', 'check', 'checkcircle', 'checksquare', 'clockcircle', 'warning']
@@ -91,7 +92,7 @@
         watch : {
             iconsChecked : {
                 handler(props){
-                    if(!this.validatenull(props)) {
+                    if(!isEmpty(props)) {
                         let {name, paneName} = props
                         this.checked = {
                             ...this.checked,

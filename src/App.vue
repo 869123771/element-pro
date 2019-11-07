@@ -6,6 +6,7 @@
     </div>
 </template>
 <script>
+    import "@/assets/anticon/iconfont.css";
     import "@/assets/iconfont/iconfont.css";
     import "font-awesome/less/font-awesome.less";
     import '@/assets/less/index.less'
