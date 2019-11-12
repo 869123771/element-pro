@@ -48,7 +48,7 @@ export default {
         lang: localRead('lang'),
         themeColor : localRead('themeColor'),
         controlShow : {
-            themeColor : isBoolean(localRead('themeColorShow')) ? localRead('themeColorShow') : true,
+            themeColor : localRead('themeColorShow') || false ,
             shrinkBar : isBoolean(localRead('shrinkBar')) ? localRead('shrinkBar') : true,
             breadcrumb : isBoolean(localRead('breadcrumb')) ? localRead('breadcrumb') : true,
             navTag : isBoolean(localRead('navTag')) ? localRead('navTag') : true,

@@ -164,7 +164,7 @@
             },
             //行拖拽
             rowDrop() {
-                const tbody = document.querySelector('.el-table__body-wrapper tbody')
+                const tbody = this.$refs.elTable.$el.querySelector('.el-table__body-wrapper tbody')
                 const _this = this
                 Sortable.create(tbody, {
                     onEnd({ newIndex, oldIndex }) {
@@ -175,7 +175,7 @@
             },
             //列拖拽
             columnDrop() {
-                const thead = document.querySelector('.el-table__header-wrapper tr')
+                const thead = this.$refs.elTable.$el.querySelector('.el-table__header-wrapper tr')
                 this.sortable = Sortable.create(thead, {
                     animation: 180,
                     delay: 0,
