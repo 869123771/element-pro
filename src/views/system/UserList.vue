@@ -74,6 +74,7 @@
                 <div slot = "collapse-content">
                     <fox-table
                             ref = "table"
+                            row-key = "id"
                             v-if="table.show"
                             v-loading="table.loading"
                             :column="table.column"
