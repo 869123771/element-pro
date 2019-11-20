@@ -31,27 +31,28 @@
             </collapse>
         </el-row>
 
-        <drag-drawer v-model="drawer.show"
-                     :draggable="drawer.draggable"
-                     :title="drawer.title"
-                     :width.sync="drawer.width"
-                     :direction="drawer.direction"
+        <slide-out :visible.sync="drawer.show"
+                   :dock ="drawer.direction"
+                   :title="drawer.title"
+                   :size="drawer.width"
+                   :close-on-mask-click = "false"
+                   allow-resize
         >
             <component :is="component.type" :ref="component.ref" :data="component.data"
                        @successClose="successClose"></component>
-            <div class="dialog-footer p-2 w-full flex justify-end" v-if="component.showFooter">
-                <div class="flex">
+            <div slot = "footer" v-if = "drawer.showFooter">
+                <div class="flex justify-end">
                     <popover-confirm @confirm="popoverConfirm" class="mx-2">
-                        <div slot="popover-title">确定要关闭吗</div>
+                        <div slot="popover-title">{{$t('common_sure_to_close_popover')}}</div>
                         <div slot="popover-content">
-                            <el-button plain>取消</el-button>
+                            <el-button plain>{{$t('common_cancel')}}</el-button>
                         </div>
                     </popover-confirm>
-                    <el-button type="primary" @click="submit">提交</el-button>
+                    <el-button :plain = "!isEdit" type = "primary"  @click="submit(false)" v-loading = "drawer.loading">{{$t('common_submit')}}</el-button>
+                    <el-button type="primary" v-show = "!isEdit" @click = "continueAdd(true)" v-loading = "drawer.loading">继续添加</el-button>
                 </div>
             </div>
-        </drag-drawer>
-
+        </slide-out>
     </div>
 </template>
 
@@ -59,7 +60,6 @@
     import {mapState, mapActions} from 'vuex'
     import {http, apiList, constant, sweetAlert} from '@/utils'
     import Collapse from '@/components/collapse/Collapse'
-    import DragDrawer from '@/components/dragDrawer'
     import DragDialog from '@/components/dragDialog'
     import foxTable from '@/components/fox-table/'
     import OperBtn from '@/components/table/OperBtn'
@@ -72,7 +72,6 @@
         name: "PermissionList",
         components: {
             Collapse,
-            DragDrawer,
             DragDialog,
             foxTable,
             PopoverConfirm
@@ -100,7 +99,7 @@
                         {
                             label: '菜单类型',
                             prop: 'menuType',
-                            render: (h, {row, $index, column}) => {
+                            render: (h, {row}) => {
                                 let {menuType} = row
                                 return (
                                     <span>
@@ -135,8 +134,8 @@
                         {
                             label: '操作',
                             width: 80,
-                            prop: 'oper',
-                            render: (h, {row, $index}) => {
+                            prop: 'operate',
+                            render: (h, {row}) => {
                                 let btnInfo = [
                                     {
                                         content: '修改',
@@ -193,14 +192,13 @@
                 },
                 drawer: {
                     show: false,
-                    direction: 'rtl',
-                    draggable: true,
-                    data: {}
+                    direction: 'right',
+                    showFooter : true,
+                    loading : false
                 },
                 component: {
                     type: Modify,
                     ref: 'modify',
-                    showFooter: true,
                     data: {}
                 },
             }
@@ -208,7 +206,10 @@
         computed: {
             ...mapState({
                 menuType: ({dict}) => dict.menuType,
-            })
+            }),
+            isEdit(){
+                return this.component.data.id
+            }
         },
         methods: {
             ...mapActions({
@@ -330,22 +331,26 @@
                     show: false
                 }
             },
-            submit() {
+            submit(isClose) {
                 let {ref} = this.component
                 let modifyRef = this.$refs[ref]
                 modifyRef.$refs.form.validate(valid => {
                     if (valid) {
-                        this.dialog = {
+                        this.drawer = {
                             ...this.dialog,
-                            loading: true
+                            loading : true,
+                            isClose
                         }
                         modifyRef.saveData()
                     }
                 })
-                this.dialog = {
-                    ...this.dialog,
+                this.drawer = {
+                    ...this.drawer,
                     loading: false
                 }
+            },
+            continueAdd(isClose){
+                this.submit(isClose)
             },
             deleteBatch() {
                 let {selection} = this.table
@@ -353,9 +358,12 @@
                 sweetAlert.confirm('删除', '确认要删除吗', this.confirmDeleteBatch, ids)
             },
             successClose() {
-                this.drawer = {
-                    ...this.drawer,
-                    show: false
+                let {isClose} = this.drawer
+                if(isClose){
+                    this.drawer = {
+                        ...this.drawer,
+                        show : false
+                    }
                 }
                 this.queryList()
             },

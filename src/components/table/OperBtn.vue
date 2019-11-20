@@ -42,13 +42,13 @@
                                     width="160"
                                     ref={index}
                         >
-                            <div className="pb-3 flex">
+                            <div class="pb-3 flex">
                                     <span class ="px-1 text-orange-500 font-mono">
                                         <i class ="el-icon-warning"></i>
                                     </span>
                                 <slot name="popover-title">{popText}</slot>
                             </div>
-                            <div className="text-right">
+                            <div class="text-right">
                                 <el-button size="mini" type="text"
                                            onClick={() => this.cancel(index)}>{this.$t('common_cancel')}
                                 </el-button>
@@ -130,8 +130,9 @@
                 this.$refs[index].doClose();
             },
             hasPermission(permission) {
-                return this.allAuth.find(item => item.action === permission) && this.allAuth.find(item => item.action === permission).type !== '2'
-            }
+                let findPermission = this.allAuth.find(item => item.action === permission)
+                return findPermission && findPermission.type !== '2'
+            },
         }
     }
 </script>

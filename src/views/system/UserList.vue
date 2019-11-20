@@ -246,7 +246,7 @@
                 getSex: 'GET_SEX',
                 getUserStatus: 'GET_USER_STATUS',
                 getAllRoles: 'GET_ALL_ROLES',
-                getAllDepts: 'GET_ALL_DEPTS',
+                getAllDept: 'GET_ALL_DEPT',
                 getActivitySync: 'GET_ACTIVITY_SYNC',
             }),
             closeFlush() {
@@ -322,7 +322,7 @@
             deleteBatch() {
                 let {selection} = this.table
                 let ids = selection.map(item => item.id).join(',')
-                sweetAlert.confirm('删除', '确认要删除吗', this.confirmDeleteBatch, ids)
+                sweetAlert.confirm(this.$t('common_delete'), this.$t('common_confirm_del'), this.confirmDeleteBatch, ids)
             },
             async confirmDeleteBatch(ids) {
                 let {success, message} = await http.delete(apiList.sys_user_deleteBatch, {ids})
@@ -474,7 +474,7 @@
             },
             async handleDel(scope) {
                 let {row: {id}} = scope
-                let {success, message, result} = await http.delete(apiList.sys_user_delete, {id})
+                let {success, message} = await http.delete(apiList.sys_user_delete, {id})
                 if (success) {
                     sweetAlert.successWithTimer('删除成功'),
                         this.queryList()
@@ -652,7 +652,7 @@
             this.getSex()
             this.getUserStatus()
             this.getAllRoles()
-            this.getAllDepts()
+            this.getAllDept()
             this.getActivitySync()
         }
     }

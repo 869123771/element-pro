@@ -21,10 +21,11 @@
                 detail : {
                     options : [
                         {label : '机构名称',prop : 'departName'},
-                        {label : '手机号',prop : 'mobile'},
-                        {label : '上级部门',prop : 'parentId'},
-                        {label : '地址',prop : 'address'},
+                        {label : '上级部门',prop : 'parentName'},
+                        {label : '机构编码',prop : 'orgCode'},
                         {label : '排序',prop : 'departOrder'},
+                        {label : '手机号',prop : 'mobile'},
+                        {label : '地址',prop : 'address'},
                         {label : '备注',prop : 'memo'},
                     ],
                     data : {}
@@ -35,12 +36,10 @@
             basicInfo : {
                 handler(props){
                     if(!isEmpty(props)){
-                        let {parentIdName} = props
                         this.detail = {
                             ...this.detail,
                             data : {
                                 ...props,
-                                parentId : parentIdName
                             }
                         }
                     }

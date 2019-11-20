@@ -105,11 +105,11 @@
         },
         computed: {
             ...mapState({
-                depts: ({system}) => system.depts,
+                dept: ({system}) => system.dept,
             })
         },
         watch: {
-            depts: {
+            dept: {
                 handler(props) {
                     this.tree = {
                         ...this.tree,
@@ -122,7 +122,7 @@
         },
         methods: {
             ...mapActions({
-                getAllDepts: 'GET_ALL_DEPTS',
+                getAllDept: 'GET_ALL_DEPT',
             }),
             filterText(val) {
                 this.$refs.tree.filter(val);

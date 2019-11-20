@@ -2,15 +2,15 @@ import {http,apiList} from '@/utils'
 export default {
     state: {
         roles : [],                                       //角色
-        depts : [],                                       //部门
+        dept : [],                                       //部门
         menus : [],                                       //菜单
     },
     mutations: {
         SET_ALL_ROLES(state,roles){
             state.roles = roles
         },
-        SET_ALL_DEPTS(state,depts){
-            state.depts = depts
+        SET_ALL_DEPT(state,dept){
+            state.dept = dept
         },
         SET_ALL_MENUS(state,menus){
             state.menus = menus
@@ -23,10 +23,10 @@ export default {
                 commit('SET_ALL_ROLES',result)
             }
         },
-        async GET_ALL_DEPTS({commit}){
+        async GET_ALL_DEPT({commit}){
             let {success,result} = await http.get(apiList.sys_dept_query_all)
             if(success){
-                commit('SET_ALL_DEPTS',result)
+                commit('SET_ALL_DEPT',result)
             }
         },
         async GET_ALL_MENUS({commit}){

@@ -188,7 +188,7 @@
                 getSex: 'GET_SEX',
                 getUserStatus: 'GET_USER_STATUS',
                 getAllRoles: 'GET_ALL_ROLES',
-                getAllDepts: 'GET_ALL_DEPTS',
+                getAllDept: 'GET_ALL_DEPT',
                 getActivitySync: 'GET_ACTIVITY_SYNC',
             }),
             addUser() {
@@ -377,7 +377,7 @@
             this.getSex()
             this.getUserStatus()
             this.getAllRoles()
-            this.getAllDepts()
+            this.getAllDept()
             this.getActivitySync()
             this.queryList()
         }

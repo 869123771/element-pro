@@ -30,12 +30,12 @@
                             <span>{{ node.label }}</span>
                             <span class="custom-tree-node-control text-gray-900 text-base">
                                 <el-tooltip content="新增子部门" placement="top">
-                                    <i class="fa fa-fw fa-plus px-1 hover:color-blue-500" @click = "addChildDetp(node,data)"></i>
+                                    <i class="fa fa-fw fa-plus px-1 hover:color-blue-500" @click = "addChildDept(node,data)"></i>
                                 </el-tooltip>
                                 <el-tooltip content="编辑" placement="top">
                                     <i class="fa fa-fw fa-pencil hover:color-blue-500" @click = "edit(node,data)"></i>
                                 </el-tooltip>
-                                <popover-confirm @confirm="confirmDeleteBatch(data.id)">
+                                <popover-confirm @confirm="confirmDeleteBatch(data.id,true)">
                                     <div slot="popover-content">
                                         <i class="fa fa-fw fa-minus hover:color-blue-500"></i>
                                     </div>
@@ -137,11 +137,11 @@
         },
         computed: {
             ...mapState({
-                depts: ({system}) => system.depts,
+                dept: ({system}) => system.dept,
             })
         },
         watch: {
-            depts: {
+            dept: {
                 handler(props) {
                     this.tree = {
                         ...this.tree,
@@ -154,7 +154,7 @@
         },
         methods: {
             ...mapActions({
-                getAllDepts: 'GET_ALL_DEPTS',
+                getAllDept: 'GET_ALL_DEPT',
             }),
             handleClick({name}, event) {
                 this.tabs = {
@@ -180,7 +180,7 @@
             },
             uploadSuccess() {
                 this.$modal.hide('fileUpload')
-                this.getAllDepts()
+                this.getAllDept()
             },
             addTopDept() {
                 this.dialog = {
@@ -200,12 +200,12 @@
                     this.$modal.show(name)
                 })
             },
-            addChildDetp(node, data) {
+            addChildDept(node, data) {
                 this.dialog = {
                     ...this.dialog,
                     title: '新增子部门',
                     width: 400,
-                    height: 500,
+                    height: 550,
                     name : 'addChildDept'
                 }
                 this.component = {
@@ -213,7 +213,8 @@
                     ref: 'addChildDept',
                     data : {
                         ...data,
-                        flag : 0            //新增
+                        flag : 0,                           //新增子部门
+                        parentName : data.departName,
                     }
                 }
                 let {name} = this.dialog
@@ -226,7 +227,7 @@
                     ...this.dialog,
                     title: '编辑部门',
                     width: 400,
-                    height: 600,
+                    height: 700,
                     name : 'editDept'
                 }
                 this.component = {
@@ -234,8 +235,8 @@
                     ref: 'editDept',
                     data : {
                         ...data,
-                        ...this.handleDeptName(data),
-                        flag : 1            //编辑
+                        flag : 1,                                   //编辑子部门
+                        parentName : this.handleDeptNameById(data.parentId),
                     },
                 }
                 let {name} = this.dialog
@@ -246,7 +247,7 @@
             closeDialog() {
                 let {name} = this.dialog
                 this.$modal.hide(name)
-                this.getAllDepts()
+                this.getAllDept()
             },
             confirmAdd() {
                 let {ref} = this.component
@@ -284,47 +285,36 @@
                     checkedKeys
                 }
             },
-            deptCodeMapName(datas) {
-                let {flag} = customParams
-                if (flag) {
-                    for (let i = 0; i < datas.length; i++) {
-                        let {children, id, departName} = datas[i]
-                        if (children && children.length) {
-                            if (customParams.parentId === id) {
-                                customParams = {
-                                    ...customParams,
-                                    flag: false,
-                                    departName
-                                }
-                                return departName
+            deptCodeMapName(data,parentId) {
+                if(!data) return null
+                for (let i = 0 ;i < data.length; i++){
+                    let {children, id, departName} = data[i]
+                    if (children && children.length) {
+                        if (parentId === id) {
+                            customParams = {
+                                ...customParams,
+                                departName
                             }
-                            this.deptCodeMapName(children)
+                            break
                         }
+                    }else{
+                        this.deptCodeMapName(children,parentId)
                     }
-
                 }
-                return customParams.departName
+                console.log('deptName',customParams.departName)
+                return customParams.departName ;
             },
 
-            handleDeptName(data){
-                let {parentId} = data
-                customParams = {
-                    ...customParams,
-                    parentId,
-                    flag: true,
-                }
-
-                let departName = parentId ? this.deptCodeMapName(this.depts) : ''
-                console.log(departName)
-
-                return {parentIdName: departName}
+            handleDeptNameById(parentId){
+                let departName = parentId ? this.deptCodeMapName(this.dept,parentId) : ''
+                return departName
             },
             handleBaseInfo(data){
                 this.tabs = {
                     ...this.tabs,
                     basicInfo : {
                         ...data,
-                        ...this.handleDeptName(data)
+                        parentName : this.handleDeptNameById(data.parentId)
                     }
                 }
             },
@@ -337,26 +327,29 @@
                 }
             },
             nodeClick(data, node, tree) {
-                //this.handleDeptName(data)
                 this.handleBaseInfo(data)
                 this.handleUserInfo(data)
             },
             deleteBatch() {
                 let {checkedKeys} = customParams
-                sweetAlert.confirm('删除', '确认要删除吗', this.confirmDeleteBatch, checkedKeys.join(','))
+                sweetAlert.confirm(this.$t('common_delete'), this.$t('common_confirm_del'), this.confirmDeleteBatch, checkedKeys.join(','))
             },
-            async confirmDeleteBatch(ids) {
+            async confirmDeleteBatch(ids,flag) {
                 let {success, message} = await http.delete(apiList.sys_dept_delete_batch, {ids})
                 if (success) {
-                    sweetAlert.success(message)
-                    this.getAllDepts()
+                    if(flag){
+                        sweetAlert.successWithTimer(message)
+                    }else{
+                        sweetAlert.success(message)
+                    }
+                    this.getAllDept()
                 } else {
                     sweetAlert.error(message)
                 }
             },
         },
         mounted() {
-            this.getAllDepts()
+            this.getAllDept()
         }
     }
 </script>

@@ -29,7 +29,7 @@
         },
         computed : {
             ...mapState({
-                depts: ({system}) => system.depts,
+                dept: ({system}) => system.dept,
             })
         },
         data(){
@@ -45,7 +45,7 @@
             }
         },
         watch : {
-            depts : {
+            dept : {
                 handler(props){
                     if(!isEmpty(props)){
                         this.deptAssign = {

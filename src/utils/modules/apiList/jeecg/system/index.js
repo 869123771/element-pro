@@ -43,7 +43,7 @@ export default {
     sys_dept_edit : '/sys/sysDepart/edit',
     sys_dept_export : '/sys/sysDepart/exportXls',
     sys_dept_import : '/sys/sysDepart/importExcel',
-    sys_dept_delete_batch : '/sysdepart/sysDepart/deleteBatch',
+    sys_dept_delete_batch : '/sys/sysDepart/deleteBatch',
     sys_dict_unique_check : '/sys/duplicate/check',
     sys_menu_query_list: '/sys/permission/list',
     sys_menu_delete_batch : '/sys/permission/deleteBatch',

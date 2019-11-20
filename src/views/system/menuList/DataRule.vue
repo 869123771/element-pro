@@ -26,27 +26,33 @@
             <el-button plain type="primary" icon="el-icon-plus" @click="addRule">新增</el-button>
         </el-row>
         <el-row>
-            <fox-table
-                    border
-                    stripe
-                    fit
-                    align="center"
-                    v-loading="table.loading"
-                    :column="table.column"
-                    :data="table.data"
-                    pagination
-                    background
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :page-sizes="[5, 10, 20, 30]"
-                    :page-count="10"
-                    :current-page.sync="page.pageNum"
-                    :total="page.total"
-                    :page-size="page.pageSize"
-                    @size-change="sizeChange"
-                    @p-current-change="currentChange"
-            ></fox-table>
+            <collapse :collapse-props="collapse">
+                <div slot="collapse-title">
+                    <span>数据规则详情</span>
+                </div>
+                <div slot="collapse-content">
+                    <fox-table
+                            border
+                            stripe
+                            fit
+                            align="center"
+                            v-loading="table.loading"
+                            :column="table.column"
+                            :data="table.data"
+                            pagination
+                            background
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :page-sizes="[5, 10, 20, 30]"
+                            :page-count="10"
+                            :current-page.sync="page.pageNum"
+                            :total="page.total"
+                            :page-size="page.pageSize"
+                            @size-change="sizeChange"
+                            @p-current-change="currentChange"
+                    ></fox-table>
+                </div>
+            </collapse>
         </el-row>
-
         <drag-dialog :drag-dialog="dialog" @confirm="confirmAdd">
             <modify :data="modify.data" ref="modify" @modifySuccess="modifySuccess"></modify>
         </drag-dialog>
@@ -57,6 +63,7 @@
     import {mapActions} from 'vuex'
     import {http, apiList, constant, sweetAlert} from '@/utils'
     import DragDialog from '@/components/dragDialog'
+    import Collapse from '@/components/collapse/Collapse'
     import foxTable from '@/components/fox-table/'
     import OperBtn from '@/components/table/OperBtn'
     import Modify from './dataRule/Modify'
@@ -71,10 +78,14 @@
         components: {
             DragDialog,
             Modify,
-            foxTable
+            foxTable,
+            Collapse
         },
         data() {
             return {
+                collapse : {
+                    name : 'dataRule'
+                },
                 form: {},
                 table: {
                     data: [],
@@ -88,7 +99,7 @@
                                     {
                                         content: '修改',
                                         className: 'fa fa-fw fa-pencil',
-                                        permission: 'menu:table:update',
+                                        permission: 'dataRule:edit',
                                         event: () => {
                                             this.edit(row)
                                         }
@@ -98,6 +109,7 @@
                                         className: 'iconfont icon-wy-delete2',
                                         popover: true,
                                         popText: '确定要删除吗',
+                                        permission: 'dataRule:delete',
                                         event: () => {
                                             this.confirmDeleteBatch(row.id)
                                         }
@@ -131,14 +143,22 @@
                     total: 0
                 },
                 dialog: {
-                    width: '24',
-                    height: '52',
+                    width: 400,
+                    height: 450,
                     showFooter: true,
                 },
                 modify: {
                     data: {}
                 },
             }
+        },
+        watch : {
+            data : {
+                handler(props){
+                    this.queryList()
+                },
+                immediate : true
+            },
         },
         methods: {
             ...mapActions({
@@ -240,7 +260,7 @@
             },
             async queryList() {
                 let {pageNum: pageNo, pageSize} = this.page
-                let {id} = this.data
+                let {id:permissionId} = this.data
                 this.table = {
                     ...this.table,
                     loading: true
@@ -249,7 +269,7 @@
                     pageNo,
                     pageSize,
                     ...this.form,
-                    permissionId: id
+                    permissionId
                 }
                 let {success, result} = await http.get(apiList.sys_menu_query_data_rule, params)
                 if (success) {
@@ -270,7 +290,6 @@
         },
         mounted() {
             this.getRuleConditions()
-            this.queryList()
         }
     }
 </script>

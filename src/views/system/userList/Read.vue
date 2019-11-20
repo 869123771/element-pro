@@ -73,7 +73,7 @@
             ...mapState({
                 roles: ({system}) => system.roles,
                 activitiSync: ({dict}) => dict.activitiSync,
-                depts: ({system}) => system.depts,
+                dept: ({system}) => system.dept,
             })
         },
         watch: {
@@ -107,7 +107,7 @@
                         ...this.handleAvatar(avatar),
                         dept: {
                             ...dept,
-                            data: this.depts
+                            data: this.dept
                         }
                     }
                 }

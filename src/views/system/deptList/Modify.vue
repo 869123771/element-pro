@@ -4,16 +4,16 @@
             <el-form-item label = "机构名称" prop = "departName">
                 <el-input v-model = "form.departName" placeholder = "机构名称" clearable></el-input>
             </el-form-item>
-            <template v-if = "data.flag">
-                <el-form-item label = "上级部门" prop = "parentId">
-                    <el-input v-model = "form.parentId" placeholder = "上级部门" readonly></el-input>
+            <template v-if = "data.id">
+                <el-form-item label = "上级部门" prop = "parentName">
+                    <el-input v-model = "form.parentName" placeholder = "上级部门" readonly></el-input>
                 </el-form-item>
-                <el-form-item label = "机构编码" prop = "orgCode">
+                <el-form-item label = "机构编码" prop = "orgCode" v-if = "data.flag">
                     <el-input v-model = "form.orgCode" placeholder = "机构编码" disabled></el-input>
                 </el-form-item>
             </template>
-            <el-form-item label = "手机号" prop = "mobile">
-                <el-input v-model = "form.mobile" placeholder = "手机号" clearable></el-input>
+            <el-form-item label = "电话" prop = "mobile">
+                <el-input v-model = "form.mobile" placeholder = "电话" clearable></el-input>
             </el-form-item>
             <el-form-item label = "传真" prop = "fax">
                 <el-input v-model = "form.fax" placeholder = "传真" clearable></el-input>
@@ -34,7 +34,7 @@
 
 <script>
     import {mapState, mapActions} from 'vuex'
-    import {phoneCheck} from '@/utils/modules/validate'
+    import {telephoneCheck} from '@/utils/modules/validate'
     import {http, apiList, constant, sweetAlert} from '@/utils'
     import {isEmpty} from '30-seconds-of-code'
 
@@ -49,57 +49,52 @@
         },
         data() {
             return {
-                form: {},
+                form: {
+                    departName : '',                        //机构名称
+                    parentName : '',                        //上级部门
+                    orgCode : '',                           //机构编码
+                },
                 rules : {
                     departName : [
                         {required: true, message: '必填', trigger: 'change'}
                     ],
                     mobile : [
-                        {validator: phoneCheck, trigger: 'change'}
+                        {validator: telephoneCheck, trigger: 'change'}
                     ],
                 },
             }
         },
         computed: {
             ...mapState({
-                depts: ({system}) => system.depts,
+                dept: ({system}) => system.dept,
             })
         },
         watch: {
             data: {
                 handler(props) {
-                    if (!isEmpty(props)) {
-                        let {id,departName,flag,parentId} = props
-                        if(flag){
-                            let {parentIdName} =  props
-                            this.form = {
-                                ...this.form,
-                                ...props,
-                                parentId : parentIdName
+                    if(!isEmpty(props)){
+                        let {id,departName,flag,parentName} = props
+                        if(id){
+                            if(flag){                                   //修改子部门
+                                this.form = {
+                                    ...this.form,
+                                    ...props
+                                }
+                            }else{                                      //新增子部门
+                                debugger;
+                                this.form = {
+                                    ...this.form,
+                                    ...props,
+                                    departName : '',
+                                    mobile : '',
+                                    fax : '',
+                                    address : '',
+                                    departOrder : '',
+                                    memo : ''
+                                }
                             }
-                            customParams = {
-                                ...customParams,
-                                parentId
-                            }
-                        }else{
-                            this.form = {
-                                ...this.form,
-                                ...model,
-                                ...props,
-                                departName : '',
-                                address : '',
-                                memo : '',
-                                parentId : departName
-                            }
-                            customParams = {
-                                ...customParams,
-                                parentId : id
-                            }
-                        }
-                    }else{
-                        customParams = {
-                            ...customParams,
-                            parentId : undefined
+                        }else{                                          //新增一级部门
+                            this.form = {}
                         }
                     }
                 },
@@ -108,7 +103,7 @@
         },
         methods: {
             ...mapActions({
-                getAllDepts: 'GET_ALL_DEPTS'
+                getAllDept: 'GET_ALL_DEPT'
             }),
 
             saveData() {
@@ -120,11 +115,11 @@
                 }
             },
             async saveAdd(){
-                let {departName,mobile,fax,address,departOrder,memo} = this.form
-                let {parentId} = customParams
+                let {departName,mobile,fax,address,departOrder,memo,parentId,id} = this.form
+                let {flag} = this.data
                 let params = {
                     departName,mobile,fax,address,departOrder,memo,
-                    parentId
+                    parentId : id ? flag ? parentId : id : ''
                 }
                 let {success, message} = await http.post(apiList.sys_dept_add, params)
                 if (success) {

@@ -191,7 +191,7 @@
                 sex: ({dict}) => dict.sex,
                 roles: ({system}) => system.roles,
                 activitiSync: ({dict}) => dict.activitiSync,
-                depts: ({system}) => system.depts,
+                dept: ({system}) => system.dept,
             }),
         },
         watch: {

@@ -1,10 +1,10 @@
 import {setToken, getToken, localSave, localRead} from '@/utils/modules/tools'
 import {constant, apiList, http} from '@/utils'
-let {USER_NAME, USER_INFO} = constant
+//let {USER_NAME, USER_INFO} = constant
 export default {
     state: {
         token: getToken(),
-        userInfo: localRead(USER_INFO),
+        userInfo: localRead(constant.USER_INFO),
         permissionList: [],
         auth : [],
         allAuth : [],
@@ -28,6 +28,7 @@ export default {
     },
     actions: {
         HANDLE_LOGIN({commit}, result) {
+            let {USER_INFO} = constant
             let {token, userInfo, userInfo: {userName}} = result
             setToken(token)
             localSave(USER_INFO, userInfo)
@@ -37,6 +38,7 @@ export default {
 
         // 获取用户信息
         async GET_PERMISSION_LIST({commit}) {
+            debugger;
             let token = getToken()
             let {USER_AUTH, SYS_BUTTON_AUTH} = constant
             let {success, result} = await http.get(apiList.permission_menu, {token})
@@ -55,6 +57,7 @@ export default {
 
         // 退出登录
         async LOGIN_OUT({commit, state}) {
+            debugger;
             let logoutToken = state.token;
             commit('SET_TOKEN', '')
             commit('SET_PERMISSION_LIST', [])

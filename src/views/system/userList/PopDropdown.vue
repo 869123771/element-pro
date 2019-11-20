@@ -8,23 +8,20 @@
                   <i class="fa fa-fw fa-ellipsis-h"></i>
               </span>
             <el-dropdown-menu slot="dropdown">
-                <template v-for = "item in dropDownItem">
-                    <template v-if = "item.popover">
-                        <popover-confirm @confirm = "confirm(item.action)">
+                <template v-for = "{popover,action,popText,label,permission} in dropDownItem">
+                    <template v-if = "popover">
+                        <popover-confirm @confirm = "confirm(action)" v-if = "hasPermission(permission)">
                             <div slot="popover-title">
-                                <span>{{item.popText}}</span>
+                                <span>{{popText}}</span>
                             </div>
                             <div slot="popover-content">
-                                <el-dropdown-item>{{item.label}}</el-dropdown-item>
+                                <el-dropdown-item>{{label}}</el-dropdown-item>
                             </div>
                         </popover-confirm>
                     </template>
                     <template v-else>
-                        <el-dropdown-item @click.native = "item.action" v-if = "item.permission === 'user:password'" v-has = "'user:password'">
-                            {{item.label}}
-                        </el-dropdown-item>
-                        <el-dropdown-item @click.native = "item.action" v-else>
-                            {{item.label}}
+                        <el-dropdown-item @click.native = "action" v-if = "hasPermission(permission)">
+                            {{label}}
                         </el-dropdown-item>
                     </template>
                 </template>
@@ -35,6 +32,7 @@
 
 <script>
     import PopoverConfirm from '@/components/popoverConfirm'
+    import {mapState} from 'vuex'
 
     export default {
         name: "PopDropdown",
@@ -49,6 +47,7 @@
                         icon: '',
                         action: this.handleDetail,
                         popover: false,
+                        permission : 'user:detail'
                     },
                     {
                         label: '密码',
@@ -62,25 +61,37 @@
                         icon: '',
                         action: this.handleDel,
                         popover: true,
-                        popText : '确定要删除吗'
+                        popText : '确定要删除吗',
+                        permission : 'user:delete'
                     },
                     {
                         label: '冻结',
                         icon: '',
                         action: this.frozen,
                         popover: true,
-                        popText : '确定要冻结吗'
+                        popText : '确定要冻结吗',
+                        permission : 'user:frozen'
                     },
                     {
                         label: '代理人',
                         icon: '',
                         action: this.proxyMan,
                         popover: false,
+                        permission : 'user:proxyMan'
                     },
                 ],
             }
         },
+        computed: {
+            ...mapState({
+                allAuth: ({user}) => user.allAuth
+            })
+        },
         methods : {
+            hasPermission(permission) {
+                let findPermission = this.allAuth.find(item => item.action === permission)
+                return findPermission && findPermission.type !== '2'
+            },
             edit(){
                 this.$emit('edit')
             },
