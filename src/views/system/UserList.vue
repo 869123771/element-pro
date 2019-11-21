@@ -122,7 +122,7 @@
                             <el-button plain>{{$t('common_cancel')}}</el-button>
                         </div>
                     </popover-confirm>
-                    <el-button type="primary" @click="submit">{{$t('common_submit')}}</el-button>
+                    <el-button type="primary" @click="submit" v-loading = "drawer.loading">{{$t('common_submit')}}</el-button>
                 </div>
             </div>
         </slide-out>
@@ -195,6 +195,7 @@
                     direction: 'right',
                     width : '500px',
                     showFooter: true,
+                    loading : false,
                 },
                 dialog: {
                     width: '300',
@@ -399,15 +400,15 @@
                 let selectUserRef = this.$refs['proxyMan']
                 selectUserRef.$refs.form.validate(valid => {
                     if (valid) {
-                        this.dialog = {
-                            ...this.dialog,
+                        this.drawer = {
+                            ...this.drawer,
                             loading: true
                         }
                         selectUserRef.saveData()
                     }
                 })
-                this.dialog = {
-                    ...this.dialog,
+                this.drawer = {
+                    ...this.drawer,
                     loading: false
                 }
             },
@@ -416,11 +417,15 @@
                 let modifyRef = this.$refs[ref]
                 modifyRef.$refs.modify.validate(valid => {
                     if (valid) {
+                        this.drawer = {
+                            ...this.drawer,
+                            loading: true
+                        }
                         modifyRef.commitData()
                     }
                 })
-                this.dialog = {
-                    ...this.dialog,
+                this.drawer = {
+                    ...this.drawer,
                     loading: false
                 }
             },

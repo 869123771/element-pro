@@ -48,8 +48,8 @@
                             <el-button plain>{{$t('common_cancel')}}</el-button>
                         </div>
                     </popover-confirm>
-                    <el-button :plain = "!isEdit" type = "primary"  @click="submit(false)" v-loading = "drawer.loading">{{$t('common_submit')}}</el-button>
-                    <el-button type="primary" v-show = "!isEdit" @click = "continueAdd(true)" v-loading = "drawer.loading">继续添加</el-button>
+                    <el-button :plain = "!isEdit" type = "primary"  @click="submit(true)" v-loading = "drawer.loading">{{$t('common_submit')}}</el-button>
+                    <el-button type="primary" v-show = "!isEdit" @click = "continueAdd(false)" v-loading = "drawer.loading">继续添加</el-button>
                 </div>
             </div>
         </slide-out>
@@ -240,71 +240,55 @@
                 this.drawer = {
                     ...this.drawer,
                     show: true,
-                    name: 'addMenu',
                     width: '500px',
                     title: '新增',
+                    showFooter: true,
                 }
                 this.component = {
                     ...this.component,
                     type: Modify,
                     ref: 'add',
-                    showFooter: true,
                     data: {}
                 }
-                let {name} = this.drawer
-                this.$nextTick(() => {
-                    this.$modal.show(name)
-                })
             },
             editMenu(row) {
                 this.drawer = {
                     ...this.drawer,
                     show: true,
-                    name: 'updateMenu',
                     width: '500px',
                     title: '修改',
+                    showFooter: true,
                 }
                 this.component = {
                     ...this.component,
                     type: Modify,
                     ref: 'update',
-                    showFooter: true,
                     data: {
                         ...row
                     }
                 }
-                let {name} = this.drawer
-                this.$nextTick(() => {
-                    this.$modal.show(name)
-                })
             },
             handleDetail(row) {
                 this.drawer = {
                     ...this.drawer,
                     show: true,
-                    name: 'readMenu',
                     width: '500px',
                     title: '详情',
+                    showFooter: false,
                 }
                 this.component = {
                     ...this.component,
                     type: Read,
                     ref: 'read',
-                    showFooter: false,
                     data: {
                         ...row
                     }
                 }
-                let {name} = this.drawer
-                this.$nextTick(() => {
-                    this.$modal.show(name)
-                })
             },
             handleDataRule(row) {
                 this.drawer = {
                     ...this.drawer,
                     show: true,
-                    name: 'dataRule',
                     width: '600px',
                     title: '数据权限规则',
                 }
@@ -317,10 +301,6 @@
                         ...row
                     }
                 }
-                let {name} = this.drawer
-                this.$nextTick(() => {
-                    this.$modal.show(name)
-                })
             },
             handleDel(row) {
                 this.confirmDeleteBatch(row.id)
@@ -359,6 +339,7 @@
             },
             successClose() {
                 let {isClose} = this.drawer
+                debugger;
                 if(isClose){
                     this.drawer = {
                         ...this.drawer,

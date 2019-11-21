@@ -6,7 +6,7 @@
                     <el-avatar :size = "32":src = "getAvatarView(userInfo.avatar)"></el-avatar>
                 </div>
                 <div class = "flex items-center">
-                    <span class = "px-1">{{userInfo.username}}</span>
+                    <span class = "px-1">{{userInfo.realname}}</span>
                 </div>
             </div>
             <el-dropdown-menu>

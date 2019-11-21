@@ -289,7 +289,7 @@
                                     {
                                         content: this.$t('common_edit'),
                                         className: 'fa fa-fw fa-pencil',
-                                        permission: 'menu:table:update',
+                                        permission: 'dictCategory:edit',
                                         event: () => {
                                             this.edit(row)
                                         }
@@ -299,6 +299,7 @@
                                         className: 'iconfont icon-wy-delete2',
                                         popover: true,
                                         popText: this.$t('common_confirm_del'),
+                                        permission: 'dictCategory:delete',
                                         event: () => {
                                             this.handleDel(row)
                                         }

@@ -5,7 +5,7 @@
                 <el-input v-model = "form.roleName" placeholder = "角色名称" clearable></el-input>
             </el-form-item>
             <el-form-item label = "角色编码" prop = "roleCode">
-                <el-input v-model = "form.roleCode" placeholder = "角色编码" clearable :disabled="data.id"></el-input>
+                <el-input v-model = "form.roleCode" placeholder = "角色编码" clearable :disabled="Boolean(data.id)"></el-input>
             </el-form-item>
             <el-form-item label = "描述" prop = "description">
                 <el-input
@@ -97,9 +97,8 @@
             },
             saveData(){
                 let {id} = this.data
-                let {model} = this.form
                 let params = {
-                    ...model
+                    ...this.form
                 }
                 if(id){
                     this.updateRole(params)

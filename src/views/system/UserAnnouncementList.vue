@@ -215,7 +215,7 @@
                                         {
                                             content: '已读',
                                             className: 'fa fa-fw fa-eye',
-                                            permission: '',
+                                            permission: 'myMessage:hasDone',
                                             event: () => {
                                                 this.read(row)
                                             }
@@ -227,7 +227,7 @@
                                         {
                                             content: '未读',
                                             className: 'fa fa-fw fa-eye-slash',
-                                            permission: '',
+                                            permission: 'myMessage:notDone',
                                             event: () => {
                                                 this.read(row)
                                             }

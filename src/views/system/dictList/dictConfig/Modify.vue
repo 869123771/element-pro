@@ -31,8 +31,8 @@
             </el-form-item>
             <el-form-item :label="$t('sys_dict_is_open')" prop="status">
                 <el-radio-group v-model="form.status">
-                    <template v-for="item in dictItemStatus">
-                        <el-radio-button :label="item.itemValue">{{item.itemText}}</el-radio-button>
+                    <template v-for="{itemValue,itemText} in dictItemStatus">
+                        <el-radio :label="itemValue">{{itemText}}</el-radio>
                     </template>
                 </el-radio-group>
             </el-form-item>
@@ -76,9 +76,11 @@
             data: {
                 handler(props) {
                     if (!isEmpty(props)) {
+                        let {status} = props
                         this.form = {
                             ...this.form,
-                            ...props
+                            ...props,
+                            status : status.toString()
                         }
                     }
                 },

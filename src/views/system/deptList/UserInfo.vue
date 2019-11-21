@@ -36,26 +36,27 @@
             ></fox-table>
         </el-row>
 
-        <drag-drawer v-model="drawer.show"
-                     :draggable="drawer.draggable"
-                     :title="drawer.title"
-                     :width.sync="drawer.width"
-                     :direction="drawer.direction"
-                     :scrollable="true"
+        <slide-out :visible.sync="drawer.show"
+                   :dock ="drawer.direction"
+                   :title="drawer.title"
+                   :size="drawer.width"
+                   :close-on-mask-click = "false"
+                   allow-resize
         >
-            <component :is="component.type" :data="component.data" @closeFlush="closeFlush"></component>
-            <div class="dialog-footer p-2 w-full" v-show="drawer.showFooter">
+            <component :is="component.type" :data="component.data" @closeFlush="closeFlush" :ref = "component.ref"></component>
+            <div slot = "footer" v-if = "drawer.showFooter">
                 <div class="flex justify-end">
                     <popover-confirm @confirm="popoverConfirm" class="mx-2">
-                        <div slot="popover-title">确定要关闭吗</div>
+                        <div slot="popover-title">{{$t('common_sure_to_close_popover')}}</div>
                         <div slot="popover-content">
-                            <el-button plain>取消</el-button>
+                            <el-button plain>{{$t('common_cancel')}}</el-button>
                         </div>
                     </popover-confirm>
-                    <el-button type="primary" @click="submit">提交</el-button>
+                    <el-button type="primary" @click="submit" v-loading = "drawer.loading">{{$t('common_submit')}}</el-button>
                 </div>
             </div>
-        </drag-drawer>
+        </slide-out>
+
         <drag-dialog :drag-dialog="dialog" @confirm="confirmAdd">
             <add-user :ref="user.ref" :data="user.data" @handleSuccess="handleSuccess"></add-user>
         </drag-dialog>
@@ -152,13 +153,15 @@
                 },
                 drawer: {
                     show: false,
-                    direction: 'rtl',
+                    direction: 'right',
                     draggable: true,
                     showFooter : true,
+                    loading : false,
                     data: {}
                 },
                 component: {
                     type: Modify,
+                    ref : 'modify',
                     data: {}
                 },
                 dialog: {
@@ -258,11 +261,15 @@
                 let modifyRef = this.$refs[ref]
                 modifyRef.$refs.modify.validate(valid => {
                     if (valid) {
+                        this.drawer = {
+                            ...this.drawer,
+                            loading : true
+                        }
                         modifyRef.commitData()
                     }
                 })
-                this.dialog = {
-                    ...this.dialog,
+                this.drawer = {
+                    ...this.drawer,
                     loading: false
                 }
             },

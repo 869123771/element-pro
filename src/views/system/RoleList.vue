@@ -28,9 +28,8 @@
                 </el-col>
             </el-form>
         </el-row>
-
         <el-row class="my-3">
-            <el-button plain type="primary" icon="el-icon-plus" @click="addRole">{{$t('common_add')}}</el-button>
+            <el-button plain type="primary" icon="el-icon-plus" @click="addRole" v-has = "'role:add'">{{$t('common_add')}}</el-button>
             <el-button plain icon="iconfont icon-wy-upload" @click="fileImport">{{$t('common_import')}}</el-button>
             <el-button plain icon="iconfont icon-wy-download" @click="fileExport">{{$t('common_export')}}</el-button>
             <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
@@ -220,6 +219,10 @@
                 this.page = {
                     ...this.page,
                     pageNum: 1
+                }
+                this.role = {
+                    ...this.role,
+                    show : false
                 }
                 this.queryList()
             },
@@ -484,10 +487,10 @@
                             label: '操作',
                             prop: 'oper',
                             width: 80,
-                            render: (h, {row, $index}) => {
+                            render: (h, {row}) => {
                                 let btnInfo = [
                                     {
-                                        content: '修改',
+                                        content: this.$t('common_edit'),
                                         className: 'fa fa-fw fa-pencil',
                                         permission: 'role:edit',
                                         event: () => {
@@ -513,7 +516,7 @@
                                                 className: '',
                                                 popover: true,
                                                 popText: '确定要删除吗',
-                                                permission: 'role.delete',
+                                                permission: 'role:delete',
                                                 event: () => {
                                                     this.handleDel(row)
                                                 }

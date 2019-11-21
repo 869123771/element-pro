@@ -50,14 +50,15 @@
                 </div>
             </collapse>
         </el-row>
-        <drag-drawer v-model="drawer.show"
-                     :draggable="drawer.draggable"
-                     :title="drawer.title"
-                     :width.sync="drawer.width"
-                     :direction="drawer.direction"
+        <slide-out :visible.sync="drawer.show"
+                   :dock ="drawer.direction"
+                   :title="drawer.title"
+                   :size="drawer.width"
+                   :close-on-mask-click = "false"
+                   allow-resize
         >
             <component :is="component.type" :ref="component.ref" :data="component.data"></component>
-        </drag-drawer>
+        </slide-out>
         <drag-dialog :drag-dialog="dialog" @confirm="confirmAdd">
             <modify :data="modify.data" ref="modify" @modifySuccess="modifySuccess"></modify>
         </drag-dialog>
@@ -120,8 +121,7 @@
                 },
                 drawer: {
                     show: false,
-                    direction: 'rtl',
-                    draggable: true,
+                    direction: 'right',
                     width: '600px',
                     data: {}
                 },
@@ -131,9 +131,9 @@
                     data: {}
                 },
                 dialog: {
-                    width: '24',
-                    height: '52',
-                    name: 'addRole',
+                    width: '500',
+                    height: '300',
+                    name: 'add',
                     showFooter: true,
                 },
                 modify: {
@@ -324,7 +324,7 @@
                                     {
                                         content: this.$t('common_edit'),
                                         className: 'fa fa-fw fa-pencil',
-                                        permission: 'menu:table:update',
+                                        permission: 'dictList:edit',
                                         event: () => {
                                             this.edit(row)
                                         }
@@ -332,7 +332,7 @@
                                     {
                                         content: this.$t('sys_dict_dict_config'),
                                         className: 'fa-fw el-icon-s-tools',
-                                        permission: 'menu:table:update',
+                                        permission: 'dictList:config',
                                         event: () => {
                                             this.dictConfig(row)
                                         }
@@ -342,6 +342,7 @@
                                         className: 'iconfont icon-wy-delete2',
                                         popover: true,
                                         popText: this.$t('common_confirm_del'),
+                                        permission: 'dictList:delete',
                                         event: (event,index) => {
                                             this.confirmDeleteBatch(row.id,event,index)
                                         }

@@ -38,15 +38,28 @@
             </collapse>
 
         </el-row>
-        <drag-drawer v-model="drawer.show"
-                     :draggable="drawer.draggable"
-                     :title="drawer.title"
-                     :width.sync="drawer.width"
-                     :direction="drawer.direction"
-                     :scrollable="true"
+        <slide-out :visible.sync="drawer.show"
+                   :dock ="drawer.direction"
+                   :title="drawer.title"
+                   :size="drawer.width"
+                   :close-on-mask-click = "false"
+                   allow-resize
         >
-            <component :is="component.type" :data="component.data" @closeFlush="closeFlush"></component>
-        </drag-drawer>
+
+            <component :ref="component.ref" :is="component.type" :data="component.data"
+                       @closeFlush="closeFlush"></component>
+            <div slot = "footer" v-if = "drawer.showFooter">
+                <div class="flex justify-end">
+                    <popover-confirm @confirm="popoverConfirm" class="mx-2">
+                        <div slot="popover-title">{{$t('common_sure_to_close_popover')}}</div>
+                        <div slot="popover-content">
+                            <el-button plain>{{$t('common_cancel')}}</el-button>
+                        </div>
+                    </popover-confirm>
+                    <el-button type="primary" @click="submit" v-loading = "drawer.loading">{{$t('common_submit')}}</el-button>
+                </div>
+            </div>
+        </slide-out>
         <drag-dialog :drag-dialog="dialog" @confirm="confirmAdd">
             <add-user :ref = "user.ref" :data = "user.data" @handleSuccess = "handleSuccess"></add-user>
         </drag-dialog>
@@ -102,7 +115,7 @@
                                     {
                                         content : '修改',
                                         className : 'fa fa-fw fa-pencil',
-                                        permission : 'menu:table:update',
+                                        permission : 'roleMaintenance:update',
                                         event : ()=>{
                                             this.edit(row)
                                         }
@@ -112,6 +125,7 @@
                                         className : 'iconfont icon-wy-delete2',
                                         popover: true,
                                         popText : '确定要删除吗',
+                                        permission : 'roleMaintenance:delete',
                                         event : (event,index)=>{
                                             this.confirmDelete(row.id,event,index)
                                         }
@@ -148,8 +162,9 @@
                 },
                 drawer: {
                     show: false,
-                    direction: 'rtl',
-                    draggable: true,
+                    direction: 'right',
+                    loading : false,
+                    showFooter : true,
                     data: {}
                 },
                 component: {
@@ -176,6 +191,10 @@
                     }
                 },
                 immediate : true
+            },
+            '$i18n.locale'(){
+                this.queryList()
+                this.setI18n()
             },
         },
         methods : {
@@ -231,6 +250,15 @@
                     ...this.dialog,
                     loading: false
                 }
+            },
+            popoverConfirm() {
+                this.drawer = {
+                    ...this.drawer,
+                    show: false
+                }
+            },
+            submit(){
+
             },
             selectionChange(selection) {
                 if (selection.length) {

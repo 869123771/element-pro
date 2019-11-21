@@ -42,9 +42,9 @@ export default {
          * @description api请求基础路径
          */
         baseUrl: {
-            domianURL: 'http://localhost:8080/',
-            imgDomainURL: 'http://localhost:8080/jeecg-boot/sys/common/view',
-            pdfDomainURL : 'http://localhost:8080/jeecg-boot/sys/common/pdf/pdfPreviewIframe',
+            domianURL: 'http://47.107.178.235:8080',
+            imgDomainURL: 'http://47.107.178.235:8080/jeecg-boot/sys/common/view',
+            pdfDomainURL : 'http://47.107.178.235:8080/jeecg-boot/sys/common/pdf/pdfPreviewIframe',
             proxyURL : '/jeecg-boot'
         },
         /**

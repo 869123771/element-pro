@@ -259,6 +259,7 @@
                     parentId: Array.isArray(parentId) ? parentId.slice(-1).join('') : ''
                 }
                 let res
+                debugger;
                 if (id) {                     //编辑
                     params = {
                         ...this.data,
@@ -269,6 +270,7 @@
                 } else {
                     res = await http.post(apiList.sys_menu_add, params)
                 }
+                debugger;
                 let {success, message} = res
                 if (success) {
                     sweetAlert.successWithTimer(message)
