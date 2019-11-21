@@ -87,6 +87,10 @@
                     data: [],
                     column: [
                         {
+                            type: 'selection',
+                            width: 70
+                        },
+                        {
                             type: 'index',
                             width: 70
                         },
@@ -173,8 +177,8 @@
                                                 popover: true,
                                                 popText: '确定要删除吗',
                                                 permission: 'menu:delete',
-                                                event: () => {
-                                                    this.handleDel(row)
+                                                event: (event,index) => {
+                                                    this.confirmDeleteBatch(row.id,event,index)
                                                 }
                                             }
                                         ],
@@ -302,9 +306,6 @@
                     }
                 }
             },
-            handleDel(row) {
-                this.confirmDeleteBatch(row.id)
-            },
             popoverConfirm() {
                 this.drawer = {
                     ...this.drawer,
@@ -335,7 +336,7 @@
             deleteBatch() {
                 let {selection} = this.table
                 let ids = selection.map(item => item.id).join(',')
-                sweetAlert.confirm('删除', '确认要删除吗', this.confirmDeleteBatch, ids)
+                sweetAlert.confirm(this.$t('common_delete'), this.$t('common_confirm_del'), this.confirmDeleteBatch, ids)
             },
             successClose() {
                 let {isClose} = this.drawer
@@ -348,10 +349,15 @@
                 }
                 this.queryList()
             },
-            async confirmDeleteBatch(ids) {
+            async confirmDeleteBatch(ids,event,index) {
                 let {success, message} = await http.delete(apiList.sys_menu_delete_batch, {ids})
                 if (success) {
-                    sweetAlert.successWithTimer(message)
+                    if(typeof index === 'number'){
+                        sweetAlert.successWithTimer(message)
+                        event(index)
+                    }else{
+                        sweetAlert.success(message)
+                    }
                     this.queryList()
                     this.getPermissionList()                    //刷新菜单
                 } else {

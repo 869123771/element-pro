@@ -271,8 +271,12 @@
             async confirmDeleteBatch(id,event,index) {
                 let {success, message} = await http.delete(apiList.sys_dict_delete, {id})
                 if (success) {
-                    sweetAlert.successWithTimer(message)
-                    event(index)                        //关闭popover
+                    if(typeof index === 'number'){
+                        sweetAlert.successWithTimer(message)
+                        event(index)
+                    }else{
+                        sweetAlert.success(message)
+                    }
                     this.queryList()
                 } else {
                     sweetAlert.error(message)
