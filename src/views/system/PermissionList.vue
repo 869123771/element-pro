@@ -48,8 +48,8 @@
                             <el-button plain>{{$t('common_cancel')}}</el-button>
                         </div>
                     </popover-confirm>
-                    <el-button :plain = "!isEdit" type = "primary"  @click="submit(true)" v-loading = "drawer.loading">{{$t('common_submit')}}</el-button>
-                    <el-button type="primary" v-show = "!isEdit" @click = "continueAdd(false)" v-loading = "drawer.loading">继续添加</el-button>
+                    <el-button :plain = "!isEdit" type = "primary"  @click="submit()" v-loading = "drawer.loading">{{$t('common_submit')}}</el-button>
+                    <el-button type="primary" v-show = "!isEdit" @click = "continueAdd()" v-loading = "drawer.loading">继续添加</el-button>
                 </div>
             </div>
         </slide-out>
@@ -198,7 +198,8 @@
                     show: false,
                     direction: 'right',
                     showFooter : true,
-                    loading : false
+                    loading : false,
+                    isClose : true,
                 },
                 component: {
                     type: Modify,
@@ -312,7 +313,7 @@
                     show: false
                 }
             },
-            submit(isClose) {
+            submit() {
                 let {ref} = this.component
                 let modifyRef = this.$refs[ref]
                 modifyRef.$refs.form.validate(valid => {
@@ -320,7 +321,7 @@
                         this.drawer = {
                             ...this.dialog,
                             loading : true,
-                            isClose
+                            isClose : true
                         }
                         modifyRef.saveData()
                     }
@@ -330,8 +331,12 @@
                     loading: false
                 }
             },
-            continueAdd(isClose){
-                this.submit(isClose)
+            continueAdd(){
+                this.submit()
+                this.drawer = {
+                    ...this.drawer,
+                    isClose : false
+                }
             },
             deleteBatch() {
                 let {selection} = this.table
@@ -340,7 +345,6 @@
             },
             successClose() {
                 let {isClose} = this.drawer
-                debugger;
                 if(isClose){
                     this.drawer = {
                         ...this.drawer,

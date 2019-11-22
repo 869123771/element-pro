@@ -23,6 +23,7 @@
                     defaultCheckedkeys : [],
                     defaultExpandKes : [],
                     checkStrict : true,
+                    show : true,
                 }
             }
         },
@@ -80,8 +81,15 @@
             shrinkAll(){        //收起全部
                 this.menuSearch = {
                     ...this.menuSearch,
-                    defaultExpandKes : [],
+                    show : false,
                 }
+                this.$nextTick(()=>{
+                    this.menuSearch = {
+                        ...this.menuSearch,
+                        show : true,
+                        defaultExpandKes : [],
+                    }
+                })
             },
             async queryPermissionByRole(roleId){
                 let params = {

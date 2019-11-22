@@ -3,6 +3,7 @@
         <el-form :model = "form" label-width = "100px">
             <el-form-item label = "所拥有的权限">
                 <el-tree
+                        v-if = "menuAssign.show"
                         ref="tree"
                         show-checkbox
                         node-key="key"
@@ -51,7 +52,6 @@
             DragDrawer,
             DataRule
         },
-        inject: {},
         data() {
             return {
                 form: {},
@@ -81,6 +81,7 @@
         watch: {
             menuSearch: {
                 handler(props) {
+                    debugger;
                     if (!isEmpty(props)) {
                         let {roleId, ...res} = props
                         this.menuAssign = {
@@ -91,7 +92,7 @@
                             ...this.dataRuleProps,
                             roleId
                         }
-                        this.queryTreeRole()
+                        //this.queryTreeRole()
                     }
                 },
                 immediate: true
@@ -131,7 +132,7 @@
             }
         },
         created() {
-            //this.queryTreeRole()
+            this.queryTreeRole()
         }
     }
 </script>

@@ -74,36 +74,39 @@
         <el-row>
             <role-maintenance :data="role.data" v-show="role.show"></role-maintenance>
         </el-row>
-        <drag-drawer v-model="drawer.show"
-                     :draggable="drawer.draggable"
-                     :title="drawer.title"
-                     :width.sync="drawer.width"
-                     :direction="drawer.direction"
+        <slide-out :visible.sync="drawer.show"
+                   :dock ="drawer.direction"
+                   :title="drawer.title"
+                   :size="drawer.width"
+                   :close-on-mask-click = "false"
+                   allow-resize
         >
             <component :is="component.type" :ref="component.ref" :data="component.data"
                        @changeDialogWidth="changeDialogWidth"></component>
-            <div class="dialog-footer p-2 w-full flex justify-between">
-                <div>
-                    <tree-operation
-                            @connect="connect"
-                            @cancelConnect="cancelConnect"
-                            @selectAll="selectAll"
-                            @selectNone="selectNone"
-                            @expandAll="expandAll"
-                            @shrinkAll="shrinkAll"
-                    ></tree-operation>
-                </div>
-                <div class="flex">
-                    <popover-confirm @confirm="popoverConfirm" class="mx-2">
-                        <div slot="popover-title">确定要关闭吗</div>
-                        <div slot="popover-content">
-                            <el-button plain>取消</el-button>
-                        </div>
-                    </popover-confirm>
-                    <el-button type="primary" @click="submit">提交</el-button>
+            <div slot = "footer" v-if = "drawer.showFooter">
+                <div class="dialog-footer p-2 w-full flex justify-between">
+                    <div>
+                        <tree-operation
+                                @connect="connect"
+                                @cancelConnect="cancelConnect"
+                                @selectAll="selectAll"
+                                @selectNone="selectNone"
+                                @expandAll="expandAll"
+                                @shrinkAll="shrinkAll"
+                        ></tree-operation>
+                    </div>
+                    <div class="flex">
+                        <popover-confirm @confirm="popoverConfirm" class="mx-2">
+                            <div slot="popover-title">{{$t('common_sure_to_close_popover')}}</div>
+                            <div slot="popover-content">
+                                <el-button plain>{{$t('common_cancel')}}</el-button>
+                            </div>
+                        </popover-confirm>
+                        <el-button type="primary" @click="submit" v-loading = "drawer.loading">{{$t('common_submit')}}</el-button>
+                    </div>
                 </div>
             </div>
-        </drag-drawer>
+        </slide-out>
         <drag-dialog :drag-dialog="dialog" @confirm="confirmAdd">
             <modify :data="modify.data" ref="modify" @modifySuccess="modifySuccess"></modify>
         </drag-dialog>
@@ -170,9 +173,10 @@
                 },
                 drawer: {
                     show: false,
-                    direction: 'rtl',
-                    draggable: true,
+                    direction: 'right',
                     width: drawerDefaultWidth + 'px',
+                    showFooter : true,
+                    loading : false,
                     data: {}
                 },
                 component: {
@@ -348,6 +352,10 @@
                 })
             },
             async submit() {
+                this.drawer = {
+                    ...this.drawer,
+                    loading : true
+                }
                 let {ref} = this.component
                 let authRef = this.$refs[ref]
                 let {lastpermissionIds, permissionIds} = authRef.getCheckedKeys()
@@ -363,7 +371,8 @@
                     this.getPermissionList()                    //刷新菜单
                     this.drawer = {
                         ...this.drawer,
-                        show: false
+                        show: false,
+                        loading : false
                     }
                 } else {
                     sweetAlert.error(message)
