@@ -1,11 +1,13 @@
 <template>
     <drag-dialog :drag-dialog="dialog" @confirm="confirm">
         <el-upload
-                ref="upload"
+                :ref="upload.ref"
                 class="upload"
                 drag
-                multiple
+                :multiple = "upload.multiple"
                 :auto-upload="false"
+                :name = "upload.name"
+                :data = "upload.data"
                 :action="upload.action"
                 :headers="upload.headers"
                 :on-success="success"
@@ -41,6 +43,10 @@
                     showFooter: true,
                 },
                 upload : {
+                    ref : 'fileUpload',
+                    name : 'file',
+                    multiple : true,
+                    action : '',
                     headers: {
                         'X-Access-Token': getToken(),
                     },
@@ -50,9 +56,14 @@
         watch: {
             fileUpload: {
                 handler(props) {
+                    let {name} = this.dialog
                     this.upload = {
                         ...this.upload,
                         ...props
+                    }
+                    this.dialog = {
+                        ...this.dialog,
+                        name : props.modalName || name
                     }
                 },
                 immediate: true

@@ -1,5 +1,7 @@
 export const system_user_zh_cn = {
     sys_user_account : '账号',
+    sys_user_work_no : '工号',
+    sys_user_work_name : '职务',
     sys_user_name : '姓名',
     sys_user_pwd : '密码',
     sys_user_sex : '性别',
@@ -12,6 +14,8 @@ export const system_user_zh_cn = {
 }
 export const system_user_en_us = {
     sys_user_account : 'account',
+    sys_user_work_no : 'work account',
+    sys_user_work_name : 'work name',
     sys_user_name : 'name',
     sys_user_pwd : 'password',
     sys_user_sex : 'sex',
@@ -24,6 +28,8 @@ export const system_user_en_us = {
 }
 export const system_user_zh_tw = {
     sys_user_account : '賬號',
+    sys_user_work_no : '工號',
+    sys_user_work_name : '職務',
     sys_user_name : '姓名',
     sys_user_pwd : '密碼',
     sys_user_sex : '性別',

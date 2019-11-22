@@ -81,4 +81,8 @@ export default {
     sys_sys_announcement_delete_batch: '/sys/annountCement/deleteBatch',
     sys_sys_announcement_release: '/sys/annountCement/doReleaseData',
     sys_sys_announcement_revoke: '/sys/annountCement/doReovkeData',
+    sys_position_query_list : '/sys/position/list',
+    sys_position_add : '/sys/position/add',
+    sys_position_edit : '/sys/position/edit',
+    sys_position_delete_batch : '/sys/position/deleteBatch'
 }

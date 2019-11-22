@@ -19,6 +19,45 @@
             <el-form-item label="用户名字" prop="realname">
                 <el-input v-model="form.realname" placeholder="用户名字" clearable></el-input>
             </el-form-item>
+            <el-form-item label="工号" prop="workNo" :rules = "[
+                    {required : true, message : '必填',trigger : 'change'},
+                    data.id ? {} : {validator : uniqueCheck}
+                ]"
+            >
+                <el-input v-model="form.workNo" placeholder="工号" clearable></el-input>
+            </el-form-item>
+            <el-form-item label="职务" prop="post">
+                <el-select
+                        v-model="form.post"
+                        placeholder="职务"
+                        filterable
+                        remote
+                        :remote-method="findPost"
+                        :loading="select.loading"
+                        value-key="username"
+                        class="w-full"
+                >
+                    <el-option v-show="select.post.length" value="">
+                        <div class="flex">
+                            <div class="w-40">职务名称</div>
+                            <div class="w-40">职务编码</div>
+                            <div class="w-20">职级</div>
+                        </div>
+                    </el-option>
+                    <el-option
+                            v-for="{name,code,rank_dictText} in select.post"
+                            :key="code"
+                            :label="name"
+                            :value="code">
+                        <div class="flex">
+                            <div class="w-40">{{name}}</div>
+                            <div class="w-40">{{code}}</div>
+                            <div class="w-20">{{rank_dictText}}</div>
+
+                        </div>
+                    </el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item label="角色分配" prop="selectedroles">
                 <el-select v-model="form.selectedroles"
                            placeholder="角色分配"
@@ -125,6 +164,7 @@
                     password: '',                      //用户密码
                     confirmpassword: '',               //确认密码
                     realname: '',                      //用户名字
+                    workNo : '',                       //工号
                     selectedroles: [],                 //角色分配
                     deptName: '',                      //部门分配
                     birthday: '',
@@ -167,6 +207,10 @@
                     telephone : [
                         {validator : telephoneCheck}
                     ]
+                },
+                select: {
+                    loading: false,
+                    post: []
                 },
                 deptCheckedIds: [],
                 upload: {
@@ -249,6 +293,19 @@
                     imageUrl: ''
                 }
             },
+            async uniqueCheck(rule, fieldVal, callback){
+                let params = {
+                    tableName : 'sys_user',
+                    fieldName: 'work_no',
+                    fieldVal,
+                }
+                let {success,message} = await http.get(apiList.sys_dict_unique_check,params)
+                if(!success){
+                    callback(new Error(message));
+                }else{
+                    callback();
+                }
+            },
             userUniqueCheck(props) {
                 if (!isEmpty(props)) {
                     let {id, deptId} = props
@@ -308,6 +365,23 @@
                     customParams = {
                         ...customParams,
                         checkedNodeIds
+                    }
+                }
+            },
+            async findPost(code) {
+                this.select = {
+                    ...this.select,
+                    loading: true
+                }
+                let params = {
+                    code
+                }
+                let {success, result: {total, records: data}} = await http.get(apiList.sys_position_query_list, params)
+                if (success) {
+                    this.select = {
+                        ...this.select,
+                        post: data,
+                        loading: false
                     }
                 }
             },

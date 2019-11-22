@@ -118,25 +118,27 @@
                 </div>
             </collapse>
         </el-row>
-        <drag-drawer v-model="drawer.show"
-                     :draggable="drawer.draggable"
-                     :title="drawer.title"
-                     :width.sync="drawer.width"
-                     :direction="drawer.direction"
+
+        <slide-out :visible.sync="drawer.show"
+                   :dock ="drawer.direction"
+                   :title="drawer.title"
+                   :size="drawer.width"
+                   :close-on-mask-click = "false"
+                   allow-resize
         >
             <modify :data="modify.data" ref="modify" @modifySuccess="modifySuccess"></modify>
-            <div class="dialog-footer p-2 w-full flex justify-end">
-                <div class="flex">
+            <div slot = "footer" v-if = "drawer.showFooter">
+                <div class="flex justify-end">
                     <popover-confirm @confirm="popoverConfirm" class="mx-2">
-                        <div slot="popover-title">确定要关闭吗</div>
+                        <div slot="popover-title">{{$t('common_sure_to_close_popover')}}</div>
                         <div slot="popover-content">
-                            <el-button plain>取消</el-button>
+                            <el-button plain>{{$t('common_cancel')}}</el-button>
                         </div>
                     </popover-confirm>
-                    <el-button type="primary" @click="submit">提交</el-button>
+                    <el-button type="primary" @click="submit" v-loading = "drawer.loading">{{$t('common_submit')}}</el-button>
                 </div>
             </div>
-        </drag-drawer>
+        </slide-out>
         <file-upload :file-upload="fileUpload" @uploadSuccess="uploadSuccess"></file-upload>
     </div>
 </template>
@@ -148,7 +150,6 @@
     import Collapse from '@/components/collapse/Collapse'
     import PopoverConfirm from '@/components/popoverConfirm'
     import Modify from './sysAnnouncementList/Modify'
-    import DragDrawer from '@/components/dragDrawer'
     import FileUpload from '@/components/fileUpload'
     import foxTable from '@/components/fox-table/'
     import FormQuery from '@/components/form/query'
@@ -162,7 +163,6 @@
         name: "SysAnnouncementList",
         components: {
             Collapse,
-            DragDrawer,
             FileUpload,
             PopoverConfirm,
             Modify,
@@ -198,9 +198,11 @@
                 },
                 drawer: {
                     show: false,
-                    direction: 'rtl',
+                    direction: 'right',
                     draggable: true,
                     width: '900px',
+                    showFooter : true,
+                    loading : false,
                     data: {}
                 },
                 modify: {

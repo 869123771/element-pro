@@ -10,6 +10,16 @@
                             </el-form-item>
                         </el-col>
                         <el-col :md="6" :sm="8">
+                            <el-form-item prop="workNo">
+                                <div slot = "label" class = "truncate">
+                                    <el-tooltip :content = "$t('sys_user_work_no')" placement="top">
+                                        <span>{{$t('sys_user_work_no')}}</span>
+                                    </el-tooltip>
+                                </div>
+                                <el-input v-model="form.workNo" clearable></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :md="6" :sm="8">
                             <el-form-item :label="$t('sys_user_sex')" prop="sex">
                                 <el-select v-model="form.sex" clearable filterable class="w-full">
                                     <template v-for="item in sex">
@@ -47,9 +57,6 @@
             <div>
                 <el-button plain type="primary" icon="el-icon-plus" @click="addUser" v-has="'user:add'" v-waves>
                     {{$t('sys_user_add')}}
-                </el-button>
-                <el-button plain icon="iconfont icon-wy-upload" v-has="'user:import'" @click="fileImport">
-                    {{$t('common_import')}}
                 </el-button>
                 <el-button plain icon="iconfont icon-wy-upload" @click="fileImport">{{$t('common_import')}}</el-button>
                 <el-button plain icon="iconfont icon-wy-download" @click="fileExport">{{$t('common_export')}}</el-button>
@@ -177,6 +184,7 @@
             return {
                 form: {
                     username: '',
+                    workNo : '',
                     sex: '',
                     email: '',
                     phone: '',
@@ -597,6 +605,14 @@
                     {
                         label: this.$t('sys_user_account'),
                         prop: 'username',
+                    },
+                    {
+                        label: this.$t('sys_user_work_no'),
+                        prop: 'workNo',
+                    },
+                    {
+                        label: this.$t('sys_user_work_name'),
+                        prop: 'post',
                     },
                     {
                         label: this.$t('sys_user_name'),

@@ -34,8 +34,8 @@
                         this.queryPermissionByRole(id)
                     }
                 },
+                immediate : true
             },
-            immediate : true
         },
         methods : {
             getMenuRef(){

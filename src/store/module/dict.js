@@ -14,6 +14,7 @@ export default {
         sendStatus : [],                                        //发布状态
         msgType : [],                                           //推送类别
         formTableType : [],                                     //Online表单类型
+        positionRank : [],                                      //职位级别
     },
     mutations: {
         SET_SEX(state,sex){
@@ -54,6 +55,9 @@ export default {
         },
         SET_FORM_TABLE_TYPE(state,formTableType){
             state.formTableType = formTableType
+        },
+        SET_POSITION_RANK(state,positionRank){
+            state.positionRank = positionRank
         },
     },
     actions : {
@@ -146,6 +150,13 @@ export default {
             if(success) {
                 let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
                 commit('SET_FORM_TABLE_TYPE',records)
+            }
+        },
+        async GET_POSITION_RANK({commit}){
+            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'position_rank'})
+            if(success) {
+                let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
+                commit('SET_POSITION_RANK',records)
             }
         },
     }

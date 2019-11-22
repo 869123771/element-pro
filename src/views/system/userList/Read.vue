@@ -8,6 +8,12 @@
                 <el-form-item label="用户名字">
                     <span>{{form.realname}}</span>
                 </el-form-item>
+                <el-form-item label="工号">
+                    <span>{{form.workNo}}</span>
+                </el-form-item>
+                <el-form-item label="职务">
+                    <span>{{form.post}}</span>
+                </el-form-item>
                 <el-form-item label="角色分配">
                     <span>{{form.roleName}}</span>
                 </el-form-item>
