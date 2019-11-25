@@ -4,7 +4,7 @@
             <el-form-item prop = "username">
                 <el-input
                         v-model = "form.username"
-                        placeholder = "请输入用户账号"
+                        :placeholder = "$t('sys_user_account')"
                         prefix-icon="el-icon-user"
                         readonly
                 ></el-input>
@@ -13,7 +13,7 @@
                 <el-input
                         v-model = "form.password"
                         type = "password"
-                        placeholder = "请输入登陆密码"
+                        :placeholder = "$t('sys_user_pwd')"
                         prefix-icon="el-icon-lock"
                 ></el-input>
             </el-form-item>
@@ -21,12 +21,12 @@
                 <el-input
                         v-model = "form.confirmpassword"
                         type = "password"
-                        placeholder = "请确认登陆密码"
+                        :placeholder = "$t('sys_user_confirm_pwd')"
                         prefix-icon="el-icon-lock"
                 ></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" class="w-full" :loading="loading" @click="submit">确认</el-button>
+                <el-button type="primary" class="w-full" :loading="loading" @click="submit">{{$t('common_confirm')}}</el-button>
             </el-form-item>
         </el-form>
     </div>

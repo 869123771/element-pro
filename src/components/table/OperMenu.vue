@@ -1,14 +1,14 @@
 <template>
     <div>
-        <el-tooltip content="刷 新" placement="top">
+        <el-tooltip :content="$t('common_flush')" placement="top">
             <el-button circle icon = "el-icon-refresh" @click = "search"></el-button>
         </el-tooltip>
-        <el-tooltip content="显 隐" placement="top">
+        <el-tooltip :content="$t('common_show') + '/' + $t('common_hide')" placement="top">
             <el-button circle icon = "el-icon-menu" @click = "showColumn"></el-button>
         </el-tooltip>
         <drag-dialog :drag-dialog = "dialog">
             <el-transfer
-                    :titles = "['显示','隐藏']"
+                    :titles = "[$t('common_show'),$t('common_hide')]"
                     v-model = "transfer.values"
                     :data = "transfer.data"
                     @change = "dataChange"
@@ -69,7 +69,7 @@
                     ...this.dialog,
                     width : 550,
                     height : 380,
-                    title : '隐藏/显示',
+                    title : this.$t('common_show') + '/' + this.$t('common_hide'),
                     name : 'showHide'
                 }
                 this.handleData()

@@ -155,7 +155,7 @@
         }
         &-body {
             padding: 0 1rem;
-            overflow: scroll;
+            overflow: auto;
         }
         &-footer {
             position: absolute;

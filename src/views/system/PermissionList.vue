@@ -341,7 +341,7 @@
             deleteBatch() {
                 let {selection} = this.table
                 let ids = selection.map(item => item.id).join(',')
-                sweetAlert.confirm(this.$t('common_delete'), this.$t('common_confirm_del'), this.confirmDeleteBatch, ids)
+                sweetAlert.confirm(this.$t('common_delete'), this.$t('common_confirm_do'), this.confirmDeleteBatch, ids)
             },
             successClose() {
                 let {isClose} = this.drawer

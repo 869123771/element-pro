@@ -345,7 +345,7 @@
                                         content: this.$t('common_delete'),
                                         className: 'iconfont icon-wy-delete2',
                                         popover: true,
-                                        popText: this.$t('common_confirm_del'),
+                                        popText: this.$t('common_confirm_do'),
                                         permission: 'dictList:delete',
                                         event: (event,index) => {
                                             this.confirmDeleteBatch(row.id,event,index)

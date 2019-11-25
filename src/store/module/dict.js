@@ -15,6 +15,7 @@ export default {
         msgType : [],                                           //推送类别
         formTableType : [],                                     //Online表单类型
         positionRank : [],                                      //职位级别
+        orgCategory : [],                                       //机构类别
     },
     mutations: {
         SET_SEX(state,sex){
@@ -58,6 +59,9 @@ export default {
         },
         SET_POSITION_RANK(state,positionRank){
             state.positionRank = positionRank
+        },
+        SET_ORG_CATEGORY(state,orgCategory){
+            state.orgCategory = orgCategory
         },
     },
     actions : {
@@ -159,5 +163,13 @@ export default {
                 commit('SET_POSITION_RANK',records)
             }
         },
+        async GET_ORG_CATEGORY({commit}){
+            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'org_category'})
+            if(success) {
+                let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
+                commit('SET_ORG_CATEGORY',records)
+            }
+        },
+
     }
 }

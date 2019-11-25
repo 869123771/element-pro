@@ -3,6 +3,7 @@
 </template>
 
 <script>
+    import {mapState} from 'vuex'
     import FormDetail from '@/components/form/detail'
     import {isEmpty} from '30-seconds-of-code'
     export default {
@@ -21,6 +22,7 @@
                 detail : {
                     options : [
                         {label : '机构名称',prop : 'departName'},
+                        {label : '机构类别',prop : 'orgCategoryName'},
                         {label : '上级部门',prop : 'parentName'},
                         {label : '机构编码',prop : 'orgCode'},
                         {label : '排序',prop : 'departOrder'},
@@ -32,14 +34,21 @@
                 }
             }
         },
+        computed : {
+            ...mapState({
+                orgCategory : ({dict}) => dict.orgCategory
+            })
+        },
         watch : {
             basicInfo : {
                 handler(props){
                     if(!isEmpty(props)){
+                        let {orgCategory} = props
                         this.detail = {
                             ...this.detail,
                             data : {
                                 ...props,
+                                orgCategoryName : this.valueMapText(this.orgCategory,orgCategory)
                             }
                         }
                     }
@@ -47,6 +56,11 @@
                 immediate : true
             }
         },
+        methods : {
+            valueMapText(data,value){
+                return data.find(item=>item.itemValue === value).itemText
+            }
+        }
     }
 </script>
 

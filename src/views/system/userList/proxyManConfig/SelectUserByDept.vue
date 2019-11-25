@@ -1,11 +1,11 @@
 <template>
     <div>
         <el-row>
-            <el-col :span="12" class="pr-2">
+            <el-col :span="10" class="pr-2">
                 <div class="mb-3">
                     <el-input v-model="tree.filterDept"
                               @input="filterText"
-                              placeholder="请输入部门名称"
+                              :placeholder="$t('sys_user_input_dept')"
                               clearable
                               suffix-icon="el-icon-search"></el-input>
                 </div>
@@ -26,46 +26,45 @@
                     </el-tree>
                 </el-scrollbar>
             </el-col>
-            <el-col :span="12" class="pl-2">
+            <el-col :span="14" class="pl-2">
                 <div class="mb-3">
                     <el-input
                             size="medium"
                             v-model="table.userName"
                             @input="queryList"
                             clearable
-                            placeholder="请输入用户账号"
+                            :placeholder="$t('sys_user_input_account')"
                             suffix-icon="el-icon-search">
                     </el-input>
                 </div>
                 <el-row>
-                    <el-table
-                            border
-                            stripe
-                            :data="table.data"
+                    <fox-table
+                            v-if="table.show"
                             v-loading="table.loading"
-                            @selection-change="selectionChange"
-                    >
-                        <el-table-column align="center" type="selection" width="60"></el-table-column>
-                        <el-table-column align="center" type="index" width="60"></el-table-column>
-                        <el-table-column align="center" :show-overflow-tooltip="true" label="用户账号"
-                                         prop="username"></el-table-column>
-                        <el-table-column align="center" :show-overflow-tooltip="true" label="用户名称"
-                                         prop="realname"></el-table-column>
-                        <el-table-column align="center" :show-overflow-tooltip="true" label="状态"
-                                         prop="status_dictText"></el-table-column>
-                    </el-table>
-                </el-row>
-                <el-row v-show = "table.data.length" class = "my-3 text-right">
-                    <el-pagination
+                            :column="table.column"
+                            :data="table.data"
+                            pagination
                             background
-                            layout="total, prev, pager, next"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :page-sizes="[5, 10, 20, 30]"
+                            :page-count="10"
                             :current-page.sync="page.pageNum"
-                            :page-size="page.pageSize"
                             :total="page.total"
+                            :page-size="page.pageSize"
                             @size-change="sizeChange"
-                            @current-change="currentChange"
+                            @p-current-change="currentChange"
+                            @selection-change="selection"
                     >
-                    </el-pagination>
+                        <template slot="avatar" slot-scope="{scope}">
+                            <el-image size="26" :src="getAvatarView(scope)"
+                                      :preview-src-list="[getAvatarView(scope)]"
+                            >
+                                <div slot="error" class="cursor-pointer">
+                                    <i class="el-icon-picture-outline"></i>
+                                </div>
+                            </el-image>
+                        </template>
+                    </fox-table>
                 </el-row>
             </el-col>
         </el-row>
@@ -75,11 +74,14 @@
 <script>
     import {mapState, mapActions} from 'vuex'
     import {http, apiList, sweetAlert, constant} from '@/utils'
+    import foxTable from '@/components/fox-table'
 
     export default {
         name: "SelectUserByDept",
+        components : {
+            foxTable
+        },
         data() {
-            let {table} = constant
             return {
                 tree: {
                     filterDept: '',
@@ -91,10 +93,12 @@
                     },
                 },
                 table: {
-                    data: [],
+                    data : [],
+                    column : [],
                     userName: '',
                     loading: false,
-                    selection: []
+                    selection: [],
+                    show: true
                 },
                 page: {
                     pageNum: 1,
@@ -118,6 +122,10 @@
                     }
                 },
                 immediate: true
+            },
+            '$i18n.locale'() {
+                this.setI18n()
+                this.queryList()
             }
         },
         methods: {
@@ -138,7 +146,7 @@
                 }
                 this.queryList()
             },
-            selectionChange(selection) {
+            selection(selection) {
                 this.table = {
                     ...this.table,
                     selection
@@ -189,7 +197,39 @@
                     }
                 }
             },
-        }
+            setI18n() {
+                let column = [
+                    {type: 'selection', fixed: true},
+                    {
+                        label: this.$t('sys_user_account'),
+                        prop: 'username',
+                    },
+                    {
+                        label: this.$t('sys_user_name'),
+                        prop: 'realname',
+                    },
+                    {
+                        label: this.$t('sys_user_status'),
+                        prop: 'status_dictText',
+                        width: '70',
+                    },
+                ]
+                this.table = {
+                    ...this.table,
+                    show: false,
+                    column,
+                }
+                this.$nextTick(() => {
+                    this.table = {
+                        ...this.table,
+                        show: true
+                    }
+                })
+            }
+        },
+        created(){
+            this.setI18n()
+        },
     }
 </script>
 

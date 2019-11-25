@@ -1,35 +1,40 @@
 <template>
     <div class="modify py-2">
         <el-form ref="modify" :model="form" label-width="100px" :status-icon="true" :rules="rules">
-            <el-form-item label="用户账号" prop="username">
+            <el-form-item :label="$t('sys_user_account')" prop="username">
                 <el-input v-model="form.username"
-                          placeholder="用户账号"
+                          :placeholder="$t('sys_user_account')"
                           clearable
                           :readonly="data.id?true:false"
                 ></el-input>
             </el-form-item>
             <template v-if="!data.id">
-                <el-form-item label="登陆密码" prop="password">
-                    <el-input type="password" v-model="form.password" placeholder="登陆密码" clearable></el-input>
+                <el-form-item :label="$t('sys_user_pwd')" prop="password">
+                    <el-input type="password" v-model="form.password" :placeholder="$t('sys_user_pwd')" clearable></el-input>
                 </el-form-item>
-                <el-form-item label="确认密码" prop="confirmpassword">
-                    <el-input type="password" v-model="form.confirmpassword" placeholder="登陆密码" clearable></el-input>
+                <el-form-item :label="$t('sys_user_confirm_pwd')" prop="confirmpassword">
+                    <el-input type="password" v-model="form.confirmpassword" :placeholder="$t('sys_user_pwd')" clearable></el-input>
                 </el-form-item>
             </template>
-            <el-form-item label="用户名字" prop="realname">
-                <el-input v-model="form.realname" placeholder="用户名字" clearable></el-input>
+            <el-form-item :label="$t('sys_user_name')" prop="realname">
+                <el-input v-model="form.realname" :placeholder="$t('sys_user_name')" clearable></el-input>
             </el-form-item>
-            <el-form-item label="工号" prop="workNo" :rules = "[
-                    {required : true, message : '必填',trigger : 'change'},
+            <el-form-item prop="workNo" class = "slot-label" :rules = "[
+                    {required : true, message : $t('common_require'),trigger : 'change'},
                     data.id ? {} : {validator : uniqueCheck}
                 ]"
             >
-                <el-input v-model="form.workNo" placeholder="工号" clearable></el-input>
+                <div slot = "label" class = "truncate">
+                    <el-tooltip :content = "$t('sys_user_work_no')" placement="top">
+                        <span>{{$t('sys_user_work_no')}}</span>
+                    </el-tooltip>
+                </div>
+                <el-input v-model="form.workNo" :placeholder="$t('sys_user_work_no')" clearable></el-input>
             </el-form-item>
-            <el-form-item label="职务" prop="post">
+            <el-form-item :label="$t('sys_user_work_name')" prop="post">
                 <el-select
                         v-model="form.post"
-                        placeholder="职务"
+                        :placeholder="$t('sys_user_work_name')"
                         filterable
                         remote
                         :remote-method="findPost"
@@ -39,9 +44,9 @@
                 >
                     <el-option v-show="select.post.length" value="">
                         <div class="flex">
-                            <div class="w-40">职务名称</div>
-                            <div class="w-40">职务编码</div>
-                            <div class="w-20">职级</div>
+                            <div class="w-40">{{$t('sys_user_work_name')}}</div>
+                            <div class="w-40">{{sys_user_work_code}}</div>
+                            <div class="w-20">{{sys_user_work_rank}}}</div>
                         </div>
                     </el-option>
                     <el-option
@@ -58,9 +63,9 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="角色分配" prop="selectedroles">
+            <el-form-item :label="$t('sys_user_role_assign')" prop="selectedroles">
                 <el-select v-model="form.selectedroles"
-                           placeholder="角色分配"
+                           :placeholder="$t('sys_user_role_assign')"
                            clearable
                            filterable
                            multiple
@@ -71,16 +76,21 @@
                 </el-select>
             </el-form-item>
             <template v-if="!data.deptId">
-                <el-form-item label="部门分配" prop="deptName">
+                <el-form-item :label="$t('sys_user_dept_assign')" prop="deptName">
+                    <div slot = "label" class = "truncate">
+                        <el-tooltip :content = "$t('sys_user_dept_assign')" placement="top">
+                            <span>{{$t('sys_user_dept_assign')}}</span>
+                        </el-tooltip>
+                    </div>
                     <el-input v-model="form.deptName"
-                              placeholder="部门分配"
+                              :placeholder="$t('sys_user_dept_assign')"
                               suffix-icon="el-icon-more"
                               readonly
                               @click.native="selectDept"
                     ></el-input>
                 </el-form-item>
             </template>
-            <el-form-item label="头像" prop="upload">
+            <el-form-item :label="$t('sys_user_avatar')" prop="upload">
                 <el-upload
                         class="avatar-uploader"
                         :action="upload.action"
@@ -94,7 +104,7 @@
                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
             </el-form-item>
-            <el-form-item label="生日" prop="birthday">
+            <el-form-item :label="$t('sys_user_birthday')" prop="birthday">
                 <el-date-picker type="date"
                                 v-model="form.birthday"
                                 value-format="yyyy-MM-dd"
@@ -102,23 +112,23 @@
                     :picker-options="pickerOptions"
                 ></el-date-picker>
             </el-form-item>
-            <el-form-item label="性别" prop="sex">
-                <el-select v-model="form.sex" placeholder="性别" clearable filterable class="w-full">
+            <el-form-item :label="$t('sys_user_sex')" prop="sex">
+                <el-select v-model="form.sex" :placeholder="$t('sys_user_sex')" clearable filterable class="w-full">
                     <template v-for="item in sex">
                         <el-option :value="item.itemValue" :label="item.itemText"></el-option>
                     </template>
                 </el-select>
             </el-form-item>
-            <el-form-item label="邮箱" prop="email">
-                <el-input v-model="form.email" placeholder="邮箱" clearable></el-input>
+            <el-form-item :label="$t('sys_user_email')" prop="email">
+                <el-input v-model="form.email" :placeholder="$t('sys_user_email')" clearable></el-input>
             </el-form-item>
-            <el-form-item label="手机号码" prop="phone">
-                <el-input v-model="form.phone" placeholder="手机号码" clearable></el-input>
+            <el-form-item :label="$t('sys_user_phone')" prop="phone">
+                <el-input v-model="form.phone" :placeholder="$t('sys_user_phone')" clearable></el-input>
             </el-form-item>
-            <el-form-item label="座机号码" prop="telephone">
-                <el-input v-model="form.telephone" placeholder="座机号码" clearable></el-input>
+            <el-form-item :label="$t('sys_user_telephone')" prop="telephone">
+                <el-input v-model="form.telephone" :placeholder="$t('sys_user_telephone')" clearable></el-input>
             </el-form-item>
-            <el-form-item label="工作流引擎" prop="activitiSync">
+            <el-form-item :label="$t('sys_user_activity')" prop="activitiSync">
                 <el-radio-group v-model="form.activitiSync">
                     <template v-for="item in activitiSync">
                         <el-radio :label="item.itemValue">{{item.itemText}}</el-radio>
@@ -499,6 +509,12 @@
             width: 148px;
             height: 148px;
             display: block;
+        }
+        /deep/ .slot-label{
+            .el-form-item__label{
+                display : flex;
+                justify-content: flex-end;
+            }
         }
     }
 </style>

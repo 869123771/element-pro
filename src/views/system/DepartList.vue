@@ -155,6 +155,7 @@
         methods: {
             ...mapActions({
                 getAllDept: 'GET_ALL_DEPT',
+                getOrgCategory : 'GET_ORG_CATEGORY',
             }),
             handleClick({name}, event) {
                 this.tabs = {
@@ -332,7 +333,7 @@
             },
             deleteBatch() {
                 let {checkedKeys} = customParams
-                sweetAlert.confirm(this.$t('common_delete'), this.$t('common_confirm_del'), this.confirmDeleteBatch, checkedKeys.join(','))
+                sweetAlert.confirm(this.$t('common_delete'), this.$t('common_confirm_do'), this.confirmDeleteBatch, checkedKeys.join(','))
             },
             async confirmDeleteBatch(ids,flag) {
                 let {success, message} = await http.delete(apiList.sys_dept_delete_batch, {ids})
@@ -350,6 +351,7 @@
         },
         mounted() {
             this.getAllDept()
+            this.getOrgCategory()
         }
     }
 </script>

@@ -2,40 +2,50 @@
     <div class="read my-4">
         <el-row class = "pl-6">
             <el-form :model="form" label-width="85px">
-                <el-form-item label="用户账号">
+                <el-form-item :label="$t('sys_user_account')">
                     <span>{{form.username}}</span>
                 </el-form-item>
-                <el-form-item label="用户名字">
+                <el-form-item :label="$t('sys_user_name')">
                     <span>{{form.realname}}</span>
                 </el-form-item>
-                <el-form-item label="工号">
+                <el-form-item :label="$t('sys_user_work_no')">
+                    <div slot = "label" class = "truncate">
+                        <el-tooltip :content = "$t('sys_user_work_no')" placement="top">
+                            <span>{{$t('sys_user_work_no')}}</span>
+                        </el-tooltip>
+                    </div>
                     <span>{{form.workNo}}</span>
                 </el-form-item>
-                <el-form-item label="职务">
+                <el-form-item :label="$t('sys_user_work_name')">
                     <span>{{form.post}}</span>
                 </el-form-item>
-                <el-form-item label="角色分配">
+                <el-form-item :label="$t('sys_user_role_assign')">
                     <span>{{form.roleName}}</span>
                 </el-form-item>
-                <el-form-item label="生日">
+                <el-form-item :label="$t('sys_user_birthday')">
                     <span>{{form.birthday}}</span>
                 </el-form-item>
-                <el-form-item label="性别">
+                <el-form-item :label="$t('sys_user_sex')">
                     <span>{{form.sex_dictText}}</span>
                 </el-form-item>
-                <el-form-item label="邮箱">
+                <el-form-item :label="$t('sys_user_email')">
                     <span>{{form.email}}</span>
                 </el-form-item>
-                <el-form-item label="手机号码">
+                <el-form-item :label="$t('sys_user_phone')">
                     <span>{{form.phone}}</span>
                 </el-form-item>
-                <el-form-item label="工作流引擎">
+                <el-form-item :label="$t('sys_user_activity')">
                     <span>{{form.activitiSync}}</span>
                 </el-form-item>
-                <el-form-item label="头像">
+                <el-form-item :label="$t('sys_user_avatar')">
                     <el-avatar :src="form.avatar"></el-avatar>
                 </el-form-item>
-                <el-form-item label = "部门分配">
+                <el-form-item :label="$t('sys_user_dept_assign')">
+                    <div slot = "label" class = "truncate">
+                        <el-tooltip :content = "$t('sys_user_dept_assign')" placement="top">
+                            <span>{{$t('sys_user_dept_assign')}}</span>
+                        </el-tooltip>
+                    </div>
                     <el-tree
                             ref="tree"
                             show-checkbox

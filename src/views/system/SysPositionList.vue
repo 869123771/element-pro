@@ -281,7 +281,7 @@
             deleteBatch() {
                 let {selection} = this.table
                 let ids = selection.map(item => item.id).join(',')
-                sweetAlert.confirm(this.$t('common_delete'), this.$t('common_confirm_del'), this.confirmDeleteBatch, ids)
+                sweetAlert.confirm(this.$t('common_delete'), this.$t('common_confirm_do'), this.confirmDeleteBatch, ids)
             },
             async confirmDeleteBatch(ids,event,index) {
                 let {success, message} = await http.delete(apiList.sys_position_delete_batch, {ids})
@@ -382,7 +382,7 @@
                                         content: this.$t('common_delete'),
                                         className: 'iconfont icon-wy-delete2',
                                         popover: true,
-                                        popText: this.$t('common_confirm_del'),
+                                        popText: this.$t('common_confirm_do'),
                                         permission: 'dictCategory:delete',
                                         event: (event,index) => {
                                             this.confirmDeleteBatch(row.id,event,index)

@@ -4,6 +4,18 @@
             <el-form-item label = "机构名称" prop = "departName">
                 <el-input v-model = "form.departName" placeholder = "机构名称" clearable></el-input>
             </el-form-item>
+            <el-form-item label = "机构类别" prop = "orgCategory">
+                <el-radio-group v-model = "form.orgCategory" v-if = "!data.id">
+                    <template v-for = "{itemValue,itemText} in orgCategoryFilter">
+                        <el-radio :label = "itemValue">{{itemText}}</el-radio>
+                    </template>
+                </el-radio-group>
+                <el-radio-group v-model = "form.orgCategory" v-else>
+                    <template v-for = "{itemValue,itemText} in orgCategory">
+                        <el-radio :label = "itemValue">{{itemText}}</el-radio>
+                    </template>
+                </el-radio-group>
+            </el-form-item>
             <template v-if = "data.id">
                 <el-form-item label = "上级部门" prop = "parentName">
                     <el-input v-model = "form.parentName" placeholder = "上级部门" readonly></el-input>
@@ -50,9 +62,10 @@
         data() {
             return {
                 form: {
-                    departName : '',                        //机构名称
-                    parentName : '',                        //上级部门
-                    orgCode : '',                           //机构编码
+                    departName : '',                         //机构名称
+                    orgCategory : '1',                       //机构类别
+                    parentName : '',                         //上级部门
+                    orgCode : '',                            //机构编码
                 },
                 rules : {
                     departName : [
@@ -67,7 +80,11 @@
         computed: {
             ...mapState({
                 dept: ({system}) => system.dept,
-            })
+                orgCategory : ({dict}) => dict.orgCategory
+            }),
+            orgCategoryFilter(){
+                return this.orgCategory.filter(item=>Number(item.itemValue) === 1)
+            }
         },
         watch: {
             data: {
@@ -81,7 +98,6 @@
                                     ...props
                                 }
                             }else{                                      //新增子部门
-                                debugger;
                                 this.form = {
                                     ...this.form,
                                     ...props,
@@ -103,7 +119,7 @@
         },
         methods: {
             ...mapActions({
-                getAllDept: 'GET_ALL_DEPT'
+                getAllDept: 'GET_ALL_DEPT',
             }),
 
             saveData() {
@@ -142,7 +158,7 @@
                     sweetAlert.error(message)
                 }
             }
-        }
+        },
     }
 </script>
 

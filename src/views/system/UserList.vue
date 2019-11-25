@@ -62,12 +62,12 @@
                 <el-button plain icon="iconfont icon-wy-download" @click="fileExport">{{$t('common_export')}}</el-button>
                 <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
                     <el-button plain>
-                        批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+                        {{$t('common_batch_operate')}}<i class="el-icon-arrow-down el-icon--right"></i>
                     </el-button>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item @click.native="deleteBatch"><i class="el-icon-delete"></i>删除</el-dropdown-item>
-                        <el-dropdown-item @click.native="frozen()"><i class="el-icon-lock"></i>冻结</el-dropdown-item>
-                        <el-dropdown-item @click.native="frozen(1)"><i class="el-icon-unlock"></i>解冻</el-dropdown-item>
+                        <el-dropdown-item @click.native="deleteBatch"><i class="el-icon-delete"></i>{{$t('common_delete')}}</el-dropdown-item>
+                        <el-dropdown-item @click.native="frozen()"><i class="el-icon-lock"></i>{{$t('sys_user_frozen')}}</el-dropdown-item>
+                        <el-dropdown-item @click.native="frozen(1)"><i class="el-icon-unlock"></i>{{$t('sys_user_unfrozen')}}</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
@@ -76,7 +76,7 @@
         <el-row>
             <collapse :collapse-props = "collapse">
                 <div slot = "collapse-title">
-                    <span>用户信息</span>
+                    <span>{{$t('sys_user_info')}}</span>
                 </div>
                 <div slot = "collapse-content">
                     <fox-table
@@ -209,7 +209,7 @@
                     width: '300',
                     height: '300',
                     name: 'resetPwd',
-                    title: '重设密码'
+                    title: this.$t('sys_user_reset_pwd')
                 },
                 fileUpload: {
                     action: apiList.sys_user_import
@@ -301,7 +301,7 @@
             addUser() {
                 this.drawer = {
                     ...this.drawer,
-                    title: '添加用户',
+                    title: this.$t('common_add'),
                     width: '500px',
                     showFooter: true,
                     show: true
@@ -316,7 +316,7 @@
             edit({row}) {
                 this.drawer = {
                     ...this.drawer,
-                    title: '修改用户',
+                    title: this.$t('common_edit'),
                     width: '500px',
                     showFooter: true,
                     show: true
@@ -331,7 +331,7 @@
             deleteBatch() {
                 let {selection} = this.table
                 let ids = selection.map(item => item.id).join(',')
-                sweetAlert.confirm(this.$t('common_delete'), this.$t('common_confirm_del'), this.confirmDeleteBatch, ids)
+                sweetAlert.confirm(this.$t('common_delete'), this.$t('common_confirm'), this.confirmDeleteBatch, ids)
             },
             async confirmDeleteBatch(ids) {
                 let {success, message} = await http.delete(apiList.sys_user_deleteBatch, {ids})
@@ -382,10 +382,10 @@
             proxyMan({row}) {
                 this.dialog = {
                     ...this.dialog,
-                    width: 26,
-                    height: 450,
+                    width: 600,
+                    height: 340,
                     name: 'proxyConf',
-                    title: '用户代理人设置',
+                    title: this.$t('sys_user_proxy_man_conf'),
                     showFooter: true
                 }
                 this.show = {
@@ -446,7 +446,7 @@
                 this.drawer = {
                     ...this.drawer,
                     width: '450px',
-                    title: '详情',
+                    title: this.$t('common_read'),
                     showFooter: false,
                     show: true,
                 }
@@ -464,7 +464,7 @@
                     width: '300',
                     height: '300',
                     name: 'resetPwd',
-                    title: '重设密码',
+                    title: this.$t('sys_user_reset_pwd'),
                     showFooter: false
                 }
                 this.show = {
@@ -489,7 +489,7 @@
                 let {row: {id}} = scope
                 let {success, message} = await http.delete(apiList.sys_user_delete, {id})
                 if (success) {
-                    sweetAlert.successWithTimer('删除成功'),
+                    sweetAlert.successWithTimer(message),
                         this.queryList()
                 } else {
                     sweetAlert.error(message)

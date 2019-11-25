@@ -1,33 +1,32 @@
 <template>
-    <div>
+    <div class = "proxy">
         <el-form ref = "form" :model = "form" :rules = "rules" label-width="110px">
-            <el-form-item label = "用户名" prop = "userName">
+            <el-form-item :label="$t('sys_user_account')" prop = "userName">
                 <el-input v-model = "form.userName" readonly></el-input>
             </el-form-item>
-            <el-form-item label = "代理人用户名" prop = "agentUserName">
+            <el-form-item :label = "$t('sys_user_proxy_man_name')" prop = "agentUserName" class = "slot-label">
+                <div slot = "label" class = "truncate">
+                    <el-tooltip :content = "$t('sys_user_proxy_man_name')" placement="top">
+                        <span>{{$t('sys_user_proxy_man_name')}}</span>
+                    </el-tooltip>
+                </div>
                 <el-input v-model = "form.agentUserName"
                           readonly
                           suffix-icon="el-icon-more"
                           @click.native = "selectAgent"
                 ></el-input>
             </el-form-item>
-            <el-form-item label = "代理开始时间" prop = "startTime">
+            <el-form-item :label="$t('sys_user_proxy_time')" prop="proxyTime">
                 <el-date-picker
-                        v-model = "form.startTime"
-                        type = "datetime"
+                        class="w-full"
+                        v-model="form.proxyTime"
+                        type="datetimerange"
+                        :start-placeholder="$t('common_time_start')"
+                        :end-placeholder="$t('common_time_end')"
                         value-format="yyyy-MM-dd hh:mm:ss"
-                        class = "w-full"
                 ></el-date-picker>
             </el-form-item>
-            <el-form-item label = "代理结束时间" prop = "endTime">
-                <el-date-picker
-                        v-model = "form.endTime"
-                        type = "datetime"
-                        value-format="yyyy-MM-dd hh:mm:ss"
-                        class = "w-full"
-                ></el-date-picker>
-            </el-form-item>
-            <el-form-item label = "状态" prop = "status">
+            <el-form-item :label = "$t('sys_user_status')" prop = "status">
                 <el-radio-group v-model = "form.status">
                     <template v-for = "item in validStatus">
                         <el-radio :label = "item.itemValue">{{item.itemText}}</el-radio>
@@ -66,7 +65,7 @@
         data() {
             return {
                 form: {
-                    status : '1'
+                    status : '1',
                 },
                 rules : {
                     agentUserName : [
@@ -80,9 +79,9 @@
                     ]
                 },
                 dialog: {
-                    width: 80,
-                    height: 90,
-                    title: '根据部门选择用户',
+                    width: 900,
+                    height: 80,
+                    title: this.$t('sys_user_select_user'),
                     name : 'selectUser',
                     showFooter: true,
                 },
@@ -124,8 +123,12 @@
                 this.$modal.hide(name)
             },
             async saveData(){
+                let {proxyTime : [startTime,endTime],...res} = this.form
+
                 let params = {
-                    ...this.form,
+                    ...res,
+                    startTime,
+                    endTime
                 }
                 let {success,message} = await http.put(apiList.sys_user_agent_edit,params)
                 if(success){
@@ -153,6 +156,11 @@
     }
 </script>
 
-<style scoped>
-
+<style scoped lang = "less">
+    /deep/ .slot-label{
+        .el-form-item__label{
+            display : flex;
+            justify-content: flex-end;
+        }
+    }
 </style>

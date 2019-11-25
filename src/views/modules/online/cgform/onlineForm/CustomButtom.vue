@@ -255,7 +255,7 @@
                                     {
                                         content: this.$t('common_delete'),
                                         popover: true,
-                                        popText: this.$t('common_confirm_del'),
+                                        popText: this.$t('common_confirm_do'),
                                         className: 'iconfont icon-wy-delete2',
                                         permission: 'onlineForm:customButton:delete',
                                         event: () => {

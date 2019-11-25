@@ -43,37 +43,37 @@
             return {
                 dropDownItem: [
                     {
-                        label: '详情',
+                        label: this.$t('common_read'),
                         icon: '',
                         action: this.handleDetail,
                         popover: false,
                         permission : 'user:detail'
                     },
                     {
-                        label: '密码',
+                        label: this.$t('sys_user_pwd'),
                         icon: '',
                         action: this.handlePwd,
                         popover: false,
                         permission : 'user:password'
                     },
                     {
-                        label: '删除',
+                        label: this.$t('common_delete'),
                         icon: '',
                         action: this.handleDel,
                         popover: true,
-                        popText : '确定要删除吗',
+                        popText : this.$t('common_confirm_do'),
                         permission : 'user:delete'
                     },
                     {
-                        label: '冻结',
+                        label: this.$t('sys_user_frozen'),
                         icon: '',
                         action: this.frozen,
                         popover: true,
-                        popText : '确定要冻结吗',
+                        popText : this.$t('common_confirm_do'),
                         permission : 'user:frozen'
                     },
                     {
-                        label: '代理人',
+                        label: this.$t('sys_user_proxy_man'),
                         icon: '',
                         action: this.proxyMan,
                         popover: false,
