@@ -1,34 +1,51 @@
 <template>
     <div class="http-trace bg-white p-3 m-3">
         <el-row class = "mb-3">
-            <el-button plain icon="el-icon-refresh" @click="refresh">刷新</el-button>
+            <el-alert
+                type = "info"
+                show-icon
+                :closable="false"
+            >
+                <div slot = "title">
+                    <span>{{`共追踪到 ${page.total} 条近期HTTP请求记录`}}</span>
+                    <span><el-divider direction="vertical"></el-divider></span>
+                    <span><el-button type = "text" @click="refresh">立即刷新</el-button></span>
+                </div>
+            </el-alert>
         </el-row>
         <el-row>
-            <fox-table
-                    v-if="table.show"
-                    v-loading="table.loading"
-                    :column="table.column"
-                    :data="table.data"
-                    pagination
-                    background
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :page-sizes="[5, 10, 20, 30]"
-                    :page-count="10"
-                    :current-page.sync="page.pageNum"
-                    :total="page.total"
-                    :page-size="page.pageSize"
-                    @size-change="sizeChange"
-                    @p-current-change="currentChange"
-            >
-                <template slot="timeTaken" slot-scope="{scope:{row}}">
+            <collapse :collapse-props = "collapse">
+                <div slot = "collapse-title">
+                    <span>API信息</span>
+                </div>
+                <div slot = "collapse-content">
+                    <fox-table
+                            v-if="table.show"
+                            v-loading="table.loading"
+                            :column="table.column"
+                            :data="table.data"
+                            pagination
+                            background
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :page-sizes="[5, 10, 20, 30]"
+                            :page-count="10"
+                            :current-page.sync="page.pageNum"
+                            :total="page.total"
+                            :page-size="page.pageSize"
+                            @size-change="sizeChange"
+                            @p-current-change="currentChange"
+                    >
+                        <template slot="timeTaken" slot-scope="{scope:{row}}">
                     <span v-if = "row.timeTaken > 100">
                         <el-tag effect="plain" type = "danger">{{`${row.timeTaken}ms`}}</el-tag>
                     </span>
-                    <span v-else>
+                            <span v-else>
                          <el-tag effect="plain" type = "success">{{`${row.timeTaken}ms`}}</el-tag>
                     </span>
-                </template>
-            </fox-table>
+                        </template>
+                    </fox-table>
+                </div>
+            </collapse>
         </el-row>
     </div>
 </template>
@@ -36,16 +53,21 @@
 <script>
     import {http, apiList, constant, sweetAlert} from '@/utils'
     import foxTable from '@/components/fox-table/'
+    import Collapse from '@/components/collapse/Collapse'
     import dayjs from 'dayjs'
     import {chunk} from '30-seconds-of-code'
 
     export default {
         name: 'HttpTrace',
         components : {
-            foxTable
+            foxTable,
+            Collapse
         },
         data() {
             return {
+                collapse : {
+                    name : 'apiInfo'
+                },
                 table: {
                     data: [],
                     column : [],
@@ -68,6 +90,12 @@
                     { type: 'success', label: 200 },
                     { type: 'danger', label: 404 },
                 ],
+            }
+        },
+        watch: {
+            '$i18n.locale'() {
+                this.setI18n()
+                this.queryList()
             }
         },
         methods: {

@@ -16,6 +16,9 @@
                 </ul>
             </el-col>
         </el-row>
+        <el-row>
+
+        </el-row>
     </div>
 </template>
 
@@ -78,6 +81,14 @@
                                 },
                                 splitLine: {            //网格线
                                     show: false
+                                },
+                                axisLine : {
+                                    lineStyle : {
+                                        color : 'rgba(204,204,204,1)',
+                                    },
+                                },
+                                axisLabel : {
+                                    color : 'black'
                                 },
                                 data: xData,
                             }

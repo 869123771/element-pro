@@ -44,13 +44,12 @@ module.exports = {
         //     'vuex': 'Vuex',
         //     'axios': 'axios'
         // }
-        config.entry.app = ["babel-polyfill", "./src/main.js"];
         config = {
             ...config,
             entry : ['@babel/polyfill','./src/main.js']
         }
 
-        const plugins = [];
+        let plugins = [];
         plugins.push(
             new MonacoEditorPlugin()
         )

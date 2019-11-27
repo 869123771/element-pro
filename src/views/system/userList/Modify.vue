@@ -12,7 +12,12 @@
                 <el-form-item :label="$t('sys_user_pwd')" prop="password">
                     <el-input type="password" v-model="form.password" :placeholder="$t('sys_user_pwd')" clearable></el-input>
                 </el-form-item>
-                <el-form-item :label="$t('sys_user_confirm_pwd')" prop="confirmpassword">
+                <el-form-item :label="$t('sys_user_confirm_pwd')" prop="confirmpassword" class = "slot-label">
+                    <div slot = "label" class = "truncate">
+                        <el-tooltip :content = "$t('sys_user_confirm_pwd')" placement="top">
+                            <span>{{$t('sys_user_confirm_pwd')}}</span>
+                        </el-tooltip>
+                    </div>
                     <el-input type="password" v-model="form.confirmpassword" :placeholder="$t('sys_user_pwd')" clearable></el-input>
                 </el-form-item>
             </template>
