@@ -42,6 +42,19 @@ export default {
                 }
             }
         },
+        pageData: {
+            list: [],
+            title: "云忆网络",
+            statsCode: "",
+            theme: "theme1",
+            style: {
+                backgroundColor: "#fff",
+                backgroundImage: "",
+            }
+        },
+        selectWg: [],
+        configTab: 'page',
+        wgCollapse: "base",
         navBreadcrumbList: [],
         navTagList: [],
         currentNav: '',
@@ -191,6 +204,15 @@ export default {
                 }
             }
         },
+        SET_PAGE_DATA(state,pageData){
+            state.pageData = pageData
+        },
+        SET_SELECT_WG(state,selectWg){
+            state.selectWg = selectWg
+        },
+        SET_CONFIG_TAB(state,configTab){
+            state.configTab = configTab
+        }
     },
     actions: {}
 }
