@@ -52,7 +52,7 @@ export default {
                 backgroundImage: "",
             }
         },
-        selectWg: [],
+        selectWg: {},
         configTab: 'page',
         wgCollapse: "base",
         navBreadcrumbList: [],

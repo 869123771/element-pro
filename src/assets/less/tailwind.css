@@ -35,6 +35,9 @@
 .border-0{
   border-width: 0px !important;
 }
+.rounded-none{
+  border-radius : 0px !important;
+}
 .ml-3{
   margin-left: 1rem !important;
 }
