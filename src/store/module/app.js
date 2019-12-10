@@ -60,6 +60,7 @@ export default {
         currentNav: '',
         lang: localRead('lang'),
         themeColor : localRead('themeColor'),
+        collect : false,
         controlShow : {
             themeColor : localRead('themeColorShow') || false ,
             shrinkBar : isBoolean(localRead('shrinkBar')) ? localRead('shrinkBar') : true,
@@ -174,6 +175,9 @@ export default {
                 ...state.controlShow,
                 navTagShowIcon
             }
+        },
+        SET_COLLECT(state,collect){
+            state.collect = collect
         },
         SET_RELOAD(state,reload){
             localSave('reload', reload)

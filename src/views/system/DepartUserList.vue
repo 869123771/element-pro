@@ -1,7 +1,8 @@
 <template>
     <div class = "text-center">
         <vue2-org-tree name="test"
-                       :data="data"
+                       :data="deptFilter"
+                       :props = "{label:'title',children: 'children'}"
                        :horizontal="horizontal"
                        :collapsable="collapsable"
                        :label-class-name="labelClassName"
@@ -13,6 +14,7 @@
 </template>
 
 <script>
+    import {mapState,mapActions} from 'vuex'
     import Vue from 'vue'
     import Vue2OrgTree from 'vue2-org-tree'
 
@@ -37,6 +39,13 @@
                                     id: 5,
                                     label: "研发-前端",
                                     className : 'bg-red-500',
+                                    children : [
+                                        {
+                                            id: '5-1',
+                                            label: "Vue",
+                                            className : 'bg-blue-500',
+                                        },
+                                    ]
                                 },
                                 {
                                     id: 6,
@@ -76,18 +85,35 @@
                         }
                     ]
                 },
-                horizontal: false,
+                horizontal: true,
                 collapsable: false,
                 expandAll: true,
                 labelClassName: this.bgColor
             }
         },
+        computed: {
+            ...mapState({
+                dept: ({system}) => system.dept,
+            }),
+            deptFilter(){
+                return {
+                    id : '1000',
+                    departName : '大中华区',
+                    title : '大中华区',
+                    children : this.dept
+                }
+            },
+        },
         methods: {
+            ...mapActions({
+                getAllDept: 'GET_ALL_DEPT',
+            }),
             bgColor(bg){
                 return bg.className
             },
             renderContent(h, data) {
-                return data.label;
+                debugger;
+                return data.departName;
             },
             onExpand(data) {
                 if ("expand" in data) {
@@ -100,39 +126,38 @@
                 }
             },
             onNodeClick(e, data) {
-                alert(data.label);
+                alert(data.departName);
             },
             collapse(list) {
-                var _this = this;
-                list.forEach(function(child) {
+                list.forEach(child => {
                     if (child.expand) {
                         child.expand = false;
                     }
-                    child.children && _this.collapse(child.children);
+                    child.children && this.collapse(child.children);
                 });
             },
             expandChange() {
-                this.toggleExpand(this.data, this.expandAll);
+                this.toggleExpand(this.deptFilter, this.expandAll);
             },
             toggleExpand(data, val) {
-                var _this = this;
                 if (Array.isArray(data)) {
-                    data.forEach(function(item) {
-                        _this.$set(item, "expand", val);
+                    data.forEach((item)=>{
+                        this.$set(item, "expand", val);
                         if (item.children) {
-                            _this.toggleExpand(item.children, val);
+                            this.toggleExpand(item.children, val);
                         }
                     });
                 } else {
                     this.$set(data, "expand", val);
                     if (data.children) {
-                        _this.toggleExpand(data.children, val);
+                        this.toggleExpand(data.children, val);
                     }
                 }
             }
         },
         mounted() {
             this.expandChange()
+            this.getAllDept()
         }
     }
 </script>

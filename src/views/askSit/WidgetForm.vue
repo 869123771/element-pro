@@ -102,19 +102,23 @@
             },
             handleSelectWidget(selectWg) {
                 debugger;
+                let {list} = this.pageData
                 if(this.selectWg.key !== selectWg.key){
                     this.setSelectWg({})
+                    this.$nextTick(()=>{
+                        this.setSelectWg(selectWg)
+                    })
+                    list.forEach(item=>{
+                        if(item.key === selectWg.key){
+                            item.active = true
+                        }else{
+                            item.active = false
+                        }
+                    })
+                    this.setPageData(deepClone(this.pageData))
+                    this.$emit('handleSelectType',selectWg)
                 }
-                this.$nextTick(()=>{
-                    this.setSelectWg(selectWg)
-                })
-                this.pageData.list.forEach(item=>{
-                    if(item.key === selectWg.key){
-                        item.active = true
-                    }else{
-                        item.active = false
-                    }
-                })
+
                 /*let unActiveList = this.pageData.list.filter(item=>item.key !== selectWg.key).map(item=>{
                     return {...item,active : false}
                 })

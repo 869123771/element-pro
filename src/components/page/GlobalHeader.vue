@@ -8,8 +8,20 @@
                     </template>
                 </div>
                 <div>
+                   <template v-if = "collect">
+                       <el-tooltip content = "取消收藏" placement="top">
+                           <i class = "fa fa-fw fa-star cursor-pointer pr-2" @click = "handleCollect"></i>
+                       </el-tooltip>
+                   </template>
+                    <template v-else>
+                        <el-tooltip content = "收藏" placement="top">
+                            <i class = "fa fa-fw fa-star-o cursor-pointer pr-2" @click = "handleCollect"></i>
+                        </el-tooltip>
+                    </template>
                     <template v-if = "controlShow.reload">
-                        <i class = "el-icon-refresh-right cursor-pointer pr-2" @click="refresh"></i>
+                       <el-tooltip content = "刷新" placement="top">
+                           <i class = "el-icon-refresh-right cursor-pointer pr-2" @click="refresh"></i>
+                       </el-tooltip>
                     </template>
                 </div>
                 <div>
@@ -64,7 +76,8 @@
             ...mapState({
                 menuProps: ({app}) => app.menuProps,
                 lang: ({app}) => app.lang,
-                controlShow: ({app}) => app.controlShow
+                controlShow: ({app}) => app.controlShow,
+                collect : ({app}) => app.collect
             }),
         },
         data() {
@@ -72,8 +85,12 @@
         },
         methods: {
             ...mapMutations({
-                setLang: 'SET_LANG'
+                setLang: 'SET_LANG',
+                setCollect : 'SET_COLLECT'
             }),
+            handleCollect(){
+                this.setCollect(!this.collect)
+            },
             refresh(){
                 this.reload()
             }

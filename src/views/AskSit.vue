@@ -19,7 +19,7 @@
                 </draggable>
             </el-col>
             <el-col :span = "14" class = "px-3">
-                <widget-form></widget-form>
+                <widget-form @handleSelectType = "handleSelectType"></widget-form>
             </el-col>
             <transition name = "slide">
                 <el-col :span = "6">
@@ -37,7 +37,9 @@
     import Draggable from 'vuedraggable'
     import WidgetForm from './askSit/WidgetForm'
     import WgSingleSelectConfig from './askSit/widgetForm/wgFormList/WgSingleSelectConfig'
-    import {isEmpty} from '30-seconds-of-code'
+    import WgMultiSelectConfig from './askSit/widgetForm/wgFormList/WgMultiSelectConfig'
+    import {level} from 'province-city-china/data'
+    import {isEmpty,nest} from '30-seconds-of-code'
 
     export default {
         name: "AskSit",
@@ -50,6 +52,10 @@
                 isEmpty,
                 component : {
                     is : WgSingleSelectConfig,
+                },
+                typeMapComponent : {
+                    singleSelect : WgSingleSelectConfig,
+                    multiSelect : WgMultiSelectConfig,
                 },
                 question : {
                     select : [
@@ -72,11 +78,27 @@
                         {
                             type : "multiSelect",
                             name : '多选题',
+                            value : '',
                             iconClass : 'fa fa-check-square',
                             list : [
                                 {value : '1',label : '选项1'},
                                 {value : '2',label : '选项2'},
                             ],
+                            paramsConfig : {
+                                isConfirmDo : true,              //此题必答
+                                questionType : 'single',         //单选
+                            }
+                        },
+                        {
+                            type : "cascade",
+                            name : '级联题',
+                            value : [],
+                            iconClass : 'fa fa-sort-alpha-asc',
+                            list : [],
+                            paramsConfig : {
+                                isConfirmDo : true,              //此题必答
+                                questionType : 'single',         //单选
+                            }
                         },
                     ]
                 }
@@ -87,6 +109,15 @@
                 selectWg: ({app}) => app.selectWg,
             })
         },
+        methods : {
+            handleSelectType(selectWg){
+                let {type} = selectWg
+                this.component = {
+                    ...this.component,
+                    is : this.typeMapComponent[type]
+                }
+            }
+        }
     }
 </script>
 
