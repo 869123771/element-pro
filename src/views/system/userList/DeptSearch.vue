@@ -1,7 +1,7 @@
 <template>
     <div class = "dept-search">
         <el-form label-width="80px">
-            <el-form-item label = "上级部门">
+            <el-form-item :label = "$t('sys_user_top_dept')">
                 <el-tree
                         ref = "tree"
                         show-checkbox

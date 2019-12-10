@@ -1,6 +1,6 @@
 <template>
     <div class="read my-4">
-        <el-row class = "pl-6">
+        <el-row class = "pl-3">
             <el-form :model="form" label-width="85px">
                 <el-form-item :label="$t('sys_user_account')">
                     <span>{{form.username}}</span>

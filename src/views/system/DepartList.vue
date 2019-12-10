@@ -188,7 +188,7 @@
                     ...this.dialog,
                     title: '新增部门',
                     width: 400,
-                    height: 500,
+                    height: 540,
                     name : 'addTopDept'
                 }
                 this.component = {
@@ -206,7 +206,7 @@
                     ...this.dialog,
                     title: '新增子部门',
                     width: 400,
-                    height: 550,
+                    height: 600,
                     name : 'addChildDept'
                 }
                 this.component = {
@@ -228,7 +228,7 @@
                     ...this.dialog,
                     title: '编辑部门',
                     width: 400,
-                    height: 700,
+                    height: 660,
                     name : 'editDept'
                 }
                 this.component = {

@@ -21,7 +21,15 @@
                 </el-tree>
             </el-form-item>
         </el-form>
-        <drag-drawer v-model="drawer.show"
+        <slide-out :visible.sync="drawer.show"
+                   :dock ="drawer.direction"
+                   :title="drawer.title"
+                   :size="drawer.width"
+                   @closed="close"
+        >
+            <data-rule :data-rule-props="dataRuleProps" @closeDataRuleDialog="close"></data-rule>
+        </slide-out>
+        <!--<drag-drawer v-model="drawer.show"
                      :draggable="drawer.draggable"
                      :title="drawer.title"
                      :width.sync="drawer.width"
@@ -30,7 +38,7 @@
                      @close="close"
         >
             <data-rule :data-rule-props="dataRuleProps" @closeDataRuleDialog="close"></data-rule>
-        </drag-drawer>
+        </drag-drawer>-->
     </div>
 </template>
 
@@ -71,9 +79,7 @@
                     placement: 'right',
                     title: '数据规则/按钮权限配置',
                     width: '350px',
-                    direction : 'rtl',
-                    closeOnClickModal: true,
-                    draggable: false,
+                    direction : 'right',
                 },
                 dataRuleProps: {}
             }

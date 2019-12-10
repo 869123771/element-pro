@@ -41,6 +41,7 @@
                         v-model="form.post"
                         :placeholder="$t('sys_user_work_name')"
                         filterable
+                        clearable
                         remote
                         :remote-method="findPost"
                         :loading="select.loading"
@@ -50,8 +51,8 @@
                     <el-option v-show="select.post.length" value="">
                         <div class="flex">
                             <div class="w-40">{{$t('sys_user_work_name')}}</div>
-                            <div class="w-40">{{sys_user_work_code}}</div>
-                            <div class="w-20">{{sys_user_work_rank}}}</div>
+                            <div class="w-40">{{$t('sys_user_work_code')}}</div>
+                            <div class="w-20">{{$t('sys_user_work_rank')}}</div>
                         </div>
                     </el-option>
                     <el-option
@@ -240,7 +241,7 @@
                     width: 22,
                     height: 80,
                     showFooter: true,
-                    title: '部门搜索',
+                    title: this.$t('sys_user_dept_search'),
                     name: 'deptSearch'
                 },
             }

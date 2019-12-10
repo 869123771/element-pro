@@ -84,7 +84,7 @@
             <component :is="component.type" :ref="component.ref" :data="component.data"
                        @changeDialogWidth="changeDialogWidth"></component>
             <div slot = "footer" v-if = "drawer.showFooter">
-                <div class="dialog-footer p-2 w-full flex justify-between">
+                <div class="w-full flex justify-between">
                     <div>
                         <tree-operation
                                 @connect="connect"
@@ -185,8 +185,8 @@
                     data: {}
                 },
                 dialog: {
-                    width: '24',
-                    height: '52',
+                    width: 25,
+                    height: 320,
                     name: 'addRole',
                     showFooter: true,
                 },
@@ -580,6 +580,11 @@
     }
 </script>
 
-<style scoped>
-
+<style scoped lang = "less">
+     .role{
+         /deep/ .vue-slideout-header,
+         /deep/ .vue-slideout-footer{
+            z-index : 29;
+        }
+    }
 </style>

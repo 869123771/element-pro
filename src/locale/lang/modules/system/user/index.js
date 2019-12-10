@@ -29,6 +29,8 @@ export const system_user_zh_cn = {
     sys_user_select_user : '根据部门选择用户',
     sys_user_input_dept : '请输入部门名称',
     sys_user_input_account : '请输入用户账号',
+    sys_user_dept_search : '部门搜索',
+    sys_user_top_dept : '上级部门',
 }
 export const system_user_en_us = {
     sys_user_account : 'account',
@@ -61,6 +63,8 @@ export const system_user_en_us = {
     sys_user_select_user : 'select user by department',
     sys_user_input_dept : 'please input department name',
     sys_user_input_account : 'please input user name',
+    sys_user_dept_search : 'department search',
+    sys_user_top_dept : 'top department',
 }
 export const system_user_zh_tw = {
     sys_user_account : '賬號',
@@ -93,4 +97,6 @@ export const system_user_zh_tw = {
     sys_user_select_user : '根據部門選擇用戶',
     sys_user_input_dept : '請輸入部門名稱',
     sys_user_input_account : '請輸入用戶賬號',
+    sys_user_dept_search : '部門搜索',
+    sys_user_top_dept : '上級部門',
 }
