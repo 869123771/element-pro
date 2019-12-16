@@ -1,7 +1,8 @@
 export const system_dict_zh_cn = {
     sys_dict_name : '字典名称',
     sys_dict_code : '字典编码',
-    sys_dict_info : '字典信息',
+    sys_dict_info_head : '数据字典-头信息',
+    sys_dict_info_detail : '数据字典-明细信息',
     sys_dict_description : '描述',
     sys_dict_dict_config : '字典配置',
     sys_dict_item_name : '名称',
@@ -15,7 +16,8 @@ export const system_dict_zh_cn = {
 export const system_dict_en_us = {
     sys_dict_name : 'dict name',
     sys_dict_code : 'dict code',
-    sys_dict_info : 'dict info',
+    sys_dict_info_head : 'dict info head',
+    sys_dict_info_detail : 'dict info detail',
     sys_dict_description : 'description',
     sys_dict_dict_config : 'dict config',
     sys_dict_item_name : 'name',
@@ -29,7 +31,8 @@ export const system_dict_en_us = {
 export const system_dict_zh_tw = {
     sys_dict_name : '字典名稱',
     sys_dict_code : '字典編碼',
-    sys_dict_info : '字典信息',
+    sys_dict_info_head : '數據字典(頭信息)',
+    sys_dict_info_detail : '數據字典(明細信息)',
     sys_dict_description : '描述',
     sys_dict_dict_config : '字典配置',
     sys_dict_item_name : '名稱',

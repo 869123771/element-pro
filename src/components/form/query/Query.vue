@@ -4,7 +4,7 @@
         <div v-show = "show.collapse">
             <slot name = "hide"></slot>
         </div>
-        <div class = "inline-block pl-4">
+        <div class = "inline-block pl-4 mb-3">
             <el-button type="primary" icon="el-icon-search" @click="$emit('search')" v-waves>{{$t('common_query')}}</el-button>
             <el-button plain icon="el-icon-refresh-left" @click="$emit('reset')" v-waves>{{$t('common_reset')}}</el-button>
             <span class="cursor-pointer inline-block text-blue-500 pl-2" @click="arrowClick">

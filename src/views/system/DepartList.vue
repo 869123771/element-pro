@@ -124,6 +124,7 @@
                     height: 500,
                     title: '新增',
                     showFooter: true,
+                    loading : false
                 },
                 component: {
                     is: Modify,
@@ -189,7 +190,8 @@
                     title: '新增部门',
                     width: 400,
                     height: 540,
-                    name : 'addTopDept'
+                    name : 'addTopDept',
+                    loading : false,
                 }
                 this.component = {
                     ...this.component,
@@ -207,7 +209,8 @@
                     title: '新增子部门',
                     width: 400,
                     height: 600,
-                    name : 'addChildDept'
+                    name : 'addChildDept',
+                    loading : false,
                 }
                 this.component = {
                     ...this.component,
@@ -229,7 +232,8 @@
                     title: '编辑部门',
                     width: 400,
                     height: 660,
-                    name : 'editDept'
+                    name : 'editDept',
+                    loading : false,
                 }
                 this.component = {
                     ...this.component,
@@ -247,6 +251,10 @@
             },
             closeDialog() {
                 let {name} = this.dialog
+                this.dialog = {
+                    ...this.dialog,
+                    loading : false
+                }
                 this.$modal.hide(name)
                 this.getAllDept()
             },
@@ -262,10 +270,6 @@
                         modifyRef.saveData()
                     }
                 })
-                this.dialog = {
-                    ...this.dialog,
-                    loading: false
-                }
             },
 
             treeCheck(treeItem, treeData) {

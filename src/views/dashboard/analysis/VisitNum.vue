@@ -3,7 +3,7 @@
         <el-row>
             <el-col :span = "18">
                 <h4 class="title">销售额趋势</h4>
-                <v-chart :options="options.cellNum" auto-resize></v-chart>
+                <v-chart :options="options.visitNum" auto-resize></v-chart>
             </el-col>
             <el-col :span = "6">
                 <h4 class="title">门店销售排行榜</h4>
@@ -41,7 +41,7 @@
 
             return {
                 options : {
-                    cellNum : {}
+                    visitNum : {}
                 },
                 rankList
             }
@@ -55,7 +55,7 @@
                 }
                 this.options = {
                     ...this.options,
-                    cellNum : {
+                    visitNum : {
                         tooltip: {
                             trigger: 'axis',
                             axisPointer: {
@@ -78,6 +78,14 @@
                                 },
                                 splitLine: {            //网格线
                                     show: false
+                                },
+                                axisLine : {
+                                    lineStyle : {
+                                        color : 'rgba(204,204,204,1)',
+                                    },
+                                },
+                                axisLabel : {
+                                    color : 'black'
                                 },
                                 data: xData,
                             }

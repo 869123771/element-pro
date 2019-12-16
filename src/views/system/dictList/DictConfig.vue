@@ -33,23 +33,32 @@
         <el-row class = "mb-4">
             <el-button plain type="primary" icon="el-icon-plus" @click="addRule">{{$t('common_add')}}</el-button>
         </el-row>
-        <fox-table
-                v-if="table.show"
-                v-loading="table.loading"
-                :column="table.column"
-                :data="table.data"
-                pagination
-                background
-                layout="total, sizes, prev, pager, next, jumper"
-                :page-sizes="[5, 10, 20, 30]"
-                :page-count="5"
-                :current-page.sync="page.pageNum"
-                :total="page.total"
-                :page-size="page.pageSize"
-                @size-change="sizeChange"
-                @p-current-change="currentChange"
-        >
-        </fox-table>
+        <el-row>
+            <collapse :collapse-props = "collapse">
+                <div slot = "collapse-title">
+                    <span>{{$t('sys_dict_info_detail')}}</span>
+                </div>
+                <div slot = "collapse-content">
+                    <fox-table
+                            v-if="table.show"
+                            v-loading="table.loading"
+                            :column="table.column"
+                            :data="table.data"
+                            pagination
+                            background
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :page-sizes="[5, 10, 20, 30]"
+                            :page-count="5"
+                            :current-page.sync="page.pageNum"
+                            :total="page.total"
+                            :page-size="page.pageSize"
+                            @size-change="sizeChange"
+                            @p-current-change="currentChange"
+                    >
+                    </fox-table>
+                </div>
+            </collapse>
+        </el-row>
         <drag-dialog :drag-dialog="dialog" @confirm="confirmAdd">
            <modify :data="modify.data" ref="modify" @modifySuccess="modifySuccess"></modify>
         </drag-dialog>
@@ -59,6 +68,7 @@
 <script>
     import {mapState,mapActions} from 'vuex'
     import {http, apiList, constant, sweetAlert} from '@/utils'
+    import Collapse from '@/components/collapse/Collapse'
     import DragDialog from '@/components/dragDialog'
     import foxTable from '@/components/fox-table'
     import OperBtn from '@/components/table/OperBtn'
@@ -73,6 +83,7 @@
             }
         },
         components : {
+            Collapse,
             DragDialog,
             foxTable,
             Modify
@@ -80,6 +91,9 @@
         data() {
             return {
                 form: {},
+                collapse : {
+                    name : 'dictDetail'
+                },
                 table: {
                     data: [],
                     column : [],

@@ -129,7 +129,7 @@
                             <el-button plain>{{$t('common_cancel')}}</el-button>
                         </div>
                     </popover-confirm>
-                    <el-button type="primary" @click="submit" v-loading = "drawer.loading">{{$t('common_submit')}}</el-button>
+                    <el-button type="primary" @click="submit" :loading = "drawer.loading">{{$t('common_submit')}}</el-button>
                 </div>
             </div>
         </slide-out>
@@ -209,6 +209,7 @@
                     width: '300',
                     height: '300',
                     name: 'resetPwd',
+                    loading : false,
                     title: this.$t('sys_user_reset_pwd')
                 },
                 fileUpload: {
@@ -262,6 +263,7 @@
                 this.drawer = {
                     ...this.drawer,
                     show: false,
+                    loading : false
                 }
                 this.queryList()
             },
@@ -303,6 +305,7 @@
                     ...this.drawer,
                     title: this.$t('common_add'),
                     width: '500px',
+                    loading : false,
                     showFooter: true,
                     show: true
                 }
@@ -318,6 +321,7 @@
                     ...this.drawer,
                     title: this.$t('common_edit'),
                     width: '500px',
+                    loading : false,
                     showFooter: true,
                     show: true
                 }
@@ -331,7 +335,7 @@
             deleteBatch() {
                 let {selection} = this.table
                 let ids = selection.map(item => item.id).join(',')
-                sweetAlert.confirm(this.$t('common_delete'), this.$t('common_confirm'), this.confirmDeleteBatch, ids)
+                sweetAlert.confirm(this.$t('common_delete'), this.$t('common_confirm_do'), this.confirmDeleteBatch, ids)
             },
             async confirmDeleteBatch(ids) {
                 let {success, message} = await http.delete(apiList.sys_user_deleteBatch, {ids})
@@ -415,10 +419,6 @@
                         selectUserRef.saveData()
                     }
                 })
-                this.drawer = {
-                    ...this.drawer,
-                    loading: false
-                }
             },
             submit() {
                 let {ref} = this.component
@@ -432,13 +432,13 @@
                         modifyRef.commitData()
                     }
                 })
-                this.drawer = {
-                    ...this.drawer,
-                    loading: false
-                }
             },
             successClose() {
                 let {name} = this.dialog
+                this.dialog = {
+                    ...this.dialog,
+                    loading : false
+                }
                 this.$modal.hide(name)
                 this.queryList()
             },
@@ -456,8 +456,7 @@
                     ref: 'read',
                     data: row
                 }
-            }
-            ,
+            },
             handlePwd({row, $index: index}) {
                 this.dialog = {
                     ...this.dialog,
@@ -649,6 +648,16 @@
                         prop: 'status_dictText',
                         width: '70',
                     },
+                    {
+                        label : this.$t('common_create_time'),
+                        prop : 'createTime',
+                        width : 150,
+                    },
+                    {
+                        label : this.$t('common_update_time'),
+                        prop : 'updateTime',
+                        width : 150,
+                    }
                 ]
                 this.table = {
                     ...this.table,

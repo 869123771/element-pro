@@ -22,6 +22,8 @@ export const common_zh_cn = {
     common_flush : '刷新',
     common_show : '显示',
     common_hide : '隐藏',
+    common_create_time : '创建时间',
+    common_update_time : '修改时间',
 }
 
 export const common_en_us = {
@@ -48,6 +50,8 @@ export const common_en_us = {
     common_flush : 'flush',
     common_show : 'show',
     common_hide : 'hide',
+    common_create_time : 'create time',
+    common_update_time : 'update time',
 }
 
 export const common_zh_tw = {
@@ -74,4 +78,6 @@ export const common_zh_tw = {
     common_flush : '刷新',
     common_show : '顯示',
     common_hide : '隱藏',
+    common_create_time : '創建時間',
+    common_update_time : '修改時間',
 }

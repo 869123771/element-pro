@@ -82,6 +82,14 @@
     }
 </script>
 
-<style scoped>
-
+<style scoped lang = "less">
+    /deep/ .el-transfer__button{
+        border-radius: 50%;
+        padding: 12px;
+        display: block;
+        margin: 0px;
+    }
+    /deep/ .el-transfer__button:first-child{
+        margin-bottom : 10px;
+    }
 </style>

@@ -5,7 +5,7 @@
                 <el-form-item label="代码生成目录" prop="projectPath">
                     <el-input placeholder="代码生成目录" v-model="form.projectPath">
                         <template slot="append">
-                            <span @click="selectFold">
+                            <span @click="selectFold" class = "cursor-pointer">
                                 <i class="fa fa-fw fa-folder-open-o"></i>
                                 <span>浏览</span>
                             </span>
@@ -47,16 +47,15 @@
                 </el-form-item>
             </el-form>
         </el-row>
-        <drag-drawer v-model="drawer.show"
-                     :draggable="drawer.draggable"
-                     :title="drawer.title"
-                     :width.sync="drawer.width"
-                     :direction="drawer.direction"
-                     :scrollable="true"
+        <slide-out :visible.sync="drawer.show"
+                   :dock ="drawer.direction"
+                   :title="drawer.title"
+                   :size="drawer.width"
+                   :close-on-mask-click = "false"
+                   allow-resize
         >
-
             <component :ref="component.ref" :is="component.type" :data="component.data"></component>
-            <div class="dialog-footer p-2 w-full" v-show="drawer.showFooter">
+            <div slot = "footer" v-if = "drawer.showFooter">
                 <div class="flex justify-end">
                     <popover-confirm @confirm="popoverConfirm" class="mx-2">
                         <div slot="popover-title">确定要关闭吗</div>
@@ -67,7 +66,7 @@
                     <el-button type="primary" @click="submit">提交</el-button>
                 </div>
             </div>
-        </drag-drawer>
+        </slide-out>
     </div>
 </template>
 
@@ -135,8 +134,7 @@
                 },
                 drawer: {
                     show: false,
-                    direction: 'rtl',
-                    draggable: true,
+                    direction: 'right',
                     showFooter: true,
                     data: {}
                 },

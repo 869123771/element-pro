@@ -1,6 +1,6 @@
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
     .BundleAnalyzerPlugin;
-const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
+const TerserPlugin = require('terser-webpack-plugin')
 const MonacoEditorPlugin = require('monaco-editor-webpack-plugin')
 const CompressionWebpackPlugin = require("compression-webpack-plugin");
 /*
@@ -66,21 +66,17 @@ module.exports = {
             );*/
 
             plugins.push(
-                new ParallelUglifyPlugin({
-                    // 传递给 UglifyJS的参数如下：
-                    uglifyES: {
-                        output: {
-                            beautify: false,
-                            comments: false
-                        },
-                        warnings: false,
+                new TerserPlugin({
+                    cache: true,
+                    parallel: true,
+                    sourceMap: true, // Must be set to true if using source-maps in production
+                    terserOptions: {
                         compress: {
                             drop_console: true,
-                            collapse_vars: true,
-                            reduce_vars: true
+                            drop_debugger: true
                         }
-                    },
-                }),
+                    }
+                })
             );
 
           //  plugins.push(new DashboardPlugin(dashboard.setData))
@@ -184,7 +180,7 @@ module.exports = {
         //  filename: 'css/[name].[hash:8].css',
         //  chunkFilename: 'css/[name].[hash:8].css'
         //}，
-        sourceMap: false,
+        sourceMap: true,
         loaderOptions: {
             sass: {
                 // 向全局sass样式传入共享的全局变量
@@ -221,7 +217,7 @@ module.exports = {
         //   errors: true
         // },
         open: IS_PROD,
-        //host: "localhost",
+        host: "10.149.10.33",
         port: 8088,
         https: false,
         hotOnly: true,
