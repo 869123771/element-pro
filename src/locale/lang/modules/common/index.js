@@ -24,6 +24,9 @@ export const common_zh_cn = {
     common_hide : '隐藏',
     common_create_time : '创建时间',
     common_update_time : '修改时间',
+    common_upload : '上传',
+    common_drag_file_hear : '将文件拖到此处，或',
+    common_click_upload : '点击上传'
 }
 
 export const common_en_us = {
@@ -52,6 +55,9 @@ export const common_en_us = {
     common_hide : 'hide',
     common_create_time : 'create time',
     common_update_time : 'update time',
+    common_upload : 'upload',
+    common_drag_file_hear : 'drag file hear ,or ',
+    common_click_upload : 'click upload'
 }
 
 export const common_zh_tw = {
@@ -80,4 +86,7 @@ export const common_zh_tw = {
     common_hide : '隱藏',
     common_create_time : '創建時間',
     common_update_time : '修改時間',
+    common_upload : '上傳',
+    common_drag_file_hear : '將文件拖到此處,或',
+    common_click_upload : '點擊上傳'
 }

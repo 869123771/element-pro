@@ -14,7 +14,7 @@
                 :on-error="error"
         >
             <i class="el-icon-upload"></i>
-            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            <div class="el-upload__text">{{$t('common_drag_file_hear')}}<em>{{$t('common_click_upload')}}</em></div>
         </el-upload>
     </drag-dialog>
 </template>
@@ -39,7 +39,7 @@
                     name : 'fileUpload',
                     width: 25,
                     height: 50,
-                    title: '上传',
+                    title: this.$t('common_upload'),
                     showFooter: true,
                 },
                 upload : {

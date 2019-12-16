@@ -652,6 +652,7 @@
                         label : this.$t('common_create_time'),
                         prop : 'createTime',
                         width : 150,
+                        sortable : true
                     },
                     {
                         label : this.$t('common_update_time'),
