@@ -118,8 +118,8 @@
                                         popText: '确定要删除吗',
                                         className: 'iconfont icon-wy-delete2',
                                         permission: 'dept:user:delete',
-                                        event: () => {
-                                            this.confirmDelete(row.id, $index)
+                                        event: (event,index) => {
+                                            this.confirmDelete(row.id, event,index)
                                         }
                                     },
                                 ]
@@ -309,7 +309,7 @@
                     sweetAlert.error(message)
                 }
             },
-            async confirmDelete(userId, index) {
+            async confirmDelete(userId, event,index) {
                 let {id: depId} = this.userInfo
                 let params = {
                     userId,
@@ -318,7 +318,7 @@
                 let {success, message} = await http.delete(apiList.sys_user_delete_dept_user, params)
                 if (success) {
                     sweetAlert.successWithTimer(message)
-                    this.$refs[index].doClose();
+                    event(index)
                     this.queryList()
                 } else {
                     sweetAlert.error(message)

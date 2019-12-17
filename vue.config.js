@@ -144,19 +144,34 @@ module.exports = {
         });
 
         // 添加别名
-
         config.resolve.alias
             .set("@", resolve("src"))
             .set("assets", resolve("src/assets"))
             .set("components", resolve("src/components"))
 
-        // 打包分析
-        if (process.env.IS_ANALYZ) {
-            config.plugin("webpack-report").use(BundleAnalyzerPlugin, [
-                {
-                    analyzerMode: "static"
-                }
-            ]);
+        if (IS_PROD) {
+            // 压缩图片
+            config.module
+                .rule("images")
+                .test(/\.(png|jpe?g|gif|svg)(\?.*)?$/)
+                .use("image-webpack-loader")
+                .loader("image-webpack-loader")
+                .options({
+                    mozjpeg: { progressive: true, quality: 65 },
+                    optipng: { enabled: false },
+                    pngquant: { quality: [0.65, 0.90], speed: 4 },
+                    gifsicle: { interlaced: false }
+                });
+
+
+            // 打包分析
+            if (process.env.IS_ANALYZ) {
+                config.plugin("webpack-report").use(BundleAnalyzerPlugin, [
+                    {
+                        analyzerMode: "static"
+                    }
+                ]);
+            }
         }
 
         // 多页面配置，为js添加hash
