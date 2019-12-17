@@ -15,9 +15,9 @@
                 <div class = "item-container border-solid border-b border-gray-300 flex justify-between">
                     <div>题型</div>
                     <div class = "flex items-center">
-                        <el-radio-group v-model = "selectWg.paramsConfig.questionType" size = "small">
-                            <el-radio-button label = "single">单选</el-radio-button>
-                            <el-radio-button label = "multi">多选</el-radio-button>
+                        <el-radio-group v-model = "selectWg.paramsConfig.questionType" size = "small" @change="questionTypeChange">
+                            <el-radio-button label = "singleSelect">单选</el-radio-button>
+                            <el-radio-button label = "multiSelect">多选</el-radio-button>
                         </el-radio-group>
                     </div>
                 </div>
@@ -60,15 +60,41 @@
 </template>
 
 <script>
-    import {mapState} from 'vuex'
+    import {mapState,mapMutations} from 'vuex'
+    import {deepClone} from '30-seconds-of-code'
 
     export default {
         name: "WgSingleSelectConfig",
         computed: {
             ...mapState({
+                pageData : ({app}) => app.pageData,
                 selectWg: ({app}) => app.selectWg,
+
             })
         },
+        methods : {
+            ...mapMutations({
+                setSelectWg : 'SET_SELECT_WG',
+                setPageData : 'SET_PAGE_DATA'
+            }),
+            questionTypeChange(type){
+                let selectWg = {
+                    ...this.selectWg,
+                    type
+                }
+                this.handlePageData(selectWg)
+                this.setSelectWg(selectWg)
+            },
+            handlePageData(selectWg){
+                let {list} = this.pageData
+                list.forEach(item=>{
+                    if(item.key === selectWg.key){
+                        item.type = selectWg.type
+                    }
+                })
+                this.setPageData(deepClone(this.pageData))
+            },
+        }
     }
 </script>
 

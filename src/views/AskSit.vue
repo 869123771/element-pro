@@ -69,8 +69,8 @@
                             ],
                             iconClass : 'fa fa-dot-circle-o',
                             paramsConfig : {
-                                isConfirmDo : true,              //此题必答
-                                questionType : 'single',         //单选
+                                isConfirmDo : true,                     //此题必答
+                                questionType : 'singleSelect',         //单选
                                 randomOrder : false,              //选项随机排列
                                 fixedLastItem : false,              //固定最后一个选项
                             }
@@ -85,8 +85,8 @@
                                 {value : '2',label : '选项2'},
                             ],
                             paramsConfig : {
-                                isConfirmDo : true,              //此题必答
-                                questionType : 'single',         //单选
+                                isConfirmDo : true,                   //此题必答
+                                questionType : 'multiSelect',         //单选
                             }
                         },
                         {
