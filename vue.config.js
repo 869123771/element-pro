@@ -232,7 +232,7 @@ module.exports = {
         //   errors: true
         // },
         open: IS_PROD,
-        host: "10.149.10.33",
+        host: "127.0.0.1",
         port: 8088,
         https: false,
         hotOnly: true,

@@ -2,7 +2,7 @@
     <div class="modify">
         <el-form :model="form" :rules="rules" ref="form" label-width="100px" :status-icon="true">
             <el-form-item label="菜单类型">
-                <el-radio-group v-model="form.menuType">
+                <el-radio-group v-model="form.menuType" @change = "menuTypeChange">
                     <template v-for="item in menuType">
                         <el-radio :label="item.itemValue">{{item.itemText}}</el-radio>
                     </template>
@@ -12,16 +12,16 @@
                 <el-form-item label="按钮/权限" prop="name">
                     <el-input v-model="form.name" placeholder="请输入按钮名称" clearable></el-input>
                 </el-form-item>
-                <el-form-item label="父级菜单">
-                    <el-cascader
-                            v-model="form.parentId"
-                            :options="menus"
-                            :props="{ checkStrictly: true,label:'name',value : 'id'}"
-                            clearable
-                            filterable
-                            class="w-full"
+                <el-form-item label="父级菜单" prop="parentId" :rules = "{required : true, message : '必填'}">
+                    <select-tree
+                            ref = "selectTree"
+                            :value = "form.parentId"
+                            :props = "tree.props"
+                            :options = "menus"
+                            @getValue = "getValue($event)"
                     >
-                    </el-cascader>
+
+                    </select-tree>
                 </el-form-item>
                 <el-form-item label="菜单路径" prop="url">
                     <el-input v-model="form.url" placeholder="请输入菜单路径" clearable></el-input>
@@ -49,17 +49,16 @@
                     <el-input v-model="form.name" placeholder="请输入菜单名称" clearable></el-input>
                 </el-form-item>
                 <template v-if="form.menuType === '1'">
-                    <el-form-item label="父级菜单" prop="parentId">
-                        <el-cascader
-                                v-model="form.parentId"
-                                :options="menus"
-                                :props="{ checkStrictly: true,label:'name',value : 'id'}"
-                                :show-all-levels="false"
-                                clearable
-                                filterable
-                                class="w-full"
+                    <el-form-item label="父级菜单" prop="parentId" :rules = "{required : true, message : '必填'}">
+                        <select-tree
+                            ref = "selectTree"
+                            :value = "form.parentId"
+                            :props = "tree.props"
+                            :options = "menus"
+                            @getValue = "getValue($event)"
                         >
-                        </el-cascader>
+
+                        </select-tree>
                     </el-form-item>
                 </template>
                 <el-form-item label="菜单路径" v-if="form.menuType === '2'">
@@ -77,7 +76,7 @@
                 </el-form-item>
                 <template v-if="form.menuType === '0'">
                     <el-form-item label="默认跳转地址">
-                        <el-input v-model="form.redirect" placeholder="请输入默认跳转地址" clearable></el-input>
+                        <el-input v-model="form.redirect" placeholder="请输入路由参数 redirect" clearable></el-input>
                     </el-form-item>
                 </template>
                 <el-form-item label="菜单图标">
@@ -114,6 +113,7 @@
     import {http, apiList, constant, sweetAlert} from '@/utils'
     import Icons from './icon/Icons'
     import DragDialog from '@/components/dragDialog'
+    import SelectTree from '@/components/treeSelect/TreeSelect'
     import {isEmpty} from '30-seconds-of-code'
 
     let customParams = {}
@@ -122,7 +122,8 @@
         name: "Modify",
         components: {
             Icons,
-            DragDialog
+            DragDialog,
+            SelectTree
         },
         props: {
             data: {
@@ -131,6 +132,14 @@
         },
         data() {
             return {
+                tree : {
+                    value : '',
+                    props : {
+                        value : 'id',
+                        label : 'name',
+                        children : 'children'
+                    }
+                },
                 form: {
                     menuType: '0',                  //菜单类型
                     name: '',                      //菜单名称
@@ -188,8 +197,8 @@
                             menuType: menuType.toString()
                         }
                     }else{
-                        this.resetFields()
                         this.$nextTick(()=>{
+                            this.resetFields()
                             this.$refs.form.resetFields()
                         })
                     }
@@ -216,6 +225,19 @@
                     perms: '',                      //授权标识
                     status: '1'                      //状态
                 }
+            },
+            getValue(value){
+                this.form = {
+                    ...this.form,
+                    parentId : value
+                }
+                this.tree = {
+                    ...this.tree,
+                    value
+                }
+            },
+            menuTypeChange(){
+               this.$refs.form.clearValidate()
             },
             checkIcons() {
                 let {name} = this.dialog
@@ -252,25 +274,17 @@
                 }
             },
             async saveData() {
-                let {parentId} = this.form
                 let {id} = this.data
                 let params = {
                     ...this.form,
-                    parentId: Array.isArray(parentId) ? parentId.slice(-1).join('') : ''
+                    ...this.data,
                 }
                 let res
-                debugger;
                 if (id) {                     //编辑
-                    params = {
-                        ...this.data,
-                        ...params,
-                        parentId: Array.isArray(parentId) ? parentId.slice(-1).join('') : parentId
-                    }
                     res = await http.put(apiList.sys_menu_edit, params)
                 } else {
                     res = await http.post(apiList.sys_menu_add, params)
                 }
-                debugger;
                 let {success, message} = res
                 if (success) {
                     sweetAlert.successWithTimer(message)

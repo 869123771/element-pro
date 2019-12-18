@@ -96,6 +96,7 @@
                 </el-form-item>
             </el-form>
         </drag-dialog>
+        <file-upload ref="fileUpload" :file-upload="fileUpload" @uploadSuccess="uploadSuccess"></file-upload>
     </div>
 </template>
 
@@ -107,13 +108,15 @@
     import DragDialog from '@/components/dragDialog'
     import foxTable from '@/components/fox-table/'
     import OperBtn from '@/components/table/OperBtn'
+    import FileUpload from '@/components/fileUpload'
 
     export default {
         name: "SysPositionList",
         components : {
             Collapse,
             DragDialog,
-            foxTable
+            foxTable,
+            FileUpload
         },
         data(){
             return {
@@ -126,6 +129,9 @@
                     code : '',                          //职务编码
                     name : '',                          //职务名称
                     rank : '',                          //职级
+                },
+                fileUpload: {
+                    action: apiList.sys_position_import
                 },
                 rules : {
                     name : [
@@ -244,6 +250,10 @@
             fileImport() {
                 this.$modal.show('fileUpload')
             },
+            uploadSuccess() {
+                this.$modal.hide('fileUpload')
+                this.queryList()
+            },
             async saveData(){
                 let {id} = this.modify
                 let params = {
@@ -274,8 +284,10 @@
                 this.queryList()
             },
             async fileExport() {
-                let params = {}
-                let {data, filename} = await http.getFileDownload(apiList.sys_user_export, params)
+                let params = {
+                    ...this.form
+                }
+                let {data, filename} = await http.getFileDownload(apiList.sys_position_export, params)
                 downloadFile(data, filename)
             },
             deleteBatch() {

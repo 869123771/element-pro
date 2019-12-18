@@ -319,17 +319,13 @@
                 modifyRef.$refs.form.validate(valid => {
                     if (valid) {
                         this.drawer = {
-                            ...this.dialog,
+                            ...this.drawer,
                             loading : true,
                             isClose : true
                         }
                         modifyRef.saveData()
                     }
                 })
-                this.drawer = {
-                    ...this.drawer,
-                    loading: false
-                }
             },
             continueAdd(){
                 this.submit()
@@ -345,6 +341,10 @@
             },
             successClose() {
                 let {isClose} = this.drawer
+                this.drawer = {
+                    ...this.drawer,
+                    loading  : false
+                }
                 if(isClose){
                     this.drawer = {
                         ...this.drawer,

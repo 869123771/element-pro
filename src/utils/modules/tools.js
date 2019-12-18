@@ -146,6 +146,7 @@ export const generateIndexRouter = (data) =>{
  const generateChildRouters = (data) =>{
     const routers = [];
     for (let item of data) {
+        let {path,name,redirect,meta,alwaysShow} = item
         let component = "";
         if(item.component.includes('layouts')){
             component = "components/"+item.component;
@@ -160,21 +161,23 @@ export const generateIndexRouter = (data) =>{
         }
 
         let menu =  {
-            path: item.path,
-            name: item.name,
-            redirect:item.redirect,
+            path,
+            name,
+            redirect,
             component: resolve => require(['@/' + component+'.vue'], resolve),
             hidden:item.hidden,
             //component:()=> import(`@/views/${item.component}.vue`),
             meta: {
-                title:item.meta.title ,
-                icon: item.meta.icon,
-                url:item.meta.url ,
-                permissionList:item.meta.permissionList
+                title : meta.title ,
+                icon : meta.icon,
+                url : meta.url ,
+                permissionList : meta.permissionList,
+                keepAlive : meta.keepAlive
             }
         }
-        if(item.alwaysShow){
+        if(alwaysShow){
             menu.alwaysShow = true;
+            menu.redirect = path;
         }
         if (item.children && item.children.length > 0) {
             menu.children = [...generateChildRouters( item.children)];
@@ -182,8 +185,8 @@ export const generateIndexRouter = (data) =>{
         //--update-begin----author:scott---date:20190320------for:根据后台菜单配置，判断是否路由菜单字段，动态选择是否生成路由（为了支持参数URL菜单）------
         //判断是否生成路由
         if(item.route && item.route === '0'){
-            //console.log(' 不生成路由 item.route：  '+item.route);
-            //console.log(' 不生成路由 item.path：  '+item.path);
+            console.log(' 不生成路由 item.route：  '+item.route);
+            console.log(' 不生成路由 item.path：  '+item.path);
         }else{
             routers.push(menu);
         }
