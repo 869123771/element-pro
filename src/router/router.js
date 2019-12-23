@@ -1,4 +1,4 @@
-import { UserLayout, TabLayout, RouteView, BlankLayout,PageView } from '@/components/layouts'
+import { UserLayout, TabLayout, RouteView, BlankLayout } from '@/components/layouts'
 
 /**
  * 走菜单，走权限控制

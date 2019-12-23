@@ -5,7 +5,6 @@
 </template>
 
 <script>
-  import PageLayout from '../page/PageLayout'
   import RouteView from './RouteView'
 
   export default {
