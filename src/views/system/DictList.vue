@@ -23,6 +23,21 @@
             <el-button plain type="primary" icon="el-icon-plus" @click="addDict">{{$t('common_add')}}</el-button>
             <el-button plain icon="iconfont icon-wy-upload" @click="fileImport">{{$t('common_import')}}</el-button>
             <el-button plain icon="iconfont icon-wy-download" @click="fileExport">{{$t('common_export')}}</el-button>
+            <template v-if = "recycleBin.total">
+                <el-popover
+                        placement="bottom"
+                        trigger="manual"
+                        v-model="show.recycle">
+                    <fox-table
+                            :column="recycleBin.column"
+                            :data="recycleBin.data"
+                    >
+                    </fox-table>
+                    <el-badge :value = "recycleBin.total" slot="reference">
+                        <el-button plain icon="el-icon-refresh" @click="recycle">{{$t('sys_dict_recycle_bin')}}</el-button>
+                    </el-badge>
+                </el-popover>
+            </template>
         </el-row>
         <el-row class="my-3">
             <collapse :collapse-props = "collapse">
@@ -105,6 +120,9 @@
                     dictName: '',      //字典名称
                     dictCode: '',      //字典编号
                 },
+                show : {
+                    recycle : false
+                },
                 table: {
                     show: true,
                     column: [],
@@ -118,6 +136,56 @@
                     pageNum : 1,
                     pageSize: 10,
                     total: 0
+                },
+                recycleBin : {
+                    total : '',
+                    data: [],
+                    column : [
+                        {
+                            label: this.$t('common_operate'),
+                            prop: 'oper',
+                            width: '100',
+                            render: (h, {row:{id},$index}) => {
+                                let btnInfo = [
+                                    {
+                                        content: this.$t('sys_dict_fetch'),
+                                        className: 'fa fa-fw fa-reply',
+                                        permission: 'dictList:config',
+                                        event: () => {
+                                            this.dictRecycle(id)
+                                        }
+                                    },
+                                    {
+                                        content: this.$t('sys_dict_delete_thorough'),
+                                        className: 'fa fa-fw fa-remove',
+                                        permission: 'dictList:delete',
+                                        event: () => {
+                                            this.deletePhysic(id)
+                                        }
+                                    },
+                                ]
+                                return (
+                                    <OperBtn btnInfo={btnInfo}></OperBtn>
+
+                                )
+                            },
+                        },
+                        {
+                            label: this.$t('sys_dict_name'),
+                            prop: 'dictName',
+                            width : 120
+                        },
+                        {
+                            label: this.$t('sys_dict_code'),
+                            prop: 'dictCode',
+                            width : 120
+                        },
+                        {
+                            label: this.$t('sys_dict_description'),
+                            prop: 'description',
+                            width : 120
+                        },
+                    ]
                 },
                 drawer: {
                     show: false,
@@ -197,6 +265,13 @@
                 downloadFile(data, filename)
 
             },
+            recycle(){
+                let {recycle} = this.show
+                this.show = {
+                    ...this.show,
+                    recycle : !recycle
+                }
+            },
             uploadSuccess() {
                 this.$modal.hide('fileUpload')
                 this.queryList()
@@ -268,6 +343,25 @@
                 }
                 this.queryList()
             },
+            async dictRecycle(id){
+                let {success, message} = await http.put(apiList.sys_dict_recycle + id)
+                if(success){
+                    sweetAlert.successWithTimer(message)
+                    this.getDeleteList()
+                    this.queryList()
+                }else{
+                    sweetAlert.errorWithTimer(message)
+                }
+            },
+            async deletePhysic(id){
+                let {success, message} = await http.delete(apiList.sys_dict_delete_physic + id)
+                if(success){
+                    sweetAlert.successWithTimer(message)
+                    this.getDeleteList()
+                }else{
+                    sweetAlert.errorWithTimer(message)
+                }
+            },
             async confirmDeleteBatch(id,event,index) {
                 let {success, message} = await http.delete(apiList.sys_dict_delete, {id})
                 if (success) {
@@ -278,8 +372,19 @@
                         sweetAlert.success(message)
                     }
                     this.queryList()
+                    this.getDeleteList()
                 } else {
                     sweetAlert.error(message)
+                }
+            },
+            async getDeleteList(){
+                let {success,result = []} = await http.get(apiList.sys_dict_delete_list)
+                if(success){
+                    this.recycleBin = {
+                        ...this.recycleBin,
+                        total : result.length,
+                        data : result
+                    }
                 }
             },
             async queryList() {
@@ -385,10 +490,13 @@
         },
         mounted() {
             this.queryList()
+            this.getDeleteList()
         },
     }
 </script>
 
-<style scoped>
-
+<style scoped lang = "less">
+    .el-badge.el-popover__reference{
+        margin-left : 10px;
+    }
 </style>
