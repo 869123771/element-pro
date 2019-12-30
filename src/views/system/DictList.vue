@@ -29,6 +29,7 @@
                         trigger="manual"
                         v-model="show.recycle">
                     <fox-table
+                            v-if = "recycleBin.show"
                             :column="recycleBin.column"
                             :data="recycleBin.data"
                     >
@@ -139,53 +140,9 @@
                 },
                 recycleBin : {
                     total : '',
+                    show : true,
                     data: [],
-                    column : [
-                        {
-                            label: this.$t('common_operate'),
-                            prop: 'oper',
-                            width: '100',
-                            render: (h, {row:{id},$index}) => {
-                                let btnInfo = [
-                                    {
-                                        content: this.$t('sys_dict_fetch'),
-                                        className: 'fa fa-fw fa-reply',
-                                        permission: 'dictList:config',
-                                        event: () => {
-                                            this.dictRecycle(id)
-                                        }
-                                    },
-                                    {
-                                        content: this.$t('sys_dict_delete_thorough'),
-                                        className: 'fa fa-fw fa-remove',
-                                        permission: 'dictList:delete',
-                                        event: () => {
-                                            this.deletePhysic(id)
-                                        }
-                                    },
-                                ]
-                                return (
-                                    <OperBtn btnInfo={btnInfo}></OperBtn>
-
-                                )
-                            },
-                        },
-                        {
-                            label: this.$t('sys_dict_name'),
-                            prop: 'dictName',
-                            width : 120
-                        },
-                        {
-                            label: this.$t('sys_dict_code'),
-                            prop: 'dictCode',
-                            width : 120
-                        },
-                        {
-                            label: this.$t('sys_dict_description'),
-                            prop: 'description',
-                            width : 120
-                        },
-                    ]
+                    column : []
                 },
                 drawer: {
                     show: false,
@@ -477,10 +434,64 @@
                         },
                     ]
                 }
+                this.recycleBin = {
+                    ...this.recycleBin,
+                    show: false,
+                    column : [
+                        {
+                            label: this.$t('common_operate'),
+                            prop: 'oper',
+                            width: '100',
+                            render: (h, {row:{id},$index}) => {
+                                let btnInfo = [
+                                    {
+                                        content: this.$t('sys_dict_fetch'),
+                                        className: 'fa fa-fw fa-reply',
+                                        permission: 'dictList:config',
+                                        event: () => {
+                                            this.dictRecycle(id)
+                                        }
+                                    },
+                                    {
+                                        content: this.$t('sys_dict_delete_thorough'),
+                                        className: 'fa fa-fw fa-remove',
+                                        permission: 'dictList:delete',
+                                        event: () => {
+                                            this.deletePhysic(id)
+                                        }
+                                    },
+                                ]
+                                return (
+                                    <OperBtn btnInfo={btnInfo}></OperBtn>
+
+                                )
+                            },
+                        },
+                        {
+                            label: this.$t('sys_dict_name'),
+                            prop: 'dictName',
+                            width : 120
+                        },
+                        {
+                            label: this.$t('sys_dict_code'),
+                            prop: 'dictCode',
+                            width : 120
+                        },
+                        {
+                            label: this.$t('sys_dict_description'),
+                            prop: 'description',
+                            width : 120
+                        },
+                    ]
+                }
                 this.$nextTick(() => {
                     this.table = {
                         ...this.table,
                         show: true
+                    }
+                    this.recycleBin = {
+                        ...this.recycleBin,
+                        show : true
                     }
                 })
             }
