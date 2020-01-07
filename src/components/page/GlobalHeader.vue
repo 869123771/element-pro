@@ -31,9 +31,11 @@
                 </div>
             </div>
 
-            <div class="float-right flex items-center self-stretch">
+            <div class="flex items-center self-stretch">
                 <template v-if="controlShow.themeColor">
-                    <color-picker></color-picker>
+                    <div class = "pr-3">
+                        <color-picker></color-picker>
+                    </div>
                 </template>
                 <div class = "pr-2">
                     <message></message>
