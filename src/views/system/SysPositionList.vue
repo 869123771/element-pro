@@ -385,7 +385,7 @@
                                     {
                                         content: this.$t('common_edit'),
                                         className: 'fa fa-fw fa-pencil',
-                                        permission: 'dictCategory:edit',
+                                        permission: 'positionMgr:edit',
                                         event: () => {
                                             this.edit(row)
                                         }
@@ -395,7 +395,7 @@
                                         className: 'iconfont icon-wy-delete2',
                                         popover: true,
                                         popText: this.$t('common_confirm_do'),
-                                        permission: 'dictCategory:delete',
+                                        permission: 'positionMgr:delete',
                                         event: (event,index) => {
                                             this.confirmDeleteBatch(row.id,event,index)
                                         }
