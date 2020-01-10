@@ -6,6 +6,7 @@
             </el-button>
             <el-button plain icon="iconfont icon-wy-upload" @click="fileImport">{{$t('common_import')}}</el-button>
             <el-button plain icon="iconfont icon-wy-download" @click="fileExport">{{$t('common_export')}}</el-button>
+            <el-button plain icon="el-icon-search" @click="highSearch">高级查询</el-button>
         </el-row>
         <el-row>
             <fox-table
@@ -27,6 +28,7 @@
             >
             </fox-table>
         </el-row>
+
     </div>
 </template>
 
@@ -127,6 +129,9 @@
 
             },
             fileExport(){
+
+            },
+            highSearch(){
 
             },
             getAvatarView({row},prop) {

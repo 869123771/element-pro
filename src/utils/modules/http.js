@@ -138,10 +138,19 @@ export default {
         )
     },
     post(url, data) {
+        let {params} = data
+        let postParamsType = {
+            data: JSON.stringify(data),
+        }
+        if(params && params instanceof Object){
+            postParamsType = {
+                params
+            }
+        }
         return ajax({
             method: 'post',
             url,
-            data: JSON.stringify(data),
+            ...postParamsType,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Content-Type': 'application/json; charset=UTF-8'
