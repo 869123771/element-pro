@@ -6,7 +6,7 @@
             </el-button>
             <el-button plain icon="iconfont icon-wy-upload" @click="fileImport">{{$t('common_import')}}</el-button>
             <el-button plain icon="iconfont icon-wy-download" @click="fileExport">{{$t('common_export')}}</el-button>
-            <el-button plain icon="el-icon-search" @click="highSearch">高级查询</el-button>
+            <el-button plain icon="el-icon-search" @click="handleHighSearch">高级查询</el-button>
         </el-row>
         <el-row>
             <fox-table
@@ -28,7 +28,7 @@
             >
             </fox-table>
         </el-row>
-
+        <high-search ref = "highSearch" :high-search = "highSearch"></high-search>
     </div>
 </template>
 
@@ -36,6 +36,7 @@
     import {http, apiList, constant, mixin, sweetAlert} from '@/utils'
     import foxTable from '@/components/fox-table/'
     import OperBtn from '@/components/table/OperBtn'
+    import HighSearch from "@/components/highSearch";
     import dayjs from 'dayjs'
 
     let oper = [
@@ -97,7 +98,8 @@
     export default {
         name: "OnlCgformAutoList",
         components : {
-            foxTable
+            foxTable,
+            HighSearch
         },
         data(){
             return {
@@ -112,6 +114,9 @@
                     pageNum : 1,
                     pageSize: 10,
                     total: 0
+                },
+                highSearch : {
+                    type : []
                 },
             }
         },
@@ -131,8 +136,12 @@
             fileExport(){
 
             },
-            highSearch(){
-
+            handleHighSearch(){
+                let {dialog:{name},getQueryConditions} = this.$refs.highSearch
+                this.$nextTick(() => {
+                    this.$modal.show(name)
+                })
+                getQueryConditions()
             },
             getAvatarView({row},prop) {
                 let {config: {baseUrl: {imgDomainURL}}} = constant
@@ -181,7 +190,6 @@
                     let {columns,dictOptions} = result
                     columns.forEach(item=>{
                         let {title:label,dataIndex:prop,align,sorter,customRender,scopedSlots = {}} = item
-                        debugger;
                         let columnItem = {
                             align,
                             label,
@@ -236,6 +244,10 @@
                             ...oper,
                             ...column
                         ]
+                    }
+                    this.highSearch = {
+                        ...this.highSearch,
+                        type : column
                     }
                     return result
                 }

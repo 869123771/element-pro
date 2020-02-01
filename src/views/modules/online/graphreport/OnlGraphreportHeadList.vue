@@ -1,15 +1,15 @@
 <template>
-    <div class="report bg-white p-3 m-3">
+    <div class = "p-3 m-3 bg-white">
         <el-row>
             <el-form ref="form" :model="form" label-width="90px">
                 <el-col :md="6" :sm="8">
-                    <el-form-item label="报表编码" prop="code">
-                        <el-input v-model="form.code" placeholder="报表编码" clearable></el-input>
+                    <el-form-item label="图表名称" prop="name">
+                        <el-input v-model="form.name" placeholder="图表名称" clearable></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :md="6" :sm="8">
-                    <el-form-item label="报表名字" prop="name">
-                        <el-input v-model="form.name" placeholder="报表名字" clearable></el-input>
+                    <el-form-item label="编码" prop="code">
+                        <el-input v-model="form.code" placeholder="编码" clearable></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :md="6" :sm="8" class="px-3">
@@ -19,9 +19,9 @@
             </el-form>
         </el-row>
         <el-row class="my-3">
-            <el-button plain type="primary" icon="el-icon-plus" @click="add">
-                录入
-            </el-button>
+            <el-button plain type="primary" icon="el-icon-plus" @click="add"> {{$t('common_add')}}</el-button>
+            <el-button plain icon="iconfont icon-wy-upload" @click="fileImport">{{$t('common_import')}}</el-button>
+            <el-button plain icon="iconfont icon-wy-download" @click="fileExport">{{$t('common_export')}}</el-button>
             <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
                 <el-button plain>
                     批量操作<i class="el-icon-arrow-down el-icon--right"></i>
@@ -34,7 +34,7 @@
         <el-row>
             <collapse :collapse-props="collapse">
                 <div slot="collapse-title">
-                    <span>报表配置</span>
+                    <span>图表配置</span>
                 </div>
                 <div slot="collapse-content">
                     <fox-table
@@ -93,31 +93,33 @@
         <drag-dialog :drag-dialog="dialog" @confirm="confirm">
             <component :is = "component.is" :ref = "component.ref" :data = "component.data" @modifySuccess = "modifySuccess" @modifyFail = "modifyFail"></component>
         </drag-dialog>
+        <file-upload ref="fileUpload" :file-upload="fileUpload" @uploadSuccess="uploadSuccess"></file-upload>
     </div>
 </template>
 
 <script>
-    import {mapState, mapActions} from 'vuex'
     import {http, apiList, constant, mixin, sweetAlert} from '@/utils'
+    import FileUpload from '@/components/fileUpload'
+    import {downloadFile} from '@/utils/modules/tools'
     import Collapse from '@/components/collapse/Collapse'
     import DragDialog from '@/components/dragDialog'
     import foxTable from '@/components/fox-table'
     import PopoverConfirm from '@/components/popoverConfirm'
-    import Modify from "./onlCgreportHeadList/Modify";
-    import AddressConfig from "./onlCgreportHeadList/AddressConfig";
-
+    import Modify from "./onlGraphreportHeadList/Modify";
+    import AddressConfig from "./onlGraphreportHeadList/AddressConfig";
     export default {
-        name: "OnlCgreportHeadList",
+        name: "OnlGraphreportHeadList",
         components: {
             Collapse,
             DragDialog,
             foxTable,
+            FileUpload,
             PopoverConfirm
         },
         data() {
             return {
                 collapse : {
-                    name : 'onlineReportConf'
+                    name : 'graphReport'
                 },
                 form: {},
                 show: {
@@ -155,6 +157,9 @@
                         popText: '确定要删除吗'
                     },
                 ],
+                fileUpload: {
+                    action: apiList.online_graph_import
+                },
                 table: {
                     column: [],
                     data: [],
@@ -169,7 +174,7 @@
                 }
             }
         },
-        methods: {
+        methods : {
             search() {
                 this.page = {
                     ...this.page,
@@ -180,12 +185,20 @@
             reset() {
                 this.$refs.form.resetFields()
             },
+            fileImport() {
+                this.$modal.show('fileUpload')
+            },
+            async fileExport() {
+                let params = {}
+                let {data, filename} = await http.getFileDownload(apiList.online_graph_export, params)
+                downloadFile(data, filename)
+            },
             add() {
                 this.dialog = {
                     ...this.dialog,
                     name: 'add',
                     width: 82,
-                    height: 700,
+                    height: 100,
                     title: this.$t('common_add'),
                     showFooter: true
                 }
@@ -205,7 +218,7 @@
                     ...this.dialog,
                     name: 'edit',
                     width: 82,
-                    height: 700,
+                    height: 100,
                     title: this.$t('common_edit'),
                     showFooter: true
                 }
@@ -241,8 +254,12 @@
                     this.$modal.show(name)
                 })
             },
+            uploadSuccess() {
+                this.$modal.hide('fileUpload')
+                this.queryList()
+            },
             functionTest({id}) {
-                this.$router.push('/online/cgreport/' + id)
+                this.$router.push('/online/graphreport/chart/' + id)
             },
             handleDel({id},index) {
                 debugger;
@@ -254,7 +271,7 @@
                 sweetAlert.confirm(this.$t('common_delete'), this.$t('common_confirm_do'), this.confirmDeleteBatch, ids)
             },
             async confirmDeleteBatch(ids,index,event) {
-                let {success, message} = await http.delete(apiList.online_report_delete, {ids})
+                let {success, message} = await http.delete(apiList.online_graph_delete, {ids})
                 if (success) {
                     if(typeof index === 'number'){
                         sweetAlert.successWithTimer(message)
@@ -269,15 +286,19 @@
             },
             confirm(){
                 let modifyRef = this.$refs[this.component.ref]
-                modifyRef.$refs.form.validate(valid => {
-                    if (valid) {
-                        this.dialog = {
-                            ...this.dialog,
-                            loading: true
+                if(modifyRef.$refs.form){
+                    modifyRef.$refs.form.validate(valid => {
+                        if (valid) {
+                            this.dialog = {
+                                ...this.dialog,
+                                loading: true
+                            }
+                            modifyRef.saveData()
                         }
-                        modifyRef.saveData()
-                    }
-                })
+                    })
+                }else{
+                    modifyRef.saveData()
+                }
             },
             modifySuccess(){
                 this.closeLoading()
@@ -339,7 +360,7 @@
                     pageSize,
                     pageNo
                 }
-                let {success, result: {total, records: data}} = await http.get(apiList.online_report_head_list_query, params)
+                let {success, result: {total, records: data}} = await http.get(apiList.online_graph_query_list, params)
                 if (success) {
                     this.table = {
                         ...this.table,
@@ -358,6 +379,7 @@
                     show: false,
                     column: [
                         {type: 'selection', fixed: true},
+                        {type: 'index', fixed: true},
                         {
                             label: this.$t('common_operate'),
                             prop: 'oper',
@@ -366,7 +388,7 @@
                             slot: true
                         },
                         {
-                            label: '报表名称',
+                            label: '字段名',
                             prop: 'name',
                         },
                         {
@@ -374,12 +396,11 @@
                             prop: 'code',
                         },
                         {
-                            label: '查询SQL',
+                            label: '数据',
                             prop: 'cgrSql',
                         },
-                        {label: '数据源', prop: 'dbSource'},
-                        {label: '创建时间', prop: 'createTime',},
-                        {label: '描述', prop: 'content'},
+                        {label: 'Y轴文字段', prop: 'yaxisText'},
+                        {label: 'X轴文字段', prop: 'xaxisField',},
                     ]
                 }
                 this.$nextTick(() => {
@@ -390,12 +411,12 @@
                 })
             }
         },
-        created() {
+        created(){
             this.setI18n()
         },
-        mounted() {
+        mounted(){
             this.queryList()
-        }
+        },
     }
 </script>
 

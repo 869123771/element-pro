@@ -71,7 +71,7 @@
         },
         methods: {
             confirm() {
-                this.$refs.upload.submit();
+                this.$refs.fileUpload.submit();
             },
             success(response, file, fileList) {
                 let {success,message} = response

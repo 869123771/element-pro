@@ -16,6 +16,9 @@ export default {
         formTableType : [],                                     //Online表单类型
         positionRank : [],                                      //职位级别
         orgCategory : [],                                       //机构类别
+        onlineGraphDisplayTemplate : [],                        //展示模板
+        onlineGraphDataType : [],                               //数据类型
+        onlineGraphType : [],                                   //图表类型
     },
     mutations: {
         SET_SEX(state,sex){
@@ -62,6 +65,15 @@ export default {
         },
         SET_ORG_CATEGORY(state,orgCategory){
             state.orgCategory = orgCategory
+        },
+        SET_ONLINE_GRAPH_DISPLAY_TEMPLATE(state,onlineGraphDisplayTemplate){
+            state.onlineGraphDisplayTemplate = onlineGraphDisplayTemplate
+        },
+        SET_ONLINE_GRAPH_DATA_TYPE(state,onlineGraphDataType){
+            state.onlineGraphDataType = onlineGraphDataType
+        },
+        SET_ONLINE_GRAPH_TYPE(state,onlineGraphType){
+            state.onlineGraphType = onlineGraphType
         },
     },
     actions : {
@@ -170,6 +182,26 @@ export default {
                 commit('SET_ORG_CATEGORY',records)
             }
         },
-
+        async GET_ONLINE_GRAPH_DISPLAY_TEMPLATE({commit}){
+            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'online_graph_display_template'})
+            if(success) {
+                let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
+                commit('SET_ONLINE_GRAPH_DISPLAY_TEMPLATE',records)
+            }
+        },
+        async GET_ONLINE_GRAPH_DATA_TYPE({commit}){
+            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'online_graph_data_type'})
+            if(success) {
+                let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
+                commit('SET_ONLINE_GRAPH_DATA_TYPE',records)
+            }
+        },
+        async GET_ONLINE_GRAPH_TYPE({commit}){
+            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'online_graph_type'})
+            if(success) {
+                let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
+                commit('SET_ONLINE_GRAPH_TYPE',records)
+            }
+        },
     }
 }

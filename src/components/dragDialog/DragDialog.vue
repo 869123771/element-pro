@@ -34,10 +34,15 @@
                 <slot></slot>
             </div>
         </el-scrollbar>
-        <div class="modal-footer text-center" v-if="dialog.showFooter">
-            <el-button plain @click="close">{{$t('common_cancel')}}</el-button>
-            <el-button type="primary" :loading="dialog.loading" @click="confirm">{{dialog.confirmText || $t('common_confirm')}}</el-button>
-        </div>
+        <template v-if = "dialog.showFooter">
+            <div class="modal-footer text-center">
+                <el-button plain @click="close">{{$t('common_cancel')}}</el-button>
+                <el-button type="primary" :loading="dialog.loading" @click="confirm">{{dialog.confirmText || $t('common_confirm')}}</el-button>
+            </div>
+        </template>
+        <template v-else>
+            <slot name = "footer"></slot>
+        </template>
     </modal>
 </template>
 <script>
