@@ -98,6 +98,7 @@
 </template>
 
 <script>
+    import {mapActions} from 'vuex'
     import {http, apiList, constant, mixin, sweetAlert} from '@/utils'
     import FileUpload from '@/components/fileUpload'
     import {downloadFile} from '@/utils/modules/tools'
@@ -175,6 +176,9 @@
             }
         },
         methods : {
+            ...mapActions({
+                getOnlineGraphType : 'GET_ONLINE_GRAPH_TYPE',
+            }),
             search() {
                 this.page = {
                     ...this.page,
@@ -416,6 +420,7 @@
         },
         mounted(){
             this.queryList()
+            this.getOnlineGraphType()
         },
     }
 </script>

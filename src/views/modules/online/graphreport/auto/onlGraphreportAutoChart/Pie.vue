@@ -8,6 +8,7 @@
     import ECharts from 'vue-echarts/components/ECharts'
     import 'echarts/lib/chart/pie'
     import 'echarts/lib/component/tooltip';
+    import 'echarts/lib/component/legend'
 
     export default {
         name: "Pie",
@@ -39,29 +40,23 @@
                 let {data} = this.data
                 this.options = {
                     ...this.options,
-                    /*tooltip: {
-                        trigger: 'axis',
-                        axisPointer: {
-                            type: 'shadow',
-                            label: {
-                                backgroundColor: '#6a7985'
-                            }
-                        }
-                    },*/
+                    tooltip : {
+                        trigger: 'item',
+                    },
+                    legend: {
+                        bottom : 0,
+                        data: data.map(item=>item.name),
+                    },
                     series: [
                         {
                             type: 'pie',
                             radius: '55%',
                             roseType: 'angle',
-                            itemStyle: {
-                                normal: {
-                                    color: ['#C335                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        31', '#EFE42A', '#64BD3D', '#EE9201', '#29AAE3', '#B74AE5', '#0AAF9F', '#E89589',
-                                        '#16A085', '#4A235A', '#C39BD3 ', '#F9E79F', '#BA4A00', '#ECF0F1', '#616A6B', '#EAF2F8', '#4A235A', '#3498DB']
-                                },
-                            },
                             data
                         }
-                    ]
+                    ],
+                    color: ['#C335                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        31', '#EFE42A', '#64BD3D', '#EE9201', '#29AAE3', '#B74AE5', '#0AAF9F', '#E89589',
+                        '#16A085', '#4A235A', '#C39BD3 ', '#F9E79F', '#BA4A00', '#ECF0F1', '#616A6B', '#EAF2F8', '#4A235A', '#3498DB']
                 }
             }
         }

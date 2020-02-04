@@ -3,6 +3,7 @@ import system from './system'
 import online from './online'
 import login from './login'
 import message from './message'
+import workCheck from './workCheck'
 
 let prefix = '/jeecg-boot'
 let serviceMap = {
@@ -11,6 +12,7 @@ let serviceMap = {
     ...online,
     ...login,
     ...message,
+    ...workCheck
 }
 let result = {}
 Object.keys(serviceMap).forEach(key=>{

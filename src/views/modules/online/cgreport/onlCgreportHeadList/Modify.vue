@@ -118,7 +118,7 @@
                 select : {
                     dataSource : [],
                     fieldType : [
-                        {value : 'Number',label : '数值类型'},
+                        {value : 'Integer',label : '数值类型'},
                         {value : 'String',label : '字符类型'},
                         {value : 'Date',label : '日期类型'},
                         {value : 'Time',label : '时间类型'},

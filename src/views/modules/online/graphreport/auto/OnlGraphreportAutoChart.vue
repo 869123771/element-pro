@@ -1,6 +1,6 @@
 <template>
     <div class = "p-3 m-3 bg-white">
-        <el-row>
+        <el-row class = "mb-3">
             <el-card>
                 <div slot = "header">{{chartProps.head.name}}</div>
                 <el-row>
@@ -11,6 +11,16 @@
                                     <el-col :span = "24">
                                         <template v-if = "item === 'bar'">
                                             <bar :data = "bar"></bar>
+                                        </template>
+                                    </el-col>
+                                    <el-col :span = "24">
+                                        <template v-if = "item === 'pie'">
+                                            <pie :data = "pie"></pie>
+                                        </template>
+                                    </el-col>
+                                    <el-col :span = "24">
+                                        <template v-if = "item === 'line'">
+                                            <line-char :data = "line"></line-char>
                                         </template>
                                     </el-col>
                                 </template>
@@ -25,15 +35,59 @@
                                             <pie :data = "pie"></pie>
                                         </template>
                                     </el-col>
+                                    <el-col :span = "12">
+                                        <template v-if = "item === 'line'">
+                                            <line-char :data = "line"></line-char>
+                                        </template>
+                                    </el-col>
                                 </template>
                             </template>
                         </template>
                     </template>
                     <template v-else-if = "chartProps.head.displayTemplate === 'single'">
-
+                        <template v-for = "(item,index) in expectTableType">
+                            <el-row>
+                                <el-col :span = "24">
+                                    <template v-if = "item === 'bar'">
+                                        <bar :data = "bar"></bar>
+                                    </template>
+                                </el-col>
+                                <el-col :span = "24">
+                                    <template v-if = "item === 'pie'">
+                                        <pie :data = "pie"></pie>
+                                    </template>
+                                </el-col>
+                                <el-col :span = "24">
+                                    <template v-if = "item === 'line'">
+                                        <line-char :data = "line"></line-char>
+                                    </template>
+                                </el-col>
+                            </el-row>
+                        </template>
                     </template>
                     <template v-else-if = "chartProps.head.displayTemplate === 'tab'">
-
+                        <el-button-group>
+                            <template v-for = "(item,index) in expectTableType">
+                                <el-button :plain = "tabChar.active === item ? false : true" :type = "tabChar.active === item ? 'primary' : ''" @click = "showChar(item)">{{onlineGraphType.find(v=>v.itemValue === item).itemText}}</el-button>
+                            </template>
+                        </el-button-group>
+                        <el-row>
+                            <el-col :span = "24">
+                                <template v-if = "tabChar.active === 'bar'">
+                                    <bar :data = "bar"></bar>
+                                </template>
+                            </el-col>
+                            <el-col :span = "24">
+                                <template v-if = "tabChar.active === 'pie'">
+                                    <pie :data = "pie"></pie>
+                                </template>
+                            </el-col>
+                            <el-col :span = "24">
+                                <template v-if = "tabChar.active === 'line'">
+                                    <line-char :data = "line"></line-char>
+                                </template>
+                            </el-col>
+                        </el-row>
                     </template>
                 </el-row>
             </el-card>
@@ -50,23 +104,29 @@
 </template>
 
 <script>
+    import {mapState} from 'vuex'
     import {http, apiList, constant, sweetAlert} from '@/utils'
     import {remove} from '30-seconds-of-code'
     import List from './onlGraphreportAutoChart/List'
     import Bar from './onlGraphreportAutoChart/Bar'
     import Pie from './onlGraphreportAutoChart/Pie'
+    import LineChar from './onlGraphreportAutoChart/Line'
 
     export default {
         name: "OnlGraphreportAutoChart",
         components : {
             List,
             Bar,
-            Pie
+            Pie,
+            LineChar
         },
         data(){
             return {
                 chartProps : {
 
+                },
+                tabChar : {
+                    active : 'pie',
                 },
                 table : {
                     column : [],
@@ -78,10 +138,17 @@
                 },
                 pie : {
                     data : []
-                }
+                },
+                line : {
+                    xData : [],
+                    yData : []
+                },
             }
         },
         computed : {
+            ...mapState({
+                onlineGraphType : ({dict}) => dict.onlineGraphType
+            }),
             isDouble(){
                 let flag = false
                 let {head:{displayTemplate}} = this.chartProps
@@ -139,6 +206,21 @@
                     data
                 }
             },
+            initLine({parseData,xaxisField,yaxisField}){
+                const xData = parseData.map(item=>item[xaxisField])
+                const yData = parseData.map(item=>item[yaxisField])
+                this.line = {
+                    ...this.line,
+                    xData,
+                    yData
+                }
+            },
+            showChar(active){
+                this.tabChar = {
+                    ...this.tabChar,
+                    active
+                }
+            },
             async getCharData(){
                 let {params : {code:id}} = this.$route
                 let params = {
@@ -162,6 +244,9 @@
                           ...this.table,
                           data
                       }
+                      this.initBar({parseData:data,xaxisField,yaxisField})
+                      this.initPie({parseData:data,xaxisField,yaxisField})
+                      this.initLine({parseData:data,xaxisField,yaxisField})
                   }else{
                       let parseData = JSON.parse(cgrSql)
                       this.table = {
@@ -170,6 +255,7 @@
                       }
                       this.initBar({parseData,xaxisField,yaxisField})
                       this.initPie({parseData,xaxisField,yaxisField})
+                      this.initLine({parseData,xaxisField,yaxisField})
                   }
                 }
 

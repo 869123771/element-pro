@@ -19,6 +19,8 @@ export default {
         onlineGraphDisplayTemplate : [],                        //展示模板
         onlineGraphDataType : [],                               //数据类型
         onlineGraphType : [],                                   //图表类型
+        signType : [],                                          //打卡类型
+        signStatus: [],                                         //打卡状态
     },
     mutations: {
         SET_SEX(state,sex){
@@ -75,6 +77,12 @@ export default {
         SET_ONLINE_GRAPH_TYPE(state,onlineGraphType){
             state.onlineGraphType = onlineGraphType
         },
+        SET_SIGN_TYPE(state,signType){
+            state.signType = signType
+        },
+        SET_SIGN_STATUS(state,signStatus){
+            state.signStatus = signStatus
+        }
     },
     actions : {
         async GET_SEX({commit}){
@@ -201,6 +209,20 @@ export default {
             if(success) {
                 let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
                 commit('SET_ONLINE_GRAPH_TYPE',records)
+            }
+        },
+        async GET_SIGN_TYPE({commit}){
+            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'sign_type'})
+            if(success) {
+                let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
+                commit('SET_SIGN_TYPE',records)
+            }
+        },
+        async GET_SIGN_STATUS({commit}){
+            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'sign_status'})
+            if(success) {
+                let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
+                commit('SET_SIGN_STATUS',records)
             }
         },
     }

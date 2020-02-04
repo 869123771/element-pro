@@ -144,7 +144,7 @@
                 select : {
                     dataSource : [],
                     fieldType : [
-                        {value : 'Number',label : '数值类型'},
+                        {value : 'Integer',label : '数值类型'},
                         {value : 'String',label : '字符类型'},
                         {value : 'Date',label : '日期类型'},
                         {value : 'Time',label : '时间类型'},
@@ -230,7 +230,6 @@
             ...mapActions({
                 getOnlineGraphDisplayTemplate : 'GET_ONLINE_GRAPH_DISPLAY_TEMPLATE',
                 getOnlineGraphDataType : 'GET_ONLINE_GRAPH_DATA_TYPE',
-                getOnlineGraphType : 'GET_ONLINE_GRAPH_TYPE',
             }),
             add(){
                 let {data} = this.table
@@ -509,7 +508,6 @@
         mounted(){
             this.getOnlineGraphDisplayTemplate()
             this.getOnlineGraphDataType()
-            this.getOnlineGraphType()
         },
     }
 </script>

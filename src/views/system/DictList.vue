@@ -156,8 +156,8 @@
                     data: {}
                 },
                 dialog: {
-                    width: '500',
-                    height: '300',
+                    width: 500,
+                    height: 380,
                     name: 'add',
                     showFooter: true,
                 },
