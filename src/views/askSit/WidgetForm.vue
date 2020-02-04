@@ -3,6 +3,7 @@
             v-model="pageData.list"
             :group="{ name:'widget',put:true}"
             ghostClass="ghost"
+            handle = ".el-card__header"
             :swapThreshold="0.8"
             :animation="100"
             @add="handleWidgetAdd"
@@ -138,6 +139,7 @@
                 this.$set(this.pageData.list, newIndex, newObj);
                 this.handleSelectWidget(newObj)
             },
+
             formWidgetAdd(evt) {
                 debugger;
                 // console.log(evt);

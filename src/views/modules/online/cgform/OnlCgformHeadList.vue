@@ -78,6 +78,7 @@
                             @edit="()=>edit(row)"
                             @functionalTest="()=>functionalTest(row)"
                             @addressConfig="()=>addressConfig(row)"
+                            @copyView = "copyView(row)"
                             @handleRemove="()=>handleRemove(row)"
                             @handleDel="()=>handleDel(row)"
                             @syncDb="()=>syncDb(row)"
@@ -300,7 +301,9 @@
         },
         data() {
             return {
-                form: {},
+                form: {
+                    copyType: 0
+                },
                 table: {
                     data: [],
                     column: [],
@@ -535,6 +538,18 @@
             },
             functionalTest(row) {
                 this.$router.push(`/online/cgformList/${row.id}`)
+            },
+            async copyView({id:code}){
+                let _params = {
+                    code
+                }
+                let {success,message} = await http.post(apiList.online_form_head_copy_view, {_params})
+                if(success){
+                    sweetAlert.successWithTimer(message)
+                    this.queryList()
+                }else{
+                    sweetAlert.errorWithTimer(message)
+                }
             },
             addressConfig(row) {
                 this.dialog = {

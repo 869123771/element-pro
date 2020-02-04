@@ -53,8 +53,25 @@
             popDropdownProps : {
                 handler(props){
                     if(!isEmpty(props)){
-                        let {isDbSynch,tableType} = props
+                        let {isDbSynch,tableType,hascopy} = props
+                        let configViewItem = ()=>{
+                            return Number(hascopy) ? [
+                                {
+                                    label: '配置视图',
+                                    icon: '',
+                                    action: this.configView,
+                                    popover: false,
+                                },
+                            ] : []
+                        }
                         let dropDownItems = [
+                            {
+                                label: '复制视图',
+                                icon: '',
+                                action: this.copyView,
+                                popover: false,
+                            },
+                            ...configViewItem(),
                             {
                                 label: '移出',
                                 icon: '',
@@ -124,6 +141,12 @@
             syncDb(){
                 this.$emit('syncDb')
             },
+            copyView(){
+                this.$emit('copyView')
+            },
+            configView(){
+                this.$emit('configView')
+            }
         }
     }
 </script>

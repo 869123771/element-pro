@@ -56,7 +56,7 @@
             }
             return {
                 form: {
-                    username: 'admin',
+                    username: 'jeecg',
                     password: '123456',
                     code: '',
                 },

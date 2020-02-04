@@ -100,7 +100,7 @@
                         }
                         this.pane = {
                             ...this.pane,
-                            name: paneName
+                            name: paneName || 'direct'
                         }
                         this.iconClass(name)
                     }

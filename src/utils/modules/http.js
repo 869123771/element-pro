@@ -6,7 +6,7 @@ import {constant, sweetAlert} from "../index";
 
 const ajax = axios.create({
     //baseURL: process.env.NODE_ENV === 'development' ? '/jeecg-boot' : '',
-    timeout: 1000,
+    timeout: 20000,
 })
 
 ajax.interceptors.request.use(config => {
@@ -138,10 +138,19 @@ export default {
         )
     },
     post(url, data) {
+        let {_params} = data
+        let postParamsType = {
+            data: JSON.stringify(data),
+        }
+        if(_params && _params instanceof Object){
+            postParamsType = {
+                params : _params
+            }
+        }
         return ajax({
             method: 'post',
             url,
-            data: JSON.stringify(data),
+            ...postParamsType,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Content-Type': 'application/json; charset=UTF-8'

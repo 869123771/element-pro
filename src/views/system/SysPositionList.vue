@@ -14,7 +14,7 @@
                 </el-col>
                 <el-col :md="6" :sm="8">
                     <el-form-item label="职级" prop="rank">
-                        <el-select v-model="form.rank" clearable filterable class="w-full" placeholder="职级">
+                        <el-select v-model="form.postRank" clearable filterable class="w-full" placeholder="职级">
                             <template v-for="{itemValue,itemText} in positionRank">
                                 <el-option :value="itemValue" :label="itemText"></el-option>
                             </template>
@@ -87,8 +87,8 @@
                 <el-form-item label="职务名称" prop="name">
                     <el-input v-model="modify.name" placeholder="职务名称" clearable></el-input>
                 </el-form-item>
-                <el-form-item label="职级" prop="rank">
-                    <el-select v-model="modify.rank" clearable filterable class="w-full" placeholder="职级">
+                <el-form-item label="职级" prop="postRank">
+                    <el-select v-model="modify.postRank" clearable filterable class="w-full" placeholder="职级">
                         <template v-for="{itemValue,itemText} in positionRank">
                             <el-option :value="itemValue" :label="itemText"></el-option>
                         </template>
@@ -123,12 +123,12 @@
                 form: {
                     code : '',                          //职务编码
                     name : '',                          //职务名称
-                    rank : '',                          //职级
+                    postRank : '',                          //职级
                 },
                 modify : {
                     code : '',                          //职务编码
                     name : '',                          //职务名称
-                    rank : '',                          //职级
+                    postRank : '',                          //职级
                 },
                 fileUpload: {
                     action: apiList.sys_position_import
@@ -137,7 +137,7 @@
                     name : [
                         {required : true, message : '必填', trigger : 'change'}
                     ],
-                    rank : [
+                    postRank : [
                         {required : true, message : '必填', trigger : 'change'}
                     ]
                 },
@@ -385,7 +385,7 @@
                                     {
                                         content: this.$t('common_edit'),
                                         className: 'fa fa-fw fa-pencil',
-                                        permission: 'dictCategory:edit',
+                                        permission: 'positionMgr:edit',
                                         event: () => {
                                             this.edit(row)
                                         }
@@ -395,7 +395,7 @@
                                         className: 'iconfont icon-wy-delete2',
                                         popover: true,
                                         popText: this.$t('common_confirm_do'),
-                                        permission: 'dictCategory:delete',
+                                        permission: 'positionMgr:delete',
                                         event: (event,index) => {
                                             this.confirmDeleteBatch(row.id,event,index)
                                         }

@@ -266,6 +266,7 @@
                     }
                     this.icons = {
                         ...this.icons,
+                        name : icon,
                         paneName
                     }
                     this.$modal.hide(name)
@@ -277,7 +278,6 @@
                 let {id} = this.data
                 let params = {
                     ...this.form,
-                    ...this.data,
                 }
                 let res
                 if (id) {                     //编辑

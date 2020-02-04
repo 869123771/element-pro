@@ -381,10 +381,10 @@
                             data: result
                         }
                     })
-                }
-                this.table = {
-                    ...this.table,
-                    loading: false
+                    this.table = {
+                        ...this.table,
+                        loading: false
+                    }
                 }
             },
         },

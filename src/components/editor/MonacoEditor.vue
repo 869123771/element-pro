@@ -2,7 +2,7 @@
     <div
             class="container w-full"
             ref="container"
-            :style="{height:editorHeight}"
+            :style="{height:height}"
     >
 
     </div>
@@ -35,7 +35,7 @@
                     return 'vs'
                 }
             },
-            editorHeight : {
+            height : {
                 type: String ,
                 default : ()=> {
                     return '500px'
@@ -52,8 +52,8 @@
                         automaticLayout: false, //自动布局
                         glyphMargin: true,  //字形边缘
                         useTabStops: false,
-                        fontSize: 28,       //字体大小
-                        autoIndent: true,//自动布局
+                        fontSize: 16,       //字体大小
+                        autoIndent: true,
                         quickSuggestionsDelay: 500,   //代码提示延时
                         acceptSuggestionOnEnter : 'smart'
                     }

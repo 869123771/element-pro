@@ -68,12 +68,17 @@
 
 <style scoped lang = "less">
     @import "../../widgetForm";
-    .row-item:hover{
+    .row-item{
         .radio-item{
-            border : 1px dashed #aaa;
+            border : 1px dashed transparent;
         }
-        .config-item{
-            display: block;
+        &:hover{
+            .radio-item{
+                border : 1px dashed #aaa;
+            }
+            .config-item{
+                display: block;
+            }
         }
     }
     .add-item{
@@ -82,9 +87,9 @@
         padding: 0px 12px;
         height: 36px;
         line-height: 36px;
-    }
-    .add-item:hover{
-        background-color: #f4f4f4;
-        border-radius: 2px;
+        &:hover{
+            background-color: #f4f4f4;
+            border-radius: 2px;
+        }
     }
 </style>
