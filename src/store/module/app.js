@@ -3,6 +3,7 @@ import {isBoolean} from '30-seconds-of-code'
 
 export default {
     state: {
+        dialogLoading : false,
         menuProps: {
             collapse: false,
             activeName: '',
@@ -71,6 +72,9 @@ export default {
         }
     },
     mutations: {
+        DIALOG_LOADING(state,dialogLoading){
+             state.dialogLoading = dialogLoading
+        },
         SHRINK_MENU(state) {
             let {menuProps, menuProps: {collapse}} = state
             state.menuProps = {

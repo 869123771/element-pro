@@ -28,7 +28,7 @@
         },
         computed : {
             current(){
-                return `${dayjs().locale('zh-cn').format('ll') + '' + dayjs().locale('zh-cn').format('dddd')}`
+                return `${dayjs().locale('zh-cn').format('ll') + ' ' + dayjs().locale('zh-cn').format('dddd')}`
             }
         }
     }

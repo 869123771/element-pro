@@ -13,7 +13,7 @@
                 </el-col>
                 <el-col :span = "18">
                     <template v-if = "conditions.length">
-                        <el-row v-for = "(item,index) in conditions">
+                        <el-row v-for = "(item,index) in conditions" :key = "index">
                             <el-form-item label-width="0px">
                                 <el-col :span = "6">
                                     <el-select v-model = "item.field" clearable filterable class = "w-full" placeholder="选择查询字段">
