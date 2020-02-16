@@ -2,7 +2,7 @@
     <div class="head">
         <div class="h-full flex items-center justify-between head-top">
             <div class="flex items-center self-stretch">
-                <div class="pr-3">
+                <div>
                     <template v-if="controlShow.shrinkBar">
                         <level-bar></level-bar>
                     </template>
@@ -10,17 +10,17 @@
                 <div>
                    <template v-if = "collect">
                        <el-tooltip content = "取消收藏" placement="top">
-                           <i class = "fa fa-fw fa-star cursor-pointer pr-2" @click = "handleCollect"></i>
+                           <i class = "fa fa-fw fa-star cursor-pointer pr-2 collect" @click = "handleCollect"></i>
                        </el-tooltip>
                    </template>
                     <template v-else>
                         <el-tooltip content = "收藏" placement="top">
-                            <i class = "fa fa-fw fa-star-o cursor-pointer pr-2" @click = "handleCollect"></i>
+                            <i class = "fa fa-fw fa-star-o cursor-pointer pr-2 collect" @click = "handleCollect"></i>
                         </el-tooltip>
                     </template>
                     <template v-if = "controlShow.reload">
                        <el-tooltip content = "刷新" placement="top">
-                           <i class = "el-icon-refresh-right cursor-pointer pr-2" @click="refresh"></i>
+                           <i class = "el-icon-refresh-right cursor-pointer pr-2 refresh" @click="refresh"></i>
                        </el-tooltip>
                     </template>
                 </div>
@@ -37,14 +37,16 @@
                         <color-picker></color-picker>
                     </div>
                 </template>
-                <div class = "pr-2">
+                <div>
                     <message></message>
                 </div>
-                <div class="px-2 flex items-center">
+                <div class="flex items-center">
                     <language @on-lang-change="setLang" :lang="lang"></language>
                 </div>
                 <avatar></avatar>
-                <i class="el-icon-more rotate-90 cursor-pointer text-lg px-2" @click="$refs.controls.open()"></i>
+                <div class = "control-btn">
+                    <i class="el-icon-more rotate-90 cursor-pointer text-lg px-2" @click="$refs.controls.open()"></i>
+                </div>
             </div>
         </div>
         <div class = "head-bottom">
@@ -102,11 +104,27 @@
 <style scoped lang="less">
     .head {
         &-top {
+            height: 56px;
+            line-height: 56px;
+            overflow: hidden;
+            padding: 0 6px;
+            .collect,.refresh{
+                line-height: 56px;
+                padding: 0 8px;
+                display: inline-block;
+                width: auto;
+                font-size: 18px;
+            }
             border-bottom: 1px solid #e2e8f0;
-            padding: 0 1rem;
         }
         &-bottom{
             background: #f0f2f5;
+        }
+        .control-btn{
+            line-height: 56px;
+            padding: 0 6px;
+            display: inline-block;
+            width: auto;
         }
     }
 </style>

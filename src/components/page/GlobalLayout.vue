@@ -1,14 +1,15 @@
 <template>
     <el-container class="layout">
-        <el-aside :width="menuProps.collapse ? '64px' : '240px'" class="layout-aside">
+        <el-aside :width="menuProps.collapse ? '64px' : '240px'"
+                  class="layout-aside"
+                  :class="`layout-aside-${menuProps.theme}`">
             <side-menu></side-menu>
         </el-aside>
         <el-container>
             <el-header class="layout-header border-b bg-white"
+                       :class="`layout-header-${headProps.theme}`"
                        :style="{
-                            marginLeft : menuProps.collapse ? '64px' : '240px',
-                            background : headProps.theme[headProps.theme.default].backgroundColor,
-                            color : headProps.theme[headProps.theme.default].textColor
+                            marginLeft : menuProps.collapse ? '64px' : '240px'
                        }"
             >
                 <global-header></global-header>
@@ -44,7 +45,7 @@
         },
         data() {
             return {
-                isRouterAlive : true
+                isRouterAlive: true
             }
         },
         watch: {
@@ -78,7 +79,7 @@
                     result.unshift({path, name, title, icon})
                     this.setActiveName(activeName)
                     this.setOpenNames(openNames)
-                    this.setActiveNavTag({path, name, title,icon})
+                    this.setActiveNavTag({path, name, title, icon})
                     this.setActiveBreadCream(result.reverse())
 
                 }
@@ -101,15 +102,126 @@
 <style scoped lang="less">
     .layout {
         &-aside {
-            background-color: rgb(238, 241, 246);
             position: fixed;
-            overflow: hidden;
-            height: 100vh;
+            bottom: 0;
+            top: 0;
+            left: 0;
+            overflow: auto;
+            min-height: 100vh;
+
+            /deep/ &-dark {
+                background-color: #001529;
+
+                .el-menu {
+                    background-color: #001529;
+                    color: #b3b3b3;
+                    border: none;
+
+                    .el-submenu__title,
+                    .el-menu-item {
+                        color: #b3b3b3;
+                    }
+
+                    .el-submenu {
+                        .el-menu {
+                            background-color: #000810;
+                        }
+
+                        &:hover {
+                            .el-submenu__title {
+                                i, span {
+                                    color: #fff !important;
+                                }
+
+                                background: none;
+                            }
+                        }
+                    }
+
+                    .el-menu-item {
+                        &:hover {
+                            color: #fff !important;
+                            background: none;
+                        }
+                    }
+
+                    .el-menu-item.is-active {
+                        background-color: #3788ee;
+                        color: #fff;
+                    }
+                }
+            }
+
+            &-white {
+                background-color: #fff;
+            }
         }
+
         &-header {
             height: auto !important;
             padding: 0px;
+
+            /deep/ &-dark {
+                background-color: #001529;
+                .level-bar, .collect, .refresh, .message,.avatar,.control-btn {
+                    &:hover {
+                        background-color: hsla(0, 0%, 100%, .05);
+                    }
+                    color: #fff;
+                }
+
+                .language {
+                    /deep/ .el-menu--horizontal > .el-submenu .el-submenu__title {
+                        background-color: #001529;
+                        &:hover {
+                            background-color: #001529;
+                        }
+                        color: #fff;
+                    }
+                }
+            }
+            /deep/ &-white {
+                .level-bar, .collect, .refresh, .message,.avatar,.control-btn {
+                    &:hover {
+                        background-color: #f0f2f5;
+                    }
+                    color: black;
+                }
+                .language {
+                    /deep/ .el-menu--horizontal > .el-submenu .el-submenu__title {
+                        &:hover {
+                            background-color: #f0f2f5;
+                        }
+                        color: black;
+                    }
+                }
+            }
+
+            /deep/ &-blue{
+                background : linear-gradient(90deg,#1d42ab,#2173dc,#1e93ff);
+                .level-bar, .collect, .refresh, .message,.avatar,.control-btn {
+                    &:hover {
+                        background-color: hsla(0, 0%, 100%, .05);
+                    }
+                    color: #fff;
+                }
+
+                .language {
+                    /deep/ .el-menu--horizontal > .el-submenu .el-submenu__title {
+                        background-color: #218fea;
+                        &:hover {
+                            background-color: #358ed8;
+                        }
+                        color: #fff;
+                        i{
+                            color: #fff;
+                        }
+                    }
+                }
+            }
+
         }
+
         &-main {
             padding: 0px;
             overflow: hidden;

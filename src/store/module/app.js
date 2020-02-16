@@ -9,39 +9,10 @@ export default {
             activeName: '',
             openNames: [],
             uniqueOpened : localRead('uniqueOpened') || false,
-            theme : {
-                default : localRead('menuTheme') || 'dark',
-                white : {
-                    backgroundColor : '',
-                    textColor : '',
-                    activeTextColor :''
-                },
-                dark : {
-                    backgroundColor : '#191a23',
-                    textColor : '#fff',
-                    activeTextColor :'#2d8cf0'
-                }
-            }
+            theme : localRead('menuTheme') || 'dark'
         },
         headProps : {
-            theme : {
-                default : localRead('headerTheme') || 'white',
-                white : {
-                    backgroundColor : '',
-                    textColor : '',
-                    activeTextColor :''
-                },
-                dark : {
-                    backgroundColor : '#191a23',
-                    textColor : '#fff',
-                    activeTextColor :'#fff'
-                },
-                blue : {
-                    backgroundColor : '#1f54bd',
-                    textColor : '#fff',
-                    activeTextColor :'#fff'
-                }
-            }
+            theme : localRead('headerTheme') || 'white',
         },
         pageData: {
             list: [],
@@ -145,7 +116,6 @@ export default {
             state.themeColor = themeColor
         },
         SET_THEME_COLOR_SHOW(state,themeColor){
-            debugger
             localSave('themeColorShow', themeColor)
             state.controlShow = {
                 ...state.controlShow,
@@ -190,26 +160,18 @@ export default {
                 reload
             }
         },
-        SET_MENU_THEME(state,menuTheme){
-            localSave('menuTheme', menuTheme)
-            let {menuProps:{theme}} = state
+        SET_MENU_THEME(state,theme){
+            localSave('menuTheme', theme)
             state.menuProps = {
                 ...state.menuProps,
-                theme : {
-                    ...theme,
-                    default: menuTheme
-                }
+                theme
             }
         },
-        SET_HEADER_THEME(state,headerTheme){
-            localSave('headerTheme', headerTheme)
-            let {headProps:{theme}} = state
+        SET_HEADER_THEME(state,theme){
+            localSave('headerTheme', theme)
             state.headProps = {
                 ...state.menuProps,
-                theme : {
-                    ...theme,
-                    default: headerTheme
-                }
+                theme
             }
         },
         SET_PAGE_DATA(state,pageData){

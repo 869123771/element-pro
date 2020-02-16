@@ -41,7 +41,8 @@
 </script>
 
 <style scoped>
-    /deep/ .el-dropdown{
-        color : inherit;
+    .avatar{
+        padding: 0 8px;
+        width: auto;
     }
 </style>

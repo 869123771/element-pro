@@ -9,14 +9,14 @@
             <el-tabs v-model="tabs.activeName">
                 <el-tab-pane :label="`我的消息(${tabs.myMessage.total})`" name="myMessage" lazy>
                     <el-row class="message-item" type="flex" align="center">
-                        <el-col :span="18" class = "flex items-center">标题</el-col>
+                        <el-col :span="18" class="flex items-center">标题</el-col>
                         <el-col :span="6" class="text-center flex justify-center items-center">
                             <span>紧急度</span>
                         </el-col>
                     </el-row>
                     <template v-for="{titile,time,priority} in tabs.myMessage.data">
                         <el-row class="message-item" type="flex" align="center">
-                            <el-col :span="18" class = "flex items-center">{{titile}}</el-col>
+                            <el-col :span="18" class="flex items-center">{{titile}}</el-col>
                             <el-col :span="6" class="text-center flex justify-center items-center">
                                 <template v-if="priority === 'L'">
                                     <el-tag type="primary">一般</el-tag>
@@ -38,14 +38,14 @@
                 </el-tab-pane>
                 <el-tab-pane :label="`系统通告(${tabs.sysAnnouncement.total})`" name="sysAnnouncement">
                     <el-row class="message-item" type="flex" align="center">
-                        <el-col :span="18" class = "flex items-center">标题</el-col>
+                        <el-col :span="18" class="flex items-center">标题</el-col>
                         <el-col :span="6" class="text-center flex justify-center items-center">
                             <span>紧急度</span>
                         </el-col>
                     </el-row>
                     <template v-for="{titile,time,priority} in tabs.sysAnnouncement.data">
                         <el-row class="message-item" type="flex" align="center">
-                            <el-col :span="18" class = "flex items-center">{{titile}}</el-col>
+                            <el-col :span="18" class="flex items-center">{{titile}}</el-col>
                             <el-col :span="6" class="text-center flex justify-center items-center">
                                 <template v-if="priority === 'L'">
                                     <el-tag type="primary">一般</el-tag>
@@ -61,7 +61,7 @@
                     </template>
                     <el-row>
                         <div class="message-more">
-                            <el-link type="primary" @click = "$router.push('/isystem/annountCement')">加载更多</el-link>
+                            <el-link type="primary" @click="$router.push('/isystem/annountCement')">加载更多</el-link>
                         </div>
                     </el-row>
                 </el-tab-pane>
@@ -74,7 +74,7 @@
 </template>
 
 <script>
-    import {mapState,mapActions} from 'vuex'
+    import {mapState, mapActions} from 'vuex'
     import {http, apiList, constant, sweetAlert} from '@/utils'
 
     export default {
@@ -94,14 +94,14 @@
                 }
             }
         },
-        computed : {
+        computed: {
             ...mapState({
-                priority : ({dict}) => dict.priority,
+                priority: ({dict}) => dict.priority,
             })
         },
         methods: {
             ...mapActions({
-                getPriority : 'GET_PRIORITY',
+                getPriority: 'GET_PRIORITY',
             }),
             async messageQuery() {
                 let params = {
@@ -132,7 +132,7 @@
                 }
             },
         },
-        created(){
+        created() {
             this.getPriority()
 
         },
@@ -145,17 +145,25 @@
 
 <style scoped lang="less">
     .message {
-        /deep/ .el-badge__content {
-            z-index: 100;
+        line-height: 56px;
+        padding: 0 12px;
+        display: inline-block;
+        width: auto;
+
+        /deep/ .el-badge__content.is-fixed {
+            top: 16px;
         }
+
         &-item {
             border-bottom: 1px solid #ebeaec;
             padding: 0.5rem;
             cursor: pointer;
         }
+
         &-item:hover {
             background-color: #f0faff;
         }
+
         &-more {
             border-bottom: 1px solid #ebeaec;
             padding: 0.5rem;

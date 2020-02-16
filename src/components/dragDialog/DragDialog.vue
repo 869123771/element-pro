@@ -16,7 +16,7 @@
             :resizable="dialog.resizable"
     >
         <div class="modal-header">
-            <div class="modal-header-title" v-html = "dialog.title"></div>
+            <div class="modal-header-title" v-html="dialog.title"></div>
             <div class="modal-header-control">
                 <div class="modal-header-control-screen">
                     <div class="iconfont icon-wy-compress handle-icon px-1 hover:color-blue-500 "
@@ -29,19 +29,21 @@
             </div>
         </div>
         <el-scrollbar>
-           <!-- <div class="modal-body" :style="{maxHeight:dialog.maxHeight + 'px'}">-->
+            <!-- <div class="modal-body" :style="{maxHeight:dialog.maxHeight + 'px'}">-->
             <div class="modal-body" style=" max-height: calc(100vh - 130px)">
                 <slot></slot>
             </div>
         </el-scrollbar>
-        <template v-if = "dialog.showFooter">
+        <template v-if="dialog.showFooter">
             <div class="modal-footer text-center">
                 <el-button plain @click="close">{{$t('common_cancel')}}</el-button>
-                <el-button type="primary" :loading="dialog.loading" @click="confirm">{{dialog.confirmText || $t('common_confirm')}}</el-button>
+                <el-button type="primary" :loading="dialog.loading" @click="confirm">{{dialog.confirmText ||
+                    $t('common_confirm')}}
+                </el-button>
             </div>
         </template>
         <template v-else>
-            <slot name = "footer"></slot>
+            <slot name="footer"></slot>
         </template>
     </modal>
 </template>
@@ -127,6 +129,7 @@
 <style scoped lang="less">
     .modal {
         z-index: 1200;
+
         &-header {
             height: 56px;
             padding: 0 1rem;
@@ -134,14 +137,17 @@
             align-items: center;
             justify-content: space-between;
             cursor: move;
+
             &-title {
 
             }
+
             &-control {
                 position: absolute;
                 right: 1rem;
                 display: flex;
                 align-items: center;
+
                 .handle-icon {
                     display: inline-block;
                     color: #909399;
@@ -158,20 +164,26 @@
             }
 
         }
+
         &-body {
             padding: 0 1rem;
             overflow: auto;
         }
+
         &-footer {
             position: absolute;
             bottom: 0px;
             background: #fff;
-            z-index: inherit;
+            z-index: 10;
             width: 100%;
             border-top: 1px solid #e2e8f0;
             height: 60px;
             line-height: 60px;
             min-height: 60px;
+        }
+
+        /deep/ .vue-modal-resizer {
+            z-index: 10;
         }
     }
 </style>

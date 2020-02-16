@@ -5,8 +5,8 @@ body,
 #app{
   height: 100%;
   max-width: 1920px;
-  margin: auto;
   font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+  font-size: 14px;
 }
 .el-scrollbar__view {
   height: 100%;
@@ -31,4 +31,9 @@ img, svg, video, canvas, audio, iframe, embed, object{
 
 button:focus{
   outline: none;
+}
+.menu-lang{
+  .el-menu--popup, .el-menu-item {
+    min-width: inherit !important;
+  }
 }

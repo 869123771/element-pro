@@ -1,6 +1,6 @@
 <template>
-    <div class="levelbar">
-        <i class="iconfont icon-wy-shrink levelbar-shrink" :class="{barShrink}" @click="shrink"></i>
+    <div class="level-bar">
+        <i class="iconfont icon-wy-shrink level-bar-shrink" :class="{barShrink}" @click="shrink"></i>
     </div>
 </template>
 <script>
@@ -25,7 +25,11 @@
     }
 </script>
 <style scoped lang="less">
-    .levelbar {
+    .level-bar {
+        line-height: 56px;
+        padding: 0 8px;
+        display: inline-block;
+        width: auto;
         &-shrink {
             font-size: 24px;
             cursor: pointer;

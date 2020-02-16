@@ -1,12 +1,9 @@
 <template>
-    <div class="lang">
+    <div class="language">
         <el-menu
                 mode="horizontal"
-                :background-color="headProps.theme[headProps.theme.default].backgroundColor"
-                :text-color="headProps.theme[headProps.theme.default].textColor"
-                :active-text-color="headProps.theme[headProps.theme.default].activeTextColor"
         >
-            <el-submenu index="" popper-class="menu-lang" :popper-append-to-body="false">
+            <el-submenu index="" popper-class="menu-lang">
                 <template slot="title">{{ title }}</template>
                 <el-menu-item :index="key" :key = "value" v-for="(value, key) in localList" @click.native="selectLang(key)">
                     {{value}}
@@ -59,16 +56,15 @@
 </script>
 
 <style scoped lang="less">
-    .lang {
+    .language {
         /deep/ .el-menu--horizontal > .el-submenu .el-submenu__title {
-            height: 50px;
-            line-height: 50px;
+            height: 56px;
+            line-height: 56px;
             border-bottom: none;
             color : inherit;
+            padding: 0 10px;
         }
-        /deep/ .el-menu--popup, .el-menu-item {
-            min-width: inherit !important;
-        }
+
         /deep/ .el-menu.el-menu--horizontal{
             border : none;
         }

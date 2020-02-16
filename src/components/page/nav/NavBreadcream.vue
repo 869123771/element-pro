@@ -1,12 +1,14 @@
 <template>
-    <el-breadcrumb separator="/">
-        <template v-for="item in navBreadcrumbList">
-            <el-breadcrumb-item>
-                <span :class="'pr-1 anticon icon-' + item.icon"></span>
-                <span>{{item.title}}</span>
-            </el-breadcrumb-item>
-        </template>
-    </el-breadcrumb>
+    <div class = "bread-crumb">
+        <el-breadcrumb separator="/">
+            <template v-for="item in navBreadcrumbList">
+                <el-breadcrumb-item>
+                    <span :class="'pr-1 anticon icon-' + item.icon"></span>
+                    <span>{{item.title}}</span>
+                </el-breadcrumb-item>
+            </template>
+        </el-breadcrumb>
+    </div>
 </template>
 
 <script>
@@ -26,11 +28,7 @@
 </script>
 
 <style scoped lang="less">
-    /deep/ .el-breadcrumb__inner,
-    /deep/ .el-breadcrumb__item:last-child .el-breadcrumb__inner,
-    /deep/ .el-breadcrumb__item:last-child .el-breadcrumb__inner a,
-    /deep/ .el-breadcrumb__item:last-child .el-breadcrumb__inner a:hover,
-    /deep/ .el-breadcrumb__item:last-child .el-breadcrumb__inner:hover{
-        color : inherit;
+    .bread-crumb {
+        padding : 0 8px;
     }
 </style>
