@@ -5,7 +5,7 @@ export default {
     state: {
         dialogLoading : false,
         menuProps: {
-            collapse: false,
+            collapse:  localRead('collapse') || false,
             activeName: '',
             openNames: [],
             uniqueOpened : localRead('uniqueOpened') || true,
@@ -30,7 +30,7 @@ export default {
         configTab: 'page',
         wgCollapse: "base",
         navBreadcrumbList: [],
-        navTagList: [],
+        navTagList: localRead('navTagList') || [],
         currentNav: '',
         lang: localRead('lang'),
         themeColor : localRead('themeColor'),
@@ -49,11 +49,12 @@ export default {
              state.dialogLoading = dialogLoading
         },
         SHRINK_MENU(state) {
-            let {menuProps, menuProps: {collapse}} = state
+            let {menuProps: {collapse}} = state
             state.menuProps = {
-                ...menuProps,
+                ...state.menuProps,
                 collapse: !collapse,
             }
+            localSave('collapse', !collapse)
         },
         ACTIVE_NAME(state, activeName) {
             let {menuProps} = state
@@ -94,6 +95,7 @@ export default {
                     {path, name, title,icon}
                 ]
             }
+            localSave('navTagList', navTagList)
             state.navTagList = [...navTagList]
             state.currentNav = path
         },

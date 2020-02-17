@@ -41,10 +41,10 @@
     };
 </script>
 <style scoped lang="less">
-    .el-menu {
+    /deep/ .el-menu {
         font-size: 14px;
-
-        /deep/ .el-submenu {
+        border-right : 0px;
+         .el-submenu {
             .el-submenu__title {
                 .anticon {
                     font-size: 20px;

@@ -313,6 +313,7 @@
 
         &-main {
             padding: 0px;
+            background-color: #f0f2f5;
         }
     }
 </style>

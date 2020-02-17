@@ -6,8 +6,8 @@
                 :name="path"
         >
             <span slot="label">
-                <template v-if = "controlShow.navTagShowIcon">
-                     <i class="anticon" :class = "'icon-' + icon"></i>
+                <template v-if="controlShow.navTagShowIcon">
+                     <i class="anticon" :class="'icon-' + icon"></i>
                 </template>
                 {{title}}</span>
         </el-tab-pane>
@@ -56,35 +56,46 @@
 
 <style scoped lang="less">
     .el-tabs {
-        padding: 0 0.75rem;
+        padding: 0.5rem 0.75rem;
+
         /deep/ .el-tabs__header {
             margin: 0px;
         }
-        /deep/ &__item:not(:first-child){
+
+        /deep/ &__item:not(:first-child) {
             margin-left: 0px;
         }
-        /deep/ &__item{
+
+        /deep/ &__item {
             background: #fff;
-            margin: 4px;
+            margin-right: 4px;
             padding: 0 12px;
             height: 32px;
             line-height: 32px;
         }
+
         /deep/ &__active-bar {
             display: none;
         }
 
+        /deep/ &__nav-next,
+        /deep/ &__nav-prev {
+            line-height: 32px;
+        }
     }
+
     .el-tabs--top {
-        /deep/ .el-tabs__item.is-top:nth-child(2){
+        /deep/ .el-tabs__item.is-top:nth-child(2) {
             padding-left: 12px !important;
         }
+
         /deep/ .el-tabs__item.is-top:last-child {
             padding-right: 12px !important;
         }
     }
-    /deep/ .el-tabs__nav-wrap::after{
-        height : 0px !important;
+
+    /deep/ .el-tabs__nav-wrap::after {
+        height: 0px !important;
         display: none;
     }
 </style>

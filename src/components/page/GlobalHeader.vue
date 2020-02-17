@@ -104,6 +104,9 @@
 <style scoped lang="less">
     .head {
         &-top {
+            border-left: 1px solid #edf2f7;
+            border-right: 1px solid #edf2f7;
+            box-shadow: 0 1px 4px rgba(0,21,41,.08);
             height: 56px;
             line-height: 56px;
             overflow: hidden;

@@ -1,6 +1,6 @@
 <template>
     <div class="level-bar">
-        <i class="iconfont icon-wy-shrink level-bar-shrink" :class="{barShrink}" @click="shrink"></i>
+        <i class="iconfont icon-wy-shrink level-bar-shrink" :class="{'level-bar-rotate' : barShrink}" @click="shrink"></i>
     </div>
 </template>
 <script>
@@ -35,16 +35,9 @@
             cursor: pointer;
             display: inline-block;
             transition: all 0.6s ease 0s;
+            transform: rotate(0deg);
         }
-        &-shrink:hover {
-            /*background-color: #ecf5ff;*/
-        }
-        &-user {
-            position: absolute;
-            right: 0;
-            padding: 1rem;
-        }
-        .barShrink {
+        &-rotate {
             transform: rotate(90deg);
         }
     }
