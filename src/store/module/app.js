@@ -8,10 +8,12 @@ export default {
             collapse: false,
             activeName: '',
             openNames: [],
-            uniqueOpened : localRead('uniqueOpened') || false,
-            theme : localRead('menuTheme') || 'dark'
+            uniqueOpened : localRead('uniqueOpened') || true,
+            theme : localRead('menuTheme') || 'dark',
+            fixMenu : localRead('fixMenu') === false ? false : true,
         },
         headProps : {
+            fixHeader : localRead('fixHeader') || false,
             theme : localRead('headerTheme') || 'white',
         },
         pageData: {
@@ -120,6 +122,20 @@ export default {
             state.controlShow = {
                 ...state.controlShow,
                 themeColor
+            }
+        },
+        SET_FIX_MENU(state,fixMenu){
+            localSave('fixMenu', fixMenu)
+            state.menuProps = {
+                ...state.menuProps,
+                fixMenu
+            }
+        },
+        SET_FIX_HEADER(state,fixHeader){
+            localSave('fixHeader', fixHeader)
+            state.headProps = {
+                ...state.headProps,
+                fixHeader
             }
         },
         SET_SHRINK_BAR(state,shrinkBar){

@@ -19,11 +19,13 @@ const glob = require("glob-all");
 
 const resolve = dir => path.join(__dirname, dir);
 const IS_PROD = ["production", "prod"].includes(process.env.NODE_ENV);
+const IS_DEV = ["development"].includes(process.env.NODE_ENV);
 
 const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i;
 
 module.exports = {
-    publicPath: IS_PROD ? process.env.VUE_APP_SRC || "/" : "./", // 默认'/'，部署应用包时的基本 URL
+   // publicPath: IS_PROD ? process.env.VUE_APP_SRC || "/" : "./", // 默认'/'，部署应用包时的基本 URL
+    publicPath: IS_PROD ? process.env.VUE_APP_PUBLIC_PATH : "./", // 默认'/'，部署应用包时的基本 URL
     outputDir: process.env.outputDir || "dist", // 'dist', 生产环境构建文件的目录
     assetsDir: "", // 相对于outputDir的静态资源(js、css、img、fonts)目录
     lintOnSave: false,

@@ -44,4 +44,7 @@
 .text-center{
   text-align: center !important;
 }
+*, *::before, *::after{
+  border-style: none;
+}
 

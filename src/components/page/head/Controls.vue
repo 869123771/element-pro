@@ -42,6 +42,22 @@
         </el-row>
         <el-row class="px-3 mt-4">
             <div class="flex justify-between">
+                <div>国定侧栏</div>
+                <div>
+                    <el-switch v-model="menuProps.fixMenu" @change="setFixMenu" size="mini"></el-switch>
+                </div>
+            </div>
+        </el-row>
+        <el-row class="px-3 mt-4">
+            <div class="flex justify-between">
+                <div>国定顶栏</div>
+                <div>
+                    <el-switch v-model="headProps.fixHeader" @change="setFixHeader" size="mini"></el-switch>
+                </div>
+            </div>
+        </el-row>
+        <el-row class="px-3 mt-4">
+            <div class="flex justify-between">
                 <div>侧边栏开启手风琴模式</div>
                 <div>
                     <el-switch v-model="menuProps.uniqueOpened" @change="setOpenUnique"></el-switch>
@@ -170,12 +186,15 @@
         computed: {
             ...mapState({
                 controlShow: ({app}) => app.controlShow,
-                menuProps: ({app}) => app.menuProps
+                menuProps: ({app}) => app.menuProps,
+                headProps : ({app}) => app.headProps,
             })
         },
         methods: {
             ...mapMutations({
                 setThemeColor: 'SET_THEME_COLOR_SHOW',
+                setFixMenu : 'SET_FIX_MENU',
+                setFixHeader : 'SET_FIX_HEADER',
                 setShrinkBar: 'SET_SHRINK_BAR',
                 setBreadcrumb: 'SET_BREADCRUMB',
                 setNavTag: 'SET_NAV_TAG',

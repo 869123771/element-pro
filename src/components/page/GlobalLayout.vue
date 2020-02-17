@@ -1,20 +1,24 @@
 <template>
-    <el-container class="layout">
+    <el-container
+            class="layout"
+            :class = "layoutType"
+    >
         <el-aside :width="menuProps.collapse ? '64px' : '240px'"
                   class="layout-aside"
-                  :class="`layout-aside-${menuProps.theme}`">
+                  :class="`layout-aside-${menuProps.theme} layout-aside-${menuProps.fixMenu ? 'fix' : 'stick'}`">
             <side-menu></side-menu>
         </el-aside>
-        <el-container>
+        <el-container
+                :class = "headProps.fixHeader?'layout-container-head-fix':''"
+        >
             <el-header class="layout-header border-b bg-white"
-                       :class="`layout-header-${headProps.theme}`"
-                       :style="{
-                            marginLeft : menuProps.collapse ? '64px' : '240px'
-                       }"
+                       :class="`layout-header-${headProps.theme} ${layoutHeadType}`"
+                       :style="{marginLeft}"
             >
                 <global-header></global-header>
             </el-header>
-            <el-main class="layout-main" :style="{marginLeft : menuProps.collapse ? '64px' : '240px'}">
+            <el-main class="layout-main"
+                     :style="{marginLeft}">
                 <router-view v-if="isRouterAlive"></router-view>
             </el-main>
         </el-container>
@@ -40,8 +44,54 @@
         computed: {
             ...mapState({
                 menuProps: ({app}) => app.menuProps,
-                headProps: ({app}) => app.headProps
-            })
+                headProps: ({app}) => app.headProps,
+                controlShow: ({app}) => app.controlShow
+            }),
+            layoutType(){
+                let layoutType
+                let {fixHeader} = this.headProps
+                let {fixMenu} = this.menuProps
+                let {navTag} = this.controlShow
+                if(fixHeader){
+                    if(fixMenu){
+                        layoutType = 'layout-head-menu-fix';
+                    }else{
+                        layoutType = 'layout-head-fix';
+                    }
+                }else{
+                    layoutType = 'layout-menu-fix';
+                }
+                return layoutType
+            },
+            layoutHeadType(){
+                let layoutHeadType
+                let {fixHeader} = this.headProps
+                let {navTag} = this.controlShow
+                if(fixHeader){
+                    if(navTag){
+                        layoutHeadType = 'layout-header-nav-fix'
+                    }else{
+                        layoutHeadType = 'layout-header-fix'
+                    }
+                }else{
+                    layoutHeadType = 'layout-header-stick'
+                }
+                return layoutHeadType
+            },
+            marginLeft(){
+                let marginLeft
+                let {collapse,fixMenu} = this.menuProps
+                if(fixMenu){
+                    if(collapse){
+                        marginLeft = '64px'
+                    }else{
+                        marginLeft = '240px'
+                    }
+                }else{
+                    marginLeft = '0px'
+                }
+                return marginLeft
+            }
         },
         data() {
             return {
@@ -100,14 +150,22 @@
     }
 </script>
 <style scoped lang="less">
+    .layout-head-fix{
+        height: 100%;
+        .layout-aside-stick{
+            margin-top: 106px;
+        }
+    }
     .layout {
         &-aside {
-            position: fixed;
-            bottom: 0;
-            top: 0;
-            left: 0;
-            overflow: auto;
-            min-height: 100vh;
+            &-fix{
+                position: fixed;
+                bottom: 0;
+                top: 0;
+                left: 0;
+                overflow: auto;
+                min-height: 100vh;
+            }
 
             /deep/ &-dark {
                 background-color: #001529;
@@ -126,16 +184,16 @@
                         .el-menu {
                             background-color: #000810;
                         }
-
-                        &:hover {
-                            .el-submenu__title {
+                        &__title {
+                            &:hover {
                                 i, span {
                                     color: #fff !important;
                                 }
-
-                                background: none;
                             }
+
+                            background: none;
                         }
+
                     }
 
                     .el-menu-item {
@@ -156,75 +214,105 @@
                 background-color: #fff;
             }
         }
-
+        &-container-head-fix{
+            .layout-main{
+                margin-top : 95px;
+            }
+        }
         &-header {
-            height: auto !important;
             padding: 0px;
 
             /deep/ &-dark {
                 background-color: #001529;
-                .level-bar, .collect, .refresh, .message,.avatar,.control-btn {
+
+                .level-bar, .collect, .refresh, .message, .avatar, .control-btn {
                     &:hover {
                         background-color: hsla(0, 0%, 100%, .05);
                     }
+
                     color: #fff;
                 }
 
                 .language {
                     /deep/ .el-menu--horizontal > .el-submenu .el-submenu__title {
                         background-color: #001529;
+
                         &:hover {
                             background-color: #001529;
                         }
+
                         color: #fff;
                     }
                 }
             }
+
             /deep/ &-white {
-                .level-bar, .collect, .refresh, .message,.avatar,.control-btn {
+                .level-bar, .collect, .refresh, .message, .avatar, .control-btn {
                     &:hover {
                         background-color: #f0f2f5;
                     }
+
                     color: black;
                 }
+
                 .language {
                     /deep/ .el-menu--horizontal > .el-submenu .el-submenu__title {
                         &:hover {
                             background-color: #f0f2f5;
                         }
+
                         color: black;
                     }
                 }
             }
 
-            /deep/ &-blue{
-                background : linear-gradient(90deg,#1d42ab,#2173dc,#1e93ff);
-                .level-bar, .collect, .refresh, .message,.avatar,.control-btn {
+            /deep/ &-blue {
+                background: linear-gradient(90deg, #1d42ab, #2173dc, #1e93ff);
+
+                .level-bar, .collect, .refresh, .message, .avatar, .control-btn {
                     &:hover {
                         background-color: hsla(0, 0%, 100%, .05);
                     }
+
                     color: #fff;
                 }
 
                 .language {
                     /deep/ .el-menu--horizontal > .el-submenu .el-submenu__title {
                         background-color: #218fea;
+
                         &:hover {
                             background-color: #358ed8;
                         }
+
                         color: #fff;
-                        i{
+
+                        i {
                             color: #fff;
                         }
                     }
                 }
             }
-
+            &-nav-fix,&-fix{
+                position: fixed;
+                top : 0;
+                left: 0;
+                right: 0;
+                z-index: 10;
+            }
+            &-nav-fix{
+                height: 95px !important;
+            }
+            &-stick{
+                height: 90px !important;
+            }
+            &-fix{
+                height: 65px !important;
+            }
         }
 
         &-main {
             padding: 0px;
-            overflow: hidden;
         }
     }
 </style>
