@@ -565,6 +565,16 @@
                     ...this.table,
                     column
                 }
+                this.table = {
+                    ...this.table,
+                    show: false
+                }
+                this.$nextTick(()=>{
+                    this.table = {
+                        ...this.table,
+                        show: true
+                    }
+                })
             },
             setI18n() {
                 let column = [

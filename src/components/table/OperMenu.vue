@@ -87,7 +87,7 @@
         border-radius: 50%;
         padding: 12px;
         display: block;
-        margin: 0px;
+        margin-left: 0px;
     }
     /deep/ .el-transfer__button:first-child{
         margin-bottom : 10px;
