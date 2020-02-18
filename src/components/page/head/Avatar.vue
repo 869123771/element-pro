@@ -1,7 +1,7 @@
 <template>
-    <div class = "flex">
+    <div class = "avatar flex items-center h-full">
         <el-dropdown>
-            <div class = "avatar flex items-center">
+            <div class = "flex items-center">
                 <div class = "flex px-1">
                     <el-avatar :size = "32":src = "getAvatarView(userInfo.avatar)"></el-avatar>
                 </div>

@@ -145,6 +145,7 @@
 
 <style scoped lang="less">
     .message {
+        height: inherit;
         line-height: 56px;
         padding: 0 12px;
         display: inline-block;

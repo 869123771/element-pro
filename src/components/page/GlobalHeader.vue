@@ -1,45 +1,39 @@
 <template>
     <div class="head">
-        <div class="h-full flex items-center justify-between head-top">
-            <div class="flex items-center self-stretch">
-                <div>
-                    <template v-if="controlShow.shrinkBar">
-                        <level-bar></level-bar>
-                    </template>
-                </div>
-                <div>
-                   <template v-if = "collect">
-                       <el-tooltip content = "取消收藏" placement="top">
-                           <i class = "fa fa-fw fa-star cursor-pointer pr-2 collect" @click = "handleCollect"></i>
-                       </el-tooltip>
-                   </template>
-                    <template v-else>
-                        <el-tooltip content = "收藏" placement="top">
-                            <i class = "fa fa-fw fa-star-o cursor-pointer pr-2 collect" @click = "handleCollect"></i>
-                        </el-tooltip>
-                    </template>
-                    <template v-if = "controlShow.reload">
-                       <el-tooltip content = "刷新" placement="top">
-                           <i class = "el-icon-refresh-right cursor-pointer pr-2 refresh" @click="refresh"></i>
-                       </el-tooltip>
-                    </template>
-                </div>
-                <div>
-                    <template v-if="controlShow.breadcrumb">
-                        <bread-crumb></bread-crumb>
-                    </template>
-                </div>
+        <div class="flex items-center justify-between head-top">
+            <div class="flex items-center self-stretch h-full">
+                <template v-if="controlShow.shrinkBar">
+                    <level-bar></level-bar>
+                </template>
+                <template v-if = "collect">
+                    <el-tooltip content = "取消收藏" placement="top">
+                        <i class = "fa fa-fw fa-star cursor-pointer pr-2 collect" @click = "handleCollect"></i>
+                    </el-tooltip>
+                </template>
+                <template v-else>
+                    <el-tooltip content = "收藏" placement="top">
+                        <i class = "fa fa-fw fa-star-o cursor-pointer pr-2 collect" @click = "handleCollect"></i>
+                    </el-tooltip>
+                </template>
+                <template v-if = "controlShow.reload">
+                    <el-tooltip content = "刷新" placement="top">
+                        <i class = "el-icon-refresh-right cursor-pointer pr-2 refresh" @click="refresh"></i>
+                    </el-tooltip>
+                </template>
+                <template v-if="controlShow.breadcrumb">
+                    <bread-crumb></bread-crumb>
+                </template>
             </div>
 
-            <div class="flex items-center self-stretch">
+            <div class="flex items-center self-stretch h-full">
                 <template v-if="controlShow.themeColor">
                     <div class = "pr-3">
                         <color-picker></color-picker>
                     </div>
                 </template>
-                <div>
+                <template>
                     <message></message>
-                </div>
+                </template>
                 <div class="flex items-center">
                     <language @on-lang-change="setLang" :lang="lang"></language>
                 </div>
@@ -104,11 +98,8 @@
 <style scoped lang="less">
     .head {
         &-top {
-            border-left: 1px solid #edf2f7;
-            border-right: 1px solid #edf2f7;
             box-shadow: 0 1px 4px rgba(0,21,41,.08);
             height: 56px;
-            line-height: 56px;
             overflow: hidden;
             padding: 0 6px;
             .collect,.refresh{
@@ -118,7 +109,6 @@
                 width: auto;
                 font-size: 18px;
             }
-            border-bottom: 1px solid #e2e8f0;
         }
         &-bottom{
             background: #f0f2f5;

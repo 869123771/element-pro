@@ -30,6 +30,7 @@
 </script>
 <style scoped lang="less">
     .level-bar {
+        height : inherit;
         line-height: 56px;
         padding: 0 8px;
         display: inline-block;

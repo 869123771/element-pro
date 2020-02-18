@@ -170,6 +170,7 @@
 
     .layout {
         &-aside {
+            box-shadow: 0px 1px 4px rgba(0, 21, 41, 0.08);
             &-fix {
                 position: fixed;
                 bottom: 0;
