@@ -1,11 +1,15 @@
 <template>
     <div class = "cell-num">
         <el-row>
-            <el-col :span = "18">
+            <el-col :xs = "24" :sm = "24" :md="18" :lg = "18" :xl = "18">
                 <h4 class="title">销售额排行</h4>
-                <v-chart :options="options.cellNum" auto-resize></v-chart>
+                <v-chart
+                        :options="options.cellNum"
+                        auto-resize
+                        ref = "cellNum"
+                ></v-chart>
             </el-col>
-            <el-col :span = "6">
+            <el-col :xs = "24" :sm = "24" :md="6" :lg = "6" :xl = "6">
                 <h4 class="title">门店销售排行榜</h4>
                 <ul class="list">
                     <li :key="index" v-for="(item, index) in rankList">
@@ -23,6 +27,7 @@
 </template>
 
 <script>
+    import {mapState} from 'vuex'
     import ECharts from 'vue-echarts/components/ECharts'
     import 'echarts/lib/chart/line'
     import 'echarts/lib/chart/bar'
@@ -48,6 +53,16 @@
                 },
                 rankList
             }
+        },
+        computed : {
+            ...mapState({
+                menuProps : ({app}) => app.menuProps
+            })
+        },
+        watch : {
+            'menuProps.collapse'(){
+                this.listenResize()
+            },
         },
         methods : {
             initCellNumCharts(){
@@ -115,7 +130,6 @@
                         series: [
                             {
                                 type: 'bar',
-                                barWidth : 50,
                                 barGap:'50%',
                                 itemStyle: {
                                     normal: {
@@ -130,7 +144,18 @@
                         ]
                     }
                 }
-            }
+            },
+            listenResize(){
+                this.$refs.cellNum.resize()
+            },
+        },
+        created() {
+            this.$nextTick(()=>{
+                window.addEventListener('resize',this.listenResize);
+            })
+        },
+        beforeDestroy() {
+            window.removeEventListener("resize",this.listenResize);
         },
         mounted(){
             this.initCellNumCharts()

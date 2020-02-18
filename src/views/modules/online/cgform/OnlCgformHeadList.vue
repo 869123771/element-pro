@@ -2,27 +2,27 @@
     <div class="m-3 p-3 bg-white">
         <el-row>
             <el-form ref="form" :model="form" label-width="80px">
-                <el-col :md="6" :sm="8">
-                    <el-form-item label="表名" prop="tableName">
-                        <el-input v-model="form.tableName" placeholder="表名" clearable></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :md="6" :sm="8">
-                    <el-form-item label="表类型" prop="tableType">
-                        <el-select v-model="form.tableType" placeholder="表类型" clearable filterable class="w-full">
-                            <template v-for="item in formTableType">
-                                <el-option :value="item.itemValue" :label="item.itemText"></el-option>
-                            </template>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :md="6" :sm="8" class="px-3">
-                    <el-button type="primary" icon="el-icon-search" @click="search">{{$t('common_query')}}</el-button>
-                    <el-button plain icon="el-icon-refresh-left" @click="reset">{{$t('common_reset')}}</el-button>
-                </el-col>
+                <form-query @search="search" @reset="reset" :show-arrow = "false">
+                    <template slot = "show">
+                        <el-col  :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "12">
+                            <el-form-item label="表名" prop="tableName">
+                                <el-input v-model="form.tableName" placeholder="表名" clearable></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "12">
+                            <el-form-item label="表类型" prop="tableType">
+                                <el-select v-model="form.tableType" placeholder="表类型" clearable filterable class="w-full">
+                                    <template v-for="item in formTableType">
+                                        <el-option :value="item.itemValue" :label="item.itemText"></el-option>
+                                    </template>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                    </template>
+                </form-query>
             </el-form>
         </el-row>
-        <el-row class="my-3">
+        <el-row class="pb-3">
             <el-button plain type="primary" icon="el-icon-plus" @click="add">新增</el-button>
             <el-button plain @click="customButton">
                 <span class="fa fa-fw fa-circle-o"></span>
@@ -99,6 +99,7 @@
 <script>
     import {mapState, mapActions} from 'vuex'
     import {http, apiList, constant, sweetAlert} from '@/utils'
+    import FormQuery from '@/components/form/query'
     import foxTable from '@/components/fox-table/'
     import PopoverConfirm from '@/components/popoverConfirm'
     import DragDialog from '@/components/dragDialog'
@@ -294,6 +295,7 @@
     export default {
         name: "OnlCgformHeadList",
         components: {
+            FormQuery,
             foxTable,
             PopoverConfirm,
             DragDialog,

@@ -4,24 +4,24 @@
             <el-form ref="form" :model="form" label-width="90px">
                 <form-query @search="search" @reset="reset">
                     <template slot="show">
-                        <el-col :md="6" :sm="8">
+                        <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
                             <el-form-item label="模板CODE" prop="templateCode">
                                 <el-input v-model="form.templateCode" clearable></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :md="6" :sm="8">
+                        <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
                             <el-form-item label="模板内容" prop="templateContent">
                                 <el-input v-model="form.templateContent" clearable></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :md="6" :sm="8">
+                        <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
                             <el-form-item label="模板标题" prop="templateName">
                                 <el-input v-model="form.templateName" clearable></el-input>
                             </el-form-item>
                         </el-col>
                     </template>
                     <template slot="hide">
-                        <el-col :md="6" :sm="8">
+                        <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
                             <el-form-item label="模版类型" prop="templateType">
                                 <el-select v-model="form.templateType" clearable filterable class="w-full">
                                     <template v-for="item in sendStatus">

@@ -1,25 +1,29 @@
 <template>
     <div class="level-bar">
-        <i class="iconfont icon-wy-shrink level-bar-shrink" :class="{'level-bar-rotate' : barShrink}" @click="shrink"></i>
+        <i class="iconfont icon-wy-shrink level-bar-shrink" :class="{'level-bar-rotate' : menuProps.collapse}" @click="shrink(menuProps.collapse)"></i>
     </div>
 </template>
 <script>
-    import {mapMutations} from 'vuex'
+    import {mapState,mapMutations} from 'vuex'
 
     export default {
         name: 'Levelbar',
         data() {
             return {
-                barShrink: false
+
             }
+        },
+        computed : {
+            ...mapState({
+                menuProps : ({app}) => app.menuProps
+            })
         },
         methods: {
             ...mapMutations({
                 shrinkMenu : 'SHRINK_MENU'
             }),
-            shrink() {
-                this.barShrink = !this.barShrink
-                this.shrinkMenu()
+            shrink(collapse) {
+                this.shrinkMenu(!collapse)
             }
         },
     }

@@ -1,7 +1,7 @@
 <template>
     <div class="dept m-3">
-        <el-row>
-            <el-col :span="12" class="pr-2">
+        <el-row :gutter = "12">
+            <el-col :xs = "24" :sm = "24" :md="12" :lg = "12" :xl = "12">
                 <el-card>
                     <div>
                         <el-button plain icon="el-icon-plus" type="primary" @click="addTopDept">添加一级部门</el-button>
@@ -45,7 +45,7 @@
                     </el-tree>
                 </el-card>
             </el-col>
-            <el-col :span="12" class="pl-2">
+            <el-col :xs = "24" :sm = "24" :md="12" :lg = "12" :xl = "12">
                 <el-card>
                     <el-tabs v-model="tabs.name" @tab-click="handleClick">
                         <el-tab-pane label="基本信息" name="basicInfo">

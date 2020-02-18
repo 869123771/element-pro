@@ -48,13 +48,12 @@ export default {
         DIALOG_LOADING(state,dialogLoading){
              state.dialogLoading = dialogLoading
         },
-        SHRINK_MENU(state) {
-            let {menuProps: {collapse}} = state
+        SHRINK_MENU(state,collapse) {
             state.menuProps = {
                 ...state.menuProps,
-                collapse: !collapse,
+                collapse,
             }
-            localSave('collapse', !collapse)
+            localSave('collapse', collapse)
         },
         ACTIVE_NAME(state, activeName) {
             let {menuProps} = state

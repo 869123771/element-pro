@@ -4,12 +4,12 @@
             <el-form ref="form" :model="form" label-width="80px">
                 <form-query @search="search" @reset="reset">
                     <template slot="show">
-                        <el-col :md="6" :sm="8">
+                        <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "6">
                             <el-form-item :label="$t('sys_user_account')" prop="username">
                                 <el-input v-model="form.username" clearable></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :md="6" :sm="8">
+                        <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "6">
                             <el-form-item prop="workNo">
                                 <div slot = "label" class = "truncate">
                                     <el-tooltip :content = "$t('sys_user_work_no')" placement="top">
@@ -19,7 +19,7 @@
                                 <el-input v-model="form.workNo" clearable></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :md="6" :sm="8">
+                        <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "6">
                             <el-form-item :label="$t('sys_user_sex')" prop="sex">
                                 <el-select v-model="form.sex" clearable filterable class="w-full">
                                     <template v-for="item in sex">
@@ -30,17 +30,17 @@
                         </el-col>
                     </template>
                     <template slot="hide">
-                        <el-col :md="6" :sm="8">
+                        <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "6">
                             <el-form-item :label="$t('sys_user_email')" prop="email">
                                 <el-input v-model="form.email" clearable></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :md="6" :sm="8">
+                        <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "6">
                             <el-form-item :label="$t('sys_user_phone')" prop="phone">
                                 <el-input v-model="form.phone" clearable></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :md="6" :sm="8">
+                        <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "6">
                             <el-form-item :label="$t('sys_user_status')" prop="status">
                                 <el-select v-model="form.status" clearable filterable class="w-full">
                                     <template v-for="item in userStatus">

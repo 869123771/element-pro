@@ -40,8 +40,8 @@
             <chart-card>
                 <div slot="card-head">最近一周访问次数统计</div>
                 <div slot="card-content">
-                    <el-row class="mt-4">
-                        <el-col :span="8" class="pr-3">
+                    <el-row :gutter = "16">
+                        <el-col :xs = "24" :sm = "12" :md="8" :lg = "8" :xl = "8" class="pt-4">
                             <div class="card-panel">
                                 <div class="card-panel-icon-wrapper icon-location">
                                     <i class="el-icon-location-outline card-panel-icon"></i>
@@ -55,7 +55,7 @@
                                 </div>
                             </div>
                         </el-col>
-                        <el-col :span="8" class="pr-3">
+                        <el-col :xs = "24" :sm = "12" :md="8" :lg = "8" :xl = "8" class="pt-4">
                             <div class="card-panel">
                                 <div class="card-panel-icon-wrapper icon-people">
                                     <i class="el-icon-user-solid card-panel-icon"></i>
@@ -69,7 +69,7 @@
                                 </div>
                             </div>
                         </el-col>
-                        <el-col :span="8">
+                        <el-col :xs = "24" :sm = "12" :md="8" :lg = "8" :xl = "8" class="pt-4">
                             <div class="card-panel">
                                 <div class="card-panel-icon-wrapper icon-visit">
                                     <i class="el-icon-bell card-panel-icon"></i>

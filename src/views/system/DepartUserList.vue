@@ -1,5 +1,5 @@
 <template>
-    <div class = "text-center">
+    <div class = "text-center p-3 m-3 bg-white">
         <vue2-org-tree name="test"
                        :data="deptFilter"
                        :props = "{label:'title',children: 'children'}"

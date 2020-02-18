@@ -2,32 +2,32 @@
     <div class = "message bg-white p-3 m-3">
         <el-row>
             <el-form ref="form" :model="form" label-width="90px">
-                <el-col :md="6" :sm="8">
-                    <el-form-item label="职务编码" prop="code">
-                        <el-input v-model="form.code" placeholder="职务编码" clearable></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :md="6" :sm="8">
-                    <el-form-item label="职务名称" prop="name">
-                        <el-input v-model="form.name" placeholder="职务名称" clearable></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :md="6" :sm="8">
-                    <el-form-item label="职级" prop="rank">
-                        <el-select v-model="form.postRank" clearable filterable class="w-full" placeholder="职级">
-                            <template v-for="{itemValue,itemText} in positionRank">
-                                <el-option :value="itemValue" :label="itemText"></el-option>
-                            </template>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :md="6" :sm="8" class = "px-3">
-                    <el-button type="primary" icon="el-icon-search" @click="search">查询</el-button>
-                    <el-button plain icon="el-icon-refresh-left" @click="reset">重置</el-button>
-                </el-col>
+                <form-query @search="search" @reset="reset" :showArrow = "false">
+                    <template slot = "show">
+                        <el-col  :xs = "24" :sm = "24" :md="12" :lg = "8" :xl = "8">
+                            <el-form-item label="职务编码" prop="code">
+                                <el-input v-model="form.code" placeholder="职务编码" clearable></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :xs = "24" :sm = "24" :md="12" :lg = "8" :xl = "8">
+                            <el-form-item label="职务名称" prop="name">
+                                <el-input v-model="form.name" placeholder="职务名称" clearable></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :xs = "24" :sm = "24" :md="12" :lg = "8" :xl = "8">
+                            <el-form-item label="职级" prop="rank">
+                                <el-select v-model="form.postRank" clearable filterable class="w-full" placeholder="职级">
+                                    <template v-for="{itemValue,itemText} in positionRank">
+                                        <el-option :value="itemValue" :label="itemText"></el-option>
+                                    </template>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                    </template>
+                </form-query>
             </el-form>
         </el-row>
-        <el-row class = "my-3">
+        <el-row class = "pb-3">
             <el-button plain type="primary" icon="el-icon-plus" @click="add" v-has="'user:add'" v-waves>
                 {{$t('common_add')}}
             </el-button>
@@ -103,6 +103,7 @@
 <script>
     import {mapState, mapActions} from 'vuex'
     import {http, apiList, constant, sweetAlert} from '@/utils'
+    import FormQuery from '@/components/form/query'
     import {downloadFile} from '@/utils/modules/tools'
     import Collapse from '@/components/collapse/Collapse'
     import DragDialog from '@/components/dragDialog'
@@ -113,6 +114,7 @@
     export default {
         name: "SysPositionList",
         components : {
+            FormQuery,
             Collapse,
             DragDialog,
             foxTable,

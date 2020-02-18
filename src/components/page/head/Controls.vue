@@ -42,7 +42,7 @@
         </el-row>
         <el-row class="px-3 mt-4">
             <div class="flex justify-between">
-                <div>国定侧栏</div>
+                <div>固定侧栏</div>
                 <div>
                     <el-switch v-model="menuProps.fixMenu" @change="setFixMenu" size="mini"></el-switch>
                 </div>
@@ -50,7 +50,7 @@
         </el-row>
         <el-row class="px-3 mt-4">
             <div class="flex justify-between">
-                <div>国定顶栏</div>
+                <div>固定定顶栏</div>
                 <div>
                     <el-switch v-model="headProps.fixHeader" @change="setFixHeader" size="mini"></el-switch>
                 </div>

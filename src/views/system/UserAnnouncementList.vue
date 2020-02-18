@@ -2,23 +2,23 @@
     <div class = "message bg-white p-3 m-3">
         <el-row>
             <el-form ref="form" :model="form" label-width="90px">
-                <el-col :md="6" :sm="8">
-                    <el-form-item label="标题" prop="titile">
-                        <el-input v-model="form.titile" placeholder="标题" clearable></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :md="6" :sm="8">
-                    <el-form-item label="发布人:" prop="sender">
-                        <el-input v-model="form.sender" clearable></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :md="6" :sm="8" class = "px-3">
-                    <el-button type="primary" icon="el-icon-search" @click="search">查询</el-button>
-                    <el-button plain icon="el-icon-refresh-left" @click="reset">重置</el-button>
-                </el-col>
+                <form-query @search="search" @reset="reset" :show-arrow = "false">
+                    <template slot = "show">
+                        <el-col  :xs = "24" :sm = "24" :md="12" :lg = "12" :xl = "12">
+                            <el-form-item label="标题" prop="titile">
+                                <el-input v-model="form.titile" placeholder="标题" clearable></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :xs = "24" :sm = "24" :md="12" :lg = "12" :xl = "12">
+                            <el-form-item label="发布人:" prop="sender">
+                                <el-input v-model="form.sender" clearable></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </template>
+                </form-query>
             </el-form>
         </el-row>
-        <el-row class = "my-3">
+        <el-row class = "pb-3">
             <el-button plain type="primary" icon="fa fa-fw fa-eye" @click="noteReadAll">全部标记已读</el-button>
         </el-row>
         <el-row>
@@ -64,6 +64,7 @@
 <script>
     import {mapState, mapActions} from 'vuex'
     import {http, apiList, constant, sweetAlert} from '@/utils'
+    import FormQuery from '@/components/form/query'
     import DragDialog from '@/components/dragDialog'
     import foxTable from '@/components/fox-table/'
     import OperBtn from '@/components/table/OperBtn'
@@ -71,6 +72,7 @@
     export default {
         name: "UserAnnouncementList",
         components : {
+            FormQuery,
             DragDialog,
             foxTable,
             OperBtn

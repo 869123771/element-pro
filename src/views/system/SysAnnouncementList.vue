@@ -4,12 +4,12 @@
             <el-form ref="form" :model="form" label-width="90px">
                 <form-query @search="search" @reset="reset">
                     <template slot="show">
-                        <el-col :md="6" :sm="8">
+                        <el-col  :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
                             <el-form-item label="标题:" prop="titile">
                                 <el-input v-model="form.titile" clearable></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :md="6" :sm="8">
+                        <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
                             <el-form-item label="消息类型:" prop="msgCategory">
                                 <el-select v-model="form.msgCategory" clearable filterable class="w-full">
                                     <template v-for="item in msgCategory">
@@ -20,12 +20,12 @@
                         </el-col>
                     </template>
                     <template slot="hide">
-                        <el-col :md="6" :sm="8">
+                        <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
                             <el-form-item label="发布人:" prop="sender">
                                 <el-input v-model="form.sender" clearable></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :md="6" :sm="8">
+                        <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
                             <el-form-item label="发布状态:" prop="sendStatus">
                                 <el-select v-model="form.sendStatus" clearable filterable class="w-full">
                                     <template v-for="item in sendStatus">
@@ -34,7 +34,7 @@
                                 </el-select>
                             </el-form-item>
                         </el-col>
-                        <el-col :md="6" :sm="8">
+                        <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
                             <el-form-item label="优先级:" prop="priority">
                                 <el-select v-model="form.priority" clearable filterable class="w-full">
                                     <template v-for="item in priority">

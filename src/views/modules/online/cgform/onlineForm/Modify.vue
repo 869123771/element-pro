@@ -2,18 +2,18 @@
     <div class="modify">
         <el-row>
             <el-form ref="form" :model="form" label-width="100px" status-icon :rules="rules">
-                <el-col :span="8">
+                <el-col  :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
                     <el-form-item label="表名" prop="tableName">
                         <el-input v-model="form.tableName" placeholder="表名" clearable></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="8">
+                <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
                     <el-form-item label="表描述" prop="tableTxt">
                         <el-input v-model="form.tableTxt" placeholder="表描述" clearable maxlength="50"
                                   show-word-limit></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="8">
+                <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
                     <el-form-item label="表类型" prop="tableType">
                         <el-select v-model="form.tableType" placeholder="表类型" clearable filterable class="w-full">
                             <template v-for="item in formTableType">
@@ -22,12 +22,12 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
-                <el-col :span="8">
+                <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
                     <el-form-item label="表单分类" prop="formCategory">
                         <el-input v-model="form.formCategory" placeholder="表单分类" clearable></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="8">
+                <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
                     <el-form-item label="主键策略" prop="tableType">
                         <el-select v-model="form.idType" placeholder="主键策略" clearable filterable class="w-full">
                             <!-- <template v-for="item in formTableType">
@@ -36,7 +36,7 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
-                <el-col :span="8">
+                <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
                     <el-form-item label="PC表单风格" prop="formTemplate">
                         <el-select v-model="form.formTemplate" placeholder="PC表单风格" clearable filterable class="w-full">
                             <!-- <template v-for="item in formTableType">
@@ -45,7 +45,7 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
-                <el-col :span="8">
+                <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
                     <el-form-item label="查询模式" prop="queryMode">
                         <el-select v-model="form.queryMode" placeholder="查询模式" clearable filterable class="w-full">
                             <!-- <template v-for="item in formTableType">
@@ -54,7 +54,7 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
-                <el-col :span="8">
+                <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
                     <el-form-item label="显示复选框" prop="isCheckbox">
                         <el-select v-model="form.isCheckbox" placeholder="显示复选框" clearable filterable class="w-full">
                             <template v-for="item in select.isCheckbox">
@@ -63,7 +63,7 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
-                <el-col :span="8">
+                <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
                     <el-form-item label="是否分页" prop="isPage">
                         <el-select v-model="form.isPage" placeholder="是否分页" clearable filterable class="w-full">
                             <template v-for="item in select.isPage">
@@ -72,7 +72,7 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
-                <el-col :span="8">
+                <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
                     <el-form-item label="是否树" prop="isTree">
                         <el-select v-model="form.isTree" placeholder="是否树" clearable filterable class="w-full">
                             <template v-for="item in select.isTree">

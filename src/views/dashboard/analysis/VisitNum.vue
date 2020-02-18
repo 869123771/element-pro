@@ -1,16 +1,17 @@
 <template>
     <div class = "visit-num">
         <el-row>
-            <el-col :span = "18">
+            <el-col :xs = "24" :sm = "12" :md="12" :lg = "18" :xl = "18">
                 <h4 class="title">销售额趋势</h4>
-                <v-chart :options="options.visitNum" auto-resize></v-chart>
+                <v-chart :options="options.visitNum" auto-resize ref = "visitNum"></v-chart>
             </el-col>
-            <el-col :span = "6">
+            <el-col :xs = "24" :sm = "12" :md="12" :lg = "6" :xl = "6">
                 <h4 class="title">门店销售排行榜</h4>
                 <ul class="list">
                     <li :key="index" v-for="(item, index) in rankList">
                         <span :class="index < 3 ? 'active' : null">{{ index + 1 }}</span>
                         <span>{{ item.name }}</span>
+
                         <span>{{ item.total }}</span>
                     </li>
                 </ul>

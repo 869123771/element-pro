@@ -234,7 +234,7 @@ module.exports = {
         //   errors: true
         // },
         open: IS_PROD,
-        host: "127.0.0.1",
+        //host: "localhost",
         port: 8088,
         https: false,
         hotOnly: true,

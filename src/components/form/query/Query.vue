@@ -1,13 +1,18 @@
 <template>
-    <div>
-        <slot name = "show"></slot>
-        <div v-show = "show.collapse">
-            <slot name = "hide"></slot>
+    <div class="form-query">
+        <slot name="show"></slot>
+        <div v-show="show.collapse">
+            <slot name="hide"></slot>
         </div>
-        <div class = "inline-block pl-4 mb-3">
-            <el-button type="primary" icon="el-icon-search" @click="$emit('search')" v-waves>{{$t('common_query')}}</el-button>
-            <el-button plain icon="el-icon-refresh-left" @click="$emit('reset')" v-waves>{{$t('common_reset')}}</el-button>
-            <span class="cursor-pointer inline-block text-blue-500 pl-2" @click="arrowClick">
+        <div>
+            <el-form-item class="inline-block">
+                <el-button type="primary" icon="el-icon-search" @click="$emit('search')" v-waves>
+                    {{$t('common_query')}}
+                </el-button>
+                <el-button plain icon="el-icon-refresh-left" @click="$emit('reset')" v-waves>{{$t('common_reset')}}
+                </el-button>
+            </el-form-item>
+            <span class="cursor-pointer inline-block text-blue-500 pl-2" @click="arrowClick" v-show="showArrow">
                 <span v-if="!show.collapse">
                     <span>{{$t('common_expand')}}</span>
                     <i class="el-icon-arrow-down pl-1"></i>
@@ -32,8 +37,9 @@
             }
         },
         props: {
-            queryPad: {
-                default: '40px'
+            showArrow: {
+                type: Boolean,
+                default: true
             }
         },
         methods: {
@@ -48,6 +54,10 @@
     }
 </script>
 
-<style scoped>
-
+<style scoped lang="less">
+    .form-query {
+        /deep/ .el-form-item {
+            margin-bottom: 14px;
+        }
+    }
 </style>
