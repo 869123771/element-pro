@@ -4,14 +4,6 @@ export default {
     ...user,
     ...defaultProps,
     SUCCESS: 200,
-    tablePageInfo : {
-        datas : [],
-        totalRows : 0,
-        pageNum : 1,
-        pageSize : 10,
-        opts : [10,20,30,40],
-        loading : true
-    },
     errorTip: {
         userNameTip: '3到16位非特殊字符',
         passwordTip: '最少6位,至少1个大写字母,1个小写字母,1个数字,1个特殊字符',

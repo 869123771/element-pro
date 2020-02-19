@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class = "p-3 m-3">
         <el-row>
             <el-col :span = "4" class = "question-type">
                 <div class = "border-solid border-b border-gray-300 px-2 py-3">选择题</div>
@@ -155,7 +155,7 @@
         position: fixed;
         width: 22%;
         bottom: 0;
-        top: 50px;
+        top: 110px;
         border-radius: 0px;
     }
     .slide-enter, .slide-leave-to {

@@ -7,6 +7,7 @@
     import "@/assets/anticon/iconfont.css";
     import "@/assets/iconfont/iconfont.css";
     import "font-awesome/less/font-awesome.less";
+    import "animate.css/animate.min.css"
     import '@/assets/less/index.less'
 
     export default {

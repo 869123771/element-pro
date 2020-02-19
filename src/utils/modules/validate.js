@@ -1,5 +1,5 @@
 import {http, apiList} from '@/utils'
-
+import {email,tel,phone} from 'regular-xb'
 /**
  * 邮箱
  * @param {*} s

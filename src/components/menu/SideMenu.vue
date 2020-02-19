@@ -6,7 +6,7 @@
                     :router="true"
                     :unique-opened="menuProps.uniqueOpened"
                     :collapse="menuProps.collapse"
-                    :collapse-transition="false"
+                    :collapse-transition="true"
                     :default-active="menuProps.activeName"
                     :default-openeds="menuProps.openNames"
 

@@ -35,7 +35,7 @@ ajax.interceptors.response.use(response => {
 })
 
 const checkStatus = (response) => {
-    let {status: httpStatus, data: {message, success, result}} = response
+    let {status: httpStatus, data: {message, success, status,result}} = response
     let httpStatusList = [200, 304, 400]
     let httpMsg
     switch (httpStatus) {
@@ -86,14 +86,21 @@ const checkStatus = (response) => {
     // 异常状态下，把错误信息返回去
     return {
         httpStatus,
-        message: httpMsg
+        message: httpMsg,
+        result,
+        status,
     }
 }
 
 const checkCode = (res) => {
-    let {httpStatus, message, success, result} = res
+    let {httpStatus, message, success, result,status} = res
     if (res && httpStatus !== constant.SUCCESS) {
-        sweetAlert.error(message ? message : result)
+        if(status === 500){
+            sweetAlert.error(message ? message : result,()=>location.href = location.origin)
+        }else{
+            sweetAlert.error(message ? message : result)
+        }
+
     }
     return {message, success, result}
 }
