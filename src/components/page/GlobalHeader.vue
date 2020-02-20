@@ -101,7 +101,6 @@
             box-shadow: 0 1px 4px rgba(0,21,41,.08);
             height: 56px;
             overflow: hidden;
-            padding: 0 6px;
             .collect,.refresh{
                 line-height: 56px;
                 padding: 0 8px;

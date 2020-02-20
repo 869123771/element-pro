@@ -6,13 +6,13 @@
             draggable=".modal-header"
             transition="nice-modal-fade"
             :adaptive="true"
-            :scrollable="true"
+            :scrollable="dialog.height ? false : true"
             :min-width="dialog.minWidth"
             :min-height="dialog.minHeight"
             :delay="100"
             :clickToClose="dialog.clickToClose"
             :width="dialog.width"
-            :height="dialog.height"
+            :height="dialog.height || 'auto'"
             :resizable="dialog.resizable"
     >
         <div class="modal-header">

@@ -1,25 +1,24 @@
 <template>
     <el-container
             class="layout"
-            :class="layoutType"
+            :class="layoutType "
     >
         <el-aside :width="menuProps.collapse ? '64px' : '240px'"
                   class="layout-aside"
-                  :class="`layout-aside-${menuProps.theme} layout-aside-${menuProps.fixMenu ? 'fix' : 'stick'}`">
+                  :class="`layout-aside-${menuProps.theme}`">
             <side-menu></side-menu>
         </el-aside>
 
         <el-container
                 class="layout-container"
-                :class="headProps.fixHeader?'layout-container-head-fix':''"
-                :style="{paddingLeft}"
+                :style="{marginLeft}"
         >
-            <el-header class="layout-header border-b bg-white"
-                       :class="`layout-header-${headProps.theme} ${layoutHeadType}`"
+            <el-header class="layout-container-header border-b bg-white"
+                       :class="`layout-container-header-${headProps.theme}`"
             >
                 <global-header></global-header>
             </el-header>
-            <el-main class="layout-main">
+            <el-main class="layout-container-main">
                 <router-view v-if="isRouterAlive"></router-view>
             </el-main>
         </el-container>
@@ -48,49 +47,35 @@
                 controlShow: ({app}) => app.controlShow
             }),
             layoutType() {
-                let layoutType
+                let layoutType = ''
                 let {fixHeader} = this.headProps
-                let {fixMenu} = this.menuProps
+                let {fixMenu,collapse} = this.menuProps
                 let {navTag} = this.controlShow
+                if(collapse){
+                    layoutType += ' layout-collapse '
+                }
                 if (fixHeader) {
                     if (fixMenu) {
-                        layoutType = 'layout-head-menu-fix';
+                        layoutType += ' layout-header-menu-fix ';
                     } else {
-                        layoutType = 'layout-head-fix';
+                        layoutType += ' layout-header-fix ';
                     }
                 } else {
-                    layoutType = 'layout-menu-fix';
+                    if(fixMenu){
+                        layoutType += ' layout-menu-fix ';
+                    }
                 }
                 return layoutType
             },
-            layoutHeadType() {
-                let layoutHeadType
-                let {fixHeader} = this.headProps
-                let {navTag} = this.controlShow
-                if (fixHeader) {
-                    if (navTag) {
-                        layoutHeadType = 'layout-header-nav-fix'
-                    } else {
-                        layoutHeadType = 'layout-header-fix'
-                    }
-                } else {
-                    layoutHeadType = 'layout-header-stick'
-                }
-                return layoutHeadType
-            },
-            paddingLeft() {
-                let paddingLeft
+            marginLeft() {
+                let marginLeft
                 let {collapse, fixMenu} = this.menuProps
-                if (fixMenu) {
-                    if (collapse) {
-                        paddingLeft = '64px'
-                    } else {
-                        paddingLeft = '240px'
-                    }
+                if (collapse) {
+                    marginLeft = '64px'
                 } else {
-                    paddingLeft = '0px'
+                    marginLeft = '240px'
                 }
-                return paddingLeft
+                return marginLeft
             }
         },
         data() {
@@ -160,26 +145,32 @@
     }
 </script>
 <style scoped lang="less">
-    .layout-head-fix, .layout-head-menu-fix {
-        height: 100%;
-
-        .layout-aside-stick, .layout-aside-fix {
-            margin-top: 107px;
+    .layout-collapse.layout-header-menu-fix{
+        .layout-container{
+            margin-left : 64px !important;
+            &-header{
+                left: 64px;
+            }
+            &-main{
+                margin-left : 0px;
+            }
         }
     }
-
+    .layout-collapse.layout-header-fix{
+        .layout-container{
+            &-header{
+                left: 0px;
+            }
+        }
+    }
+    .layout-collapse.layout-menu-fix{
+        .layout-container{
+            margin-left: 64px !important;
+        }
+    }
     .layout {
         &-aside {
             box-shadow: 0px 1px 4px rgba(0, 21, 41, 0.08);
-            &-fix {
-                position: fixed;
-                bottom: 0;
-                top: 0;
-                left: 0;
-                overflow: auto;
-                min-height: 100vh;
-            }
-
             /deep/ &-dark {
                 background-color: #001529;
                 box-shadow: 2px 0 6px rgba(0, 21, 41, .35);
@@ -229,118 +220,169 @@
                 background-color: #fff;
             }
         }
-
         &-container {
             min-height: 100vh;
             transition: all .2s ease-in-out;
-        }
+            margin-left: 0px !important;
+            &-header {
+                padding: 0px;
+                box-shadow: 0 1px 4px rgba(0,21,41,.08);
+                transition: all .2s ease-in-out;
+                /deep/ &-dark {
+                    background-color: #001529;
 
-        &-container-head-fix {
-            .layout-main {
-                margin-top: 95px;
-            }
-        }
-
-        &-header {
-            padding: 0px;
-
-            /deep/ &-dark {
-                background-color: #001529;
-
-                .level-bar, .collect, .refresh, .message, .avatar, .control-btn {
-                    &:hover {
-                        background-color: hsla(0, 0%, 100%, .05);
-                    }
-
-                    color: #fff;
-                }
-
-                .language {
-                    /deep/ .el-menu--horizontal > .el-submenu .el-submenu__title {
-                        background-color: #001529;
-
+                    .level-bar, .collect, .refresh, .message, .avatar, .control-btn {
                         &:hover {
-                            background-color: #001529;
+                            background-color: hsla(0, 0%, 100%, .05);
                         }
 
                         color: #fff;
                     }
-                }
-            }
 
-            /deep/ &-white {
-                .level-bar, .collect, .refresh, .message, .avatar, .control-btn {
-                    &:hover {
-                        background-color: #f0f2f5;
+                    .language {
+                        /deep/ .el-menu--horizontal > .el-submenu .el-submenu__title {
+                            background-color: #001529;
+
+                            &:hover {
+                                background-color: #001529;
+                            }
+
+                            color: #fff;
+                        }
                     }
-
-                    color: black;
                 }
-
-                .language {
-                    /deep/ .el-menu--horizontal > .el-submenu .el-submenu__title {
+                /deep/ &-white {
+                    .level-bar, .collect, .refresh, .message, .avatar, .control-btn {
                         &:hover {
                             background-color: #f0f2f5;
                         }
 
                         color: black;
                     }
-                }
-            }
 
-            /deep/ &-blue {
-                background: linear-gradient(90deg, #1d42ab, #2173dc, #1e93ff);
+                    .language {
+                        /deep/ .el-menu--horizontal > .el-submenu .el-submenu__title {
+                            &:hover {
+                                background-color: #f0f2f5;
+                            }
 
-                .level-bar, .collect, .refresh, .message, .avatar, .control-btn {
-                    &:hover {
-                        background-color: hsla(0, 0%, 100%, .05);
+                            color: black;
+                        }
                     }
-
-                    color: #fff;
                 }
 
-                .language {
-                    /deep/ .el-menu--horizontal > .el-submenu .el-submenu__title {
-                        background-color: #218fea;
+                /deep/ &-blue {
+                    background: linear-gradient(90deg, #1d42ab, #2173dc, #1e93ff);
 
+                    .level-bar, .collect, .refresh, .message, .avatar, .control-btn {
                         &:hover {
-                            background-color: #358ed8;
+                            background-color: hsla(0, 0%, 100%, .05);
                         }
 
                         color: #fff;
+                    }
 
-                        i {
+                    .language {
+                        /deep/ .el-menu--horizontal > .el-submenu .el-submenu__title {
+                            background-color: #218fea;
+
+                            &:hover {
+                                background-color: #358ed8;
+                            }
+
                             color: #fff;
+
+                            i {
+                                color: #fff;
+                            }
                         }
                     }
                 }
             }
-
-            &-nav-fix, &-fix {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                z-index: 10;
-            }
-
-            &-nav-fix {
-                height: 95px !important;
-            }
-
-            &-stick {
-                height: 90px !important;
-            }
-
-            &-fix {
-                height: 65px !important;
+            &-main {
+                padding: 0px;
+                background-color: #f0f2f5;
+                overflow: scroll;
+                margin-top: 30px;
+                &-fix{
+                    .layout-aside{
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        bottom : 0;
+                        z-index: 10;
+                    }
+                    .layout-container{
+                        padding-left : 240px !important;
+                        .layout-header{
+                            height: inherit;
+                        }
+                    }
+                }
             }
         }
-
-        &-main {
-            padding: 0px;
-            background-color: #f0f2f5;
-            overflow: scroll;
+        &-header{
+            &-menu-fix {
+                .layout-aside{
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    bottom : 0;
+                    z-index: 10;
+                }
+                .layout-container{
+                    margin-left : 240px !important;
+                    &-header{
+                        position: fixed;
+                        top: 0;
+                        left: 240px;
+                        right: 0;
+                        z-index: 10;
+                        height: 95px !important;
+                    }
+                    &-main{
+                        padding-top: 62px;
+                        margin-left : 0px;
+                    }
+                }
+            }
+            &-fix {
+                .layout-aside{
+                    overflow: auto;
+                    min-height: 100vh;
+                    margin-top : 106px;
+                }
+                .layout-container{
+                    margin-left: 0px !important;
+                    &-header{
+                        height: 95px !important;
+                        position: fixed;
+                        z-index: 10;
+                        right: 0;
+                        left: 0;
+                    }
+                    &-main{
+                        margin-top: 95px;
+                    }
+                }
+            }
+        }
+        &-menu{
+            &-fix{
+                .layout-aside{
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    bottom : 0;
+                    z-index: 10;
+                }
+                .layout-container{
+                    margin-left: 240px !important;
+                    &-main{
+                        margin-top: 30px;
+                    }
+                }
+            }
         }
     }
 </style>
