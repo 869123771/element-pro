@@ -89,5 +89,12 @@ export default {
     sys_position_edit : '/sys/position/edit',
     sys_position_delete_batch : '/sys/position/deleteBatch',
     sys_position_export : '/sys/position/exportXls',
-    sys_position_import : '/sys/position/importExcel'
+    sys_position_import : '/sys/position/importExcel',
+    sys_quartz_job_query_list: '/sys/quartzJob/list',
+    sys_quertz_job_add : '/sys/quartzJob/add',
+    sys_quertz_job_edit : '/sys/quartzJob/edit',
+    sys_quertz_job_export : '/sys/quartzJob/exportXls',
+    sys_quertz_job_import : '/sys/quartzJob/importExcel',
+    sys_quertz_job_delete_batch : '/sys/quartzJob/deleteBatch',
+    sys_quertz_job_resume: '/sys/quartzJob/resume'
 }

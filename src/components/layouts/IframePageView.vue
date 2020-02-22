@@ -1,45 +1,48 @@
 <template>
-
-    <iframe  :id="id" :src="url" frameborder="0" width="100%" height="800px" scrolling="auto"></iframe>
-
+    <iframe :id="id" :src="url" frameborder="0" width="100%" height="800px" scrolling="auto"></iframe>
 </template>
 
 <script>
-  import RouteView from './RouteView'
+    import RouteView from './RouteView'
 
-  export default {
-    name: "IframePageContent",
-    data () {
-      return {
-        url: "",
-        id:""
-      }
-    },
-    created () {
-      this.goUrl()
-    },
-    updated () {
-      this.goUrl()
-    },
-    watch: {
-      $route(to, from) {
-        this.goUrl();
-      }
-    },
-    methods: {
-      goUrl () {
-        let url = this.$route.meta.url
-        let id = this.$route.path
-        this.id = id
-        //url = "http://www.baidu.com"
-        console.log("------url------"+url)
-        if (url !== null && url !== undefined) {
-          this.url = url;
-          //window.open(this.url);
+    export default {
+        name: "IframePageView",
+        data() {
+            return {
+                url: "",
+                id: ""
+            }
+        },
+        created() {
+            this.goUrl()
+        },
+        updated() {
+            this.goUrl()
+        },
+        watch: {
+            $route(to, from) {
+                this.goUrl();
+            }
+        },
+        methods: {
+            goUrl() {
+                debugger;
+                let {path, meta: {url,internalOrExternal}} = this.$route
+                this.id = path
+                //url = "http://www.baidu.com"
+                console.log("------url------" + url)
+                if (url !== null && url !== undefined) {
+                    this.url = url;
+                    /*update_begin author:wuxianquan date:20190908 for:判断打开方式，新窗口打开时this.$route.meta.internalOrExternal==true */
+                    if (internalOrExternal !== undefined && internalOrExternal === true) {
+                        //this.closeCurrent();
+                        window.open(this.url);
+                    }
+                    /*update_end author:wuxianquan date:20190908 for:判断打开方式，新窗口打开时this.$route.meta.internalOrExternal==true */
+                }
+            }
         }
-      }
     }
-  }
 </script>
 
 <style>

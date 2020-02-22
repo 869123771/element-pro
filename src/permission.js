@@ -20,13 +20,14 @@ router.beforeEach((to, from, next) => {
             NProgress.done()
         } else {
             if (store.getters.permissionList.length === 0) {
-                store.dispatch('GET_PERMISSION_LIST').then(result => {
+                 store.dispatch('GET_PERMISSION_LIST').then( result => {
                     let menuData = result.menu;
                     if (!menuData) {
                         return;
                     }
                     let constRoutes = [];
                     constRoutes = generateIndexRouter(menuData);
+                    console.log('constRoutes',constRoutes)
                     // 添加主界面路由
                     store.dispatch('UpdateAppRouter', {constRoutes}).then(() => {
                         // 根据roles权限生成可访问的路由表

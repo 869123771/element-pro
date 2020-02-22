@@ -24,8 +24,8 @@
                         <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
                             <el-form-item label="模版类型" prop="templateType">
                                 <el-select v-model="form.templateType" clearable filterable class="w-full">
-                                    <template v-for="item in sendStatus">
-                                        <el-option :value="item.itemValue" :label="item.itemText"></el-option>
+                                    <template v-for="{itemValue,itemText} in templateType">
+                                        <el-option :value="itemValue" :label="itemText"></el-option>
                                     </template>
                                 </el-select>
                             </el-form-item>
@@ -51,7 +51,7 @@
         <el-row class="my-3">
             <collapse :collapse-props="collapse">
                 <div slot="collapse-title">
-                    <span>系统通告信息</span>
+                    <span>模版管理</span>
                 </div>
                 <div slot="collapse-content">
                     <fox-table
@@ -77,7 +77,6 @@
                 </div>
             </collapse>
         </el-row>
-
         <slide-out :visible.sync="drawer.show"
                    :dock ="drawer.direction"
                    :title="drawer.title"
@@ -98,6 +97,9 @@
                 </div>
             </div>
         </slide-out>
+        <drag-dialog :drag-dialog="dialog" @confirm="confirm">
+            <component :is = "component.is" :data="component.data" :ref="component.ref" @testResult="testResult"></component>
+        </drag-dialog>
         <file-upload :file-upload="fileUpload" @uploadSuccess="uploadSuccess"></file-upload>
     </div>
 </template>
@@ -109,14 +111,12 @@
     import Collapse from '@/components/collapse/Collapse'
     import PopoverConfirm from '@/components/popoverConfirm'
     import Modify from './sysMessageTemplateList/Modify'
+    import Test from './sysMessageTemplateList/Test'
     import FileUpload from '@/components/fileUpload'
     import foxTable from '@/components/fox-table/'
+    import OperBtn from '@/components/table/OperBtn'
     import FormQuery from '@/components/form/query'
-
-    const uploadAction = () => {
-        let {config: {baseUrl: {proxyURL}}} = constant
-        return `${proxyURL + apiList.sys_sys_announcement_importExcel}`
-    }
+    import DragDialog from '@/components/dragDialog'
 
     export default {
         name: "SysMessageTemplateList",
@@ -126,7 +126,8 @@
             PopoverConfirm,
             Modify,
             foxTable,
-            FormQuery
+            FormQuery,
+            DragDialog
         },
         data() {
             return {
@@ -141,6 +142,18 @@
                 },
                 show: {
                     batch: false
+                },
+                dialog: {
+                    width: 25,
+                    height: 560,
+                    name: 'test',
+                    loading : false,
+                    showFooter: true,
+                },
+                component : {
+                    is : Test,
+                    ref : 'test',
+                    data : {}
                 },
                 table: {
                     data: [],
@@ -158,7 +171,7 @@
                     show: false,
                     direction: 'right',
                     draggable: true,
-                    width: '900px',
+                    width: 700,
                     showFooter : true,
                     loading : false,
                     data: {}
@@ -167,13 +180,13 @@
                     data: {}
                 },
                 fileUpload: {
-                    action: uploadAction()
+                    action: apiList.message_center_template_delete_import
                 },
             }
         },
         computed: {
             ...mapState({
-
+                templateType : ({dict}) => dict.templateType
             })
         },
         watch: {
@@ -184,7 +197,7 @@
         },
         methods: {
             ...mapActions({
-
+                getTemplateType : 'GET_TEMPLATE_TYPE'
             }),
             search() {
                 this.page = {
@@ -195,6 +208,17 @@
             },
             reset() {
                 this.$refs.form.resetFields()
+            },
+            add() {
+                this.drawer = {
+                    ...this.drawer,
+                    show: true,
+                    title: '新增',
+                }
+                this.modify = {
+                    ...this.modify,
+                    data: {}
+                }
             },
             edit(row) {
                 this.drawer = {
@@ -209,34 +233,41 @@
                     }
                 }
             },
-            async handleRelease({id}) {
-                let {success, message} = await http.get(apiList.sys_sys_announcement_release, {id})
-                if (success) {
-                    sweetAlert.successWithTimer(message)
+            test(row){
+                this.dialog = {
+                    ...this.dialog,
+                    title: '测试',
+                    name: 'test',
+                    loading : false,
+                }
+                this.component = {
+                    ...this.component,
+                    data: {...row}
+                }
+                let {name} = this.dialog
+                this.$nextTick(() => {
+                    this.$modal.show(name)
+                })
+            },
+            testResult(result){
+                if(result){
+                    let {name} = this.dialog
                     this.queryList()
-                } else {
-                    sweetAlert.error(message)
+                    this.$modal.hide(name)
+                }
+                this.component = {
+                    ...this.component,
+                    loading : false
                 }
             },
-            async handleReply({id}) {
-                let {success, message} = await http.get(apiList.sys_sys_announcement_revoke, {id})
-                if (success) {
-                    sweetAlert.successWithTimer(message)
-                    this.queryList()
-                } else {
-                    sweetAlert.error(message)
+            confirm(){
+                let {ref} = this.component
+                let testRef = this.$refs[ref]
+                this.dialog = {
+                    ...this.dialog,
+                    loading: true
                 }
-            },
-            add() {
-                this.drawer = {
-                    ...this.drawer,
-                    show: true,
-                    title: '新增',
-                }
-                this.modify = {
-                    ...this.modify,
-                    data: {}
-                }
+                testRef.testData()
             },
             submit() {
                 let modifyRef = this.$refs.modify
@@ -255,15 +286,16 @@
                 let ids = selection.map(item => item.id).join(',')
                 sweetAlert.confirm(this.$t('common_delete'), this.$t('common_confirm_do'), this.confirmDeleteBatch, ids)
             },
-            async confirmDeleteBatch(ids) {
-                let {success, message} = await http.delete(apiList.sys_sys_announcement_delete_batch, {ids})
+            async confirmDeleteBatch(ids,event,index) {
+                let {success, message} = await http.delete(apiList.message_center_template_delete_batch, {ids})
                 if (success) {
-                    sweetAlert.success(message)
-                    this.queryList()
-                    this.show = {
-                        ...this.show,
-                        batch: false
+                    if(typeof index === 'number'){
+                        sweetAlert.successWithTimer(message)
+                        event(index)
+                    }else{
+                        sweetAlert.success(message)
                     }
+                    this.queryList()
                 } else {
                     sweetAlert.error(message)
                 }
@@ -290,7 +322,7 @@
             },
             async fileExport() {
                 let params = {}
-                let {data, filename} = await http.getFileDownload(apiList.sys_sys_announcement_exportXls, params)
+                let {data, filename} = await http.getFileDownload(apiList.message_center_template_delete_export, params)
                 downloadFile(data, filename)
 
             },
@@ -314,22 +346,6 @@
             uploadSuccess() {
                 this.$modal.hide('fileUpload')
                 this.queryList()
-            },
-            async handleDel({id}) {
-                let {success, message} = await http.delete(apiList.sys_sys_announcement_delete, {id})
-                if (success) {
-                    sweetAlert.successWithTimer(message)
-                    this.queryList()
-                } else {
-                    sweetAlert.error(message)
-                }
-            },
-            arrowClick() {
-                let {collapse} = this.show
-                this.show = {
-                    ...this.show,
-                    collapse: !collapse
-                }
             },
             currentChange(pageNum) {
                 this.page = {
@@ -384,6 +400,47 @@
                             label: '操作',
                             prop: 'oper',
                             width: 80,
+                            render: (h, {row}) => {
+                                let btnInfo = [
+                                    {
+                                        content: this.$t('common_edit'),
+                                        className: 'fa fa-fw fa-pencil',
+                                        permission: 'messageTemplate:edit',
+                                        event: () => {
+                                            this.edit(row)
+                                        }
+                                    },
+                                    {
+                                        type: 'dropDown',
+                                        className: 'fa fa-fw fa-ellipsis-h',
+                                        permission: 'role.grant',
+                                        dropDownItems: [
+                                            {
+                                                content: '发送测试',
+                                                className: '',
+                                                permission: 'messageTemplate:test',
+                                                popover: false,
+                                                event: () => {
+                                                    this.test(row)
+                                                }
+                                            },
+                                            {
+                                                content: '删除',
+                                                className: '',
+                                                popover: true,
+                                                popText: '确定要删除吗',
+                                                permission: 'messageTemplate:delete',
+                                                event: (row,event,index) => {
+                                                    this.confirmDeleteBatch(row.id,event,index)
+                                                }
+                                            }
+                                        ],
+                                    },
+                                ]
+                                return (
+                                    <OperBtn btnInfo={btnInfo}></OperBtn>
+                                )
+                            }
                         },
                         {
                             label: '模板CODE',
@@ -399,7 +456,12 @@
                         },
                         {
                             label: '模板类型',
-                            prop: 'templateType'
+                            prop: 'templateType',
+                            render : (h,{row:{templateType}})=>{
+                                return (
+                                    <span>{this.templateType.find(item=>item.itemValue === templateType).itemText}</span>
+                                )
+                            }
                         },
                     ]
                 }
@@ -413,6 +475,7 @@
         },
         created() {
             this.setI18n()
+            this.getTemplateType()
         },
         mounted() {
             this.queryList()

@@ -21,6 +21,8 @@ export default {
         onlineGraphType : [],                                   //图表类型
         signType : [],                                          //打卡类型
         signStatus: [],                                         //打卡状态
+        taskStatus : [],                                        //任务状态
+        templateType : [],                                      //模版类型
     },
     mutations: {
         SET_SEX(state,sex){
@@ -82,6 +84,12 @@ export default {
         },
         SET_SIGN_STATUS(state,signStatus){
             state.signStatus = signStatus
+        },
+        SET_TASK_STATUS(state,taskStatus){
+            state.taskStatus = taskStatus
+        },
+        SET_TEMPLATE_TYPE(state,templateType){
+            state.templateType = templateType
         }
     },
     actions : {
@@ -223,6 +231,20 @@ export default {
             if(success) {
                 let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
                 commit('SET_SIGN_STATUS',records)
+            }
+        },
+        async GET_TASK_STATUS({commit}){
+            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'task_status'})
+            if(success) {
+                let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
+                commit('SET_TASK_STATUS',records)
+            }
+        },
+        async GET_TEMPLATE_TYPE({commit}){
+            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'template_type'})
+            if(success) {
+                let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
+                commit('SET_TEMPLATE_TYPE',records)
             }
         },
     }

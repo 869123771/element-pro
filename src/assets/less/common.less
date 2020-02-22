@@ -6,17 +6,24 @@
 {
   margin-left: 5px;
 }
-.swal2-container {
-  z-index: 19930207 !important;
+.swal2{
+  &-container{
+    z-index: 19930207 !important;
+  }
+  &-title{
+    display: inline-block !important;
+  }
 }
-.vue-slideout-header,
-.vue-slideout-footer
-{
-  z-index : 28 !important;
+
+.vue-slideout{
+  &-header,&-footer{
+    z-index : 28 !important;
+  }
+  &-content{
+    padding : 1rem 0.75rem !important;
+  }
 }
-.vue-slideout-content{
-  padding : 1rem 0.75rem !important;
-}
+
 .dialog-footer {
   position: absolute;
   bottom: 0;

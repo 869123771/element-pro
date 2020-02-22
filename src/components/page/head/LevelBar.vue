@@ -32,7 +32,7 @@
     .level-bar {
         height : inherit;
         line-height: 56px;
-        padding: 0 8px;
+        padding: 0 10px;
         display: inline-block;
         width: auto;
         &-shrink {

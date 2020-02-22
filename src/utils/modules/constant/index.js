@@ -34,7 +34,7 @@ export default {
          * @description api请求基础路径
          */
         baseUrl: {
-            domianURL: 'http://47.107.178.235:8080',
+            domianURL: 'http://47.107.178.235:8080/jeecg-boot/',
             imgDomainURL: 'http://47.107.178.235:8080/jeecg-boot/sys/common/view',
             pdfDomainURL : 'http://47.107.178.235:8080/jeecg-boot/sys/common/pdf/pdfPreviewIframe',
             proxyURL : '/jeecg-boot'

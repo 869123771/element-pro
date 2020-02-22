@@ -28,8 +28,13 @@
             }
         },
         computed: {
-
+            ...mapState({
+                menuProps : ({app}) => app.menuProps
+            })
         },
+        methods : {
+
+        }
     }
 </script>
 <style scoped>

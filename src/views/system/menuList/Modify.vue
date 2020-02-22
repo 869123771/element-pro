@@ -88,16 +88,34 @@
                     <el-input-number v-model="form.sortNo" :min="0" class="w-full"></el-input-number>
                 </el-form-item>
                 <el-form-item label="是否路由">
-                    <el-switch v-model="form.route"></el-switch>
+                    <el-radio-group v-model = "form.route">
+                        <el-radio-button :label = "true">是</el-radio-button>
+                        <el-radio-button :label = "false">否</el-radio-button>
+                    </el-radio-group>
                 </el-form-item>
                 <el-form-item label="隐藏路由">
-                    <el-switch v-model="form.hidden"></el-switch>
+                    <el-radio-group v-model = "form.hidden">
+                        <el-radio-button :label = "true">是</el-radio-button>
+                        <el-radio-button :label = "false">否</el-radio-button>
+                    </el-radio-group>
                 </el-form-item>
                 <el-form-item label="是否缓存路由">
-                    <el-switch v-model="form.keepAlive"></el-switch>
+                    <el-radio-group v-model = "form.keepAlive">
+                        <el-radio-button :label = "true">是</el-radio-button>
+                        <el-radio-button :label = "false">否</el-radio-button>
+                    </el-radio-group>
                 </el-form-item>
                 <el-form-item label="聚合路由">
-                    <el-switch v-model="form.alwaysShow"></el-switch>
+                    <el-radio-group v-model = "form.alwaysShow">
+                        <el-radio-button :label = "true">是</el-radio-button>
+                        <el-radio-button :label = "false">否</el-radio-button>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="打开方式">
+                    <el-radio-group v-model = "form.internalOrExternal">
+                        <el-radio-button :label = "true">外部</el-radio-button>
+                        <el-radio-button :label = "false">内部</el-radio-button>
+                    </el-radio-group>
                 </el-form-item>
             </template>
         </el-form>
@@ -155,7 +173,8 @@
                     alwaysShow: false,              //聚合路由
                     permsType: '1',                  //授权策略
                     perms: '',                      //授权标识
-                    status: '1'                      //状态
+                    status: '1',                      //状态
+                    internalOrExternal : false,        //打开方式
                 },
                 rules: {
                     name: [
@@ -223,7 +242,8 @@
                     alwaysShow: false,              //聚合路由
                     permsType: '1',                  //授权策略
                     perms: '',                      //授权标识
-                    status: '1'                      //状态
+                    status: '1',                      //状态
+                    internalOrExternal : false,        //打开方式
                 }
             },
             getValue(value){

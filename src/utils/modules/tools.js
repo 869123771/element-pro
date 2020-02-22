@@ -172,7 +172,8 @@ export const generateIndexRouter = (data) =>{
                 icon : meta.icon,
                 url : meta.url ,
                 permissionList : meta.permissionList,
-                keepAlive : meta.keepAlive
+                keepAlive : meta.keepAlive,
+                internalOrExternal : meta.internalOrExternal
             }
         }
         if(alwaysShow){
@@ -192,6 +193,7 @@ export const generateIndexRouter = (data) =>{
         }
         //--update-end----author:scott---date:20190320------for:根据后台菜单配置，判断是否路由菜单字段，动态选择是否生成路由（为了支持参数URL菜单）------
     }
+    console.log('routers',routers)
     return routers
 }
 

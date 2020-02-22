@@ -19,7 +19,7 @@
                 <global-header></global-header>
             </el-header>
             <el-main class="layout-container-main">
-                <router-view v-if="isRouterAlive"></router-view>
+                <route-view v-if="isRouterAlive"></route-view>
             </el-main>
         </el-container>
     </el-container>
@@ -29,11 +29,11 @@
     import SideMenu from "@/components/menu/SideMenu";
     import GlobalHeader from "./GlobalHeader"
     import {localRead} from '@/utils/modules/tools'
-
+    import RouteView from "@/components/layouts/RouteView"
     export default {
         name: 'GlobalLayout',
         components: {
-            SideMenu, GlobalHeader,
+            SideMenu, GlobalHeader,RouteView
         },
         provide() {
             return {
@@ -204,7 +204,9 @@
 
                     .el-menu-item {
                         &:hover {
-                            color: #fff !important;
+                            i, span {
+                                color: #fff !important;
+                            }
                             background: none;
                         }
                     }
