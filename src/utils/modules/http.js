@@ -144,24 +144,41 @@ export default {
             }
         )
     },
-    post(url, data) {
-        let {_params} = data
-        let postParamsType = {
-            data: JSON.stringify(data),
+    post(url, data,type) {
+        let pattern = {
+            formData : {
+                data : qs.stringify(data),
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            },
+            queryString : {
+                params : data,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }
         }
-        if(_params && _params instanceof Object){
-            postParamsType = {
-                params : _params
+        let postPattern = {}
+        if(type){
+            postPattern = {
+                ...pattern[type]
+            }
+        }else{
+            postPattern = {
+                data: JSON.stringify(data),
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/json; charset=UTF-8'
+                }
             }
         }
         return ajax({
             method: 'post',
             url,
-            ...postParamsType,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Content-Type': 'application/json; charset=UTF-8'
-            }
+            ...postPattern
         }).then(
             (response) => {
                 return checkStatus(response)

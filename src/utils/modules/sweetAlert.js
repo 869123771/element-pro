@@ -77,6 +77,16 @@ export default {
             timer: 1500
         })
     },
+    noStateWithTimer : (title)=>{
+        Swal.fire({
+            position: 'top',
+            type: 'warning',
+            title,
+            toast: true,
+            showConfirmButton: false,
+            timer: 1500
+        })
+    },
     confirm: (title, text, oper, params) => {
         let _this = this
         Swal.fire({

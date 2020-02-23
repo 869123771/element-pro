@@ -17,6 +17,7 @@
     import {mapState,mapActions} from 'vuex'
     import Vue from 'vue'
     import Vue2OrgTree from 'vue2-org-tree'
+    import {sweetAlert} from '@/utils'
 
     Vue.use(Vue2OrgTree)
 
@@ -112,7 +113,6 @@
                 return bg.className
             },
             renderContent(h, data) {
-                debugger;
                 return data.departName;
             },
             onExpand(data) {
@@ -126,7 +126,7 @@
                 }
             },
             onNodeClick(e, data) {
-                alert(data.departName);
+                sweetAlert.noStateWithTimer(data.departName);
             },
             collapse(list) {
                 list.forEach(child => {

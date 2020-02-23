@@ -4,6 +4,8 @@ export default {
     ...user,
     ...defaultProps,
     SUCCESS: 200,
+    FORM_DATA : 'formData',
+    QUERY_STRING : 'queryString',
     errorTip: {
         userNameTip: '3到16位非特殊字符',
         passwordTip: '最少6位,至少1个大写字母,1个小写字母,1个数字,1个特殊字符',

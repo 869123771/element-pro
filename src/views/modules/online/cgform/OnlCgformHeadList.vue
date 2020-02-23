@@ -542,10 +542,10 @@
                 this.$router.push(`/online/cgformList/${row.id}`)
             },
             async copyView({id:code}){
-                let _params = {
+                let params = {
                     code
                 }
-                let {success,message} = await http.post(apiList.online_form_head_copy_view, {_params})
+                let {success,message} = await http.post(apiList.online_form_head_copy_view, params,constant.QUERY_STRING)
                 if(success){
                     sweetAlert.successWithTimer(message)
                     this.queryList()
