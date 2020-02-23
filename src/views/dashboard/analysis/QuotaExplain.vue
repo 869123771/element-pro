@@ -9,6 +9,7 @@
                      :vertical-compact="true"
                      :margin="[12, 12]"
                      :use-css-transforms="true"
+                     :responsive = "true"
         >
             <grid-item
                     v-for="(item,index) in layout"

@@ -177,7 +177,7 @@
             ResetPwd,
             PopDropdown,
             PopoverConfirm,
-            ProxyManConfig
+            ProxyManConfig,
         },
         mixins: [mainPageModel],
         data() {
