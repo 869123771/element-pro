@@ -53,7 +53,7 @@
                 </form-query>
             </el-form>
         </el-row>
-        <el-row class="my-3" type = "flex" justify="space-between">
+        <el-row class="my-3" type = "flex" justify="space-between" v-show = "!data">
             <div>
                 <el-button plain type="primary" icon="el-icon-plus" @click="addUser" v-has="'user:add'" v-waves>
                     {{$t('sys_user_add')}}
@@ -178,6 +178,11 @@
             PopDropdown,
             PopoverConfirm,
             ProxyManConfig,
+        },
+        props : {
+            data : {
+                type : Object
+            }
         },
         mixins: [mainPageModel],
         data() {

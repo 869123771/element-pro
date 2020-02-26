@@ -56,14 +56,14 @@
                         </div>
                     </el-option>
                     <el-option
-                            v-for="{name,code,rank_dictText} in select.post"
+                            v-for="{name,code,postRank_dictText} in select.post"
                             :key="code"
                             :label="name"
                             :value="code">
                         <div class="flex">
                             <div class="w-40">{{name}}</div>
                             <div class="w-40">{{code}}</div>
-                            <div class="w-20">{{rank_dictText}}</div>
+                            <div class="w-20">{{postRank_dictText}}</div>
 
                         </div>
                     </el-option>

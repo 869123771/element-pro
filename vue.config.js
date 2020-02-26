@@ -241,9 +241,8 @@ module.exports = {
         disableHostCheck: true,
         proxy: {
             '/jeecg-boot': {
-                //target: process.env.VUE_APP_BASE_API || 'http://localhost:8080',
+                //target : 'http://localhost:8080',
                 target: process.env.VUE_APP_BASE_API || 'http://47.107.178.235:8080/',
-                //target: process.env.VUE_APP_BASE_API || 'http://10.149.10.230:8080/',
                 //target: process.env.VUE_APP_BASE_API || 'http://boot.jeecg.org',
                 ws: false,
                 //secure: false,

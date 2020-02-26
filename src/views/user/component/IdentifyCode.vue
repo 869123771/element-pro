@@ -1,10 +1,12 @@
 <template>
     <div class="identify">
-        <el-form-item prop="code">
-            <el-input v-model="form.code" size="large" clearable placeholder="请输入右侧验证码">
+        <el-form-item prop="captcha">
+            <el-input v-model="form.captcha" size="large" clearable placeholder="请输入右侧验证码">
                 <i slot="prefix" class="el-input__icon el-icon-key"></i>
             </el-input>
-            <div class="slot-code" @click="getCheckCode">{{checkCode.code}}</div>
+            <div class="slot-code" @click="getCheckCode">
+                <img :src = "checkCodeSrc">
+            </div>
         </el-form-item>
     </div>
 </template>
@@ -21,22 +23,15 @@
         },
         data() {
             return {
-                checkCode : {
-                    code : 'wywd',
-                    key : ''
-                }
+                checkCodeSrc : ''
             }
         },
         methods: {
             async getCheckCode() {
-                //this.randomStr = Math.random().toString(36).slice(2, 6)
-                let {success,result:{code,key}} = await http.get(apiList.login_check_code)
+                let {checkKey} = this.form
+                let {success,result} = await http.get(apiList.login_check_code + checkKey)
                 if(success){
-                    this.checkCode = {
-                        ...this.checkCode,
-                        code,
-                        key
-                    }
+                    this.checkCodeSrc = result
                 }
             },
             codeInput() {
@@ -52,12 +47,16 @@
 <style scoped lang="less">
     .identify {
         .slot-code {
+            img{
+                height : 35px
+            }
+            display: flex;
+            align-items: center;
             position: absolute;
             right: 10px;
             top: 0px;
-            height: 24px;
-            line-height: 24px;
-            margin: 8px 0px;
+            line-height: 40px;
+            height : 40px;
             padding-left: 12px;
             border-left: 1px solid #cbd5e0;
             width: 76px;

@@ -545,10 +545,13 @@
                             label: '角色编码',
                             prop: 'roleCode'
                         },
-
                         {
                             label: '备注',
                             prop: 'description'
+                        },
+                        {
+                            label: '创建人',
+                            prop: 'createBy'
                         },
                         {
                             label: '创建时间',

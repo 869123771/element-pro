@@ -172,8 +172,8 @@
                     data: {}
                 },
                 dialog: {
-                    width: '300',
-                    height: '300',
+                    width: 300,
+                    height: 300,
                     name: 'addUserHas',
                     showFooter : true
                 },
@@ -236,8 +236,8 @@
                 this.$modal.show(name)
                 this.dialog = {
                     ...this.dialog,
-                    width : 70,
-                    height : 80,
+                    width : 72,
+                    height : 96,
                     title: '添加已有用户'
                 }
             },

@@ -44,13 +44,14 @@
         },
         data() {
             let checkCode = (rule, value, callback) => {
-                let {checkCode:{code}} =  this.$refs.identifyCode
+                //let {checkCode:{code}} =  this.$refs.identifyCode
                 if (!value) {
                     callback(new Error('验证码不能为空'));
                 }
-                else if (value.toUpperCase() !== code.toUpperCase()) {
+                /*else if (value.toUpperCase() !== code.toUpperCase()) {
                     callback(new Error('请输入正确的验证码'));
-                } else {
+                } */
+                else {
                     callback()
                 }
             }
@@ -58,7 +59,8 @@
                 form: {
                     username: 'jeecg',
                     password: '123456',
-                    code: '',
+                    captcha: '',
+                    checkKey : Date.now()
                 },
                 loading: false,
                 rules: {
@@ -68,8 +70,8 @@
                     password: [
                         {required: true, message: '密码不能为空', trigger: 'change'}
                     ],
-                    code: [
-                        {validator: checkCode,},
+                    captcha: [
+                        {validator: checkCode,trigger  :'change'},
                     ],
                 }
             }
@@ -92,14 +94,12 @@
             },
             async login() {
                 this.loading = true
-                let {password} = this.form
+                /*let {password} = this.form
                 let {success: pass, result: {iv, key}} = await http.get(apiList.login_encrypted)
                 if (pass) {
                     let {checkCode:{code,key}} =  this.$refs.identifyCode
                     let params = {
                         ...this.form,
-                        captcha : code,
-                        checkKey : key
                         //password: aesEncrypt(password, key, iv)
                     }
                     let {success, message, result} = await http.post(apiList.login, params)
@@ -109,6 +109,16 @@
                     } else {
                         sweetAlert.error(message)
                     }
+                }*/
+                let params = {
+                    ...this.form
+                }
+                let {success, message, result} = await http.post(apiList.login, params)
+                if (success) {
+                    this.handleLogin(result)
+                    this.$router.push({name: "dashboard"})
+                } else {
+                    sweetAlert.error(message)
                 }
                 this.loading = false
             }

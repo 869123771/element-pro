@@ -2,7 +2,7 @@
     <div class = "proxy">
         <el-form ref = "form" :model = "form" :rules = "rules" label-width="110px">
             <el-form-item :label="$t('sys_user_account')" prop = "userName">
-                <el-input v-model = "form.userName" readonly></el-input>
+                <el-input v-model = "form.username" readonly></el-input>
             </el-form-item>
             <el-form-item :label = "$t('sys_user_proxy_man_name')" prop = "agentUserName" class = "slot-label">
                 <div slot = "label" class = "truncate">
