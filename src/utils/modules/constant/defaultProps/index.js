@@ -3,6 +3,8 @@ export default {
         title : '',
         name : 'modal',
         showFooter : false,
+        showHeader : true,
+        showCancelBtn : true,
         loading : false,
         clickToClose : false,
         fullScreen : false,

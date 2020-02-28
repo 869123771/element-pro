@@ -105,8 +105,8 @@
         },
         methods: {
             handleAvatar(avatar) {
-                let {config: {baseUrl: {imgDomainURL}}} = constant
-                return {avatar: `${imgDomainURL}/${avatar}`}
+                let {config: {baseUrl: {staticDomainURL}}} = constant
+                return {avatar: `${staticDomainURL}/${avatar}`}
             },
             async getUserRole(row) {
                 let {id: userid, activitiSync, avatar} = row

@@ -92,15 +92,4 @@ export const telephoneCheck = (rule, value, callback) => {
     }
 }
 
-export const uniqueUserCheck = async (rule, username, callback) => {
-    if(username){
-        let {success, message} = await http.get(apiList.sys_user_unique_user_check, {username})
-        if (success) {
-            callback();
-        } else {
-            callback(new Error(message));
-        }
-    }
-};
-
 

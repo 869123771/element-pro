@@ -11,12 +11,11 @@
                         @getValue="getValue($event)"/>
             </el-form-item>
             <el-form-item :label = "$t('sys_dict_category_type_name')">
-
                 <el-input v-model = "form.name" :placeholder = "$t('sys_dict_category_type_code')" clearable></el-input>
             </el-form-item>
-            <el-form-item :label = "$t('sys_dict_category_type_code')">
+           <!-- <el-form-item :label = "$t('sys_dict_category_type_code')">
                 <el-input v-model = "form.code" :placeholder = "$t('sys_dict_category_type_code')" clearable></el-input>
-            </el-form-item>
+            </el-form-item>-->
         </el-form>
     </div>
 </template>
@@ -38,9 +37,7 @@
         },
         data() {
             return {
-                form : {
-
-                },
+                form : {},
                 tree : {
                     value : '',            // 初始ID（可选）
                     props:{                // 配置项（必选）

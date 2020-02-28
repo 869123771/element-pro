@@ -248,6 +248,7 @@
             ...mapState({
                 sex: ({dict}) => dict.sex,
                 userStatus: ({dict}) => dict.userStatus,
+                identity : ({dict}) => dict.identity,
             })
         },
         watch: {
@@ -263,6 +264,7 @@
                 getAllRoles: 'GET_ALL_ROLES',
                 getAllDept: 'GET_ALL_DEPT',
                 getActivitySync: 'GET_ACTIVITY_SYNC',
+                getIdentity : 'GET_IDENTITY'
             }),
             closeFlush() {
                 this.drawer = {
@@ -286,8 +288,8 @@
                 this.queryList()
             },
             getAvatarView({row: {avatar}}) {
-                let {config: {baseUrl: {imgDomainURL}}} = constant
-                return `${imgDomainURL}/${avatar}`
+                let {config: {baseUrl: {staticDomainURL}}} = constant
+                return `${staticDomainURL}/${avatar}`
             },
             changePwdOk(row) {
                 let {resetPwd: {index}} = this.props
@@ -629,6 +631,19 @@
                         prop: 'post',
                     },
                     {
+                        label : this.$t('sys_user_department'),
+                        prop : 'orgCode',
+                    },
+                    {
+                        label : this.$t('sys_user_identity'),
+                        prop : 'identity',
+                        render : (h,{row:{identity}})=>{
+                            return (
+                                <span>{identity && this.identity ? this.identity.find(item=>item.itemValue === identity.toString()).itemText : ''}</span>
+                            )
+                        }
+                    },
+                    {
                         label: this.$t('sys_user_name'),
                         prop: 'realname',
                     },
@@ -700,6 +715,7 @@
             this.getAllRoles()
             this.getAllDept()
             this.getActivitySync()
+            this.getIdentity()
         }
     }
 </script>

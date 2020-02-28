@@ -40,15 +40,6 @@
                             @p-current-change="currentChange"
                             @selection-change="selection"
                     >
-                        <template slot="avatar" slot-scope="{scope}">
-                            <el-image size="26" :src="getAvatarView(scope)"
-                                      :preview-src-list="[getAvatarView(scope)]"
-                            >
-                                <div slot="error" class="cursor-pointer">
-                                    <i class="el-icon-picture-outline"></i>
-                                </div>
-                            </el-image>
-                        </template>
                     </fox-table>
                 </div>
             </collapse>
@@ -86,6 +77,11 @@
                 },
                 show : {
                     batch : false
+                },
+                treeLoadProps : {
+                    tree : '',
+                    treeNode : '',
+                    resolve : ''
                 },
                 table: {
                     show: true,
@@ -138,9 +134,17 @@
                 })
             },
             edit(row){
+                let {tree} = this.treeLoadProps
+                this.treeLoadProps = {
+                    ...this.treeLoadProps,
+                    tree : {
+                        ...tree,
+                        id : row.pid
+                    }
+                }
                 this.dialog = {
                     ...this.dialog,
-                    name: 'add',
+                    name: 'edit',
                     title: this.$t('common_edit'),
                     showFooter: true
                 }
@@ -154,10 +158,15 @@
                     this.$modal.show(name)
                 })
             },
-            async handleDel(row){
+            async handleDel(row,event,index){
                 let {success,message} = await http.delete(apiList.sys_dict_category_delete,{id:row.id})
                 if (success) {
-                    sweetAlert.successWithTimer(message)
+                    if(typeof index === 'number'){
+                        sweetAlert.successWithTimer(message)
+                    }else{
+                        sweetAlert.success(message)
+                    }
+                    event(index)
                     this.queryList()
                 } else {
                     sweetAlert.error(message)
@@ -193,9 +202,10 @@
                     loading: false
                 }
             },
-            modifySuccess({pid}){
+            modifySuccess(){
                 let {name} = this.dialog
                 this.$modal.hide(name)
+                let {tree,treeNode,resolve} = this.treeLoadProps
                 this.queryList()
             },
             selection(selection) {
@@ -230,9 +240,14 @@
                 this.queryList()
             },
             async load(tree, treeNode, resolve) {
-                let {id} = tree
+                debugger;
+                this.treeLoadProps = {
+                    tree,
+                    treeNode,
+                    resolve
+                }
                 let params = {
-                    pid : id
+                    pid : tree.id
                 }
                 let {success, result} = await http.get(apiList.sys_dict_category_query_child, params)
                 if(success){
@@ -300,8 +315,8 @@
                                         popover: true,
                                         popText: this.$t('common_confirm_do'),
                                         permission: 'dictCategory:delete',
-                                        event: () => {
-                                            this.handleDel(row)
+                                        event: (event,index) => {
+                                            this.handleDel(row,event,index)
                                         }
                                     }
                                 ]

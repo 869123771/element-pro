@@ -165,10 +165,10 @@
                     direction: 'right',
                     loading : false,
                     showFooter : true,
-                    data: {}
                 },
                 component: {
                     type: Modify,
+                    ref : '',
                     data: {}
                 },
                 dialog: {
@@ -221,14 +221,15 @@
             edit(row) {
                 this.drawer = {
                     ...this.drawer,
-                    title: '修改用户',
+                    title: this.$t('common_edit'),
                     width: '500px',
                     show: true
                 }
                 this.component = {
                     ...this.component,
                     type: Modify,
-                    data: row
+                    ref : 'edit',
+                    data: row,
                 }
             },
             addUserHas(){
@@ -258,7 +259,17 @@
                 }
             },
             submit(){
-
+                let {ref} = this.component
+                let modifyRef = this.$refs[ref]
+                modifyRef.$refs.modify.validate(valid => {
+                    if (valid) {
+                        this.drawer = {
+                            ...this.drawer,
+                            loading: true
+                        }
+                        modifyRef.commitData()
+                    }
+                })
             },
             selectionChange(selection) {
                 if (selection.length) {

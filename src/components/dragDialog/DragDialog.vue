@@ -15,7 +15,7 @@
             :height="dialog.height || 'auto'"
             :resizable="dialog.resizable"
     >
-        <div class="modal-header">
+        <div class="modal-header" v-if="dialog.showHeader">
             <div class="modal-header-title" v-html="dialog.title"></div>
             <div class="modal-header-control">
                 <div class="modal-header-control-screen">
@@ -36,7 +36,7 @@
         </el-scrollbar>
         <template v-if="dialog.showFooter">
             <div class="modal-footer text-center">
-                <el-button plain @click="close">{{$t('common_cancel')}}</el-button>
+                <el-button plain @click="close" v-show = "dialog.showCancelBtn">{{$t('common_cancel')}}</el-button>
                 <el-button type="primary" :loading="dialog.loading" @click="confirm">{{dialog.confirmText ||
                     $t('common_confirm')}}
                 </el-button>

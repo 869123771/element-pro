@@ -21,12 +21,15 @@
                     <el-input type="password" v-model="form.confirmpassword" :placeholder="$t('sys_user_pwd')" clearable></el-input>
                 </el-form-item>
             </template>
-            <el-form-item :label="$t('sys_user_name')" prop="realname">
+            <el-form-item :label="$t('sys_user_name')" :rules = "[
+                {required: true, message : $t('common_require'),trigger : 'change'},
+                {validator: uniqueUsernameCheck}
+            ]">
                 <el-input v-model="form.realname" :placeholder="$t('sys_user_name')" clearable></el-input>
             </el-form-item>
             <el-form-item prop="workNo" class = "slot-label" :rules = "[
                     {required : true, message : $t('common_require'),trigger : 'change'},
-                    data.id ? {} : {validator : uniqueCheck}
+                    {validator : uniqueWorkNoCheck}
                 ]"
             >
                 <div slot = "label" class = "truncate">
@@ -96,6 +99,13 @@
                     ></el-input>
                 </el-form-item>
             </template>
+            <el-form-item :label="$t('sys_user_identity')" prop="identity">
+                <el-radio-group v-model="form.identity">
+                    <template v-for="{itemValue,itemText} in identity">
+                        <el-radio :label="itemValue">{{itemText}}</el-radio>
+                    </template>
+                </el-radio-group>
+            </el-form-item>
             <el-form-item :label="$t('sys_user_avatar')" prop="upload">
                 <el-upload
                         class="avatar-uploader"
@@ -152,15 +162,15 @@
     import {mapState} from 'vuex'
     import {http, apiList, constant, sweetAlert} from '@/utils'
     import {getToken} from '@/utils/modules/tools'
-    import {uniqueUserCheck, pwdCheck, confirmPwdCheck, emailCheck, phoneCheck,telephoneCheck} from '@/utils/modules/validate'
+    import {pwdCheck, confirmPwdCheck, emailCheck, phoneCheck,telephoneCheck} from '@/utils/modules/validate'
     import dragDialog from '@/components/dragDialog'
     import DeptSearch from './DeptSearch'
     import {isEmpty} from '30-seconds-of-code'
 
     let customParams = {}
     const uploadAction = () => {
-        let {config: {baseUrl: {domianURL}}} = constant
-        return `${domianURL}/${apiList.sys_common_upload}`
+        let {config: {baseUrl: {domainURL}}} = constant
+        return `${domainURL}/${apiList.sys_common_upload}`
     }
     export default {
         name: "Modify",
@@ -183,6 +193,7 @@
                     workNo : '',                       //工号
                     selectedroles: [],                 //角色分配
                     deptName: '',                      //部门分配
+                    identity : '1',
                     birthday: '',
                     sex: '',
                     email: '',
@@ -252,30 +263,30 @@
                 roles: ({system}) => system.roles,
                 activitiSync: ({dict}) => dict.activitiSync,
                 dept: ({system}) => system.dept,
+                identity : ({dict}) => dict.identity,
             }),
         },
         watch: {
             data: {
                 handler(props) {
-                    this.resetForm()
-                    this.userUniqueCheck(props)
                     if (!isEmpty(props)) {
-                        let {config: {baseUrl: {imgDomainURL}}} = constant
-                        let {id, deptId, sex, avatar} = props
+                        let {config: {baseUrl: {staticDomainURL}}} = constant
+                        let {id, deptId, sex, avatar,identity} = props
                         if (id || id && deptId) {
                             this.form = {
                                 ...props,
                                 sex: sex ? sex.toString() : '',
+                                identity : identity ? identity.toString() : '1',
                             }
                             this.upload = {
                                 ...this.upload,
-                                imageUrl: `${imgDomainURL}/${avatar}`
+                                imageUrl: `${staticDomainURL}/${avatar}`
                             }
                             this.getUserRole(id)
                             this.getUserDept(id)
                         } else {
+                            this.resetForm()
                             this.$nextTick(() => {
-                                this.resetForm()
                                 this.$refs.modify.resetFields()
                             })
                         }
@@ -302,18 +313,21 @@
                     sex: '',
                     email: '',
                     phone: '',
-                    activitiSync: '1'
+                    activitiSync: '1',
+                    identity : '1'
                 }
                 this.upload = {
                     ...this.upload,
                     imageUrl: ''
                 }
             },
-            async uniqueCheck(rule, fieldVal, callback){
+            async uniqueWorkNoCheck(rule, fieldVal, callback){
+                let {id} = this.data
                 let params = {
                     tableName : 'sys_user',
                     fieldName: 'work_no',
                     fieldVal,
+                    dataId : id
                 }
                 let {success,message} = await http.get(apiList.sys_dict_unique_check,params)
                 if(!success){
@@ -322,33 +336,19 @@
                     callback();
                 }
             },
-            userUniqueCheck(props) {
-                if (!isEmpty(props)) {
-                    let {id, deptId} = props
-                    if (id || id && deptId) {
-                        this.rules = {
-                            ...this.rules,
-                            username: [
-                                {required: true, message: '必填'},
-                            ]
-                        }
-                    } else {
-                        this.rules = {
-                            ...this.rules,
-                            username: [
-                                {required: true, message: '必填'},
-                                {validator: uniqueUserCheck}
-                            ]
-                        }
-                    }
-                } else {
-                    this.rules = {
-                        ...this.rules,
-                        username: [
-                            {required: true, message: '必填'},
-                            {validator: uniqueUserCheck}
-                        ]
-                    }
+            async uniqueUsernameCheck(rule, fieldVal, callback){
+                let {id} = this.data
+                let params = {
+                    tableName : 'sys_user',
+                    fieldName: 'username',
+                    fieldVal,
+                    dataId : id
+                }
+                let {success,message} = await http.get(apiList.sys_dict_unique_check,params)
+                if(!success){
+                    callback(new Error(message));
+                }else{
+                    callback();
                 }
             },
             selectDept() {
@@ -467,16 +467,16 @@
                 let {response, response: {success, message} = {}} = file
                 if (response && success) {
                     let [fileItem] = fileList
-                    let {config: {baseUrl: {imgDomainURL}}} = constant
+                    let {config: {baseUrl: {staticDomainURL}}} = constant
                     this.upload = {
                         ...this.upload,
                         fileList: [
                             {
                                 ...fileItem,
-                                url: `${imgDomainURL}/${message}`
+                                url: `${staticDomainURL}/${message}`
                             }
                         ],
-                        imageUrl: `${imgDomainURL}/${message}`
+                        imageUrl: `${staticDomainURL}/${message}`
                     }
                     customParams = {
                         ...customParams,

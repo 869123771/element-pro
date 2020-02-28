@@ -25,10 +25,10 @@ import i18n from '@/locale'
 //import './element'
 import {constant,hasPermission} from '@/utils'
 
-let {config: {baseUrl: {domianURL, imgDomainURL, pdfDomainURL,proxyURL}}} = constant
+let {config: {baseUrl: {domainURL, staticDomainURL, pdfDomainURL,proxyURL,casPrefixUrl,onlinePreviewDomainURL}}} = constant
 
 window._CONFIG = {
-    domianURL, imgDomainURL, pdfDomainURL,proxyURL
+    domainURL, staticDomainURL, pdfDomainURL,proxyURL,casPrefixUrl,onlinePreviewDomainURL
 };
 
 /*

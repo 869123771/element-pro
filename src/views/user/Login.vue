@@ -1,5 +1,5 @@
 <template>
-    <div class="login" @keydown.enter="handleSubmit">
+    <div class="login animated slideInUp faster" @keydown.enter="handleSubmit">
         <el-row type="flex" justify="center" class="px-3">
             <el-col :md="12" :xs="24" :sm="12" class = "max-w-sm">
                 <el-card>
@@ -21,7 +21,7 @@
                         <idenfiry-code :form="form" ref="identifyCode"></idenfiry-code>
                         <el-form-item>
                             <el-button type="primary" size="large" class="w-full" @click="handleSubmit"
-                                       :loading="loading">登录
+                                       :loading="loading" :disabled="loading">登录
                             </el-button>
                         </el-form-item>
                     </el-form>
@@ -115,12 +115,13 @@
                 }
                 let {success, message, result} = await http.post(apiList.login, params)
                 if (success) {
+                    this.loading = false
                     this.handleLogin(result)
                     this.$router.push({name: "dashboard"})
                 } else {
                     sweetAlert.error(message)
+                    this.loading = false
                 }
-                this.loading = false
             }
         },
         mounted() {

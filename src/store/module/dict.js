@@ -22,7 +22,9 @@ export default {
         signType : [],                                          //打卡类型
         signStatus: [],                                         //打卡状态
         taskStatus : [],                                        //任务状态
-        templateType : [],                                      //模版类型
+        templateType : [],                                      //模版类型,
+        databaseType : [],                                      //数据库类型
+        identity : [],                                          //身份
     },
     mutations: {
         SET_SEX(state,sex){
@@ -90,7 +92,13 @@ export default {
         },
         SET_TEMPLATE_TYPE(state,templateType){
             state.templateType = templateType
-        }
+        },
+        SET_DATABASE_TYPE(state,databaseType){
+            state.databaseType = databaseType
+        },
+        SET_IDENTITY(state,identity){
+            state.identity = identity
+        },
     },
     actions : {
         async GET_SEX({commit}){
@@ -245,6 +253,20 @@ export default {
             if(success) {
                 let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
                 commit('SET_TEMPLATE_TYPE',records)
+            }
+        },
+        async GET_DATABASE_TYPE({commit}){
+            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'database_type'})
+            if(success) {
+                let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
+                commit('SET_DATABASE_TYPE',records)
+            }
+        },
+        async GET_IDENTITY({commit}){
+            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'identity'})
+            if(success) {
+                let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
+                commit('SET_IDENTITY',records)
             }
         },
     }

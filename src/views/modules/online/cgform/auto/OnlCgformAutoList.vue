@@ -144,8 +144,8 @@
                 getQueryConditions()
             },
             getAvatarView({row},prop) {
-                let {config: {baseUrl: {imgDomainURL}}} = constant
-                return `${imgDomainURL}/${row[prop]}`
+                let {config: {baseUrl: {staticDomainURL}}} = constant
+                return `${staticDomainURL}/${row[prop]}`
             },
             selection(selection) {
                 if (selection.length) {

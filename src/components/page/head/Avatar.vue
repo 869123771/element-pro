@@ -33,8 +33,8 @@
                 logout : 'LOGIN_OUT'
             }),
             getAvatarView(avatar) {
-                let {config:{baseUrl:{imgDomainURL}}} = constant
-                return `${imgDomainURL}/${avatar}`
+                let {config:{baseUrl:{staticDomainURL}}} = constant
+                return `${staticDomainURL}/${avatar}`
             },
         }
     }

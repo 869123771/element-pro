@@ -48,7 +48,8 @@
     .identify {
         .slot-code {
             img{
-                height : 35px
+                height : 35px;
+                width: 105px;
             }
             display: flex;
             align-items: center;
@@ -59,14 +60,13 @@
             height : 40px;
             padding-left: 12px;
             border-left: 1px solid #cbd5e0;
-            width: 76px;
             cursor: pointer;
             font-size: 20px;
             font-weight: 700;
             font-family: sans-serif;
         }
         /deep/ .el-input .el-input__suffix {
-            right: 90px;
+            right: 130px;
         }
         /deep/ .el-input--suffix .el-input__inner {
             padding-right: 114px;
