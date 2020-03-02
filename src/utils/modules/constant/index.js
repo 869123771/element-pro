@@ -36,7 +36,7 @@ export default {
          * @description api请求基础路径
          */
         baseUrl: {
-            domainURL: 'http://47.107.178.235:8080/',
+            domainURL: 'http://47.107.178.235:8080/jeecg-boot',
             casPrefixUrl: "http://cas.example.org:8443/cas",
             onlinePreviewDomainURL: "http://fileview.jeecg.com/onlinePreview",
             staticDomainURL: "http://47.107.178.235:8080/jeecg-boot/sys/common/static",

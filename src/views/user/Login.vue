@@ -115,12 +115,11 @@
                 }
                 let {success, message, result} = await http.post(apiList.login, params)
                 if (success) {
-                    this.loading = false
                     this.handleLogin(result)
                     this.$router.push({name: "dashboard"})
                 } else {
-                    sweetAlert.error(message)
                     this.loading = false
+                    sweetAlert.error(message)
                 }
             }
         },

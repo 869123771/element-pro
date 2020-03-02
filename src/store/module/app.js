@@ -1,6 +1,6 @@
 import {localSave, localRead} from '@/utils/modules/tools'
 import {isBoolean} from '30-seconds-of-code'
-
+import router from '@/router'
 export default {
     state: {
         dialogLoading : false,
@@ -99,6 +99,7 @@ export default {
             state.currentNav = path
         },
         REMOVE_NAV_TAG(state, removeNav) {
+            debugger;
             let _30s = require('30-seconds-of-code');
             let {navTagList, currentNav} = state
             navTagList = _30s.remove(navTagList, item => item.path !== removeNav);
@@ -108,6 +109,7 @@ export default {
                     state.currentNav = lastNav
                 }
             }
+            localSave('navTagList', navTagList)
             state.navTagList = [...navTagList]
         },
         SET_LANG(state, lang) {

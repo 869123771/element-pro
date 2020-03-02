@@ -36,7 +36,7 @@ export const downloadFile = (data, filename) => {
     link.click()
 }
 
-export const formFileDownload = (url,params) => {
+export const formFileDownload = (url, params) => {
     let form = document.createElement("form");
     form.style.display = 'none';
     form.action = url;
@@ -45,9 +45,9 @@ export const formFileDownload = (url,params) => {
     document.body.appendChild(form);
     params = {
         ...params,
-        token : getToken()
+        token: getToken()
     }
-    for(let key in params){
+    for (let key in params) {
         let input = document.createElement("input");
         input.type = "hidden";
         input.name = key;
@@ -89,7 +89,7 @@ export const handleScreen = (fullScreen) => {
 /**
  * @description 绑定事件 on(element, event, handler)
  */
-export const on = (() =>{
+export const on = (() => {
     if (document.addEventListener) {
         return (element, event, handler) => {
             if (element && event && handler) {
@@ -108,9 +108,9 @@ export const on = (() =>{
 /**
  * @description 解绑事件 off(element, event, handler)
  */
-export const off = (()=>{
+export const off = (() => {
     if (document.removeEventListener) {
-        return  (element, event, handler) => {
+        return (element, event, handler) => {
             if (element && event) {
                 element.removeEventListener(event, handler, false)
             }
@@ -125,75 +125,77 @@ export const off = (()=>{
 })()
 
 // 生成首页路由
-export const generateIndexRouter = (data) =>{
+export const generateIndexRouter = (data) => {
     let indexRouter = [{
         path: '/',
         name: 'dashboard',
         //component: () => import('@/components/layouts/BasicLayout'),
         component: resolve => require(['@/components/layouts/TabLayout'], resolve),
-        meta: { title: '首页' },
+        meta: {title: '首页'},
         redirect: '/dashboard/analysis',
         children: [
             ...generateChildRouters(data)
         ]
-    },{
-        "path": "*", "redirect": "/404", "hidden": true
-    }]
+    },
+        {
+            "path": "*", "redirect": "/404", "hidden": true
+        },
+    ]
     return indexRouter;
 }
 
 // 生成嵌套路由（子路由）
- const generateChildRouters = (data) =>{
+const generateChildRouters = (data) => {
     const routers = [];
     for (let item of data) {
-        let {path,name,redirect,meta,alwaysShow} = item
+        let {path, name, redirect, meta, alwaysShow} = item
         let component = "";
-        if(item.component.includes('layouts')){
-            component = "components/"+item.component;
-        }else{
-            component = "views/"+item.component;
+        if (item.component.includes('layouts')) {
+            component = "components/" + item.component;
+        } else {
+            component = "views/" + item.component;
         }
 
         // eslint-disable-next-line
-        let URL = (item.meta.url|| '').replace(/{{([^}}]+)?}}/g, (s1, s2) => eval(s2)) // URL支持{{ window.xxx }}占位符变量
+        let URL = (item.meta.url || '').replace(/{{([^}}]+)?}}/g, (s1, s2) => eval(s2)) // URL支持{{ window.xxx }}占位符变量
         if (isURL(URL)) {
             item.meta.url = URL;
         }
 
-        let menu =  {
+        let menu = {
             path,
             name,
             redirect,
-            component: resolve => require(['@/' + component+'.vue'], resolve),
-            hidden:item.hidden,
+            component: resolve => require(['@/' + component + '.vue'], resolve),
+            hidden: item.hidden,
             //component:()=> import(`@/views/${item.component}.vue`),
             meta: {
-                title : meta.title ,
-                icon : meta.icon,
-                url : meta.url ,
-                permissionList : meta.permissionList,
-                keepAlive : meta.keepAlive,
-                internalOrExternal : meta.internalOrExternal
+                title: meta.title,
+                icon: meta.icon,
+                url: meta.url,
+                permissionList: meta.permissionList,
+                keepAlive: meta.keepAlive,
+                internalOrExternal: meta.internalOrExternal
             }
         }
-        if(alwaysShow){
+        if (alwaysShow) {
             menu.alwaysShow = true;
             menu.redirect = path;
         }
         if (item.children && item.children.length > 0) {
-            menu.children = [...generateChildRouters( item.children)];
+            menu.children = [...generateChildRouters(item.children)];
         }
         //--update-begin----author:scott---date:20190320------for:根据后台菜单配置，判断是否路由菜单字段，动态选择是否生成路由（为了支持参数URL菜单）------
         //判断是否生成路由
-        if(item.route && item.route === '0'){
-            console.log(' 不生成路由 item.route：  '+item.route);
-            console.log(' 不生成路由 item.path：  '+item.path);
-        }else{
+        if (item.route && item.route === '0') {
+            console.log(' 不生成路由 item.route：  ' + item.route);
+            console.log(' 不生成路由 item.path：  ' + item.path);
+        } else {
             routers.push(menu);
         }
         //--update-end----author:scott---date:20190320------for:根据后台菜单配置，判断是否路由菜单字段，动态选择是否生成路由（为了支持参数URL菜单）------
     }
-    console.log('routers',routers)
+    console.log('routers', routers)
     return routers
 }
 

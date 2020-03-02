@@ -4,6 +4,7 @@
 
 <script>
     import RouteView from './RouteView'
+    import {mapState,mapMutations} from "vuex";
 
     export default {
         name: "IframePageView",
@@ -13,11 +14,10 @@
                 id: ""
             }
         },
-        created() {
-            this.goUrl()
-        },
-        updated() {
-            this.goUrl()
+        computed : {
+            ...mapState({
+                currentNav : ({app}) => app.currentNav
+            })
         },
         watch: {
             $route(to, from) {
@@ -25,6 +25,9 @@
             }
         },
         methods: {
+            ...mapMutations({
+                removeCurrent: 'REMOVE_NAV_TAG'
+            }),
             goUrl() {
                 debugger;
                 let {path, meta: {url,internalOrExternal}} = this.$route
@@ -35,13 +38,24 @@
                     this.url = url;
                     /*update_begin author:wuxianquan date:20190908 for:判断打开方式，新窗口打开时this.$route.meta.internalOrExternal==true */
                     if (internalOrExternal !== undefined && internalOrExternal === true) {
-                        //this.closeCurrent();
+                        new Promise((resolve) => {
+                            this.removeCurrent(path);
+                            resolve()
+                        }).then(()=>{
+                            debugger;
+                            this.$router.push(this.currentNav)
+                        })
                         window.open(this.url);
                     }
-                    /*update_end author:wuxianquan date:20190908 for:判断打开方式，新窗口打开时this.$route.meta.internalOrExternal==true */
                 }
             }
-        }
+        },
+        created() {
+            this.goUrl()
+        },
+        updated() {
+            this.goUrl()
+        },
     }
 </script>
 
