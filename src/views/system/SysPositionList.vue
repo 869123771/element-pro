@@ -163,8 +163,8 @@
                 },
                 dialog: {
                     width: 450,
-                    minHeight : 280,
-                    height: 300,
+                    minHeight : 320,
+                    height: 320,
                     showFooter : true,
                 },
             }

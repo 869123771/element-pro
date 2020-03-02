@@ -185,7 +185,7 @@
                 },
                 dialog: {
                     width: 25,
-                    height: 320,
+                    height: 340,
                     name: 'addRole',
                     showFooter: true,
                 },

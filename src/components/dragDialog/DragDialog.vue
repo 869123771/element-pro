@@ -137,7 +137,7 @@
             align-items: center;
             justify-content: space-between;
             cursor: move;
-
+            border-bottom: solid #f7fafc;
             &-title {
 
             }
@@ -166,7 +166,7 @@
         }
 
         &-body {
-            padding: 0 1rem;
+            padding: 22px 1rem 0;
             overflow: auto;
         }
 
@@ -176,7 +176,7 @@
             background: #fff;
             z-index: 10;
             width: 100%;
-            border-top: 1px solid #e2e8f0;
+            border-top: 1px solid #f7fafc;
             height: 60px;
             line-height: 60px;
             min-height: 60px;

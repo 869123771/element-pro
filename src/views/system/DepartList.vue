@@ -189,7 +189,7 @@
                     ...this.dialog,
                     title: '新增部门',
                     width: 400,
-                    height: 540,
+                    height: 560,
                     name : 'addTopDept',
                     loading : false,
                 }
@@ -208,7 +208,7 @@
                     ...this.dialog,
                     title: '新增子部门',
                     width: 400,
-                    height: 600,
+                    height: 620,
                     name : 'addChildDept',
                     loading : false,
                 }

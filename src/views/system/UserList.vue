@@ -394,7 +394,7 @@
                 this.dialog = {
                     ...this.dialog,
                     width: 600,
-                    height: 340,
+                    height: 360,
                     name: 'proxyConf',
                     title: this.$t('sys_user_proxy_man_conf'),
                     showFooter: true
@@ -467,8 +467,8 @@
             handlePwd({row, $index: index}) {
                 this.dialog = {
                     ...this.dialog,
-                    width: '300',
-                    height: '300',
+                    width: 300,
+                    height: 316,
                     name: 'resetPwd',
                     title: this.$t('sys_user_reset_pwd'),
                     showFooter: false

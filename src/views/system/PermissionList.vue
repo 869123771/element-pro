@@ -48,8 +48,8 @@
                             <el-button plain>{{$t('common_cancel')}}</el-button>
                         </div>
                     </popover-confirm>
-                    <el-button :plain = "!isEdit" type = "primary"  @click="submit()" v-loading = "drawer.loading">{{$t('common_submit')}}</el-button>
-                    <el-button type="primary" v-show = "!isEdit" @click = "continueAdd()" v-loading = "drawer.loading">继续添加</el-button>
+                    <el-button :plain = "!isEdit" type = "primary"  @click="submit()" :loading = "drawer.loading">{{$t('common_submit')}}</el-button>
+                    <el-button type="primary" v-show = "!isEdit" @click = "continueAdd()" :loading = "drawer.loading">继续添加</el-button>
                 </div>
             </div>
         </slide-out>
@@ -248,6 +248,7 @@
                     width: '500px',
                     title: '新增',
                     showFooter: true,
+                    loading : false,
                 }
                 this.component = {
                     ...this.component,
@@ -263,6 +264,7 @@
                     width: '500px',
                     title: '修改',
                     showFooter: true,
+                    loading : false,
                 }
                 this.component = {
                     ...this.component,
