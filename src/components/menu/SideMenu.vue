@@ -77,32 +77,9 @@
     };
 </script>
 <style scoped lang="less">
-    /deep/ .el-menu {
-        font-size: 14px;
-        border-right : 0px;
-         .el-submenu {
-            .el-submenu__title {
-                .anticon {
-                    font-size: 20px;
-                }
-
-                > menu-item-title {
-                    font-size: 15px;
-                }
-            }
-        }
-
-        /deep/ .el-menu-item {
-            .anticon {
-                font-size: 20px;
-            }
-
-            .menu-item-title {
-                font-size: 14px;
-            }
-        }
+    .el-menu{
+        border-right : none;
     }
-
     /deep/ .el-menu--collapse {
         .menu-item-title {
             display: none;
@@ -112,10 +89,6 @@
         .el-submenu .el-submenu__title .el-submenu__icon-arrow {
             display: none;
         }
-    }
-
-    /deep/ .el-submenu .el-menu-item {
-        min-width: auto !important;
     }
 
 </style>

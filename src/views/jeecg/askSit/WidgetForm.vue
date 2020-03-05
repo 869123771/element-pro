@@ -192,7 +192,7 @@
     }
 
     .widget-empty {
-        background-image: url('../../assets/img/form_empty.png');
+        background-image: url('../../../assets/img/form_empty.png');
         background-repeat: no-repeat;
         background-position: 50%;
         padding: 1px;

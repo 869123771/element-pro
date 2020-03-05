@@ -189,31 +189,67 @@
                         .el-menu {
                             background-color: #000810;
                         }
-
                         &__title {
                             &:hover {
+                                background-color: rgba(43,61,95,0.125);
+                                box-shadow: inset -4.5rem 0 6.75rem -7rem #000;
                                 i, span {
-                                    color: #fff !important;
+                                    color: #fff;
+                                    font-size: 16px;
+                                    transition: font-size ease-in-out .3s;
+                                }
+                                &::after{
+                                    width: .55rem;
                                 }
                             }
-
-                            background: none;
+                            &::after{
+                                transition: width .3s;
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                content: '';
+                                display: block;
+                                background-color: #fff;
+                                height: 100%;
+                                width: .002%;
+                            }
                         }
-
                     }
 
                     .el-menu-item {
                         &:hover {
+                            background-color: rgba(43,61,95,0.125);
+                            box-shadow: inset -4.5rem 0 6.75rem -7rem #000;
                             i, span {
                                 color: #fff !important;
+                                font-size: 16px;
+                                transition: all ease-in-out .3s;
                             }
-                            background: none;
+                            &::after{
+                                width: .55rem;
+                            }
+                        }
+                        &::after{
+                            transition: width .3s;
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            content: '';
+                            display: block;
+                            background-color: #fff;
+                            height: 100%;
+                            width: .002%;
                         }
                     }
 
                     .el-menu-item.is-active {
                         background-color: #3788ee;
                         color: #fff;
+                        &:hover{
+                            &::after{
+                                background-color: #3788ee;
+                            }
+                        }
                     }
                 }
             }
@@ -232,7 +268,6 @@
                 transition: all .2s ease-in-out;
                 /deep/ &-dark {
                     background-color: #001529;
-
                     .level-bar, .collect, .refresh, .message, .avatar, .control-btn {
                         &:hover {
                             background-color: hsla(0, 0%, 100%, .05);

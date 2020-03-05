@@ -62,7 +62,7 @@
             line-height: 56px;
             border-bottom: none;
             color : inherit;
-            padding: 0 10px;
+            padding: 0 16px;
         }
 
         /deep/ .el-menu.el-menu--horizontal{

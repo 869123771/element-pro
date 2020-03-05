@@ -10,6 +10,7 @@
                      :margin="[12, 12]"
                      :use-css-transforms="true"
                      :responsive = "true"
+                     class = "layout"
         >
             <grid-item
                     v-for="(item,index) in layout"
@@ -157,7 +158,7 @@
     const xData = [], yData = []
     const beginDay = new Date().getTime()
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 6; i++) {
         xData.push(
             dayjs(new Date(beginDay + 1000 * 60 * 60 * 24 * i)).format('YYYY-MM-DD')
         )
@@ -227,9 +228,21 @@
                         xAxis: [
                             {
                                 type: 'category',
+                                show : false,
                                 boundaryGap: false,
+                                axisLine: {       //x轴
+                                    show: false
+                                },
+                                axisTick: {       //x轴刻度线
+                                    show: false
+                                },
                                 splitLine: {            //网格线
                                     show: false
+                                },
+                                axisLabel: {
+                                    formatter: () => {
+                                        return "";
+                                    }
                                 },
                                 data: xData,
                             }
@@ -302,6 +315,7 @@
                         xAxis: [
                             {
                                 type: 'category',
+                                show : false,
                                 boundaryGap: false,
                                 splitLine: {            //网格线
                                     show: false
@@ -358,31 +372,24 @@
     .index {
         .echarts {
             width: 100%;
-            height: 60px;
+            height: 100%;
         }
-        .chart-container {
-            height: 60px;
-            line-height: 60px;
-        }
-        .progress-container {
-            height: 60px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+        .layout{
+            .el-card{
+                .chart-container {
+                    height: 74px;
+                    line-height: 74px;
+                    width : 100%;
+                }
+                .progress-container {
+                    height: 74px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                }
+            }
         }
         .vue-grid-item {
-            &:nth-child(1)  {
-
-            }
-            &:nth-child(2) {
-
-            }
-            &:nth-child(3) {
-
-            }
-            &:nth-child(4) {
-
-            }
             background: #fff;
         }
         /deep/ .el-card__body {

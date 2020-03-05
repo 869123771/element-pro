@@ -80,7 +80,7 @@
                     </el-form-item>
                 </template>
                 <el-form-item label="菜单图标">
-                    <el-input v-model="form.icon" placeholder="请输入菜单图标" readonly clearable>
+                    <el-input v-model="form.icon" placeholder="请输入菜单图标" clearable>
                         <i slot="suffix" class="el-input__icon el-icon-setting cursor-pointer" @click="checkIcons"></i>
                     </el-input>
                 </el-form-item>

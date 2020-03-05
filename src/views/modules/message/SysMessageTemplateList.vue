@@ -145,7 +145,7 @@
                 },
                 dialog: {
                     width: 25,
-                    height: 560,
+                    height: 590,
                     name: 'test',
                     loading : false,
                     showFooter: true,
