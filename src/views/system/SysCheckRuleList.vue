@@ -237,7 +237,7 @@
                     title: '功能测试',
                     name: 'functionalTest',
                     width : 30,
-                    height : 250,
+                    height : 320,
                     minHeight :250
                 }
                 this.component = {

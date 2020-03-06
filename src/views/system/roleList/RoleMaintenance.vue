@@ -145,6 +145,14 @@
                             prop: 'realname'
                         },
                         {
+                            label : '工号',
+                            prop : 'workNo'
+                        },
+                        {
+                            label : '部门',
+                            prop : 'orgCode'
+                        },
+                        {
                             label: '状态',
                             prop: 'status_dictText'
                         },
@@ -237,8 +245,8 @@
                 this.$modal.show(name)
                 this.dialog = {
                     ...this.dialog,
-                    width : 72,
-                    height : 96,
+                    width: 90,
+                    height: 96,
                     title: '添加已有用户'
                 }
             },

@@ -1,5 +1,37 @@
 <template>
     <div class = "m-3 p-3 bg-white">
+        <el-row>
+            <el-form ref="form" label-width="90px">
+                <form-query @search="search" @reset="reset">
+                    <template v-for = "(item,index) in formList">
+                        <template slot = "show" v-if = "index < 2">
+                            <el-col  :xs = "24" :sm = "24" :md="12" :lg = "8" :xl = "8">
+                                <el-form-item :label="item.label" :prop="item.field">
+                                    <template v-if="item.view === 'text'">
+                                        <el-input v-model="item.field" :placeholder="item.label" clearable></el-input>
+                                    </template>
+                                    <template v-if="item.view === 'date'">
+                                        <el-date-picker  v-model="item.field" :placeholder="item.label" value-format="yyyy-MM-dd" class = "w-full"></el-date-picker>
+                                    </template>
+                                </el-form-item>
+                            </el-col>
+                        </template>
+                        <template slot = "hide" v-else>
+                            <el-col  :xs = "24" :sm = "24" :md="12" :lg = "8" :xl = "8">
+                                <el-form-item :label="item.label" :prop="item.field">
+                                    <template v-if="item.view === 'text'">
+                                        <el-input v-model="item.field" :placeholder="item.label" clearable></el-input>
+                                    </template>
+                                    <template v-if="item.view === 'date'">
+                                        <el-date-picker  v-model="item.field" :placeholder="item.label" value-format="yyyy-MM-dd" class = "w-full"></el-date-picker>
+                                    </template>
+                                </el-form-item>
+                            </el-col>
+                        </template>
+                    </template>
+                </form-query>
+            </el-form>
+        </el-row>
         <el-row class = "mb-3">
             <el-button plain type="primary" icon="el-icon-plus" @click="add">
                 {{$t('common_add')}}
@@ -34,6 +66,7 @@
 
 <script>
     import {http, apiList, constant, mixin, sweetAlert} from '@/utils'
+    import FormQuery from '@/components/form/query'
     import foxTable from '@/components/fox-table/'
     import OperBtn from '@/components/table/OperBtn'
     import HighSearch from "@/components/highSearch";
@@ -98,11 +131,13 @@
     export default {
         name: "OnlCgformAutoList",
         components : {
+            FormQuery,
             foxTable,
             HighSearch
         },
         data(){
             return {
+                formList : [],
                 table: {
                     column: [],
                     data: [],
@@ -127,6 +162,16 @@
             }
         },
         methods : {
+            search() {
+                this.page = {
+                    ...this.page,
+                    pageNum: 1
+                }
+                this.getDatas()
+            },
+            reset() {
+                this.$refs.form.resetFields()
+            },
             add(){
 
             },
@@ -177,6 +222,13 @@
                     pageSize
                 }
                 this.getDatas()
+            },
+            async getFormQuery(){
+                let {code} = this.$route.params
+                let {success,result} = await http.get(`${apiList.online_form_auto_online_form_get_query_info}/${code}`)
+                if(success){
+                    this.formList = result
+                }
             },
             async getColumns() {
                 this.table = {
@@ -236,8 +288,8 @@
                             }
                         }
                         column.push(columnItem)
-
                     })
+                    console.log(column)
                     this.table = {
                         ...this.table,
                         column : [
@@ -294,6 +346,7 @@
         mounted(){
             this.getColumns()
             this.getDatas()
+            this.getFormQuery()
         }
     }
 </script>

@@ -190,6 +190,10 @@
                             background-color: #000810;
                         }
                         &__title {
+                            i,span{
+                                font-size: 14px;
+                                transition: all ease-in-out .3s;
+                            }
                             &:hover {
                                 background-color: rgba(43,61,95,0.125);
                                 box-shadow: inset -4.5rem 0 6.75rem -7rem #000;
@@ -217,13 +221,16 @@
                     }
 
                     .el-menu-item {
+                        i,span{
+                            font-size: 14px;
+                            transition: all ease-in-out .3s;
+                        }
                         &:hover {
                             background-color: rgba(43,61,95,0.125);
                             box-shadow: inset -4.5rem 0 6.75rem -7rem #000;
                             i, span {
                                 color: #fff !important;
                                 font-size: 16px;
-                                transition: all ease-in-out .3s;
                             }
                             &::after{
                                 width: .55rem;

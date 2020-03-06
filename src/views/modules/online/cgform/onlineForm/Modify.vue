@@ -16,41 +16,61 @@
                 <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
                     <el-form-item label="表类型" prop="tableType">
                         <el-select v-model="form.tableType" placeholder="表类型" clearable filterable class="w-full">
-                            <template v-for="item in formTableType">
-                                <el-option :value="item.itemValue" :label="item.itemText"></el-option>
+                            <template v-for="{itemValue,itemText} in formTableType">
+                                <el-option :value="itemValue" :label="itemText"></el-option>
                             </template>
                         </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
                     <el-form-item label="表单分类" prop="formCategory">
-                        <el-input v-model="form.formCategory" placeholder="表单分类" clearable></el-input>
+                        <el-select v-model="form.formCategory" placeholder="表单分类" clearable filterable class="w-full">
+                            <template v-for="{itemValue,itemText} in formCategory">
+                                <el-option :value="itemValue" :label="itemText"></el-option>
+                            </template>
+                        </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
                     <el-form-item label="主键策略" prop="tableType">
                         <el-select v-model="form.idType" placeholder="主键策略" clearable filterable class="w-full">
-                            <!-- <template v-for="item in formTableType">
-                                 <el-option :value="item.itemValue" :label="item.itemText"></el-option>
-                             </template>-->
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
-                    <el-form-item label="PC表单风格" prop="formTemplate">
-                        <el-select v-model="form.formTemplate" placeholder="PC表单风格" clearable filterable class="w-full">
-                            <!-- <template v-for="item in formTableType">
-                                 <el-option :value="item.itemValue" :label="item.itemText"></el-option>
-                             </template>-->
+                            <el-option value="UUID" label="UUID(36位唯一编码)"></el-option>
+                            <el-option value="NATIVE" label="NATIVE(自增长方式)"></el-option>
+                            <el-option value="SEQUENCE" label="SEQUENCE(序列方式)"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
                     <el-form-item label="查询模式" prop="queryMode">
                         <el-select v-model="form.queryMode" placeholder="查询模式" clearable filterable class="w-full">
-                            <!-- <template v-for="item in formTableType">
-                                 <el-option :value="item.itemValue" :label="item.itemText"></el-option>
-                             </template>-->
+                            <template v-for="{itemValue,itemText} in queryMode">
+                                <el-option :value="itemValue" :label="itemText"></el-option>
+                            </template>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
+                    <el-form-item label="主题模版" prop="themeTemplate">
+                        <el-select v-model="form.themeTemplate" placeholder="主题模版" clearable filterable class="w-full">
+                            <el-option value="normal" label="默认主题"></el-option>
+                            <el-option value="erp" label="ERP主题(一对多)"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
+                    <el-form-item label="表单风格" prop="formTemplate">
+                        <el-select v-model="form.formTemplate" placeholder="表单风格" clearable filterable class="w-full">
+                            <template v-for="{itemValue,itemText} in formTemplate">
+                                <el-option :value="itemValue" :label="itemText"></el-option>
+                            </template>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
+                    <el-form-item label="滚动条" prop="scroll">
+                        <el-select v-model="form.scroll" placeholder="滚动条" clearable filterable class="w-full">
+                            <el-option :value="0" label="无"></el-option>
+                            <el-option :value="1" label="有"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -86,16 +106,16 @@
         <el-row>
             <el-tabs v-model="tabs.current" @tab-click="handleClick">
                 <el-tab-pane label="数据库属性" name="dbProps">
-                    <dbprops :data="tabs.data"></dbprops>
+                    <dbprops :data="tabs.data" @getData = "getData"></dbprops>
                 </el-tab-pane>
                 <el-tab-pane label="页面属性" name="pageProps">
-                    <page-props :data="tabs.data"></page-props>
+                    <page-props :data="tabs.data" @getData = "getData"></page-props>
                 </el-tab-pane>
                 <el-tab-pane label="校验字段" name="validFields">
-                    <valid-fields :data="tabs.data"></valid-fields>
+                    <valid-fields :data="tabs.data" @getData = "getData"></valid-fields>
                 </el-tab-pane>
                 <el-tab-pane label="外键" name="foreignKeys">
-                    <foreign-keys :data="tabs.data"></foreign-keys>
+                    <foreign-keys :data="tabs.data" @getData = "getData"></foreign-keys>
                 </el-tab-pane>
                 <el-tab-pane label="索引" name="index">
                     <index :data="data.formInfo" ref="index"></index>
@@ -132,9 +152,15 @@
         data() {
             return {
                 form: {
+                    tableName : '',                                     //表名
+                    tableTxt : '',                                  //表描述
+                    tableType : 'single',                           //表类型
+                    formCategory : 'bdfl_include',                     //表单分类
                     isCheckbox: 'N',
                     isPage: 'Y',
                     isTree: 'N',
+                    themeTemplate : 'normal',
+                    scroll : 0
                 },
                 rules: {
                     tableName: [
@@ -166,7 +192,10 @@
         },
         computed: {
             ...mapState({
-                formTableType: ({dict}) => dict.formTableType
+                formTableType: ({dict}) => dict.formTableType,
+                formCategory : ({dict}) => dict.formCategory,
+                formTemplate : ({dict}) => dict.formTemplate,
+                queryMode: ({dict}) => dict.queryMode,
             })
         },
         watch: {
@@ -190,6 +219,12 @@
             },
         },
         methods: {
+            getData(data){
+                this.tabs = {
+                    ...this.tabs,
+                    data
+                }
+            },
             handleClick() {
 
             },

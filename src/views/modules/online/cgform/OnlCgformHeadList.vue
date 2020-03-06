@@ -281,12 +281,14 @@
 
     let formInfo = {
         formCategory: "bdfl_include",
-        formTemplate: "1",
         idType: "UUID",
+        queryMode: "single",
+        themeTemplate : 'normal',
+        formTemplate: "1",
+        scroll : 0,
         isCheckbox: "N",
         isPage: "Y",
         isTree: "N",
-        queryMode: "single",
         tableName: "",
         tableTxt: "",
         tableType: 1
@@ -336,7 +338,10 @@
         },
         computed: {
             ...mapState({
-                formTableType: ({dict}) => dict.formTableType
+                formTableType: ({dict}) => dict.formTableType,
+                formCategory : ({dict}) => dict.formCategory,
+                formTemplate : ({dict}) => dict.formTemplate,
+                queryMode: ({dict}) => dict.queryMode,
             })
         },
         watch: {
@@ -348,6 +353,9 @@
         methods: {
             ...mapActions({
                 getFormTableType: 'GET_FORM_TABLE_TYPE',
+                getFormCategory : 'GET_FORM_CATEGORY',
+                getFormTemplate : 'GET_FORM_TEMPLATE',
+                getQueryMode : 'GET_QUERY_MODE'
             }),
             search() {
                 this.page = {
@@ -363,7 +371,7 @@
                 this.dialog = {
                     title: '新增',
                     width: 90,
-                    height: 90,
+                    height: 100,
                     name: 'add',
                     showFooter: true,
                 }
@@ -517,7 +525,7 @@
                         ...this.dialog,
                         title: '修改',
                         width: 90,
-                        height: 90,
+                        height: 100,
                         name: 'update',
                         showFooter: true,
                     }
@@ -781,9 +789,12 @@
         },
         created() {
             this.setI18n()
-            this.getFormTableType()
         },
         mounted() {
+            this.getFormTableType()
+            this.getFormCategory()
+            this.getFormTemplate()
+            this.getQueryMode()
             this.queryList()
         }
     }

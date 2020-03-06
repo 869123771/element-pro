@@ -2,14 +2,14 @@
     <div class="role bg-white p-3 m-3">
         <el-row>
             <el-form ref="form" :model="form" label-width="80px">
-                <form-query @search="search" @reset="reset" :show-arrow = "false">
-                    <template slot = "show">
-                        <el-col  :xs = "24" :sm = "24" :md="12" :lg = "12" :xl = "12">
+                <form-query @search="search" @reset="reset" :show-arrow="false">
+                    <template slot="show">
+                        <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
                             <el-form-item :label="$t('sys_role_name')" prop="roleName">
                                 <el-input v-model="form.roleName" clearable></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :xs = "24" :sm = "24" :md="12" :lg = "12" :xl = "12">
+                        <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
                             <el-form-item :label="$t('sys_role_start_time')" prop="createTime">
                                 <el-date-picker
                                         class="w-full"
@@ -26,7 +26,9 @@
             </el-form>
         </el-row>
         <el-row class="pb-3">
-            <el-button plain type="primary" icon="el-icon-plus" @click="addRole" v-has = "'role:add'">{{$t('common_add')}}</el-button>
+            <el-button plain type="primary" icon="el-icon-plus" @click="addRole" v-has="'role:add'">
+                {{$t('common_add')}}
+            </el-button>
             <el-button plain icon="iconfont icon-wy-upload" @click="fileImport">{{$t('common_import')}}</el-button>
             <el-button plain icon="iconfont icon-wy-download" @click="fileExport">{{$t('common_export')}}</el-button>
             <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
@@ -41,11 +43,11 @@
         </el-row>
 
         <el-row>
-            <collapse :collapse-props = "collapse">
-                <div slot = "collapse-title">
+            <collapse :collapse-props="collapse">
+                <div slot="collapse-title">
                     <span>角色信息</span>
                 </div>
-                <div slot = "collapse-content">
+                <div slot="collapse-content">
                     <fox-table
                             v-if="table.show"
                             highlight-current-row
@@ -72,15 +74,15 @@
             <role-maintenance :data="role.data" v-show="role.show"></role-maintenance>
         </el-row>
         <slide-out :visible.sync="drawer.show"
-                   :dock ="drawer.direction"
+                   :dock="drawer.direction"
                    :title="drawer.title"
                    :size="drawer.width"
-                   :close-on-mask-click = "false"
+                   :close-on-mask-click="false"
                    allow-resize
         >
             <component :is="component.type" :ref="component.ref" :data="component.data"
                        @changeDialogWidth="changeDialogWidth"></component>
-            <div slot = "footer" v-if = "drawer.showFooter">
+            <div slot="footer" v-if="drawer.showFooter">
                 <div class="w-full flex justify-between">
                     <div>
                         <tree-operation
@@ -99,7 +101,8 @@
                                 <el-button plain>{{$t('common_cancel')}}</el-button>
                             </div>
                         </popover-confirm>
-                        <el-button type="primary" @click="submit" v-loading = "drawer.loading">{{$t('common_submit')}}</el-button>
+                        <el-button type="primary" @click="submit" v-loading="drawer.loading">{{$t('common_submit')}}
+                        </el-button>
                     </div>
                 </div>
             </div>
@@ -155,8 +158,8 @@
                     roleName: '',
                     createTime: [],
                 },
-                collapse : {
-                    name : 'deptInfo'
+                collapse: {
+                    name: 'deptInfo'
                 },
                 table: {
                     show: true,
@@ -174,8 +177,8 @@
                     show: false,
                     direction: 'right',
                     width: drawerDefaultWidth + 'px',
-                    showFooter : true,
-                    loading : false,
+                    showFooter: true,
+                    loading: false,
                     data: {}
                 },
                 component: {
@@ -225,7 +228,7 @@
                 }
                 this.role = {
                     ...this.role,
-                    show : false
+                    show: false
                 }
                 this.queryList()
             },
@@ -353,7 +356,7 @@
             async submit() {
                 this.drawer = {
                     ...this.drawer,
-                    loading : true
+                    loading: true
                 }
                 let {ref} = this.component
                 let authRef = this.$refs[ref]
@@ -371,7 +374,7 @@
                     this.drawer = {
                         ...this.drawer,
                         show: false,
-                        loading : false
+                        loading: false
                     }
                 } else {
                     sweetAlert.error(message)
@@ -582,11 +585,8 @@
     }
 </script>
 
-<style scoped lang = "less">
-     .role{
-         /deep/ .vue-slideout-header,
-         /deep/ .vue-slideout-footer{
-            z-index : 29;
-        }
+<style scoped lang="less">
+    .role {
+
     }
 </style>

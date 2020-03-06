@@ -25,6 +25,9 @@ export default {
         templateType : [],                                      //模版类型,
         databaseType : [],                                      //数据库类型
         identity : [],                                          //身份
+        formCategory : [],                                      //表单分类
+        formTemplate : [],                                      //表单风格
+        queryMode : [],                                        //查询模式
     },
     mutations: {
         SET_SEX(state,sex){
@@ -98,6 +101,15 @@ export default {
         },
         SET_IDENTITY(state,identity){
             state.identity = identity
+        },
+        SET_FORM_CATEGORY(state,formCategory){
+            state.formCategory = formCategory
+        },
+        SET_FORM_TEMPLATE(state,formTemplate){
+            state.formTemplate = formTemplate
+        },
+        SET_QUERY_MODE(state,queryMode){
+            state.queryMode = queryMode
         },
     },
     actions : {
@@ -267,6 +279,27 @@ export default {
             if(success) {
                 let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
                 commit('SET_IDENTITY',records)
+            }
+        },
+        async GET_FORM_CATEGORY({commit}){
+            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'form_category'})
+            if(success) {
+                let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
+                commit('SET_FORM_CATEGORY',records)
+            }
+        },
+        async GET_FORM_TEMPLATE({commit}){
+            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'form_template'})
+            if(success) {
+                let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
+                commit('SET_FORM_TEMPLATE',records)
+            }
+        },
+        async GET_QUERY_MODE({commit}){
+            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'query_mode'})
+            if(success) {
+                let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
+                commit('SET_QUERY_MODE',records)
             }
         },
     }

@@ -35,7 +35,6 @@
             foxTable
         },
         data() {
-            const {table} = constant
             return {
                 table: {
                     data: [],

@@ -37,6 +37,7 @@
 
 <script>
     import {http, apiList, constant, sweetAlert} from '@/utils'
+    import chartResize from '@/utils/modules/mixins/chartResize'
     import foxTable from '@/components/fox-table/'
     import Collapse from '@/components/collapse/Collapse'
     import dayjs from 'dayjs'
@@ -63,6 +64,7 @@
             Collapse,
             foxTable
         },
+        mixins : [chartResize],
         data(){
             return {
                 collapse : {
@@ -325,6 +327,10 @@
                         show : true
                     }
                 })
+            },
+            listenResize(){
+                if(this.$refs.redisMemory) this.$refs.redisMemory.resize()
+                if(this.$refs.redisKeyNum) this.$refs.redisKeyNum.resize()
             },
         },
         created(){

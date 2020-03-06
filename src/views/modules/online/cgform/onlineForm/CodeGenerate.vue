@@ -71,7 +71,8 @@
 </template>
 
 <script>
-    import {http, apiList, sweetAlert, mainPageModel} from '@/utils'
+    import {http, apiList, sweetAlert} from '@/utils'
+    import list from '@/utils/modules/mixins/list'
     import {isEmpty} from '30-seconds-of-code'
     import DragDrawer from '@/components/dragDrawer'
     import PopoverConfirm from '@/components/popoverConfirm'
@@ -88,7 +89,7 @@
             DragDrawer,
             PopoverConfirm
         },
-        mixins: [mainPageModel],
+        mixins: [list],
         data() {
             return {
                 form: {

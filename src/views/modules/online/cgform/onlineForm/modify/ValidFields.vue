@@ -5,7 +5,7 @@
                     v-if="table.show"
                     v-loading="table.loading"
                     :column="table.column"
-                    :data="table.data"
+                    :data="data"
             >
             </fox-table>
         </el-row>
@@ -30,7 +30,6 @@
         data() {
             return {
                 table: {
-                    data: this.data,
                     show : true,
                     loading: false,
                 },

@@ -1,8 +1,8 @@
 import Cookies from 'js-cookie'
 import {isURL} from './validate'
-
 // cookie保存的天数
 import constant from './constant'
+import {EleResize} from './tools/esResize'
 
 const {config: {cookieExpires}} = constant
 
@@ -25,6 +25,8 @@ export const localSave = (key, value) => {
 export const localRead = (key) => {
     return JSON.parse(localStorage.getItem(key)) || ''
 }
+
+export const eleResize = EleResize
 
 export const downloadFile = (data, filename) => {
     let url = window.URL.createObjectURL(new Blob([data]))

@@ -23,6 +23,7 @@ export default {
     online_form_db_sync : '/online/cgform/api/doDbSynch',
     online_form_auto_online_form_get_columns : '/online/cgform/api/getColumns',
     online_form_auto_online_form_get_datas : '/online/cgform/api/getData',
+    online_form_auto_online_form_get_query_info : '/online/cgform/api/getQueryInfo',
     online_report_head_list_query : '/online/cgreport/head/list',
     online_report_data_source_query : '/sys/dataSource/options',
     online_report_parse_sql: '/online/cgreport/head/parseSql',

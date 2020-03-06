@@ -5,7 +5,7 @@
                 <h4 class="title">销售额排行</h4>
                 <v-chart
                         :options="options.cellNum"
-                        auto-resize
+                        :auto-resize = "true"
                         ref = "cellNum"
                 ></v-chart>
             </el-col>
@@ -32,7 +32,8 @@
     import 'echarts/lib/chart/line'
     import 'echarts/lib/chart/bar'
     import 'echarts/lib/component/tooltip';
-
+    import {throttle,debounce} from '30-seconds-of-code'
+    import {eleResize} from '@/utils/modules/tools'
     export default {
         name: "CellNum",
         components: {
@@ -61,7 +62,8 @@
         },
         watch : {
             'menuProps.collapse'(){
-                this.listenResize()
+                let resizeDiv = document.querySelector('.layout-container')
+                eleResize.on(resizeDiv,this.listenResize)
             },
         },
         methods : {
@@ -141,21 +143,22 @@
                                 },
                                 data: yData
                             }
-                        ]
+                        ],
+                        animationDuration: 2000
                     }
                 }
             },
             listenResize(){
-                this.$refs.cellNum.resize()
+                if(this.$refs.cellNum) this.$refs.cellNum.resize()
             },
         },
         created() {
             this.$nextTick(()=>{
-                window.addEventListener('resize',this.listenResize);
+                window.addEventListener('resize',debounce(this.listenResize,2000));
             })
         },
         beforeDestroy() {
-            window.removeEventListener("resize",this.listenResize);
+            window.removeEventListener("resize",debounce(this.listenResize,2000));
         },
         mounted(){
             this.initCellNumCharts()

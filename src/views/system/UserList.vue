@@ -152,7 +152,8 @@
     import FileUpload from '@/components/fileUpload'
     import FormQuery from '@/components/form/query'
     import {mapState, mapActions} from 'vuex'
-    import {http, apiList, constant, mainPageModel, sweetAlert} from '@/utils'
+    import {http, apiList, constant, sweetAlert} from '@/utils'
+    import list from '@/utils/modules/mixins/list'
     import {downloadFile} from '@/utils/modules/tools'
     import foxTable from '@/components/fox-table'
     import Collapse from '@/components/collapse/Collapse'
@@ -184,7 +185,7 @@
                 type : Object
             }
         },
-        mixins: [mainPageModel],
+        mixins: [list],
         data() {
             return {
                 form: {

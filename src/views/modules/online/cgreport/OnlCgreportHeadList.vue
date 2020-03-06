@@ -185,7 +185,7 @@
                     ...this.dialog,
                     name: 'add',
                     width: 82,
-                    height: 700,
+                    height: 90,
                     title: this.$t('common_add'),
                     showFooter: true
                 }
@@ -205,7 +205,7 @@
                     ...this.dialog,
                     name: 'edit',
                     width: 82,
-                    height: 700,
+                    height: 90,
                     title: this.$t('common_edit'),
                     showFooter: true
                 }

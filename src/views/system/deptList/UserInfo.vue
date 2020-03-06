@@ -65,7 +65,8 @@
 
 <script>
     import {mapActions} from 'vuex'
-    import {http, apiList, sweetAlert, constant,mainPageModel} from '@/utils'
+    import {http, apiList, sweetAlert, constant} from '@/utils'
+    import list from '@/utils/modules/mixins/list'
     import foxTable from '@/components/fox-table'
     import OperBtn from '@/components/table/OperBtn'
     import DragDrawer from '@/components/dragDrawer'
@@ -89,7 +90,7 @@
             AddUser,
             PopoverConfirm
         },
-        mixins: [mainPageModel],
+        mixins: [list],
         data() {
             return {
                 table: {
@@ -241,8 +242,8 @@
                 this.$modal.show(name)
                 this.dialog = {
                     ...this.dialog,
-                    width: 70,
-                    height: 85,
+                    width: 90,
+                    height: 96,
                     title: '添加已有用户'
                 }
             },
@@ -386,7 +387,6 @@
             this.getAllRoles()
             this.getAllDept()
             this.getActivitySync()
-            this.queryList()
         }
     }
 </script>

@@ -21,7 +21,8 @@
                     v-if="table.show"
                     v-loading="table.loading"
                     :column="table.column"
-                    :data="table.data"
+                    :data="data"
+                    max-height = "500"
                     @selection-change="selectionChange"
             >
             </fox-table>
@@ -51,7 +52,6 @@
             return {
                 table: {
                     column: [],
-                    data: this.data,
                     selection: [],
                     loading: false,
                     show: true
@@ -68,7 +68,6 @@
         },
         methods: {
             add() {
-                let {data} = this.table
                 let row = {
                     dbFieldName : '',                   //字段名称
                     dbFieldTxt : '',                    //字段备注
@@ -78,17 +77,15 @@
                     dbType : 'string',                        //字段类型
                     dbIsKey : 0,                       //是否主键
                     dbIsNull : 1,                       //允许空值
-                    orderNum : data.length + 1                       //排序
+                    orderNum : this.data.length + 1,          //排序,
+                    fieldShowType : 'text',                 //控件类型
                 }
-
-                data.push(row)
+                this.$emit('getData', [...this.data,row])
             },
             del() {
-                let {data,selection} = this.table
-                this.table = {
-                    ...this.table,
-                    data : difference(data,selection)
-                }
+                let {selection} = this.table
+                console.log(difference(this.data,selection))
+                this.$emit('getData', difference(this.data,selection))
             },
             clear() {
                 this.$refs.table.$refs.elTable.clearSelection()

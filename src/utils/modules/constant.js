@@ -1,5 +1,5 @@
-import user from './user'
-import defaultProps from './defaultProps'
+import user from './constant/user'
+import defaultProps from './constant/defaultProps'
 export default {
     ...user,
     ...defaultProps,

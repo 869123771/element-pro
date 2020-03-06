@@ -29,16 +29,6 @@
         >
             <data-rule :data-rule-props="dataRuleProps" @closeDataRuleDialog="close"></data-rule>
         </slide-out>
-        <!--<drag-drawer v-model="drawer.show"
-                     :draggable="drawer.draggable"
-                     :title="drawer.title"
-                     :width.sync="drawer.width"
-                     :direction="drawer.direction"
-                     :closeOnClickModal="drawer.closeOnClickModal"
-                     @close="close"
-        >
-            <data-rule :data-rule-props="dataRuleProps" @closeDataRuleDialog="close"></data-rule>
-        </drag-drawer>-->
     </div>
 </template>
 
