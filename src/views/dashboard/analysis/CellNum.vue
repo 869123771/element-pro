@@ -149,7 +149,8 @@
                             data: yData
                         }
                     ],
-                    animationDuration: 2000
+                    animation : true,
+                    animationDuration: 4000
                 }
             },
             listenResize() {

@@ -1,6 +1,6 @@
 <template>
     <div class="user bg-white p-3 m-3">
-        <el-row>
+        <el-row @keydown.enter.native = "queryList">
             <el-form ref="form" :model="form" label-width="80px">
                 <form-query @search="search" @reset="reset">
                     <template slot="show">
@@ -151,7 +151,7 @@
     import DragDialog from '@/components/dragDialog'
     import FileUpload from '@/components/fileUpload'
     import FormQuery from '@/components/form/query'
-    import {mapState, mapActions} from 'vuex'
+    import {mapState, mapMutations,mapActions} from 'vuex'
     import {http, apiList, constant, sweetAlert} from '@/utils'
     import list from '@/utils/modules/mixins/list'
     import {downloadFile} from '@/utils/modules/tools'
@@ -250,6 +250,7 @@
                 sex: ({dict}) => dict.sex,
                 userStatus: ({dict}) => dict.userStatus,
                 identity : ({dict}) => dict.identity,
+                dialogLoading : ({app}) => app.dialogLoading
             })
         },
         watch: {
@@ -315,7 +316,7 @@
                     width: '500px',
                     loading : false,
                     showFooter: true,
-                    show: true
+                    show: true,
                 }
                 this.component = {
                     ...this.component,

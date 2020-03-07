@@ -1,15 +1,15 @@
 <template>
     <div class = "p-3 m-3 bg-white">
-        <el-row>
+        <el-row @keydown.enter.native = "queryList">
             <el-form ref="form" :model="form" label-width="90px">
                 <form-query @search="search" @reset="reset" :show-arrow = "false">
-                    <template slot="show">
-                        <el-col  :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
+                    <template #show>
+                        <el-col :xs = "24" :sm = "24" :md="12" :lg = "12" :xl = "12">
                             <el-form-item label="规则名称" prop="ruleName">
                                 <el-input v-model="form.ruleName" clearable></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "8">
+                        <el-col :xs = "24" :sm = "24" :md="12" :lg = "12" :xl = "12">
                             <el-form-item label="规则code" prop="ruleCode">
                                 <el-input v-model="form.ruleCode" clearable></el-input>
                             </el-form-item>

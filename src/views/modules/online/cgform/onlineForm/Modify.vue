@@ -126,7 +126,7 @@
 </template>
 
 <script>
-    import {mapState} from 'vuex'
+    import {mapMutations, mapState} from 'vuex'
     import {http, apiList, sweetAlert} from '@/utils'
     import Dbprops from './modify/DbProps'
     import PageProps from './modify/PageProps'
@@ -219,6 +219,9 @@
             },
         },
         methods: {
+            ...mapMutations({
+                dialogLoading : 'DIALOG_LOADING',
+            }),
             getData(data){
                 this.tabs = {
                     ...this.tabs,
@@ -262,6 +265,7 @@
                 }
             },
             async saveData() {
+                this.dialogLoading(true)
                 let {table: {data: indexs}} = this.$refs.index
                 let {data: fields} = this.tabs
                 let {id} = this.form
@@ -282,8 +286,10 @@
                 if (success) {
                     sweetAlert.successWithTimer(message)
                     this.$emit('modifySuccess')
+                    this.dialogLoading(false)
                 } else {
                     sweetAlert.error(message)
+                    this.dialogLoading(false)
                 }
             },
         },

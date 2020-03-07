@@ -1,10 +1,10 @@
 <template>
     <div class="m-3 p-3 bg-white">
-        <el-row>
+        <el-row @keydown.enter.native = "queryList">
             <el-form ref="form" :model="form" label-width="80px">
                 <form-query @search="search" @reset="reset" :show-arrow = "false">
-                    <template slot = "show">
-                        <el-col  :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "12">
+                    <template v-slot:show>
+                        <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "12">
                             <el-form-item label="表名" prop="tableName">
                                 <el-input v-model="form.tableName" placeholder="表名" clearable></el-input>
                             </el-form-item>

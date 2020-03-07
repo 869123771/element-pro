@@ -74,7 +74,7 @@
                 </div>
             </collapse>
         </el-row>
-        <drag-dialog :drag-dialog="dialog" @confirm="" v-loading = "dialogLoading">
+        <drag-dialog :drag-dialog="dialog" @confirm="">
             <component :is="component.is" :data="component.data" :ref="component.ref" @modifySuccess=""></component>
         </drag-dialog>
     </div>

@@ -1,6 +1,6 @@
 <template>
     <div class="dict bg-white p-3 m-3">
-        <el-row>
+        <el-row @keydown.enter.native = "queryList">
             <el-form ref="form" :model="form" label-width="80px">
                 <form-query @search="search" @reset="reset" :show-arrow = "false">
                     <template slot = "show">

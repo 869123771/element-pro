@@ -1,7 +1,7 @@
 <template>
     <div class="analyze">
         <el-row>
-            <quota-explain :info="topCard"></quota-explain>
+            <quota-explain :data ="topCard"></quota-explain>
         </el-row>
         <el-row class="m-3 mt-0">
             <chart-card>
@@ -97,6 +97,7 @@
     import ChartCard from './analysis/ChartCard'
     import CellNum from "./analysis/CellNum";
     import VisitNum from './analysis/VisitNum'
+    import dayjs from "dayjs";
 
     export default {
         name: "Analysis",
@@ -145,11 +146,13 @@
                     },
                     visitNum: {
                         num: 8846,
-                        duration: 3000
+                        duration: 3000,
+                        data : {}
                     },
                     payCount: {
                         num: 6560,
-                        duration: 3000
+                        duration: 3000,
+                        data : {}
                     },
                     operateEffect: {
                         num: 78,
@@ -223,6 +226,16 @@
             getTopCardInfo() {
                 this.initTopCardValue()
                 this.$nextTick(()=>{
+                    const xData = [], yData = []
+                    const beginDay = new Date().getTime()
+                    for (let i = 0; i < 6; i++) {
+                        xData.push(
+                            dayjs(new Date(beginDay + 1000 * 60 * 60 * 24 * i)).format('YYYY-MM-DD')
+                        )
+                        yData.push(
+                            Math.round(Math.random() * 10)
+                        )
+                    }
                     this.topCard = {
                         cellNum: {
                             num: 126560,
@@ -230,11 +243,17 @@
                         },
                         visitNum: {
                             num: 8846,
-                            duration: 3000
+                            duration: 3000,
+                            data : {
+                                xData,yData
+                            }
                         },
                         payCount: {
                             num: 6560,
-                            duration: 3000
+                            duration: 3000,
+                            data : {
+                                xData,yData
+                            }
                         },
                         operateEffect: {
                             num: 78,

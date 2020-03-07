@@ -116,7 +116,7 @@
         data(){
             return {
                 form : {
-                    superQueryMatchType : '',
+                    superQueryMatchType : 'and',
                     title : ''
                 },
                 select : {

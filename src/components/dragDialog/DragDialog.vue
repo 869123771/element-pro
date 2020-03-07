@@ -14,6 +14,7 @@
             :width="dialog.width"
             :height="dialog.height || 'auto'"
             :resizable="dialog.resizable"
+            v-loading = "dialogLoading"
     >
         <div class="modal-header" v-if="dialog.showHeader">
             <div class="modal-header-title" v-html="dialog.title"></div>
@@ -49,6 +50,7 @@
 </template>
 <script>
     import {constant} from '@/utils'
+    import {mapState} from "vuex";
 
     export default {
         name: "DragDialog",
@@ -56,6 +58,11 @@
             dragDialog: {
                 type: Object
             }
+        },
+        computed: {
+            ...mapState({
+                dialogLoading : ({app}) => app.dialogLoading
+            })
         },
         watch: {
             dragDialog: {

@@ -33,6 +33,7 @@
 </template>
 
 <script>
+    import {mapMutations} from 'vuex'
     import {http, apiList, constant,sweetAlert} from '@/utils'
     import {pwdCheck, confirmPwdCheck} from '@/utils/modules/validate'
 
@@ -82,7 +83,11 @@
             }
         },
         methods: {
+            ...mapMutations({
+                dialogLoading : 'DIALOG_LOADING',
+            }),
             async changePwd() {
+                this.dialogLoading(true)
                 let {username,password,confirmpassword} = this.form
                 let params = {
                     username,password,confirmpassword
@@ -92,6 +97,7 @@
                     sweetAlert.successWithTimer(message)
                     this.$emit('change-pwd-ok',result)
                 }
+                this.dialogLoading(false)
             },
             submit() {
                 this.$refs.resetPwd.validate(validate => {

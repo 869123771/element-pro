@@ -36,8 +36,8 @@
                         </div>
                         <div slot="card-content">
                             <div class="text-3xl"><span>￥</span>
-                            <count-to :start-val="0" :end-val="info.cellNum.num"
-                                      :duration="info.cellNum.duration" class="card-panel-num"/>
+                            <count-to :start-val="0" :end-val="data.cellNum.num"
+                                      :duration="data.cellNum.duration" class="card-panel-num"/>
                             </div>
                             <div class="chart-container">
                                 <span>周同比</span><span class="pl-2 pr-1">12%</span>
@@ -67,8 +67,8 @@
                         </div>
                         <div slot="card-content">
                             <el-row class="text-3xl">
-                                <count-to :start-val="0" :end-val="info.visitNum.num"
-                                          :duration="info.visitNum.duration" class="card-panel-num"/>
+                                <count-to :start-val="0" :end-val="data.visitNum.num"
+                                          :duration="data.visitNum.duration" class="card-panel-num"/>
                             </el-row>
                             <el-row class="chart-container">
                                 <v-chart :options="options.visit" autoresize></v-chart>
@@ -95,8 +95,8 @@
                         </div>
                         <div slot="card-content">
                             <el-row class="text-3xl">
-                                <count-to :start-val="0" :end-val="info.payCount.num"
-                                          :duration="info.payCount.duration" class="card-panel-num"/>
+                                <count-to :start-val="0" :end-val="data.payCount.num"
+                                          :duration="data.payCount.duration" class="card-panel-num"/>
                             </el-row>
                             <el-row class="chart-container">
                                 <v-chart :options="options.payNum" autoresize></v-chart>
@@ -123,8 +123,8 @@
                         </div>
                         <div slot="card-content">
                             <div class="text-3xl">
-                                <count-to :start-val="0" :end-val="info.operateEffect.num"
-                                          :duration="info.operateEffect.duration" class="card-panel-num"/>
+                                <count-to :start-val="0" :end-val="data.operateEffect.num"
+                                          :duration="data.operateEffect.duration" class="card-panel-num"/>
                                 <span>%</span>
                             </div>
                             <div class="progress-container">
@@ -157,23 +157,10 @@
     import VueGridLayout from 'vue-grid-layout';
     import CountTo from 'vue-count-to'
 
-
-    const xData = [], yData = []
-    const beginDay = new Date().getTime()
-
-    for (let i = 0; i < 6; i++) {
-        xData.push(
-            dayjs(new Date(beginDay + 1000 * 60 * 60 * 24 * i)).format('YYYY-MM-DD')
-        )
-        yData.push(
-            Math.round(Math.random() * 10)
-        )
-    }
-
     export default {
         name: "QuotaExplain",
         props : {
-          info : {
+          data : {
               type : Object
           }
         },
@@ -203,6 +190,20 @@
                 resizable: true,
             }
         },
+        watch: {
+            data: {
+                handler(props) {
+                    let {visitNum,payCount} = props
+                    if (visitNum.data) {
+                        this.initVisitChart()
+                    }
+                    if(payCount.data){
+                        this.initPayNumChart()
+                    }
+                },
+                immediate: true
+            },
+        },
         methods: {
             itemTitle(item) {
                 let result = item.i;
@@ -212,6 +213,7 @@
                 return result;
             },
             initVisitChart() {
+                let {visitNum:{data :{xData,yData}}} = this.data
                 this.options = {
                     ...this.options,
                     visit: {
@@ -299,6 +301,7 @@
                 }
             },
             initPayNumChart() {
+                let {payCount:{data :{xData,yData}}} = this.data
                 this.options = {
                     ...this.options,
                     payNum: {

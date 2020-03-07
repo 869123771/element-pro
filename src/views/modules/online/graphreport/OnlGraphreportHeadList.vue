@@ -1,21 +1,21 @@
 <template>
     <div class = "p-3 m-3 bg-white">
-        <el-row>
+        <el-row @keydown.enter.native = "queryList">
             <el-form ref="form" :model="form" label-width="90px">
-                <el-col :md="6" :sm="8">
-                    <el-form-item label="图表名称" prop="name">
-                        <el-input v-model="form.name" placeholder="图表名称" clearable></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :md="6" :sm="8">
-                    <el-form-item label="编码" prop="code">
-                        <el-input v-model="form.code" placeholder="编码" clearable></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :md="6" :sm="8" class="px-3">
-                    <el-button type="primary" icon="el-icon-search" @click="search">查询</el-button>
-                    <el-button plain icon="el-icon-refresh-left" @click="reset">重置</el-button>
-                </el-col>
+                <form-query @search="search" @reset="reset" :show-arrow = "false">
+                    <template slot = "show">
+                        <el-col :xs = "24" :sm = "24" :md="12" :lg = "12" :xl = "12">
+                            <el-form-item label="图表名称" prop="name">
+                                <el-input v-model="form.name" placeholder="图表名称" clearable></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :xs = "24" :sm = "24" :md="12" :lg = "12" :xl = "12">
+                            <el-form-item label="编码" prop="code">
+                                <el-input v-model="form.code" placeholder="编码" clearable></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </template>
+                </form-query>
             </el-form>
         </el-row>
         <el-row class="my-3">
@@ -100,6 +100,7 @@
 <script>
     import {mapActions} from 'vuex'
     import {http, apiList, constant, mixin, sweetAlert} from '@/utils'
+    import FormQuery from '@/components/form/query'
     import FileUpload from '@/components/fileUpload'
     import {downloadFile} from '@/utils/modules/tools'
     import Collapse from '@/components/collapse/Collapse'
@@ -111,6 +112,7 @@
     export default {
         name: "OnlGraphreportHeadList",
         components: {
+            FormQuery,
             Collapse,
             DragDialog,
             foxTable,

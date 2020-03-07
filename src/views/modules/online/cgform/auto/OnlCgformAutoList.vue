@@ -8,10 +8,52 @@
                             <el-col  :xs = "24" :sm = "24" :md="12" :lg = "8" :xl = "8">
                                 <el-form-item :label="item.label" :prop="item.field">
                                     <template v-if="item.view === 'text'">
-                                        <el-input v-model="item.field" :placeholder="item.label" clearable></el-input>
+                                        <template v-if = "item.mode === 'single'">
+                                            <el-input v-model="form[item.field]" :placeholder="item.label" clearable></el-input>
+                                        </template>
+                                        <template v-else-if = "item.mode === 'group'">
+                                            <div class = "flex">
+                                                <el-input v-model="form[item.field + '_begin']" :placeholder="'开始' + item.label" clearable></el-input>
+                                                <span class = "px-3"> ~ </span>
+                                                <el-input v-model="form[item.field + '_end']" :placeholder="'结束' + item.label" clearable></el-input>
+                                            </div>
+                                        </template>
                                     </template>
                                     <template v-if="item.view === 'date'">
-                                        <el-date-picker  v-model="item.field" :placeholder="item.label" value-format="yyyy-MM-dd" class = "w-full"></el-date-picker>
+                                        <template v-if = "item.mode === 'single'">
+                                            <el-date-picker  v-model="form[item.field]" :placeholder="item.label" value-format="yyyy-MM-dd" class = "w-full"></el-date-picker>
+                                        </template>
+                                        <template v-else-if = "item.mode === 'group'">
+                                            <div class = "flex">
+                                                <el-date-picker v-model="form[item.field + '_begin']" :placeholder="'开始' + item.label" value-format="yyyy-MM-dd" class = "w-full"></el-date-picker>
+                                                <span class = "px-3"> ~ </span>
+                                                <el-date-picker v-model="form[item.field + '_end']" :placeholder="'结束' + item.label" value-format="yyyy-MM-dd" class = "w-full"></el-date-picker>
+                                            </div>
+                                        </template>
+                                    </template>
+                                    <template v-if="item.view === 'list'">
+                                        <template  v-if = "item.mode === 'single'">
+                                            <el-select v-model="form[item.field]" :placeholder="item.label" clearable filterable class = "w-full">
+                                                <template v-for = "{value,text} in table.dictOptions[item.field]">
+                                                    <el-option :value = "value" :label = "text"></el-option>
+                                                </template>
+                                            </el-select>
+                                        </template>
+                                        <template v-else-if = "item.mode === 'group'">
+                                            <div class = "flex">
+                                                <el-select v-model="form[item.field]" :placeholder="'开始' + item.label" clearable filterable class = "w-full">
+                                                    <template v-for = "{value,text} in table.dictOptions[item.field]">
+                                                        <el-option :value = "value" :label = "text"></el-option>
+                                                    </template>
+                                                </el-select>
+                                                <span class = "px-3"> ~ </span>
+                                                <el-select v-model="form[item.field]" :placeholder="'结束' + item.label" clearable filterable class = "w-full">
+                                                    <template v-for = "{value,text} in table.dictOptions[item.field]">
+                                                        <el-option :value = "value" :label = "text"></el-option>
+                                                    </template>
+                                                </el-select>
+                                            </div>
+                                        </template>
                                     </template>
                                 </el-form-item>
                             </el-col>
@@ -20,10 +62,52 @@
                             <el-col  :xs = "24" :sm = "24" :md="12" :lg = "8" :xl = "8">
                                 <el-form-item :label="item.label" :prop="item.field">
                                     <template v-if="item.view === 'text'">
-                                        <el-input v-model="item.field" :placeholder="item.label" clearable></el-input>
+                                        <template v-if = "item.mode === 'single'">
+                                            <el-input v-model="form[item.field]" :placeholder="item.label" clearable></el-input>
+                                        </template>
+                                        <template v-else-if = "item.mode === 'group'">
+                                            <div class = "flex">
+                                                <el-input v-model="form[item.field + '_begin']" :placeholder="'开始' + item.label" clearable></el-input>
+                                                <span class = "px-3"> ~ </span>
+                                                <el-input v-model="form[item.field + '_end']" :placeholder="'结束' + item.label" clearable></el-input>
+                                            </div>
+                                        </template>
                                     </template>
                                     <template v-if="item.view === 'date'">
-                                        <el-date-picker  v-model="item.field" :placeholder="item.label" value-format="yyyy-MM-dd" class = "w-full"></el-date-picker>
+                                        <template v-if = "item.mode === 'single'">
+                                            <el-date-picker  v-model="form[item.field]" :placeholder="item.label" value-format="yyyy-MM-dd" class = "w-full"></el-date-picker>
+                                        </template>
+                                        <template v-else-if = "item.mode === 'group'">
+                                            <div class = "flex">
+                                                <el-date-picker v-model="form[item.field + '_begin']" :placeholder="'开始' + item.label" value-format="yyyy-MM-dd" class = "w-full"></el-date-picker>
+                                                <span class = "px-3"> ~ </span>
+                                                <el-date-picker v-model="form[item.field + '_end']" :placeholder="'结束' + item.label" value-format="yyyy-MM-dd" class = "w-full"></el-date-picker>
+                                            </div>
+                                        </template>
+                                    </template>
+                                    <template v-if="item.view === 'list'">
+                                        <template  v-if = "item.mode === 'single'">
+                                            <el-select v-model="form[item.field]" :placeholder="item.label" clearable filterable class = "w-full">
+                                                <template v-for = "{value,text} in table.dictOptions[item.field]">
+                                                    <el-option :value = "value" :label = "text"></el-option>
+                                                </template>
+                                            </el-select>
+                                        </template>
+                                        <template v-else-if = "item.mode === 'group'">
+                                            <div class = "flex">
+                                                <el-select v-model="form[item.field]" :placeholder="'开始' + item.label" clearable filterable class = "w-full">
+                                                    <template v-for = "{value,text} in table.dictOptions[item.field]">
+                                                        <el-option :value = "value" :label = "text"></el-option>
+                                                    </template>
+                                                </el-select>
+                                                <span class = "px-3"> ~ </span>
+                                                <el-select v-model="form[item.field]" :placeholder="'结束' + item.label" clearable filterable class = "w-full">
+                                                    <template v-for = "{value,text} in table.dictOptions[item.field]">
+                                                        <el-option :value = "value" :label = "text"></el-option>
+                                                    </template>
+                                                </el-select>
+                                            </div>
+                                        </template>
                                     </template>
                                 </el-form-item>
                             </el-col>
@@ -137,6 +221,7 @@
         },
         data(){
             return {
+                form : {},
                 formList : [],
                 table: {
                     column: [],
@@ -144,6 +229,7 @@
                     selection: [],
                     loading: false,
                     show: true,
+                    dictOptions : {}
                 },
                 page: {
                     pageNum : 1,
@@ -226,6 +312,14 @@
             async getFormQuery(){
                 let {code} = this.$route.params
                 let {success,result} = await http.get(`${apiList.online_form_auto_online_form_get_query_info}/${code}`)
+                result.forEach(({field,mode})=>{
+                    if(mode === 'group'){
+                        this.$set(this.form,field + '_begin',undefined)
+                        this.$set(this.form,field + '_end',undefined)
+                    }else if (mode === 'single'){
+                        this.$set(this.form,field,undefined)
+                    }
+                })
                 if(success){
                     this.formList = result
                 }
@@ -257,11 +351,13 @@
                             columnItem = {
                                 ...columnItem,
                                 render : (h,{row})=>{
-                                    return <span>{dictOptions[prop].find(item=>item.value === row[prop])}</span>
+                                    let currentValueList = row[prop] ? row[prop].split(',') : []
+                                    let currentValueMapList = dictOptions[prop].filter(item=> currentValueList.includes(item.value))
+                                    return <span>{currentValueMapList.map(item=>item.text).join(',')}</span>
                                 }
                             }
                         }
-                        if(scopedSlots.customRender === 'dateSlot'){
+                        if(scopedSlots && scopedSlots.customRender === 'dateSlot'){
                             columnItem = {
                                 ...columnItem,
                                 render : (h,{row})=>{
@@ -270,14 +366,14 @@
                                 }
                             }
                         }
-                        if(scopedSlots.customRender === 'imgSlot'){
+                        if(scopedSlots && scopedSlots.customRender === 'imgSlot'){
                             columnItem = {
                                 ...columnItem,
                                 render: (h, scope) => {
-                                    let imgPath = this.getAvatarView(scope,prop)
+                                    //let imgPath = this.getAvatarView(scope,prop)
                                     return (
-                                        <el-image size={26} src={imgPath}
-                                                  preview-src-list={[imgPath]}
+                                        <el-image class = "w-8" src={scope.row[prop]}
+                                                  preview-src-list={[scope.row[prop]]}
                                         >
                                             <div slot="error" class="cursor-pointer">
                                                 <i class="el-icon-picture-outline"></i>
@@ -295,7 +391,8 @@
                         column : [
                             ...oper,
                             ...column
-                        ]
+                        ],
+                        dictOptions
                     }
                     this.highSearch = {
                         ...this.highSearch,
@@ -314,12 +411,16 @@
                     loading: true
                 }
                 let {pageNum:pageNo,pageSize} = this.page
+                let {form:{superQueryMatchType}} = this.$refs.highSearch
                 let {code} = this.$route.params
 
                 let params = {
+                    column: 'createTime',
+                    order: 'desc',
                     pageNo,
                     pageSize,
-                    column : 'createTime'
+                    ...this.form,
+                    superQueryMatchType
                 }
                 let {success, result} = await http.get(`${apiList. online_form_auto_online_form_get_datas}/${code}`,params)
                 if (success) {
