@@ -2,10 +2,10 @@
     <div class = "redis p-3 m-3 bg-white">
         <el-row>
             <el-col :span = "12">
-                <v-chart :options="options.redisMemory" auto-resize ref = "redisMemory"></v-chart>
+                <v-chart :options="options.redisMemory" autoresize ref = "redisMemory"></v-chart>
             </el-col>
             <el-col :span = "12">
-                <v-chart :options="options.redisKeyNum" auto-resize ref = "redisKeyNum"></v-chart>
+                <v-chart :options="options.redisKeyNum" autoresize ref = "redisKeyNum"></v-chart>
             </el-col>
         </el-row>
         <el-row>

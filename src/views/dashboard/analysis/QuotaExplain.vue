@@ -66,13 +66,13 @@
                             </div>
                         </div>
                         <div slot="card-content">
-                            <div class="text-3xl">
+                            <el-row class="text-3xl">
                                 <count-to :start-val="0" :end-val="info.visitNum.num"
                                           :duration="info.visitNum.duration" class="card-panel-num"/>
-                            </div>
-                            <div class="chart-container">
-                                <v-chart :options="options.visit" auto-resize></v-chart>
-                            </div>
+                            </el-row>
+                            <el-row class="chart-container">
+                                <v-chart :options="options.visit" autoresize></v-chart>
+                            </el-row>
                         </div>
                         <div slot="card-footer">
                             <div class="pt-3 border-t border-solid border-gray-300">
@@ -94,13 +94,13 @@
                             </div>
                         </div>
                         <div slot="card-content">
-                            <div class="text-3xl">
+                            <el-row class="text-3xl">
                                 <count-to :start-val="0" :end-val="info.payCount.num"
                                           :duration="info.payCount.duration" class="card-panel-num"/>
-                            </div>
-                            <div class="chart-container">
-                                <v-chart :options="options.payNum" auto-resize></v-chart>
-                            </div>
+                            </el-row>
+                            <el-row class="chart-container">
+                                <v-chart :options="options.payNum" autoresize></v-chart>
+                            </el-row>
                         </div>
                         <div slot="card-footer">
                             <div class="pt-3 border-t border-solid border-gray-300">
@@ -133,7 +133,10 @@
                         </div>
                         <div slot="card-footer">
                             <div class="pt-3 border-t border-solid border-gray-300">
-                                同周比 12% 日环比 80%
+                                <span>同周比</span><span class="pl-2 pr-1">12%</span>
+                                <span class="el-icon-caret-bottom text-green-400"></span>
+                                <span class="pl-3">日环比</span><span class="pl-2 pr-1">80%</span>
+                                <span class="el-icon-caret-top text-red-400"></span>
                             </div>
                         </div>
                     </chart-card>

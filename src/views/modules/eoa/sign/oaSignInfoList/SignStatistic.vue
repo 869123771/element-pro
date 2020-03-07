@@ -12,10 +12,10 @@
         <el-row>
             <el-tabs v-model = "tabs.active">
                 <el-tab-pane name = "bar" label = "柱状图">
-                    <v-chart :options="options.bar" auto-resize></v-chart>
+                    <v-chart :options="options.bar" autoresize></v-chart>
                 </el-tab-pane>
                 <el-tab-pane name = "pie" label = "饼图">
-                    <v-chart :options="options.pie" auto-resize></v-chart>
+                    <v-chart :options="options.pie" autoresize></v-chart>
                 </el-tab-pane>
             </el-tabs>
         </el-row>

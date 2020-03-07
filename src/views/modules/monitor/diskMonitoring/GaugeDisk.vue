@@ -1,6 +1,6 @@
 <template>
     <div class="gauge-disk">
-        <v-chart :options="options.gauge" auto-resize></v-chart>
+        <v-chart :options="options.gauge" autoresize></v-chart>
         <el-row class = "flex items-center">
             <el-col :span="12" class="text-right pr-1">使用率</el-col>
             <el-col :span="12" class="text-left pl-1 gauge-disk-value">{{usePercentage}}</el-col>

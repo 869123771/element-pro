@@ -54,12 +54,11 @@
             display: flex;
             align-items: center;
             position: absolute;
-            right: 10px;
+            right: 0px;
             top: 0px;
             line-height: 40px;
             height : 40px;
-            padding-left: 12px;
-            border-left: 1px solid #cbd5e0;
+            padding: 10px;
             cursor: pointer;
             font-size: 20px;
             font-weight: 700;

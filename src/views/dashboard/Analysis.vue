@@ -8,10 +8,10 @@
                 <div slot="card-head" class="relative">
                     <el-tabs v-model="tabs.name">
                         <el-tab-pane :label="$t('home_cell_count')" name="cellNum">
-                            <cell-num ref = "cellNum"></cell-num>
+                            <cell-num :data = "tabs.cellNum.data" :ref = "tabs.cellNum.ref"></cell-num>
                         </el-tab-pane>
                         <el-tab-pane :label="$t('home_visit_count')" name="visitNum">
-                            <visit-num ref = "visitNum"></visit-num>
+                            <visit-num :data = "tabs.visitNum.data" :ref = "tabs.visitNum.ref"></visit-num>
                         </el-tab-pane>
                     </el-tabs>
                     <div class="flex float-left absolute top-1 right-0">
@@ -111,6 +111,14 @@
             return {
                 tabs: {
                     name: 'cellNum',
+                    cellNum : {
+                        data : {},
+                        ref : 'cellNum'
+                    },
+                    visitNum : {
+                        data : {},
+                        ref : 'visitNum'
+                    }
                 },
                 chart: {
                     range: ''
@@ -192,11 +200,25 @@
                     }
                 }
             },
-            getVisitNum(){
-                this.$refs.visitNum.initVisitNumCharts()
-            },
-            getCellNum(){
-                this.$refs.cellNum.initCellNumCharts()
+            initCharts(){
+                let xData = [], yData = [];
+                for (let i = 0; i < 12; i += 1) {
+                    xData.push(`${i + 1}月`)
+                    yData.push(Math.floor(Math.random() * 1000) + 200)
+                }
+                this.tabs = {
+                    ...this.tabs,
+                    cellNum : {
+                        data : {
+                            xData,yData
+                        }
+                    },
+                    visitNum : {
+                        data : {
+                            xData,yData
+                        }
+                    },
+                }
             },
             getTopCardInfo() {
                 this.initTopCardValue()
@@ -248,8 +270,7 @@
                 this.call = setInterval(() => {
                     this.getLoginInfo()
                     this.getTopCardInfo()
-                    this.getCellNum()
-                    this.getVisitNum()
+                    this.initCharts()
                 }, 8000)
             },
             stopCall() {
@@ -261,6 +282,7 @@
             this.cycleCall()
             this.getLoginInfo()
             this.getTopCardInfo()
+            this.initCharts()
         }
         ,
         destroyed() {

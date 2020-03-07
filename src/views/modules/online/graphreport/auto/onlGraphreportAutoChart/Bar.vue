@@ -1,6 +1,6 @@
 <template>
     <div class = "bar">
-        <v-chart :options="options" auto-resize></v-chart>
+        <v-chart :options="options" autoresize></v-chart>
     </div>
 </template>
 
