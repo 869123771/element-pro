@@ -26,6 +26,7 @@
 </template>
 
 <script>
+    import {mapMutations} from 'vuex'
     import {http, apiList, constant, mixin, sweetAlert} from '@/utils'
     import foxTable from '@/components/fox-table/'
 
@@ -47,6 +48,9 @@
             }
         },
         methods : {
+            ...mapMutations({
+                dialogLoading : 'DIALOG_LOADING',
+            }),
             async querySearchAsync(queryString, cb) {
                 debugger;
                 let {result} = this.table
@@ -62,7 +66,6 @@
                 cb(filterItems)
             },
             handleSelect(queryString) {
-                debugger;
                 let {result} = this.table
                 let filterItems = result.filter(item=>item.id.toUpperCase().includes(queryString.id.toUpperCase()))
                 this.table = {
@@ -80,12 +83,15 @@
                 }
             },
             async generateForm(names){
+                this.dialogLoading(true)
                 let {success,message} = await http.post(`${apiList.online_form_head_trans_table}/${names}`)
                 if (success) {
                     sweetAlert.successWithTimer(message)
                     this.$emit('modifySuccess')
+                    this.dialogLoading(false)
                 } else {
                     sweetAlert.error(message)
+                    this.dialogLoading(false)
                 }
             },
             selection(selection) {

@@ -79,6 +79,8 @@
                     dbIsNull : 1,                       //允许空值
                     orderNum : this.data.length + 1,          //排序,
                     fieldShowType : 'text',                 //控件类型
+                    fieldLength : 120,                      //控件长度
+                    queryMode : 'single',                   //查询类型
                 }
                 this.$emit('getData', [...this.data,row])
             },

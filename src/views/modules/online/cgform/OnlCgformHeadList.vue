@@ -467,8 +467,8 @@
             importFormFromDb() {
                 this.dialog = {
                     title: '从数据库导入表单',
-                    width: 25,
-                    height: 600,
+                    width: 22,
+                    height: 80,
                     name: 'importForm',
                     confirmText : '生成表单',
                     showFooter: true,
