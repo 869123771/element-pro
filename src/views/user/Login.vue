@@ -1,7 +1,7 @@
 <template>
     <div class="login animated slideInUp faster" @keydown.enter="handleSubmit">
         <el-row type="flex" justify="center" class="px-3">
-            <el-col :md="12" :xs="24" :sm="12" class = "max-w-sm">
+            <el-col :md="12" :xs="24" :sm="12" class="max-w-sm">
                 <el-card>
                     <div class="login-logo">
                         <i class="el-icon-eleme"></i>
@@ -60,7 +60,7 @@
                     username: 'jeecg',
                     password: '123456',
                     captcha: '',
-                    checkKey : Date.now()
+                    checkKey: Date.now()
                 },
                 loading: false,
                 rules: {
@@ -71,7 +71,7 @@
                         {required: true, message: '密码不能为空', trigger: 'change'}
                     ],
                     captcha: [
-                        {validator: checkCode,trigger  :'change'},
+                        {validator: checkCode, trigger: 'change'},
                     ],
                 }
             }
@@ -134,9 +134,37 @@
         &-logo {
             font-size: 4rem;
         }
-        /deep/ .el-input.el-input--large {
+
+        /deep/ .el-input {
+            &:hover{
+                &::before{
+                    width: 100%;
+                }
+            }
+            &::before{
+                display: block;
+                position: absolute;
+                content: "";
+                -webkit-transition: width .3s ease-in-out;
+                -moz-transition: width .3s ease-in-out;
+                -ms-transition: width .3s ease-in-out;
+                -o-transition: width .3s ease-in-out;
+                transition: width .3s ease-in-out;
+                bottom: -1px;
+                width: 0;
+                height: 1px;
+                background-color: #174879;
+            }
+            &__prefix {
+                left : 3px;
+            }
+            &__inner {
+                border: none;
+                border-bottom: 1px solid #DCDFE6;
+                border-radius: 0;
+            }
             i {
-                font-size: 20px;
+                font-size: 16px;
             }
         }
     }

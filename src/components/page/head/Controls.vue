@@ -50,9 +50,17 @@
         </el-row>
         <el-row class="px-3 mt-4">
             <div class="flex justify-between">
-                <div>固定定顶栏</div>
+                <div>固定顶栏</div>
                 <div>
                     <el-switch v-model="headProps.fixHeader" @change="setFixHeader" size="mini"></el-switch>
+                </div>
+            </div>
+        </el-row>
+        <el-row class="px-3 mt-4">
+            <div class="flex justify-between">
+                <div>固定多页签</div>
+                <div>
+                    <el-switch v-model="headProps.fixTabs" @change="setFixTabs" size="mini"></el-switch>
                 </div>
             </div>
         </el-row>
@@ -195,6 +203,7 @@
                 setThemeColor: 'SET_THEME_COLOR_SHOW',
                 setFixMenu : 'SET_FIX_MENU',
                 setFixHeader : 'SET_FIX_HEADER',
+                setFixTabs : 'SET_FIX_TABS',
                 setShrinkBar: 'SET_SHRINK_BAR',
                 setBreadcrumb: 'SET_BREADCRUMB',
                 setNavTag: 'SET_NAV_TAG',

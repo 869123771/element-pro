@@ -1,7 +1,7 @@
 <template>
     <el-container
             class="layout"
-            :class="layoutType "
+            :class="layoutType"
     >
         <el-aside :width="menuProps.collapse ? '64px' : '240px'"
                   class="layout-aside"
@@ -11,29 +11,46 @@
 
         <el-container
                 class="layout-container"
+                :class = "tabsFixType"
                 :style="{marginLeft}"
         >
             <el-header class="layout-container-header border-b bg-white"
                        :class="`layout-container-header-${headProps.theme}`"
             >
-                <global-header></global-header>
+                <global-header @open = "$refs.controls.open()"></global-header>
             </el-header>
             <el-main class="layout-container-main">
-                <route-view v-if="isRouterAlive"></route-view>
+                <div
+                        v-if="controlShow.navTag"
+                        class = "layout-container-main-tabs"
+                        :class = "tabsFixType ? `layout-container-main-${tabsFixType}` : ''"
+                >
+                    <nav-panel></nav-panel>
+                </div>
+               <div class = "layout-container-main-views">
+                   <route-view v-if="isRouterAlive"></route-view>
+               </div>
             </el-main>
         </el-container>
+        <controls ref="controls"></controls>
     </el-container>
 </template>
 <script>
     import {mapState, mapMutations} from 'vuex'
     import SideMenu from "@/components/menu/SideMenu";
     import GlobalHeader from "./GlobalHeader"
+    import navPanel from './nav/NavPanel'
+    import Controls from './head/Controls'
     import {localRead} from '@/utils/modules/tools'
     import RouteView from "@/components/layouts/RouteView"
     export default {
         name: 'GlobalLayout',
         components: {
-            SideMenu, GlobalHeader,RouteView
+            SideMenu,
+            GlobalHeader,
+            navPanel,
+            Controls,
+            RouteView
         },
         provide() {
             return {
@@ -48,7 +65,7 @@
             }),
             layoutType() {
                 let layoutType = ''
-                let {fixHeader} = this.headProps
+                let {fixHeader,fixTabs} = this.headProps
                 let {fixMenu,collapse} = this.menuProps
                 let {navTag} = this.controlShow
                 if(collapse){
@@ -66,6 +83,17 @@
                     }
                 }
                 return layoutType
+            },
+            tabsFixType(){
+                let tabsFixType = ''
+                let {fixHeader,fixTabs} = this.headProps
+                if(fixTabs){
+                    tabsFixType = 'tabs-sticky'
+                }
+                if(fixTabs && fixHeader){
+                    tabsFixType = 'tabs-fix'
+                }
+                return  tabsFixType
             },
             marginLeft() {
                 let marginLeft
@@ -153,6 +181,9 @@
             }
             &-main{
                 margin-left : 0px;
+                &-tabs-fix{
+                    left: 64px;
+                }
             }
         }
     }
@@ -270,6 +301,7 @@
             transition: all .2s ease-in-out;
             margin-left: 0px !important;
             &-header {
+                height: inherit !important;
                 padding: 0px;
                 box-shadow: 0 1px 4px rgba(0,21,41,.08);
                 transition: all .2s ease-in-out;
@@ -346,22 +378,9 @@
             &-main {
                 padding: 0px;
                 background-color: #f0f2f5;
-                overflow: scroll;
-                margin-top: 30px;
-                &-fix{
-                    .layout-aside{
-                        position: fixed;
-                        top: 0;
-                        left: 0;
-                        bottom : 0;
-                        z-index: 10;
-                    }
-                    .layout-container{
-                        padding-left : 240px !important;
-                        .layout-header{
-                            height: inherit;
-                        }
-                    }
+                overflow: visible;
+                &-tabs{
+                    padding-top: 0.75rem;
                 }
             }
         }
@@ -376,17 +395,42 @@
                 }
                 .layout-container{
                     margin-left : 240px !important;
+                    margin-top: 56px;
                     &-header{
                         position: fixed;
                         top: 0;
                         left: 240px;
                         right: 0;
                         z-index: 10;
-                        height: 95px !important;
                     }
                     &-main{
-                        padding-top: 62px;
-                        margin-left : 0px;
+                        &-tabs{
+                            /*height: 38px;
+                            line-height: 50px;*/
+                        }
+                        &-tabs>&-views{
+                            margin-top: 38px;
+                        }
+                        &-tabs-fix{
+                            height: 48px;
+                            line-height: 48px;
+                            background-color: #f5f7f9;
+                            position: fixed;
+                            top: 56px;
+                            left: 240px;
+                            right: 0;
+                            z-index: 10;
+                            padding-top: 0;
+                        }
+                    }
+                }
+                .layout-container.tabs-fix{
+                    .layout-container{
+                        &-main{
+                            &-views{
+                                margin-top : calc(48px);
+                            }
+                        }
                     }
                 }
             }
@@ -394,19 +438,18 @@
                 .layout-aside{
                     overflow: auto;
                     min-height: 100vh;
-                    margin-top : 106px;
+                    margin-top : 72px;
                 }
                 .layout-container{
                     margin-left: 0px !important;
                     &-header{
-                        height: 95px !important;
                         position: fixed;
                         z-index: 10;
                         right: 0;
                         left: 0;
                     }
                     &-main{
-                        margin-top: 95px;
+                        margin-top: 72px;
                     }
                 }
             }
@@ -423,9 +466,21 @@
                 .layout-container{
                     margin-left: 240px !important;
                     &-main{
-                        margin-top: 30px;
+                        /*margin-top: 30px;*/
+
                     }
                 }
+            }
+        }
+    }
+    .layout,layout-menu-fix{
+        .tabs-sticky{
+            .layout-container-main-tabs-sticky{
+                position: sticky;
+                top: 0px;
+                background-color: #f5f7f9;
+                z-index: 1;
+                padding: 0.5rem 0;
             }
         }
     }

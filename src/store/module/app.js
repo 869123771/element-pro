@@ -14,6 +14,7 @@ export default {
         },
         headProps : {
             fixHeader : localRead('fixHeader') || false,
+            fixTabs : localRead('fixTabs') || false,
             theme : localRead('headerTheme') || 'white',
         },
         pageData: {
@@ -139,6 +140,13 @@ export default {
             state.headProps = {
                 ...state.headProps,
                 fixHeader
+            }
+        },
+        SET_FIX_TABS(state,fixTabs){
+            localSave('fixTabs', fixTabs)
+            state.headProps = {
+                ...state.headProps,
+                fixTabs
             }
         },
         SET_SHRINK_BAR(state,shrinkBar){

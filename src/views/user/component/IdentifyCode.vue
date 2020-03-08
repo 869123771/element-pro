@@ -58,7 +58,6 @@
             top: 0px;
             line-height: 40px;
             height : 40px;
-            padding: 10px;
             cursor: pointer;
             font-size: 20px;
             font-weight: 700;

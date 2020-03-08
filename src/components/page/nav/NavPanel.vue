@@ -56,8 +56,8 @@
 
 <style scoped lang="less">
     .el-tabs {
-        padding: 0.5rem 0.75rem;
-
+        padding: 0px 0.75rem;
+        height: inherit;
         /deep/ .el-tabs__header {
             margin: 0px;
         }
