@@ -1,6 +1,6 @@
 <script>
     import {mapState} from 'vuex'
-
+    import {any} from '30-seconds-of-code'
     export default {
         name: "OperBtn",
         props: {
@@ -10,7 +10,8 @@
         },
         computed: {
             ...mapState({
-                allAuth: ({user}) => user.allAuth
+                allAuth: ({user}) => user.allAuth,
+                auth : ({user}) => user.auth
             })
         },
         render(h) {
@@ -135,12 +136,25 @@
                 let findPermission = this.allAuth.find(item => item.action === permission)
                 return findPermission && findPermission.type !== '2'
             },
+            hasPermission(permission){
+                return this.hasMenuPermission(permission) && this.hasRolePermission(permission)
+            },
+            hasMenuPermission(permission){
+                let findPermission = this.allAuth.find(item => item.action === permission)
+                return findPermission && findPermission.type !== '2'
+            },
+            hasRolePermission(permission){
+                let findPermission = this.auth.find(item => item.action === permission)
+                return findPermission && findPermission.type !== '2'
+            },
             hasAnyOnePermission() {
-                return this.allAuth.some(auth => {
-                    this.btnInfo.forEach(item => {
-                        return auth.action === item.permission
-                    })
+                let flag = false
+                this.btnInfo.forEach(({permission}) => {
+                    if(this.hasMenuPermission(permission) && this.hasRolePermission(permission)){
+                        flag = true
+                    }
                 })
+               return  flag     //any(this.btnInfo,x => this.allAuth.map(item=>item.action).includes(x.permission))
             },
         },
         mounted() {

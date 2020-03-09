@@ -226,6 +226,9 @@
             },
         },
         methods: {
+            ...mapActions({
+                getPermissionList: 'GET_PERMISSION_LIST'
+            }),
             resetFields(){
                 this.form = {
                     menuType: '0',                  //菜单类型
@@ -307,6 +310,7 @@
                 }
                 let {success, message} = res
                 if (success) {
+                    this.getPermissionList()                        //刷新菜单
                     sweetAlert.successWithTimer(message)
                     this.$emit('successClose')
                 } else {
