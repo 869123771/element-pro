@@ -58,9 +58,14 @@
         </el-row>
         <el-row class="px-3 mt-4">
             <div class="flex justify-between">
-                <div>固定多页签</div>
                 <div>
-                    <el-switch v-model="headProps.fixTabs" @change="setFixTabs" size="mini"></el-switch>
+                    <span>固定多页签</span>
+                    <el-tooltip content="需开启多页签" placement="top">
+                        <span class = "el-icon-warning-outline"></span>
+                    </el-tooltip>
+                </div>
+                <div>
+                    <el-switch v-model="headProps.fixTabs" @change="setFixTabs" size="mini" :disabled = "!controlShow.navTag"></el-switch>
                 </div>
             </div>
         </el-row>

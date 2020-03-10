@@ -169,6 +169,12 @@ export default {
         },
         SET_NAV_TAG(state,navTag){
             localSave('navTag', navTag)
+            if(!navTag){
+                state.headProps = {
+                    ...state.headProps,
+                    fixTabs : false
+                }
+            }
             state.controlShow = {
                 ...state.controlShow,
                 navTag
