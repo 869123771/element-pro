@@ -28,6 +28,7 @@
                     <nav-panel></nav-panel>
                 </div>
                <div class = "layout-container-main-views">
+                   <bar-wave v-show = "pageLoading"></bar-wave>
                    <route-view v-if="isRouterAlive"></route-view>
                </div>
             </el-main>
@@ -43,6 +44,7 @@
     import Controls from './head/Controls'
     import {localRead} from '@/utils/modules/tools'
     import RouteView from "@/components/layouts/RouteView"
+    import BarWave from "@/components/loading/BarWave";
     export default {
         name: 'GlobalLayout',
         components: {
@@ -50,7 +52,8 @@
             GlobalHeader,
             navPanel,
             Controls,
-            RouteView
+            RouteView,
+            BarWave
         },
         provide() {
             return {
@@ -61,7 +64,8 @@
             ...mapState({
                 menuProps: ({app}) => app.menuProps,
                 headProps: ({app}) => app.headProps,
-                controlShow: ({app}) => app.controlShow
+                controlShow: ({app}) => app.controlShow,
+                pageLoading : ({app}) => app.pageLoading
             }),
             layoutType() {
                 let layoutType = ''

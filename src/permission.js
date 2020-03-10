@@ -12,6 +12,7 @@ const whiteList = ['/user/login', '/user/register', '/user/register-result'] // 
 
 router.beforeEach((to, from, next) => {
     NProgress.start() // start progress bar
+    store.commit('PAGE_LOADING',true)        //start page loading
     let {matched, path} = to
     if (getToken()) {
         /* has token */
@@ -70,4 +71,5 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach(() => {
     NProgress.done() // finish progress bar
+    store.commit('PAGE_LOADING',false)        //finish page loading
 })

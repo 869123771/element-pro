@@ -4,6 +4,7 @@ import router from '@/router'
 export default {
     state: {
         dialogLoading : false,
+        pageLoading : false,
         menuProps: {
             collapse:  localRead('collapse') || false,
             activeName: '',
@@ -48,6 +49,9 @@ export default {
     mutations: {
         DIALOG_LOADING(state,dialogLoading){
              state.dialogLoading = dialogLoading
+        },
+        PAGE_LOADING(state, pageLoading) {
+            state.pageLoading = pageLoading
         },
         SHRINK_MENU(state,collapse) {
             state.menuProps = {
