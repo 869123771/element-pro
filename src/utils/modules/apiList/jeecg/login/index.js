@@ -1,5 +1,7 @@
 export default {
     login : '/sys/login',
+    login_by_phone : '/sys/phoneLogin',
+    login_sms : '/sys/sms',
     login_encrypted : '/sys/getEncryptedString',
     login_check_code : '/sys/randomImage/',
     login_out : '/sys/logout',
