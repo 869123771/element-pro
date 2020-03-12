@@ -27,7 +27,6 @@
         },
         watch: {
             async theme(val) {
-                debugger;
                 this.$store.commit("SET_THEME", val);
                 // 如果存在chalk，oldVal就是当前颜色(颜色选择器中选取的就是新颜色)
                 // 否则，oldVal就是element-ui默认的蓝色

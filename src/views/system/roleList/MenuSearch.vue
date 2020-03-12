@@ -77,7 +77,6 @@
         watch: {
             menuSearch: {
                 handler(props) {
-                    debugger;
                     if (!isEmpty(props)) {
                         let {roleId, ...res} = props
                         this.menuAssign = {

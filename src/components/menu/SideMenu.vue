@@ -51,12 +51,10 @@
                     let {children,meta} = item
                     if(children && children.length){
                         let result = this.findItem(children,path)                   //这里一定要return 不然是undefined
-                        //console.log('result',result)
                         if(result !== undefined){
                             return result;
                         }
                     }else{
-                        //console.log(item.path)
                         if(path === item.path){
                             return item;
                         }
@@ -65,7 +63,6 @@
             },
             select(path,indexPath){
                 let result = this.findItem(this.permissionList,path)
-//                console.log(result)
                 let {meta:{internalOrExternal} = {}} = result || {}
                 if(internalOrExternal){                                     //外部打开
                     this.$router.push(indexPath.join('/'))

@@ -162,7 +162,6 @@
             },
             async next(){
                 let {current} = this.steps
-                debugger;
                 switch (current){
                     case 1 : if(await this.stepUserValid()) this.addStep(current) ;break;
                     case 2 : if(await this.stepPhoneValid()) this.addStep(current) ;break;

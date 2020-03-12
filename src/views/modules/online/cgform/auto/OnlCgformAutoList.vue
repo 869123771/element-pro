@@ -289,7 +289,6 @@
                         }
                         column.push(columnItem)
                     })
-                    console.log(column)
                     this.table = {
                         ...this.table,
                         column : [

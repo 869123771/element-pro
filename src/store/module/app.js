@@ -104,7 +104,6 @@ export default {
             state.currentNav = path
         },
         REMOVE_NAV_TAG(state, removeNav) {
-            debugger;
             let _30s = require('30-seconds-of-code');
             let {navTagList, currentNav} = state
             navTagList = _30s.remove(navTagList, item => item.path !== removeNav);

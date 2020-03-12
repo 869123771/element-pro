@@ -86,7 +86,6 @@
             },
             del() {
                 let {selection} = this.table
-                console.log(difference(this.data,selection))
                 this.$emit('getData', difference(this.data,selection))
             },
             clear() {

@@ -102,7 +102,6 @@
                 })
             },
             handleSelectWidget(selectWg) {
-                debugger;
                 let {list} = this.pageData
                 if(this.selectWg.key !== selectWg.key){
                     this.setSelectWg({})
@@ -131,7 +130,6 @@
                 this.$set(this.pageData, 'list', [...unActiveList,...activeList]);*/
             },
             handleWidgetAdd(evt) {
-                debugger;
                 // console.log(evt);
                 const newIndex = evt.newIndex;
                 let newObj = deepClone(this.pageData.list[newIndex]);
@@ -141,7 +139,6 @@
             },
 
             formWidgetAdd(evt) {
-                debugger;
                 // console.log(evt);
                 const formIndex = this.pageData.list.findIndex(item => item.type === 'formList');
                 const newIndex = evt.newIndex;

@@ -107,7 +107,6 @@
         },
         methods : {
             cornClick(){
-                debugger;
                 this.dialog = {
                     ...this.dialog,
                     name: 'corn',

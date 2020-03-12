@@ -143,7 +143,6 @@
         },
         methods: {
             async findUser(username) {
-                console.log(username)
                 this.select = {
                     ...this.select,
                     loading: true

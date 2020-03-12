@@ -28,7 +28,6 @@ router.beforeEach((to, from, next) => {
                     }
                     let constRoutes = [];
                     constRoutes = generateIndexRouter(menuData);
-                    console.log('constRoutes',constRoutes)
                     // 添加主界面路由
                     store.dispatch('UpdateAppRouter', {constRoutes}).then(() => {
                         // 根据roles权限生成可访问的路由表

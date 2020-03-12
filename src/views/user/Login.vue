@@ -205,6 +205,7 @@
                 } else {
                     this.loading = false
                     sweetAlert.error(message)
+                    this.$refs.identifyCode.getCheckCode()
                 }
             }
         },

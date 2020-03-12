@@ -144,16 +144,12 @@
                     this.steps = 'home';
                 } else if (val > pie && val <= activity) {
                     this.steps = 'pie';
-                    console.log(1)
                 } else if (val > activity && val <= workShop) {
                     this.steps = 'activity';
-                    console.log(2)
                 } else if (val > workShop && val <= sponsor) {
                     this.steps = 'work-shop';
-                    console.log(3)
                 } else if (val > sponsor) {
                     this.steps = 'sponsor';
-                    console.log(4)
                 }
             },
             steps(res) {

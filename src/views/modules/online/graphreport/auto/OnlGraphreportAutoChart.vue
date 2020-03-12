@@ -200,7 +200,6 @@
                         value : item[yaxisField],
                     }
                 })
-                debugger;
                 this.pie = {
                     ...this.pie,
                     data
@@ -238,7 +237,6 @@
                       column.push({label : fieldTxt, prop : fieldName})
                   })
                     column.unshift({type : 'index'})
-                    debugger;
                   if(dataType === 'sql'){
                       this.table = {
                           ...this.table,

@@ -268,7 +268,6 @@
                 this.$router.push('/online/graphreport/chart/' + id)
             },
             handleDel({id},index) {
-                debugger;
                 this.confirmDeleteBatch(id,index)
             },
             deleteBatch() {

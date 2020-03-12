@@ -52,7 +52,6 @@
                 dialogLoading : 'DIALOG_LOADING',
             }),
             async querySearchAsync(queryString, cb) {
-                debugger;
                 let {result} = this.table
                 result.forEach(item=>{
                     let {id} = item

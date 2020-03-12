@@ -3,7 +3,6 @@ let {USER_AUTH, SYS_BUTTON_AUTH} = constant
 
 const hasPermission = {
     install (Vue, options) {
-        console.log(options);
         Vue.directive('has', {
             inserted: (el, binding, vnode)=>{
                 console.log("页面权限控制----");
@@ -21,7 +20,6 @@ const hasPermission = {
  */
 export const filterNodePermission = (el, binding, vnode) => {
     console.log("页面权限--NODE--");
-    debugger;
     let permissionList = [];
     try {
         var obj = vnode.context.$props.formData;
@@ -66,7 +64,6 @@ export const filterNodePermission = (el, binding, vnode) => {
  */
 export const filterGlobalPermission = (el, binding, vnode) => {
     console.log("页面权限--Global--");
-    debugger;
     let permissionList = [];
     let allPermissionList = [];
 

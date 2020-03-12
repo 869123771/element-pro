@@ -240,7 +240,6 @@
                 this.queryList()
             },
             async load(tree, treeNode, resolve) {
-                debugger;
                 this.treeLoadProps = {
                     tree,
                     treeNode,

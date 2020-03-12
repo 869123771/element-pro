@@ -189,7 +189,8 @@
                     width: 82,
                     height: 90,
                     title: this.$t('common_add'),
-                    showFooter: true
+                    showFooter: true,
+                    confirmText : '',
                 }
                 this.component = {
                     ...this.component,
@@ -209,7 +210,8 @@
                     width: 82,
                     height: 90,
                     title: this.$t('common_edit'),
-                    showFooter: true
+                    showFooter: true,
+                    confirmText : '',
                 }
                 this.component = {
                     ...this.component,
@@ -247,7 +249,6 @@
                 this.$router.push('/online/cgreport/' + id)
             },
             handleDel({id},index) {
-                debugger;
                 this.confirmDeleteBatch(id,index)
             },
             deleteBatch() {
@@ -271,15 +272,19 @@
             },
             confirm(){
                 let modifyRef = this.$refs[this.component.ref]
-                modifyRef.$refs.form.validate(valid => {
-                    if (valid) {
-                        this.dialog = {
-                            ...this.dialog,
-                            loading: true
+                if(modifyRef.$refs.form){
+                    modifyRef.$refs.form.validate(valid => {
+                        if (valid) {
+                            this.dialog = {
+                                ...this.dialog,
+                                loading: true
+                            }
+                            modifyRef.saveData()
                         }
-                        modifyRef.saveData()
-                    }
-                })
+                    })
+                }else{
+                    modifyRef.saveData()
+                }
             },
             modifySuccess(){
                 this.closeLoading()

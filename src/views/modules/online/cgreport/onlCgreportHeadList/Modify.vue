@@ -19,7 +19,7 @@
                     <el-form-item label="数据源" prop = "dbSource">
                         <el-select v-model="form.dbSource" placeholder="数据源" clearable filterable class = "w-full">
                            <template v-for = "{value,label} in select.dataSource">
-                               <el-option :value = "value" :label = "label"></el-option>
+                               <el-option :value = "value + ''" :label = "label"></el-option>
                            </template>
                         </el-select>
                     </el-form-item>
@@ -169,7 +169,10 @@
                     if (!isEmpty(props)) {
                         let {id,code,name,dbSource,cgrSql} = props
                         this.form = {
-                            code,name,dbSource,cgrSql
+                            code,
+                            name,
+                            dbSource : dbSource + '',
+                            cgrSql
                         }
                         this.editor = {
                             ...this.editor,
@@ -230,7 +233,6 @@
                 }
             },
             selection(selection) {
-                debugger;
                 let {active} = this.tabs
                 if (selection.length) {
                     this.show = {

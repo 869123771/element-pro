@@ -38,7 +38,6 @@ export default {
 
         // 获取用户信息
         async GET_PERMISSION_LIST({commit}) {
-            debugger;
             let token = getToken()
             let {USER_AUTH, SYS_BUTTON_AUTH} = constant
             let {success, result} = await http.get(apiList.permission_menu, {token})
@@ -57,7 +56,6 @@ export default {
 
         // 退出登录
         async LOGIN_OUT({commit, state}) {
-            debugger;
             let logoutToken = state.token;
             commit('SET_TOKEN', '')
             commit('SET_PERMISSION_LIST', [])

@@ -226,7 +226,6 @@ export default {
                     ...qs.parse(item)
                 }
             })
-            debugger;
             return {
                 filename : desObj.filename ? decodeURIComponent(desObj.filename) : '',
                 data
