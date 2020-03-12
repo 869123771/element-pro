@@ -53,6 +53,7 @@ router.beforeEach((to, from, next) => {
                 if(path.includes(':')){
                     next({...from, replace: true})
                     NProgress.done()
+                    store.commit('PAGE_LOADING',false)
                 }else{
                     next()
                 }
