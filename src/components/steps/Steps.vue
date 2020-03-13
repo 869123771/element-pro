@@ -3,7 +3,7 @@
   <div class="steps">
     <div class="steps-item" v-for="(item, index) in items" :key="index">
       <p :class="['steps-item-line', activeIndex === index + 1 ? 'active' : '']"></p>
-      <p :class="['steps-item-num', activeIndex === index + 1 ? 'active' : '']" v-html = "item.num"></p>
+      <p :class="['steps-item-num', activeIndex === index + 1 ? 'active' : '']" v-html = "item.html"></p>
       <p :class="['steps-item-text', activeIndex === index + 1 ? 'activeText' : '']">{{item.text}}</p>
     </div>
   </div>
@@ -45,10 +45,10 @@
       }
       // 当前状态
       .active {
-        background: #0EAEE9;
+        background: #409EFF;
       }
       .activeText {
-        color: #0EAEE9;
+        color: #409EFF;
       }
     }
   }

@@ -11,9 +11,10 @@
                             <el-step title="完成"></el-step>
                         </el-steps>-->
                         <steps :items="steps.items" :activeIndex='steps.current'/>
+                        <wizard :items="steps.items" :activeIndex='steps.current'></wizard>
                     </el-row>
-                    <el-row type = "flex" justify="center" class = "p-10">
-                        <el-col :span = "14">
+                    <el-row type = "flex" justify="center" class = "mt-6">
+                        <el-col :md="14" :xs="24" :sm="14" >
                             <el-form :model="form" :rules="rules" ref="form">
                                 <div v-show = "steps.current === 1">
                                     <el-form-item prop="username">
@@ -72,22 +73,24 @@
     import {http, constant, apiList, sweetAlert} from "@/utils";
     import IdenfiryCode from './component/IdentifyCode'
     import Steps from '@/components/steps'
+    import Wizard from "@/components/steps/Wizard";
 
     export default {
         name: "Alteration",
         components : {
             IdenfiryCode,
-            Steps
+            Steps,
+            Wizard
         },
         data(){
             return {
                 steps : {
                     current : 1,
                     items : [
-                        {text : '用户账户',num : '<i class = "el-icon-user"></i>'},
-                        {text : '手机验证',num : '<i class = "el-icon-phone"></i>'},
-                        {text : '密码',num : '<i class = "el-icon-lock"></i>'},
-                        {text : '完成',num : '<i class = "el-icon-check"></i>'},
+                        {text : '用户账户',html : '<i class = "el-icon-user"></i>'},
+                        {text : '手机验证',html : '<i class = "el-icon-phone"></i>'},
+                        {text : '密码',html : '<i class = "el-icon-lock"></i>'},
+                        {text : '完成',html : '<i class = "el-icon-check"></i>'},
                     ]
                 },
                 form : {
