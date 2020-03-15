@@ -92,4 +92,64 @@ export const telephoneCheck = (rule, value, callback) => {
     }
 }
 
+/*
+    任何在1-6之间的一类字符的组合，弱；例如： win
+    任何字符数的两类字符组合，中； 例如： win123
+    12位字符数以下的三类或四类字符组合，强 例如 win123abcABC
+    12位字符数以上的三类或四类字符组合，非常好。 例如：win123abcABC!
+
+*/
+export const pwdStrengthTest = (value)=>{
+    debugger;
+    let testResult = {
+        text : '强度 : 低',
+        textColor : 'danger',
+        percentage : 25,
+        statusColor : '#F56C6C'
+    }
+    let modes = 0;
+    if (value && value.length < 1) return modes;
+    if (/\d/.test(value)) modes++; //数字
+    if (/[a-z]/.test(value)) modes++; //小写
+    if (/[A-Z]/.test(value)) modes++; //大写
+    if (/\W/.test(value)) modes++; //特殊字符
+
+    //逻辑处理
+    switch (modes) {
+        case 1:
+            testResult = {
+                text : '强度 : 低',
+                textColor : 'danger',
+                percentage : 25,
+                statusColor : '#F56C6C'
+            }
+            break;
+        case 2:
+            testResult = {
+                text : '强度 : 中',
+                textColor : 'warning',
+                percentage : 50,
+                statusColor : '#E6A23C'
+            }
+            break;
+        case 3:
+            testResult = {
+                text : '强度 : 高',
+                textColor : 'primary',
+                percentage : 75,
+                statusColor : '#409EFF'
+            }
+            break;
+        case 4:
+            testResult = {
+                text : '强度 : 超高',
+                textColor : 'success',
+                percentage : 100,
+                statusColor : '#67C23A'
+            }
+            break;
+    }
+    return testResult
+}
+
 

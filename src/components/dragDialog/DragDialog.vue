@@ -3,7 +3,7 @@
             ref="modal"
             :name="dialog.name"
             class="modal"
-            draggable=".modal-header"
+            :draggable="'.modal-header' || true"
             transition="nice-modal-fade"
             :adaptive="true"
             :scrollable="dialog.height ? false : true"
@@ -18,7 +18,7 @@
     >
         <div class="modal-header" v-if="dialog.showHeader">
             <div class="modal-header-title" v-html="dialog.title"></div>
-            <div class="modal-header-control">
+            <div class="modal-header-control" v-if="dialog.showHeaderHandle">
                 <div class="modal-header-control-screen">
                     <div class="iconfont icon-wy-compress handle-icon px-1 hover:color-blue-500 "
                          v-if="dialog.fullScreen" @click="exit"></div>
@@ -29,12 +29,9 @@
                      @click="close"></div>
             </div>
         </div>
-        <el-scrollbar>
-            <!-- <div class="modal-body" :style="{maxHeight:dialog.maxHeight + 'px'}">-->
-            <div class="modal-body" style=" max-height: calc(100vh - 130px)">
-                <slot></slot>
-            </div>
-        </el-scrollbar>
+        <div class="modal-body" style=" max-height: calc(100vh - 130px)">
+            <slot></slot>
+        </div>
         <template v-if="dialog.showFooter">
             <div class="modal-footer text-center">
                 <el-button plain @click="close" v-show = "dialog.showCancelBtn">{{$t('common_cancel')}}</el-button>
@@ -67,8 +64,9 @@
         watch: {
             dragDialog: {
                 handler(props) {
+                    let {dialog} = constant
                     this.dialog = {
-                        ...this.dialog,
+                        ...dialog,
                         ...props,
                     }
                     this.$nextTick(() => {
@@ -80,11 +78,8 @@
 
         },
         data() {
-            let {dialog} = constant
             return {
-                dialog: {
-                    ...dialog
-                },
+                dialog: {},
             }
         }
         ,

@@ -16,6 +16,18 @@ export default {
         SET_USER_INFO(state, userInfo) {
             state.userInfo = userInfo
         },
+        SET_CURRENT_DEPT(state, currentDept){
+            state.userInfo = {
+                ...state.userInfo,
+                currentDept
+            }
+        },
+        SET_OWNER_DEPT(state, ownerDept){
+            state.userInfo = {
+                ...state.userInfo,
+                ownerDept
+            }
+        },
         SET_PERMISSION_LIST: (state, permissionList) => {
             state.permissionList = permissionList
         },

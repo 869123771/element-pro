@@ -1,6 +1,6 @@
 <template>
-    <div class="login animated slideInUp faster" @keydown.enter="handleSubmit">
-        <el-row type="flex" justify="center" class="px-3">
+    <div class="login animated slideInUp faster h-full" @keydown.enter="handleSubmit">
+        <el-row type="flex" justify="center" align="middle" class="px-3 h-full">
             <el-col :md="12" :xs="24" :sm="12" class="max-w-sm">
                 <el-card>
                     <el-row>
@@ -58,24 +58,42 @@
                                            :loading="loading" :disabled="loading">登录
                                 </el-button>
                             </el-form-item>
+                            <el-form-item>
+                                <el-button plain size="large" class="w-full" @click = "$router.push('/user/register')">注册账户
+                                </el-button>
+                            </el-form-item>
                         </el-form>
                     </el-row>
                 </el-card>
             </el-col>
         </el-row>
+        <drag-dialog :drag-dialog="dialog" @confirm="confirm">
+            <div class = "dept">
+                <el-select v-model = "userInfo.currentDept" class = "w-full" clearable filterable @change = "setCurrentDept">
+                <span slot = "prefix">
+                    <i class = "fa fa-fx fa-bank"></i>
+                </span>
+                    <template v-for = "{id,departName} in userInfo.ownerDept">
+                        <el-option :value = "id" :label = "departName"></el-option>
+                    </template>
+                </el-select>
+            </div>
+        </drag-dialog>
     </div>
 </template>
 
 <script>
-    import {mapActions} from 'vuex'
+    import {mapState,mapMutations,mapActions} from 'vuex'
     import IdenfiryCode from './component/IdentifyCode'
+    import DragDialog from '@/components/dragDialog'
     import {http, constant, apiList, sweetAlert} from "@/utils";
     import {aesEncrypt} from '@/utils/encryption/aesEncrypt'
     import {} from '30-seconds-of-code'
     export default {
         name: "login",
         components: {
-            IdenfiryCode
+            IdenfiryCode,
+            DragDialog
         },
         data() {
             let checkCode = (rule, value, callback) => {
@@ -108,6 +126,20 @@
                     show : false
                 },
                 loading: false,
+                select : {
+                    depts : []
+                },
+                dialog: {
+                    width: 380,
+                    height: 200,
+                    minHeight : 200,
+                    name: 'choseDept',
+                    title: '登录部门选择',
+                    showCancelBtn : false,
+                    showHeaderHandle : false,
+                    showFooter : true,
+                    resizable : false
+                },
                 rules: {
                     username: [
                         {required: true, message: '账号不能为空', trigger: 'change'}
@@ -126,7 +158,17 @@
             }
 
         },
+        computed : {
+            ...mapState({
+                userInfo : ({user}) => user.userInfo
+            })
+        },
         methods: {
+            ...mapMutations({
+                setCurrentDept : 'SET_CURRENT_DEPT',
+                setOwnerDept : 'SET_OWNER_DEPT',
+                dialogLoading : 'DIALOG_LOADING',
+            }),
             ...mapActions({
                 handleLogin: 'HANDLE_LOGIN'
             }),
@@ -157,6 +199,33 @@
                     },1000)
                 }
                 this.$refs.form.validateField('mobile')
+            },
+            getCurrentDept(depts){
+                this.setOwnerDept(depts)
+                if(depts.length > 1){
+                    let {name} = this.dialog
+                    this.$nextTick(() => {
+                        this.$modal.show(name)
+                    })
+                }else{
+                    if(depts.length === 1){
+                        let [{id}] = depts
+                        this.setCurrentDept(id)
+                    }
+                    this.$router.push({name: "dashboard"})
+                }
+            },
+            confirm(){
+                let {currentDept} = this.userInfo
+                if(currentDept){
+                    this.dialogLoading(true)
+                    this.$router.push({name: "dashboard"})
+                    this.$nextTick(()=>{
+                        this.dialogLoading(false)
+                    })
+                }else{
+                    sweetAlert.errorWithTimer('请选择一个部门')
+                }
             },
             handleSubmit() {
                 let {active} = this.tabs
@@ -200,8 +269,9 @@
                 this.loading = true
                 let {success, message, result} = await http.post(api, params)
                 if (success) {
+                    let {departs} = result
                     this.handleLogin(result)
-                    this.$router.push({name: "dashboard"})
+                    this.getCurrentDept(departs)
                 } else {
                     this.loading = false
                     sweetAlert.error(message)
@@ -220,7 +290,14 @@
         &-logo {
             font-size: 4rem;
         }
-
+        .dept{
+            padding-bottom : 1rem;
+            /deep/  .el-input{
+                &__prefix{
+                    top : 8px;
+                }
+            }
+        }
         /deep/ .el-input {
             &:hover {
                 &::before {

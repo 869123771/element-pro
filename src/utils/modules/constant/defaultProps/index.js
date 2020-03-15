@@ -4,6 +4,7 @@ export default {
         name : 'modal',
         showFooter : false,
         showHeader : true,
+        showHeaderHandle : true,
         showCancelBtn : true,
         loading : false,
         clickToClose : false,

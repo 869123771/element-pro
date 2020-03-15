@@ -95,13 +95,13 @@ export const constantRouterMap = [
                 path : 'alteration',
                 name: 'alteration',
                 component: () => import('@/views/user/Alteration')
-            }
-            /*{
-                path: 'register',
-                name: 'register',
-                component: () => import(/!* webpackChunkName: "user" *!/ '@/views/user/Register')
             },
             {
+                path: 'register',
+                name: 'register',
+                component: () => import('@/views/user/Register')
+            }
+            /*{
                 path: 'register-result',
                 name: 'registerResult',
                 component: () => import(/!* webpackChunkName: "user" *!/ '@/views/user/RegisterResult')

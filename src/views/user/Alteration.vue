@@ -1,6 +1,6 @@
 <template>
-    <div class="alteration animated slideInUp faster">
-        <el-row type="flex" justify="center" class="px-3">
+    <div class="alteration animated slideInUp faster h-full">
+        <el-row type="flex" justify="center" align = "middle" class="px-3 h-full">
             <el-col :md="12" :xs="24" :sm="24" :lg = "8">
                 <el-card>
                     <el-row>
