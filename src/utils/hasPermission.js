@@ -19,13 +19,13 @@ const hasPermission = {
  * 全局权限控制
  */
 export const filterNodePermission = (el, binding, vnode) => {
-    console.log("页面权限--NODE--");
+    debugger;
     let permissionList = [];
     try {
-        var obj = vnode.context.$props.formData;
+        let obj = vnode.context.$props.formData;
         if (obj) {
             let bpmList = obj.permissionList;
-            for (var bpm of bpmList) {
+            for (let bpm of bpmList) {
                 if(bpm.type != '2') {
                     permissionList.push(bpm);
                 }
@@ -63,7 +63,7 @@ export const filterNodePermission = (el, binding, vnode) => {
  * 全局权限控制
  */
 export const filterGlobalPermission = (el, binding, vnode) => {
-    console.log("页面权限--Global--");
+    debugger;
     let permissionList = [];
     let allPermissionList = [];
 

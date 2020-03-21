@@ -3,16 +3,16 @@
         <el-form :model = "form" label-width = "100px">
             <el-form-item label = "所拥有的权限">
                 <el-tree
-                        v-if = "menuAssign.show"
+                        v-if = "menuSearch.show"
                         ref="tree"
                         show-checkbox
                         node-key="key"
                         :expand-on-click-node="false"
-                        :default-expanded-keys="menuAssign.defaultExpandKes"
-                        :check-strictly="menuAssign.checkStrict"
-                        :data="menuAssign.data"
-                        :props="menuAssign.defaultProps"
-                        :default-checked-keys="menuAssign.defaultCheckedkeys"
+                        :default-expanded-keys="menuSearch.defaultExpandKes"
+                        :check-strictly="menuSearch.checkStrict"
+                        :data="menuSearch.data"
+                        :props="{children: 'children',label: 'slotTitle'}"
+                        :default-checked-keys="menuSearch.defaultCheckedKeys"
                 >
                 <span class="mt-1" slot-scope="{ node, data}" @click="dataRule(node,data)">
                     <span>{{ node.label }}</span>
@@ -27,7 +27,7 @@
                    :size="drawer.width"
                    @closed="close"
         >
-            <data-rule :data-rule-props="dataRuleProps" @closeDataRuleDialog="close"></data-rule>
+            <data-rule :data-rule-props="menuSearch" @closeDataRuleDialog="close"></data-rule>
         </slide-out>
     </div>
 </template>
@@ -53,17 +53,6 @@
         data() {
             return {
                 form: {},
-                menuAssign: {
-                    data: [],
-                    defaultProps: {
-                        children: 'children',
-                        label: 'slotTitle'
-                    },
-                    defaultCheckedkeys: [],
-                    defaultExpandKes: [],
-                    checkStrict: true,
-                    ids: []
-                },
                 drawer: {
                     show: false,
                     placement: 'right',
@@ -71,27 +60,10 @@
                     width: '350px',
                     direction : 'right',
                 },
-                dataRuleProps: {}
             }
         },
         watch: {
-            menuSearch: {
-                handler(props) {
-                    if (!isEmpty(props)) {
-                        let {roleId, ...res} = props
-                        this.menuAssign = {
-                            ...this.menuAssign,
-                            ...res
-                        }
-                        this.dataRuleProps = {
-                            ...this.dataRuleProps,
-                            roleId
-                        }
-                        //this.queryTreeRole()
-                    }
-                },
-                immediate: true
-            }
+
         },
         methods: {
             dataRule(node, data) {
@@ -113,22 +85,7 @@
                 }
                 this.$emit('changeDialogWidth', 1)
             },
-            async queryTreeRole() {
-                let {success, result} = await http.get(apiList.sys_role_query_tree_list)
-                if (success) {
-                    let {ids, treeList} = result
-                    this.menuAssign = {
-                        ...this.menuAssign,
-                        data: treeList,
-                        ids,
-                        defaultExpandKes: ids
-                    }
-                }
-            }
         },
-        created() {
-            this.queryTreeRole()
-        }
     }
 </script>
 

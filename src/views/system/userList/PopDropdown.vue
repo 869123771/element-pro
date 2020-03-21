@@ -84,12 +84,20 @@
         },
         computed: {
             ...mapState({
-                allAuth: ({user}) => user.allAuth
+                allAuth: ({user}) => user.allAuth,
+                auth: ({user}) => user.auth
             })
         },
         methods : {
-            hasPermission(permission) {
+            hasPermission(permission){
+                return this.hasMenuPermission(permission) && this.hasRolePermission(permission)
+            },
+            hasMenuPermission(permission){
                 let findPermission = this.allAuth.find(item => item.action === permission)
+                return findPermission && findPermission.type !== '2'
+            },
+            hasRolePermission(permission){
+                let findPermission = this.auth.find(item => item.action === permission)
                 return findPermission && findPermission.type !== '2'
             },
             edit(){

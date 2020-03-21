@@ -20,7 +20,7 @@
         data(){
             return {
                 menuSearch : {
-                    defaultCheckedkeys : [],
+                    defaultCheckedKeys : [],
                     defaultExpandKes : [],
                     checkStrict : true,
                     show : true,
@@ -33,6 +33,7 @@
                     let {id} = props
                     if(id){
                         this.queryPermissionByRole(id)
+                        this.queryTreeRole()
                     }
                 },
                 immediate : true
@@ -46,11 +47,14 @@
                 return this.getMenuRef().$refs.tree
             },
             getCheckedKeys(){
-                let {defaultCheckedkeys} = this.menuSearch
+                let {defaultCheckedKeys} = this.menuSearch
                 return {
-                    lastpermissionIds : defaultCheckedkeys.join(','),
+                    lastpermissionIds : defaultCheckedKeys.join(','),
                     permissionIds : this.getTreeRef().getCheckedKeys().join(',')
                 }
+            },
+            setCheckedKeys(keys){
+                this.getTreeRef().setCheckedKeys(keys)
             },
             connect(){  //父子关联
                 this.menuSearch = {
@@ -65,14 +69,14 @@
                 }
             },
             selectAll(){        //全选
-                let {menuAssign:{ids}} = this.getMenuRef()
+                let {ids} = this.menuSearch
                 this.getTreeRef().setCheckedKeys(ids);
             },
             selectNone(){       //全不选
                 this.getTreeRef().setCheckedKeys([]);
             },
             expandAll(){        //展开全部
-                let {menuAssign:{ids}} = this.getMenuRef()
+                let {ids} = this.menuSearch
                 this.menuSearch = {
                     ...this.menuSearch,
                     defaultExpandKes : [...ids],
@@ -99,15 +103,26 @@
                 if(success){
                     this.menuSearch = {
                         ...this.menuSearch,
-                        defaultCheckedkeys : result,
+                        defaultCheckedKeys : result,
                         roleId
+                    }
+                    this.setCheckedKeys(result)
+                }
+            },
+            async queryTreeRole() {
+                let {success, result} = await http.get(apiList.sys_role_query_tree_list)
+                if (success) {
+                    let {ids, treeList} = result
+                    this.menuSearch = {
+                        ...this.menuSearch,
+                        data: treeList,
+                        ids,
+                        defaultExpandKes: ids
                     }
                 }
             }
         },
-        created(){
-            //this.queryPermissionByRole()
-        }
+
     }
 </script>
 
