@@ -7,7 +7,7 @@
                         <el-button plain icon="el-icon-plus" type="primary" @click="addTopDept">添加一级部门</el-button>
                         <el-button plain icon="iconfont icon-wy-upload" @click="fileImport">导入</el-button>
                         <el-button plain icon="iconfont icon-wy-download" @click="fileExport">导出</el-button>
-                        <el-button plain icon="el-icon-close" v-show="show.delete" @click="deleteBatch">批量删除</el-button>
+                        <el-button plain icon="el-icon-close" v-show="show.delete" @click="deleteBatch" v-has = "'dept:delete'">批量删除</el-button>
                     </div>
                     <div class="my-3">
                         <el-input size="medium" v-model="tree.filterDept" @input="filterText" clearable suffix-icon="el-icon-search"></el-input>
@@ -36,7 +36,7 @@
                                     <i class="fa fa-fw fa-pencil hover:color-blue-500" @click = "edit(node,data)"></i>
                                 </el-tooltip>
                                 <popover-confirm @confirm="confirmDeleteBatch(data.id,true)">
-                                    <div slot="popover-content">
+                                    <div slot="popover-content" v-has = "'dept:delete'">
                                         <i class="fa fa-fw fa-minus hover:color-blue-500"></i>
                                     </div>
                                 </popover-confirm>

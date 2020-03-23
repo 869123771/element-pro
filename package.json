@@ -58,7 +58,7 @@
     "less": "^3.0.4",
     "less-loader": "^4.1.0",
     "monaco-editor-webpack-plugin": "^1.8.2",
-    "node-sass": "^4.12.0",
+    "node-sass": "^4.13.1",
     "province-city-china": "^4.0.3",
     "purgecss-webpack-plugin": "^1.5.0",
     "sass-loader": "^7.1.0",
