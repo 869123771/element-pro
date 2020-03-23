@@ -24,6 +24,9 @@ npm run test
 ```
 npm run lint
 ```
+登录注册
+![image](https://github.com/869123771/element-pro/blob/master/screenshort/%E7%99%BB%E5%BD%95%E6%B3%A8%E5%86%8C.png)
+
 下拉树组件
 ![image](https://github.com/869123771/element-pro/blob/master/screenshort/%E4%B8%8B%E6%8B%89%E6%A0%91.png)
 
@@ -35,4 +38,7 @@ npm run lint
 
 国际化
 ![image](https://github.com/869123771/element-pro/blob/master/screenshort/%E5%9B%BD%E9%99%85%E5%8C%96.png)
+
+代码编辑器
+![image](https://github.com/869123771/element-pro/blob/master/screenshort/%E4%BB%A3%E7%A0%81%E7%BC%96%E8%BE%91%E5%99%A8.png)
 
