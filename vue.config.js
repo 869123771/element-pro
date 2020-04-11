@@ -31,7 +31,7 @@ module.exports = {
     lintOnSave: false,
     runtimeCompiler: true, // 是否使用包含运行时编译器的 Vue 构建版本
     productionSourceMap: false, // 生产环境的 source map
-    // 显式转义依赖
+    //  指定对第三方依赖包进行babel-polyfill处理
     transpileDependencies: [
         'vue-echarts',
         'resize-detector'
@@ -48,7 +48,7 @@ module.exports = {
         // }
         config = {
             ...config,
-            entry : ['@babel/polyfill','./src/main.js']
+            entry : ['./src/main.js']
         }
 
         let plugins = [];
@@ -161,8 +161,8 @@ module.exports = {
                 .options({
                     mozjpeg: { progressive: true, quality: 65 },
                     optipng: { enabled: false },
-                    pngquant: { quality: [0.65, 0.90], speed: 4 },
-                    gifsicle: { interlaced: false }
+                    pngquant: { enabled: false,quality: [0.65, 0.90], speed: 4 },
+                    gifsicle: { interlaced: false },
                 });
 
 
