@@ -102,10 +102,10 @@
 
                     this.$emit('onCodeChange', this.monacoEditor.getValue(), event);
                 });
-                //编辑器随窗口自适应
+                /*//编辑器随窗口自适应
                 window.addEventListener('resize', () => {
                     this.initEditor();
-                })
+                })*/
             },
         }
     }

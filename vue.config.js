@@ -46,12 +46,10 @@ module.exports = {
         //     'vuex': 'Vuex',
         //     'axios': 'axios'
         // }
-        config = {
-            ...config,
-            entry : ['./src/main.js']
-        }
 
-        let plugins = [];
+        config.entry = ['./src/main.js']
+        let plugins  = config.plugins
+
         plugins.push(
             new MonacoEditorPlugin()
         )
@@ -132,7 +130,6 @@ module.exports = {
             //     })
             // );
         }
-        config.plugins = [...plugins];
     },
     chainWebpack: config => {
 
@@ -242,8 +239,8 @@ module.exports = {
         proxy: {
             '/jeecg-boot': {
                 //target : 'http://localhost:8080',
-                target: process.env.VUE_APP_BASE_API || 'http://47.107.178.235:8080/',
-                //target : 'http://boot.jeecg.org',
+                //target: process.env.VUE_APP_BASE_API || 'http://47.107.178.235:8080/',
+                target : 'http://boot.jeecg.org',
                 ws: false,
                 //secure: false,
                 changeOrigin: true

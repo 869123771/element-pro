@@ -133,7 +133,7 @@
                 },
                 editor: {
                     code: '',
-                    language: 'sql',
+                    language: 'mysql',
                     theme : 'vs-dark'
                 },
                 table : {

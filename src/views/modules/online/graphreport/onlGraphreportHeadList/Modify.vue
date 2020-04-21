@@ -67,12 +67,12 @@
                 </el-row>
                 <el-row>
                     <el-form-item :label="labelType" :rules = "{required : true, message : '必填',trigger : 'change'}">
-                        <monaco-editor :editor-props = "sql"
-                                       @onCodeChange = "onCodeChange"
-                                       height = "200px"
-                                       v-model = "form.cgrSql"
-                        >
-                        </monaco-editor>
+                        <MonacoEditor
+                                class = "editor"
+                                v-model ="form.cgrSql"
+                                :language="sql.language"
+                                :theme="sql.theme"
+                        />
                         <el-row class = "pt-3" v-if = "form.dataType === 'sql'">
                             <el-button type = "primary" @click = "parseSql" :loading = "loading">解析SQL</el-button>
                         </el-row>
@@ -80,12 +80,12 @@
                 </el-row>
                 <el-row>
                     <el-form-item label="JS增强">
-                        <monaco-editor :editor-props = "js"
-                                       @onCodeChange = "onCodeChange"
-                                       height = "200px"
-                                       v-model = "form.extendJs"
-                        >
-                        </monaco-editor>
+                        <MonacoEditor
+                                class = "editor"
+                                v-model ="form.cgJs"
+                                :language="js.language"
+                                :theme="js.theme"
+                        />
                     </el-form-item>
                 </el-row>
             </el-form>
@@ -116,7 +116,7 @@
     import {mapState,mapActions} from 'vuex'
     import {http, apiList, constant, sweetAlert} from '@/utils'
     import foxTable from '@/components/fox-table'
-    import MonacoEditor from '@/components/editor/MonacoEditor'
+    import MonacoEditor from 'vue-monaco'
     import {isEmpty} from '30-seconds-of-code'
     import {difference} from '30-seconds-of-code'
 
@@ -252,12 +252,6 @@
                 this.table = {
                     ...this.table,
                     data : difference(data,selection)
-                }
-            },
-            onCodeChange(code){
-                this.form = {
-                    ...this.form,
-                    cgrSql : code
                 }
             },
             dataTypeChange(value){
@@ -513,5 +507,7 @@
 </script>
 
 <style scoped>
-
+    .editor{
+        height : 200px;
+    }
 </style>
