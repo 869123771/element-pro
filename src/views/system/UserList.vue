@@ -22,8 +22,8 @@
                         <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "6">
                             <el-form-item :label="$t('sys_user_sex')" prop="sex">
                                 <el-select v-model="form.sex" clearable filterable class="w-full">
-                                    <template v-for="item in sex">
-                                        <el-option :value="item.itemValue" :label="item.itemText"></el-option>
+                                    <template v-for="{itemValue,itemText} in sex">
+                                        <el-option :value="itemValue" :label="itemText"></el-option>
                                     </template>
                                 </el-select>
                             </el-form-item>
@@ -43,8 +43,8 @@
                         <el-col :xs = "24" :sm = "12" :md="12" :lg = "12" :xl = "6">
                             <el-form-item :label="$t('sys_user_status')" prop="status">
                                 <el-select v-model="form.status" clearable filterable class="w-full">
-                                    <template v-for="item in userStatus">
-                                        <el-option :value="item.itemValue" :label="item.itemText"></el-option>
+                                    <template v-for="{itemValue,itemText} in userStatus">
+                                        <el-option :value="itemValue" :label="itemText"></el-option>
                                     </template>
                                 </el-select>
                             </el-form-item>
