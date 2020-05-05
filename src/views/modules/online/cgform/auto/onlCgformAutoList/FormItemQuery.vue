@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-form-item :label="item.label" :prop="item.field">
-            <template v-if="item.view === 'text'">
+            <template v-if="item.view === 'text' || item.view === 'String'">
                 <template v-if = "item.mode === 'single'">
                     <el-input v-model="form[item.field]" :placeholder="item.label" clearable></el-input>
                 </template>
@@ -13,7 +13,7 @@
                     </div>
                 </template>
             </template>
-            <template v-if="item.view === 'date'">
+            <template v-if="item.view === 'date' || item.view === 'Date'">
                 <template v-if = "item.mode === 'single'">
                     <el-date-picker  v-model="form[item.field]" :placeholder="item.label" value-format="yyyy-MM-dd" class = "w-full"></el-date-picker>
                 </template>
@@ -25,10 +25,10 @@
                     </div>
                 </template>
             </template>
-            <template v-if="item.view === 'list'">
+            <template v-if="item.view === 'list' || item.view === 'sel_search'">
                 <template  v-if = "item.mode === 'single'">
                     <el-select v-model="form[item.field]" :placeholder="item.label" clearable filterable class = "w-full">
-                        <template v-for = "{value,text} in table.dictOptions[item.field]">
+                        <template v-for = "{value,text} in dictOptions[item.field]">
                             <el-option :value = "value" :label = "text"></el-option>
                         </template>
                     </el-select>
@@ -36,13 +36,13 @@
                 <template v-else-if = "item.mode === 'group'">
                     <div class = "flex">
                         <el-select v-model="form[item.field]" :placeholder="'开始' + item.label" clearable filterable class = "w-full">
-                            <template v-for = "{value,text} in table.dictOptions[item.field]">
+                            <template v-for = "{value,text} in dictOptions[item.field]">
                                 <el-option :value = "value" :label = "text"></el-option>
                             </template>
                         </el-select>
                         <span class = "px-3"> ~ </span>
                         <el-select v-model="form[item.field]" :placeholder="'结束' + item.label" clearable filterable class = "w-full">
-                            <template v-for = "{value,text} in table.dictOptions[item.field]">
+                            <template v-for = "{value,text} in dictOptions[item.field]">
                                 <el-option :value = "value" :label = "text"></el-option>
                             </template>
                         </el-select>
@@ -73,6 +73,9 @@
                 type : Object
             },
             form : {
+                type : Object
+            },
+            dictOptions : {
                 type : Object
             }
         }

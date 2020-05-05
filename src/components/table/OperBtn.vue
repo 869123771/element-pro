@@ -150,7 +150,7 @@
             hasAnyOnePermission() {
                 let flag = false
                 this.btnInfo.forEach(({permission}) => {
-                    if(this.hasMenuPermission(permission) && this.hasRolePermission(permission)){
+                    if(this.hasPermission(permission)){
                         flag = true
                     }
                 })

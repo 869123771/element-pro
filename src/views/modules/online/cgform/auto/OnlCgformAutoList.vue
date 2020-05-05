@@ -6,12 +6,12 @@
                     <template v-for = "(item,index) in formList">
                         <template slot = "show" v-if = "index < 2">
                             <el-col  :xs = "24" :sm = "24" :md="12" :lg = "8" :xl = "8">
-                                <form-item-query :item = "item" :form = "form"></form-item-query>
+                                <form-item-query :item = "item" :form = "form" :dict-options = "table.dictOptions"></form-item-query>
                             </el-col>
                         </template>
                         <template slot = "hide" v-else>
                             <el-col  :xs = "24" :sm = "24" :md="12" :lg = "8" :xl = "8">
-                                <form-item-query :item = "item" :form = "form"></form-item-query>
+                                <form-item-query :item = "item" :form = "form" :dict-options = "table.dictOptions"></form-item-query>
                             </el-col>
                         </template>
                     </template>
@@ -47,6 +47,9 @@
             </fox-table>
         </el-row>
         <high-search ref = "highSearch" :high-search = "highSearch"></high-search>
+        <drag-dialog :drag-dialog="dialog" @confirm="">
+            <component :is="component.is" :data="component.data" :ref="component.ref" @modifySuccess=""></component>
+        </drag-dialog>
     </div>
 </template>
 
@@ -57,63 +60,9 @@
     import OperBtn from '@/components/table/OperBtn'
     import HighSearch from "@/components/highSearch";
     import FormItemQuery from "./onlCgformAutoList/FormItemQuery";
+    import DragDialog from '@/components/dragDialog'
+    import Modify from './onlCgformAutoList/Modify'
     import dayjs from 'dayjs'
-
-    let oper = [
-        {
-            label : '操作',
-            prop : 'oper',
-            render: (h, {row, $index}) => {
-                let btnInfo = [
-                    {
-                        content: '修改',
-                        className: 'fa fa-fw fa-pencil',
-                        permission: 'autoOnlineForm:edit',
-                        event: () => {
-                            this.editMenu(row)
-                        }
-                    },
-                    {
-                        type: 'dropDown',
-                        className: 'fa fa-fw fa-ellipsis-h',
-                        dropDownItems: [
-                            {
-                                content: '详情',
-                                className: '',
-                                popover: false,
-                                permission : 'menu:detail',
-                                event: () => {
-                                    this.handleDetail(row)
-                                }
-                            },
-                            {
-                                content: '提交流程',
-                                className: '',
-                                popover: false,
-                                permission : 'menu:dataRule',
-                                event: () => {
-                                    this.handleDataRule(row)
-                                }
-                            },
-                            {
-                                content: '删除',
-                                className: '',
-                                popover: true,
-                                popText: '确定要删除吗',
-                                permission : 'menu:delete',
-                                event: () => {
-                                    this.handleDel(row)
-                                }
-                            }
-                        ],
-                    },
-                ]
-                return (
-                    <OperBtn btnInfo={btnInfo}></OperBtn>
-                )
-            }
-        }
-    ]
 
     export default {
         name: "OnlCgformAutoList",
@@ -121,14 +70,72 @@
             FormQuery,
             FormItemQuery,
             foxTable,
-            HighSearch
+            HighSearch,
+            DragDialog
         },
         data(){
+            let operate = [
+                {
+                    label : '操作',
+                    prop : 'oper',
+                    render: (h, {row, $index}) => {
+                        let btnInfo = [
+                            {
+                                content: '修改',
+                                className: 'fa fa-fw fa-pencil',
+                                permission: 'autoOnlineForm:edit',
+                                event: () => {
+                                    this.edit(row)
+                                }
+                            },
+                            {
+                                type: 'dropDown',
+                                className: 'fa fa-fw fa-ellipsis-h',
+                                dropDownItems: [
+                                    {
+                                        content: '详情',
+                                        className: '',
+                                        popover: false,
+                                        permission : 'menu:detail',
+                                        event: () => {
+                                            this.handleDetail(row)
+                                        }
+                                    },
+                                    {
+                                        content: '提交流程',
+                                        className: '',
+                                        popover: false,
+                                        permission : 'menu:dataRule',
+                                        event: () => {
+                                            this.handleDataRule(row)
+                                        }
+                                    },
+                                    {
+                                        content: '删除',
+                                        className: '',
+                                        popover: true,
+                                        popText: '确定要删除吗',
+                                        permission : 'menu:delete',
+                                        event: () => {
+                                            this.handleDel(row)
+                                        }
+                                    }
+                                ],
+                            },
+                        ]
+                        return (
+                            <OperBtn btnInfo={btnInfo}></OperBtn>
+                        )
+                    }
+                }
+            ]
             return {
                 form : {},
                 formList : [],
                 table: {
-                    column: [],
+                    column: [
+                        ...operate,
+                    ],
                     data: [],
                     selection: [],
                     loading: false,
@@ -143,6 +150,17 @@
                 highSearch : {
                     type : []
                 },
+                dialog: {
+                    width: 18,
+                    height: 200,
+                    name: 'add',
+                    showFooter: true,
+                },
+                component: {
+                    data: {},
+                    ref: '',
+                    is : Modify
+                }
             }
         },
         watch: {
@@ -164,6 +182,33 @@
             },
             add(){
 
+            },
+            edit(row){
+                let {schema,column,dictOptions,head} = this.table
+                this.dialog = {
+                    ...this.dialog,
+                    title: '编辑',
+                    width: 22,
+                    height: 700,
+                    name: 'edit',
+                    showFooter: true,
+                }
+                this.component = {
+                    ...this.component,
+                    data: {
+                        row,
+                        schema,
+                        column,
+                        dictOptions,
+                        head
+                    },
+                    ref: 'edit',
+                    is: Modify
+                }
+                let {name} = this.dialog
+                this.$nextTick(() => {
+                    this.$modal.show(name)
+                })
             },
             fileImport(){
 
@@ -216,6 +261,7 @@
             async getFormQuery(){
                 let {code} = this.$route.params
                 let {success,result} = await http.get(`${apiList.online_form_auto_online_form_get_query_info}/${code}`)
+                debugger
                 result.forEach(({field,mode})=>{
                     if(mode === 'group'){
                         this.$set(this.form,field + '_begin',undefined)
@@ -228,6 +274,17 @@
                     this.formList = result
                 }
             },
+            async getFormItem(){
+                let {code} = this.$route.params
+                let {success,result:{schema,head}} = await http.get(`${apiList.online_form_auto_online_get_form_item}/${code}`)
+                if(success){
+                    this.table = {
+                        ...this.table,
+                        schema,
+                        head
+                    }
+                }
+            },
             async getColumns() {
                 this.table = {
                     ...this.table,
@@ -236,7 +293,7 @@
                 let {code} = this.$route.params
                 let {success, result} = await http.get(`${apiList.online_form_auto_online_form_get_columns}/${code}`)
                 if (success) {
-                    let column = [];
+                    let {column} = this.table
                     let {columns,dictOptions} = result
                     columns.forEach(item=>{
                         let {title:label,dataIndex:prop,align,sorter,customRender,scopedSlots = {}} = item
@@ -256,7 +313,7 @@
                                 ...columnItem,
                                 render : (h,{row})=>{
                                     let currentValueList = row[prop] ? row[prop].split(',') : []
-                                    let currentValueMapList = dictOptions[prop].filter(item=> currentValueList.includes(item.value))
+                                    let currentValueMapList = dictOptions[customRender].filter(item=> currentValueList.includes(item.value))
                                     return <span>{currentValueMapList.map(item=>item.text).join(',')}</span>
                                 }
                             }
@@ -291,10 +348,6 @@
                     })
                     this.table = {
                         ...this.table,
-                        column : [
-                            ...oper,
-                            ...column
-                        ],
                         dictOptions
                     }
                     this.highSearch = {
@@ -351,6 +404,7 @@
             this.getColumns()
             this.getDatas()
             this.getFormQuery()
+            this.getFormItem()
         }
     }
 </script>
