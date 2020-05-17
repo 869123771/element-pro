@@ -10,11 +10,11 @@
                 </div>
             </div>
             <el-dropdown-menu>
-                <el-dropdown-item @click.native="logout">
-                    <i class="iconfont icon-wy-log-out"></i>登出
-                </el-dropdown-item>
                 <el-dropdown-item @click.native="toggleDept">
                     <i class="fa fa-bank"></i>切换部门
+                </el-dropdown-item>
+                <el-dropdown-item @click.native="logout" divided>
+                    <i class="iconfont icon-wy-log-out"></i>登出
                 </el-dropdown-item>
             </el-dropdown-menu>
         </el-dropdown>

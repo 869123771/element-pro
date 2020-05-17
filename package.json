@@ -1,6 +1,6 @@
 {
   "name": "element-pro",
-  "version": "0.2.0",
+  "version": "0.1.0",
   "private": true,
   "sideEffects": false,
   "scripts": {
@@ -13,13 +13,13 @@
     "30-seconds-of-code": "^1.2.3",
     "@babel/polyfill": "^7.8.7",
     "@hyjiacan/vue-slideout": "^2.2.1",
-    "@jiaminghi/data-view": "^2.7.3",
+    "@jiaminghi/data-view": "^2.8.3",
     "animate.css": "^3.7.2",
     "axios": "^0.18.1",
     "crypto-js": "^3.3.0",
     "dayjs": "^1.8.24",
     "echarts": "^4.7.0",
-    "element-ui": "^2.13.0",
+    "element-ui": "^2.13.1",
     "font-awesome": "^4.7.0",
     "js-cookie": "^2.2.0",
     "monaco-editor": "^0.20.0",

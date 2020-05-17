@@ -1,6 +1,7 @@
 <script>
     import {mapState} from 'vuex'
     import {any} from '30-seconds-of-code'
+
     export default {
         name: "OperBtn",
         props: {
@@ -11,7 +12,7 @@
         computed: {
             ...mapState({
                 allAuth: ({user}) => user.allAuth,
-                auth : ({user}) => user.auth
+                auth: ({user}) => user.auth
             })
         },
         render(h) {
@@ -71,7 +72,7 @@
             return (
                 <div>
                     {
-                         this.hasAnyOnePermission() ?
+                        this.hasAnyOnePermission() ?
                             btnInfo.map(({type, dropDownItems, popover, popText, content, className, permission, event}, index) => {
                                 return (
                                     type === 'dropDown' ?
@@ -90,7 +91,8 @@
                                                                                 ref={index}
                                                                     >
                                                                         <div class="pb-3 flex">
-                                                                            <span class="px-1 text-orange-500 font-mono">
+                                                                            <span
+                                                                                class="px-1 text-orange-500 font-mono">
                                                                                 <i class="el-icon-warning"></i>
                                                                             </span>
                                                                             <slot
@@ -136,25 +138,25 @@
                 let findPermission = this.allAuth.find(item => item.action === permission)
                 return findPermission && findPermission.type !== '2'
             },
-            hasPermission(permission){
+            hasPermission(permission) {
                 return this.hasMenuPermission(permission) && this.hasRolePermission(permission)
             },
-            hasMenuPermission(permission){
+            hasMenuPermission(permission) {
                 let findPermission = this.allAuth.find(item => item.action === permission)
                 return findPermission && findPermission.type !== '2'
             },
-            hasRolePermission(permission){
+            hasRolePermission(permission) {
                 let findPermission = this.auth.find(item => item.action === permission)
                 return findPermission && findPermission.type !== '2'
             },
             hasAnyOnePermission() {
                 let flag = false
                 this.btnInfo.forEach(({permission}) => {
-                    if(this.hasPermission(permission)){
+                    if (this.hasPermission(permission)) {
                         flag = true
                     }
                 })
-               return  flag     //any(this.btnInfo,x => this.allAuth.map(item=>item.action).includes(x.permission))
+                return flag     //any(this.btnInfo,x => this.allAuth.map(item=>item.action).includes(x.permission))
             },
         },
         mounted() {
