@@ -66,7 +66,7 @@
                     </el-button>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item @click.native="deleteBatch" v-has = "'user:delete'"><i class="el-icon-delete"></i>{{$t('common_delete')}}</el-dropdown-item>
-                        <el-dropdown-item @click.native="frozen()"><i class="el-icon-lock"></i>{{$t('sys_user_frozen')}}</el-dropdown-item>
+                        <el-dropdown-item @click.native="frozen()" v-has = "'user:frozen'"><i class="el-icon-lock"></i>{{$t('sys_user_frozen')}}</el-dropdown-item>
                         <el-dropdown-item @click.native="frozen(1)"><i class="el-icon-unlock"></i>{{$t('sys_user_unfrozen')}}</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>

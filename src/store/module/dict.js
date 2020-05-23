@@ -135,7 +135,7 @@ export default {
             }
         },
         async GET_PERMISSION_TYPE({commit}){
-            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'perms_type'})
+            let {success,result:{records:[{id:dictId}]}} = await http.get(apiList.sys_common_dict,{dictCode:'form_perms_type'})
             if(success) {
                 let {result:{records}} = await http.get(apiList.sys_common_dict_item,{dictId})
                 commit('SET_PERMISSION_TYPE',records)

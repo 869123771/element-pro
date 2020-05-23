@@ -27,7 +27,7 @@
                    :size="drawer.width"
                    @closed="close"
         >
-            <data-rule :data-rule-props="menuSearch" @closeDataRuleDialog="close"></data-rule>
+            <data-rule :data-rule-props="dataRuleProps" @closeDataRuleDialog="close"></data-rule>
         </slide-out>
     </div>
 </template>
@@ -53,6 +53,9 @@
         data() {
             return {
                 form: {},
+                dataRuleProps : {
+
+                },
                 drawer: {
                     show: false,
                     placement: 'right',
@@ -72,8 +75,10 @@
                     ...this.drawer,
                     show: true
                 }
+
                 this.dataRuleProps = {
                     ...this.dataRuleProps,
+                    ...this.menuSearch,
                     dataRuleId
                 }
                 this.$emit('changeDialogWidth')

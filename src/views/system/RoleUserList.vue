@@ -36,7 +36,7 @@
                     {{$t('common_batch_operate')}}<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item @click.native="deleteBatch"><i class="el-icon-delete"></i>{{$t('common_delete')}}
+                    <el-dropdown-item @click.native="deleteBatch" v-has="'role:delete'"><i class="el-icon-delete"></i>{{$t('common_delete')}}
                     </el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
@@ -504,6 +504,7 @@
                                         content: this.$t('common_edit'),
                                         className: 'fa fa-fw fa-pencil',
                                         permission: 'role:edit',
+                                        popover: false,
                                         event: () => {
                                             this.edit(row)
                                         }
@@ -511,7 +512,6 @@
                                     {
                                         type: 'dropDown',
                                         className: 'fa fa-fw fa-ellipsis-h',
-                                        permission: 'role.grant',
                                         dropDownItems: [
                                             {
                                                 content: '授权',

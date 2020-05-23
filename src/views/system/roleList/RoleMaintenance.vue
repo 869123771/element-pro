@@ -8,7 +8,7 @@
                     批量操作<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item @click.native="deleteBatch"><i class="el-icon-delete"></i>删除
+                    <el-dropdown-item @click.native="deleteBatch" v-has = "'roleMaintenance:delete'"><i class="el-icon-delete"></i>删除
                     </el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>

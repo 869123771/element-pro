@@ -30,6 +30,8 @@ export const filterNodePermission = (el, binding, vnode) => {
                     permissionList.push(bpm);
                 }
             }
+        }else{
+            return false
         }
     } catch (e) {
         //console.log("页面权限异常----", e);
@@ -85,7 +87,7 @@ export const filterGlobalPermission = (el, binding, vnode) => {
     if(allPermissionList.length){
         for (let itemG of allPermissionList) {
             if(binding.value === itemG.action){
-                if(itemG.status === '1'){
+                if(itemG.status === '0'){
                     invalidFlag = true;
                     break;
                 }

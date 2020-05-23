@@ -245,7 +245,7 @@
                 this.drawer = {
                     ...this.drawer,
                     show: true,
-                    width: '500px',
+                    width: '540px',
                     title: '新增',
                     showFooter: true,
                     loading : false,
@@ -261,7 +261,7 @@
                 this.drawer = {
                     ...this.drawer,
                     show: true,
-                    width: '500px',
+                    width: '540px',
                     title: '修改',
                     showFooter: true,
                     loading : false,
