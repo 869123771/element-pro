@@ -23,6 +23,17 @@ const IS_DEV = ["development"].includes(process.env.NODE_ENV);
 
 const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i;
 
+const minify = IS_DEV ? false : {
+    collapseWhitespace: true,
+    removeComments: true,
+    removeRedundantAttributes: true,
+    removeScriptTypeAttributes: true,
+    removeStyleLinkTypeAttributes: true,
+    useShortDoctype: true,
+    minifyCSS: true,
+    minifyJS: true
+}
+
 module.exports = {
    // publicPath: IS_PROD ? process.env.VUE_APP_SRC || "/" : "./", // 默认'/'，部署应用包时的基本 URL
     publicPath: IS_PROD ? process.env.VUE_APP_PUBLIC_PATH : "./", // 默认'/'，部署应用包时的基本 URL
@@ -36,18 +47,28 @@ module.exports = {
         'vue-echarts',
         'resize-detector'
     ],
-
+    pages: {
+        index: {
+            entry: './src/main.js',
+            template: 'public/index.html',
+            filename: 'index.html',
+            chunks: ['chunk-vendors', 'chunk-common', 'index']
+        },
+        preview: {
+            entry: './src/views/modules/online/desform/preview.js',
+            template: 'public/preview.html',
+            filename: 'preview.html',
+            chunks: ['chunk-vendors', 'chunk-common', 'preview'],
+            minify
+        }
+    },
     configureWebpack: config => {
         // cdn引用时配置externals
-        // config.externals = {
-        //     'vue': 'Vue',
-        //     'element-ui': 'ELEMENT',
-        //     'vue-router': 'VueRouter',
-        //     'vuex': 'Vuex',
-        //     'axios': 'axios'
-        // }
+         config.externals = {
+                vue: 'Vue',
+                'element-ui': 'ELEMENT',
+         }
 
-        config.entry = ['./src/main.js']
         let plugins  = config.plugins
 
         plugins.push(
@@ -137,10 +158,10 @@ module.exports = {
         config.resolve.symlinks(true);
 
         // 修复Lazy loading routes Error： Cyclic dependency  [https://github.com/vuejs/vue-cli/issues/1669]
-        config.plugin("html").tap(args => {
+        /*config.plugin("html").tap(args => {
             args[0].chunksSortMode = "none";
             return args;
-        });
+        });*/
 
         // 添加别名
         config.resolve.alias

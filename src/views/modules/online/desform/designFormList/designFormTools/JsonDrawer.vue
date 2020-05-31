@@ -37,9 +37,6 @@
     import {beautifierConf} from './utils/index'
     import ClipboardJS from 'clipboard'
     import {saveAs} from 'file-saver'
-    import loadMonaco from './utils/loadMonaco'
-    import loadBeautifier from './utils/loadBeautifier'
-
 
     export default {
         components: {
@@ -95,7 +92,6 @@
                 }
             },
             onOpen() {
-                console.log(beautifier)
                 this.beautifierJson = beautifier.js(this.jsonStr, beautifierConf.js)
                 this.editor = {
                     ...this.editor,
@@ -104,39 +100,23 @@
             },
             onClose() {
             },
-            setEditorValue(id, codeStr) {
-                if (this.jsonEditor) {
-                    this.jsonEditor.setValue(codeStr)
-                } else {
-                    this.jsonEditor = monaco.editor.create(document.getElementById(id), {
-                        value: codeStr,
-                        theme: 'vs-dark',
-                        language: 'json',
-                        automaticLayout: true
-                    })
-                    // ctrl + s 刷新
-                    this.jsonEditor.onKeyDown(e => {
-                        if (e.keyCode === 49 && (e.metaKey || e.ctrlKey)) {
-                            this.refresh()
-                        }
-                    })
-                }
-            },
             exportJsonFile() {
                 this.$prompt('文件名:', '导出文件', {
                     inputValue: `${+new Date()}.json`,
                     closeOnClickModal: false,
                     inputPlaceholder: '请输入文件名'
                 }).then(({value}) => {
+                    debugger;
                     if (!value) value = `${+new Date()}.json`
-                    const codeStr = this.jsonEditor.getValue()
-                    const blob = new Blob([codeStr], {type: 'text/plain;charset=utf-8'})
+                    const {code} = this.editor
+                    const blob = new Blob([code], {type: 'text/plain;charset=utf-8'})
                     saveAs(blob, value)
                 })
             },
             refresh() {
                 try {
-                    this.$emit('refresh', JSON.parse(this.jsonEditor.getValue()))
+                    let {code} = this.editor
+                    this.$emit('refresh', JSON.parse(code))
                 } catch (error) {
                     this.$notify({
                         title: '错误',

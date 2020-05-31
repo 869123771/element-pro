@@ -424,6 +424,7 @@
                 }
             },
             refreshJson(data) {
+                debugger;
                 this.drawingList = JSON.parse(JSON.stringify(data.fields))
                 delete data.fields
                 this.formConf = data
