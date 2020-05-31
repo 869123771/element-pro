@@ -47,4 +47,5 @@ export default {
     online_graph_export : '/online/graphreport/head/exportXls',
     online_graph_import : '/online/graphreport/head/importExcel',
     online_graph_get_char_data: '/online/graphreport/api/getChartsData',
+    form_design_tools_query_list : 'desform/list',
 }

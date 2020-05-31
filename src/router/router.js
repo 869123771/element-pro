@@ -112,4 +112,8 @@ export const constantRouterMap = [
         path: '/404',
         component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/404')
     },
+    {
+        path: '/form_design_tools',
+        component: () => import(/* webpackChunkName: "fail" */ '@/views/modules/online/desform/designFormList/DesignFormTools')
+    }
 ]

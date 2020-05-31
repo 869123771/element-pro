@@ -148,6 +148,23 @@ module.exports = {
             .set("assets", resolve("src/assets"))
             .set("components", resolve("src/components"))
 
+        // set svg-sprite-loader
+        config.module
+            .rule('svg')
+            .exclude.add(resolve('src/views/modules/online/desform/designFormList/designFormTools/icons'))
+            .end()
+        config.module
+            .rule('icons')
+            .test(/\.svg$/)
+            .include.add(resolve('src/views/modules/online/desform/designFormList/designFormTools/icons'))
+            .end()
+            .use('svg-sprite-loader')
+            .loader('svg-sprite-loader')
+            .options({
+                symbolId: 'icon-[name]'
+            })
+            .end()
+
         if (IS_PROD) {
             // 压缩图片
             config.module

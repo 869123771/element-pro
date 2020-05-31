@@ -29,7 +29,12 @@
                 let isDisClass = 'text-gray-400'
                 if(this.hasHandlePermission(permission)){
                     isDisClass = 'text-blue-500'
-                    props.onClick = ()=>{event()}
+                    props = {
+                        ...props,
+                        on : {
+                            click : ()=>{event()}
+                        }
+                    }
                 }
                 //let isDisClass = this.hasHandlePermission(permission) ? 'text-blue-500' : 'text-gray-400'
                 if (permission && this.hasPermission(permission)) {

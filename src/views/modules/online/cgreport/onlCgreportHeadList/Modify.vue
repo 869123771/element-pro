@@ -28,13 +28,13 @@
             <el-row>
                 <el-form-item label="SQL表达式" :rules = "{required : true, message : '必填',trigger : 'change'}">
                     <div class = "flex">
-                        <monaco-editor :editor-props = "editor"
-                                       @onCodeChange = "onCodeChange"
-                                       height = "200px"
-                                       v-model = "form.cgrSql"
-                        >
-                        </monaco-editor>
-                       <div>
+                        <MonacoEditor
+                                class = "editor"
+                                v-model ="form.cgrSql"
+                                :language="editor.language"
+                                :theme="editor.theme"
+                        />
+                       <div class = "flex-shrink-0">
                            <el-popover
                                 placement="top"
                                 title="使用指南"
@@ -92,7 +92,7 @@
 <script>
     import {http, apiList, constant, sweetAlert} from '@/utils'
     import foxTable from '@/components/fox-table'
-    import MonacoEditor from '@/components/editor/MonacoEditor'
+    import MonacoEditor from 'vue-monaco'
     import {isEmpty} from '30-seconds-of-code'
     import {difference} from '30-seconds-of-code'
 
@@ -113,7 +113,9 @@
                 show : {
                     del : false
                 },
-                form: {},
+                form: {
+                    cgrSql : ''
+                },
                 tabs : {
                     active : 'configDetail'
                 },
@@ -189,7 +191,6 @@
         },
         methods: {
             handleTabClick({name}){
-                debugger
                 let {selection} = this.table[name]
                 this.selection(selection)
             },
@@ -224,12 +225,6 @@
                 this.table[active] = {
                     ...this.table[active],
                     data : difference(data,selection)
-                }
-            },
-            onCodeChange(code){
-                this.form = {
-                    ...this.form,
-                    cgrSql : code
                 }
             },
             selection(selection) {
@@ -566,5 +561,8 @@
 </script>
 
 <style scoped>
-
+    .editor{
+        height : 300px;
+        width: 100%;
+    }
 </style>
