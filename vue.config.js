@@ -23,17 +23,6 @@ const IS_DEV = ["development"].includes(process.env.NODE_ENV);
 
 const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i;
 
-const minify = IS_DEV ? false : {
-    collapseWhitespace: true,
-    removeComments: true,
-    removeRedundantAttributes: true,
-    removeScriptTypeAttributes: true,
-    removeStyleLinkTypeAttributes: true,
-    useShortDoctype: true,
-    minifyCSS: true,
-    minifyJS: true
-}
-
 module.exports = {
    // publicPath: IS_PROD ? process.env.VUE_APP_SRC || "/" : "./", // 默认'/'，部署应用包时的基本 URL
     publicPath: IS_PROD ? process.env.VUE_APP_PUBLIC_PATH : "./", // 默认'/'，部署应用包时的基本 URL
@@ -59,7 +48,6 @@ module.exports = {
             template: 'public/preview.html',
             filename: 'preview.html',
             chunks: ['chunk-vendors', 'chunk-common', 'preview'],
-            minify
         }
     },
     configureWebpack: config => {
@@ -188,7 +176,7 @@ module.exports = {
 
         if (IS_PROD) {
             // 压缩图片
-            config.module
+           /* config.module
                 .rule("images")
                 .test(/\.(png|jpe?g|gif|svg)(\?.*)?$/)
                 .use("image-webpack-loader")
@@ -198,7 +186,7 @@ module.exports = {
                     optipng: { enabled: false },
                     pngquant: { enabled: false,quality: [0.65, 0.90], speed: 4 },
                     gifsicle: { interlaced: false },
-                });
+                });*/
 
 
             // 打包分析
