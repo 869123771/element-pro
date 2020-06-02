@@ -25,18 +25,18 @@ const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i;
 
 module.exports = {
    // publicPath: IS_PROD ? process.env.VUE_APP_SRC || "/" : "./", // 默认'/'，部署应用包时的基本 URL
-    publicPath: IS_PROD ? process.env.VUE_APP_PUBLIC_PATH : "./", // 默认'/'，部署应用包时的基本 URL
+    publicPath: IS_PROD ? process.env.BASE_URL : "/", // 默认'/'，部署应用包时的基本 URL
     outputDir: process.env.outputDir || "dist", // 'dist', 生产环境构建文件的目录
     assetsDir: "", // 相对于outputDir的静态资源(js、css、img、fonts)目录
     lintOnSave: false,
     runtimeCompiler: true, // 是否使用包含运行时编译器的 Vue 构建版本
-    productionSourceMap: false, // 生产环境的 source map
+    productionSourceMap: !IS_PROD, // 生产环境的 source map
     //  指定对第三方依赖包进行babel-polyfill处理
     transpileDependencies: [
         'vue-echarts',
         'resize-detector'
     ],
-    pages: {
+    /*pages: {
         index: {
             entry: './src/main.js',
             template: 'public/index.html',
@@ -49,7 +49,7 @@ module.exports = {
             filename: 'preview.html',
             chunks: ['chunk-vendors', 'chunk-common', 'preview'],
         }
-    },
+    },*/
     configureWebpack: config => {
         // cdn引用时配置externals
          config.externals = {
@@ -145,11 +145,12 @@ module.exports = {
         // 修复HMR
         config.resolve.symlinks(true);
 
-        // 修复Lazy loading routes Error： Cyclic dependency  [https://github.com/vuejs/vue-cli/issues/1669]
-        /*config.plugin("html").tap(args => {
+        // 如果使用多页面打包，使用vue inspect --plugins查看html是否在结果数组中
+        config.plugin("html").tap(args => {
+            // 修复 Lazy loading routes Error
             args[0].chunksSortMode = "none";
             return args;
-        });*/
+        });
 
         // 添加别名
         config.resolve.alias
@@ -200,7 +201,7 @@ module.exports = {
         }
 
         // 多页面配置，为js添加hash
-        // config.output.chunkFilename(`js/[name].[chunkhash:8].js`)
+         config.output.chunkFilename(`js/[name].[chunkhash:8].js`)
 
         // 修改图片输出路径
         // config.module
@@ -267,9 +268,9 @@ module.exports = {
                 //target : 'http://localhost:8080',
                 target: process.env.VUE_APP_BASE_API || 'http://47.107.178.235:8080/',
                 //target : 'http://boot.jeecg.org',
-                ws: false,
+                ws: false,                   // 是否启用websockets
                 //secure: false,
-                changeOrigin: true
+                changeOrigin: true          // 开启代理，在本地创建一个虚拟服务端
             },
             /*'/': {
                 target: process.env.VUE_APP_BASE_API || 'http://127.0.0.1:8098',
