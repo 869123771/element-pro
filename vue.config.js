@@ -24,18 +24,17 @@ const IS_DEV = ["development"].includes(process.env.NODE_ENV);
 const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i;
 
 module.exports = {
-   // publicPath: IS_PROD ? process.env.VUE_APP_SRC || "/" : "./", // 默认'/'，部署应用包时的基本 URL
-    publicPath: IS_PROD ? process.env.BASE_URL : "/", // 默认'/'，部署应用包时的基本 URL
-    outputDir: process.env.outputDir || "dist", // 'dist', 生产环境构建文件的目录
-    assetsDir: "", // 相对于outputDir的静态资源(js、css、img、fonts)目录
     lintOnSave: false,
-    runtimeCompiler: true, // 是否使用包含运行时编译器的 Vue 构建版本
-    productionSourceMap: !IS_PROD, // 生产环境的 source map
+
+    // 是否使用包含运行时编译器的 Vue 构建版本
+    runtimeCompiler: true,
+
     //  指定对第三方依赖包进行babel-polyfill处理
     transpileDependencies: [
         'vue-echarts',
         'resize-detector'
     ],
+
     /*pages: {
         index: {
             entry: './src/main.js',
@@ -64,15 +63,15 @@ module.exports = {
         )
 
         if (IS_PROD) {
-            /*plugins.push(
-                new PurgecssPlugin({
-                    paths: glob.sync([
-                        path.join(__dirname, "./src/index.html"),
-                        path.join(__dirname, "./!**!/!*.vue"),
-                        path.join(__dirname, "./src/!**!/!*.js")
-                    ])
-                })
-            );*/
+            // plugins.push(
+            //     new PurgecssPlugin({
+            //         paths: glob.sync([
+            //             path.join(__dirname, "./src/index.html"),
+            //             path.join(__dirname, "./**/*.vue"),
+            //             path.join(__dirname, "./src/**/*.js")
+            //         ])
+            //     })
+            // );
 
             plugins.push(
                 new TerserPlugin({
@@ -140,6 +139,7 @@ module.exports = {
             // );
         }
     },
+
     chainWebpack: config => {
 
         // 修复HMR
@@ -213,33 +213,17 @@ module.exports = {
         //       name: path.join('../assets/', 'img/[name].[ext]')
         //   })
     },
+
     css: {
-        modules: false,
-        extract: IS_PROD,
-        // 为css后缀添加hash
-        // extract: {
-        //  filename: 'css/[name].[hash:8].css',
-        //  chunkFilename: 'css/[name].[hash:8].css'
-        //}，
-        sourceMap: true,
-        loaderOptions: {
-            sass: {
-                // 向全局sass样式传入共享的全局变量
-                // data: `@import "~assets/scss/variables.scss";$src: "${process.env.VUE_APP_SRC}";`
-                data: `$src: "${process.env.VUE_APP_SRC}";`
-            }
-            // px转换为rem
-            // postcss: {
-            //   plugins: [
-            //     require('postcss-pxtorem')({
-            //       rootValue : 1, // 换算的基数
-            //       selectorBlackList  : ['weui', 'el'], // 忽略转换正则匹配项
-            //       propList   : ['*']
-            //     })
-            //   ]
-            // }
+      extract: false,
+      sourceMap: true,
+      loaderOptions: {
+        sass: {
+          data: '$src: "undefined";'
         }
+      }
     },
+
     pluginOptions: {
         // 安装vue-cli-plugin-style-resources-loader插件
         // 添加全局样式global.scss
@@ -250,8 +234,9 @@ module.exports = {
         //   ]
         // }
     },
-    parallel: require("os").cpus().length > 1,
+
     pwa: {},
+
     devServer: {
         // overlay: {
         //   warnings: true,
