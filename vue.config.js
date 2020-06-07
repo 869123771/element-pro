@@ -216,8 +216,8 @@ module.exports = {
         //   })
     },
     css: {
-        requireModuleExtension : false,
         extract: IS_PROD,
+        modules: false,
         // 为css后缀添加hash
         // extract: {
         //  filename: 'css/[name].[hash:8].css',
