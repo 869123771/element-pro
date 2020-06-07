@@ -5,7 +5,7 @@ import login from './login'
 import message from './message'
 import workCheck from './workCheck'
 
-let prefix = ''
+let prefix = '/jeecg-boot'
 let serviceMap = {
     ...system,
     ...monitor,

@@ -24,7 +24,7 @@ const IS_DEV = ["development"].includes(process.env.NODE_ENV);
 const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i;
 
 module.exports = {
-   // publicPath: IS_PROD ? process.env.VUE_APP_SRC || "/" : "./", // 默认'/'，部署应用包时的基本 URL
+    // publicPath: IS_PROD ? process.env.VUE_APP_SRC || "/" : "./", // 默认'/'，部署应用包时的基本 URL
     publicPath: IS_PROD ? process.env.VUE_APP_PUBLIC_PATH : "./", // 默认'/'，部署应用包时的基本 URL
     outputDir: process.env.outputDir || "dist", // 'dist', 生产环境构建文件的目录
     assetsDir: "", // 相对于outputDir的静态资源(js、css、img、fonts)目录
@@ -53,12 +53,12 @@ module.exports = {
     },*/
     configureWebpack: config => {
         // cdn引用时配置externals
-         config.externals = {
-                vue: 'Vue',
-                'element-ui': 'ELEMENT',
-         }
+        config.externals = {
+            vue: 'Vue',
+            'element-ui': 'ELEMENT',
+        }
 
-        let plugins  = config.plugins
+        let plugins = config.plugins
 
         plugins.push(
             new MonacoEditorPlugin()
@@ -89,7 +89,7 @@ module.exports = {
                 })
             );
 
-          //  plugins.push(new DashboardPlugin(dashboard.setData))
+            //  plugins.push(new DashboardPlugin(dashboard.setData))
 
             plugins.push(
                 new HardSourceWebpackPlugin()
@@ -179,17 +179,17 @@ module.exports = {
 
         if (IS_PROD) {
             // 压缩图片
-           /* config.module
-                .rule("images")
-                .test(/\.(png|jpe?g|gif|svg)(\?.*)?$/)
-                .use("image-webpack-loader")
-                .loader("image-webpack-loader")
-                .options({
-                    mozjpeg: { progressive: true, quality: 65 },
-                    optipng: { enabled: false },
-                    pngquant: { enabled: false,quality: [0.65, 0.90], speed: 4 },
-                    gifsicle: { interlaced: false },
-                });*/
+            /* config.module
+                 .rule("images")
+                 .test(/\.(png|jpe?g|gif|svg)(\?.*)?$/)
+                 .use("image-webpack-loader")
+                 .loader("image-webpack-loader")
+                 .options({
+                     mozjpeg: { progressive: true, quality: 65 },
+                     optipng: { enabled: false },
+                     pngquant: { enabled: false,quality: [0.65, 0.90], speed: 4 },
+                     gifsicle: { interlaced: false },
+                 });*/
 
 
             // 打包分析
@@ -203,7 +203,7 @@ module.exports = {
         }
 
         // 多页面配置，为js添加hash
-         config.output.chunkFilename(`js/[name].[chunkhash:8].js`)
+        config.output.chunkFilename(`js/[name].[chunkhash:8].js`)
 
         // 修改图片输出路径
         // config.module
@@ -216,7 +216,7 @@ module.exports = {
         //   })
     },
     css: {
-        extract: IS_PROD,
+        extract: false,//IS_PROD,
         modules: false,
         // 为css后缀添加hash
         // extract: {
@@ -275,6 +275,12 @@ module.exports = {
                 //secure: false,
                 changeOrigin: true          // 开启代理，在本地创建一个虚拟服务端
             },
+            '/api': {
+                target: 'http://dev.vislib.best/',
+                changeOrigin: true,          // 开启代理，在本地创建一个虚拟服务端
+                secure: false,
+            },
+
             /*'/': {
                 target: process.env.VUE_APP_BASE_API || 'http://127.0.0.1:8098',
                 ws: false,
