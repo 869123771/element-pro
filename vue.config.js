@@ -24,11 +24,13 @@ const IS_DEV = ["development"].includes(process.env.NODE_ENV);
 const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i;
 
 module.exports = {
+   // publicPath: IS_PROD ? process.env.VUE_APP_SRC || "/" : "./", // 默认'/'，部署应用包时的基本 URL
+    publicPath: IS_PROD ? process.env.VUE_APP_PUBLIC_PATH : "./", // 默认'/'，部署应用包时的基本 URL
+    outputDir: process.env.outputDir || "dist", // 'dist', 生产环境构建文件的目录
+    assetsDir: "", // 相对于outputDir的静态资源(js、css、img、fonts)目录
     lintOnSave: false,
-
-    // 是否使用包含运行时编译器的 Vue 构建版本
-    runtimeCompiler: true,
-
+    runtimeCompiler: true, // 是否使用包含运行时编译器的 Vue 构建版本
+    productionSourceMap: false, // 生产环境的 source map
     //  指定对第三方依赖包进行babel-polyfill处理
     transpileDependencies: [
         'vue-echarts',
@@ -213,15 +215,32 @@ module.exports = {
         //       name: path.join('../assets/', 'img/[name].[ext]')
         //   })
     },
-
     css: {
-      extract: false,
-      sourceMap: true,
-      loaderOptions: {
-        sass: {
-          data: '$src: "undefined";'
+        requireModuleExtension : false,
+        extract: IS_PROD,
+        // 为css后缀添加hash
+        // extract: {
+        //  filename: 'css/[name].[hash:8].css',
+        //  chunkFilename: 'css/[name].[hash:8].css'
+        //}，
+        sourceMap: true,
+        loaderOptions: {
+            sass: {
+                // 向全局sass样式传入共享的全局变量
+                // data: `@import "~assets/scss/variables.scss";$src: "${process.env.VUE_APP_SRC}";`
+                data: `$src: "${process.env.VUE_APP_SRC}";`
+            }
+            // px转换为rem
+            // postcss: {
+            //   plugins: [
+            //     require('postcss-pxtorem')({
+            //       rootValue : 1, // 换算的基数
+            //       selectorBlackList  : ['weui', 'el'], // 忽略转换正则匹配项
+            //       propList   : ['*']
+            //     })
+            //   ]
+            // }
         }
-      }
     },
 
     pluginOptions: {
@@ -234,9 +253,8 @@ module.exports = {
         //   ]
         // }
     },
-
+    parallel: require("os").cpus().length > 1,
     pwa: {},
-
     devServer: {
         // overlay: {
         //   warnings: true,

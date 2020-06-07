@@ -38,7 +38,7 @@
     import WidgetForm from './askSit/WidgetForm'
     import WgSingleSelectConfig from './askSit/widgetForm/wgFormList/WgSingleSelectConfig'
     import WgMultiSelectConfig from './askSit/widgetForm/wgFormList/WgMultiSelectConfig'
-    import {level} from 'province-city-china/data'
+    //import {level} from 'province-city-china/data'
     import {isEmpty,nest} from '30-seconds-of-code'
 
     export default {
