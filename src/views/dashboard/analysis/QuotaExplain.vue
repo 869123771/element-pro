@@ -399,7 +399,7 @@
             background: #fff;
         }
         /deep/ .el-card__body {
-            padding: 10px !important;
+            padding: 10px 10px 0 10px;
         }
         /deep/ .el-progress-bar__outer {
             border-radius: 0px;

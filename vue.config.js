@@ -269,24 +269,12 @@ module.exports = {
         proxy: {
             '/jeecg-boot': {
                 //target : 'http://localhost:8080',
-                target: process.env.VUE_APP_BASE_API || 'http://47.107.178.235:8080/',
-                //target : 'http://boot.jeecg.org',
+                //target: process.env.VUE_APP_BASE_API || 'http://47.107.178.235:8080/',
+                target : 'http://boot.jeecg.org',
                 ws: false,                   // 是否启用websockets
                 //secure: false,
                 changeOrigin: true          // 开启代理，在本地创建一个虚拟服务端
             },
-            '/api': {
-                target: 'http://dev.vislib.best/',
-                changeOrigin: true,          // 开启代理，在本地创建一个虚拟服务端
-                secure: false,
-            },
-
-            /*'/': {
-                target: process.env.VUE_APP_BASE_API || 'http://127.0.0.1:8098',
-                ws: false,
-                secure : false,
-                changeOrigin: true
-            },*/
         },
     }
 };
