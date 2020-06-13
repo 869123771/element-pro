@@ -3,6 +3,7 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
 const TerserPlugin = require('terser-webpack-plugin')
 const MonacoEditorPlugin = require('monaco-editor-webpack-plugin')
 const CompressionWebpackPlugin = require("compression-webpack-plugin");
+const SizePlugin = require('size-plugin');
 /*
 const Dashboard = require('webpack-dashboard');
 const DashboardPlugin = require('webpack-dashboard/plugin');
@@ -104,6 +105,9 @@ module.exports = {
                     minRatio: 0.8
                 })
             );
+
+            // 在每次执行打包命令后打印出本次构建的资源体积并和上次构建结果进行对比
+            new SizePlugin()
 
             // 上传文件到oss
             //if (process.env.ACCESS_KEY_ID || process.env.ACCESS_KEY_SECRET || process.env.REGION || process.env.BUCKET || process.env.PREFIX) {
