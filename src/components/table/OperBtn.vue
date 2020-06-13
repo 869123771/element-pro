@@ -25,12 +25,13 @@
                 }
             }
             let showToolTip = ({permission, content, className, event}) => {
-                debugger;
                 let isDisClass = 'text-gray-400'
+                let props = {
+                    ...props,
+                }
                 if(this.hasHandlePermission(permission)){
                     isDisClass = 'text-blue-500'
-                    props = {
-                        ...props,
+                     props = {
                         on : {
                             click : ()=>{event()}
                         }
