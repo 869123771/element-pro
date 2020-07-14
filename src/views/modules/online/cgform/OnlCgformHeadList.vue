@@ -91,7 +91,10 @@
                     :is="component.is"
                     :ref="component.ref"
                     :data="component.data"
-                    @modifySuccess="modifySuccess"></component>
+                    @modifySuccess="modifySuccess"
+                    @hideModal = "hideModal"
+                    @closeModal = "closeModal"
+            ></component>
         </drag-dialog>
     </div>
 </template>
@@ -603,9 +606,21 @@
                     modifyRef.saveData()
                 }
             },
-            modifySuccess() {
+            hideModal(){
+                this.dialog = {
+                    ...this.dialog,
+                    width: 0,
+                    height: 0,
+                    minHeight : 0,
+                    minWidth : 0
+                }
+            },
+            closeModal(){
                 let {name} = this.dialog
                 this.$modal.hide(name)
+            },
+            modifySuccess(){
+                this.closeModal()
                 this.queryList()
             },
             async queryHeadInfoById(headId) {

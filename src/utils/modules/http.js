@@ -227,7 +227,7 @@ export default {
                 }
             })
             return {
-                filename : desObj.filename ? decodeURIComponent(desObj.filename) : '',
+                filename : desObj.filename || desObj.fileName ? decodeURIComponent(desObj.filename || desObj.fileName) : '',
                 data
             }
         })

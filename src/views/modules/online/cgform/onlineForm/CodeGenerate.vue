@@ -12,10 +12,10 @@
                         </template>
                     </el-input>
                 </el-form-item>
-                <el-form-item label="代码分层样式" prop="jspMode">
+                <el-form-item label="页面风格" prop="jspMode">
                     <el-select v-model="form.jspMode" clearable filterable class="w-full">
                         <template v-for="item in select.jspMode">
-                            <el-option :value="item.itemValue" :label="item.itemText"></el-option>
+                            <el-option :value="item.code" :label="item.note"></el-option>
                         </template>
                     </el-select>
                 </el-form-item>
@@ -31,9 +31,9 @@
                 <el-form-item label="包名(小写)" prop="entityPackage">
                     <el-input v-model="form.entityPackage" placeholder="包名(小写)" clearable></el-input>
                 </el-form-item>
-                <el-form-item label="页面风格" prop="jformType">
-                    <el-select v-model="form.jformType" clearable filterable class="w-full">
-                        <template v-for="item in select.jformType">
+                <el-form-item label="代码分层样式" prop="packageStyle">
+                    <el-select v-model="form.packageStyle" clearable filterable disabled class="w-full">
+                        <template v-for="item in select.packageStyle">
                             <el-option :value="item.itemValue" :label="item.itemText"></el-option>
                         </template>
                     </el-select>
@@ -67,6 +67,18 @@
                 </div>
             </div>
         </slide-out>
+        <drag-dialog :drag-dialog="dialog">
+            <template v-for = "item in dialog.content">
+                <p>{{item}}</p>
+            </template>
+            <template slot = "footer">
+                <div class = "modal-footer text-center">
+                    <el-button plain @click="download">下载到本地</el-button>
+                    <el-button plain @click="cancel">取消</el-button>
+                    <el-button type="primary" @click="cancel">确认关闭</el-button>
+                </div>
+            </template>
+        </drag-dialog>
     </div>
 </template>
 
@@ -75,8 +87,12 @@
     import list from '@/utils/modules/mixins/list'
     import {isEmpty} from '30-seconds-of-code'
     import DragDrawer from '@/components/dragDrawer'
+    import DragDialog from '@/components/dragDialog'
     import PopoverConfirm from '@/components/popoverConfirm'
     import SelectFold from "./codeGenerate/SelectFold";
+    import CustomButtom from "./CustomButtom";
+    import {downloadFile} from '@/utils/modules/tools'
+    import {mapMutations} from "vuex";
 
     export default {
         name: "CodeGenerate",
@@ -87,6 +103,7 @@
         },
         components: {
             DragDrawer,
+            DragDialog,
             PopoverConfirm
         },
         mixins: [list],
@@ -94,21 +111,18 @@
             return {
                 form: {
                     projectPath: '',                                           //代码生成目录
-                    jspMode: '1',                                               //代码分层样式
+                    jspMode: 'many',                                               //页面风格
                     ftlDescription: '',                                        //功能说明
                     tableName: '',                                             //表名
                     entityName: '',                                            //实体类名
                     entityPackage: '',                                         //包名(小写)
-                    jformType: '1',                                             //页面风格
-                    codeTypes: ['controller', 'service', 'dao', 'mapper', 'entity', 'vue'],                                             //需要生成的代码
+                    packageStyle : 'service',                                   //代码分层样式
+                    codeTypes: ['controller', 'service', 'dao', 'mapper', 'entity', 'vue'],          //需要生成的代码
                 },
                 select: {
-                    jspMode: [
-                        {itemValue: '1', itemText: '业务分层'}
-                    ],
-                    jformType: [
-                        {itemValue: '1', itemText: '弹窗风格表单'},
-                        {itemValue: '2', itemText: '抽屉风格表单'},
+                    jspMode: [],
+                    packageStyle : [
+                        {itemText : '业务分层',itemValue : 'service'}
                     ],
                     codeTypes: [
                         {itemValue: 'controller', itemText: 'controller'},
@@ -144,6 +158,14 @@
                     ref: 'selectFold',
                     data: {}
                 },
+                dialog: {
+                    width: '800',
+                    height: '400',
+                    title: '代码生成 成功了！',
+                    name: 'generateSuccess',
+                    showFooter: false,
+                    content : []
+                },
             }
         },
         watch: {
@@ -157,6 +179,9 @@
             },
         },
         methods: {
+            ...mapMutations({
+                dialogLoading : 'DIALOG_LOADING',
+            }),
             pascalCase(string) {
                 const camelCase = this.camelCase(string)
                 return camelCase.slice(0,1).toUpperCase() + camelCase.slice(1)
@@ -197,16 +222,42 @@
                     show: false,
                 }
             },
+            async download(){
+                let {content} = this.dialog
+                let params = {
+                    fileList : encodeURI(content)
+                }
+                let {data, filename} = await http.getFileDownload(apiList.online_form_code_download, params)
+                downloadFile(data, filename)
+                this.cancel()
+            },
+            cancel(){
+                this.$modal.hide(this.dialog.name)
+                this.$emit('closeModal')
+            },
             async saveData(){
+                this.dialogLoading(true)
                 let {codeTypes} = this.form
                 let params = {
                     ...this.form,
                     codeTypes : codeTypes.join(',')
                 }
-                let {success,message} = await http.post(apiList.online_form_code_generate,params)
+                let {success,result} = await http.post(apiList.online_form_code_generate,params)
                 if(success){
-                    sweetAlert.successWithTimer(message)
-                    this.$emit('modifySuccess')
+                    this.dialogLoading(false)
+                    this.$emit('hideModal')
+                    this.$nextTick(()=>{
+                        this.dialog = {
+                            width: 1000,
+                            height: 480,
+                            title: '代码生成 成功了！',
+                            name: 'generateSuccess',
+                            showFooter: false,
+                            content: result
+                        }
+                        let {name} = this.dialog
+                        this.$modal.show(name)
+                    })
                 }else{
                     sweetAlert.errorWithTimer(message)
                 }
@@ -215,7 +266,7 @@
                 let {id:code, tableName, ...res} = row
                 let {success, result} = await http.get(apiList.online_form_head_table_info, {code})
                 if (success) {
-                    let {main, projectPath} = result
+                    let {main, projectPath,jspModeList} = result
                     this.form = {
                         ...this.form,
                         ...res,
@@ -225,12 +276,27 @@
                         entityName : this.pascalCase(tableName),
                         tableName
                     }
+                    this.select = {
+                        ...this.select,
+                        jspMode : jspModeList
+                    }
                 }
             }
         },
     }
 </script>
 
-<style scoped>
-
+<style scoped lang = "less">
+    .modal-footer{
+        position: absolute;
+        bottom: 0px;
+        background: #fff;
+        z-index: inherit;
+        width: 100%;
+        border-top: 1px solid #e2e8f0;
+        height: 60px;
+        line-height: 60px;
+        min-height: 60px;
+        left: 0px;
+    }
 </style>
