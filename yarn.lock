@@ -1884,6 +1884,13 @@ axios@^0.18.1:
     follow-redirects "1.5.10"
     is-buffer "^2.0.2"
 
+axios@^0.19.0:
+  version "0.19.2"
+  resolved "https://registry.npm.taobao.org/axios/download/axios-0.19.2.tgz#3ea36c5d8818d0d5f8a8a97a6d36b86cdc00cb27"
+  integrity sha1-PqNsXYgY0NX4qKl6bTa4bNwAyyc=
+  dependencies:
+    follow-redirects "1.5.10"
+
 babel-code-frame@^6.26.0:
   version "6.26.0"
   resolved "https://registry.npm.taobao.org/babel-code-frame/download/babel-code-frame-6.26.0.tgz#63fd43f7dc1e3bb7ce35947db8fe369a3f58c74b"
@@ -2658,6 +2665,11 @@ chrome-trace-event@^1.0.2:
   integrity sha1-I0CQ7pfH1K0aLEvq4nUF3v/GCKQ=
   dependencies:
     tslib "^1.9.0"
+
+ci-env@^1.9.0:
+  version "1.16.0"
+  resolved "https://registry.npm.taobao.org/ci-env/download/ci-env-1.16.0.tgz#e97f3b5001a8daf7da6e46f418bc6892a238704d"
+  integrity sha1-6X87UAGo2vfabkb0GLxokqI4cE0=
 
 ci-info@^1.5.0:
   version "1.6.0"
@@ -5249,7 +5261,7 @@ graceful-fs@^4.1.10, graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.
   resolved "https://registry.npm.taobao.org/graceful-readlink/download/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
   integrity sha1-TK+tdrxi8C+gObL5Tpo906ORpyU=
 
-gzip-size@^5.0.0:
+gzip-size@^5.0.0, gzip-size@^5.1.1:
   version "5.1.1"
   resolved "https://registry.npm.taobao.org/gzip-size/download/gzip-size-5.1.1.tgz#cb9bee692f87c0612b232840a873904e4c135274"
   integrity sha1-y5vuaS+HwGErIyhAqHOQTkwTUnQ=
@@ -6742,9 +6754,9 @@ lodash.uniq@^4.5.0:
   integrity sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=
 
 lodash@^4.0.0, lodash@^4.15.0, lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.3, lodash@^4.2.0, lodash@~4.17.12:
-  version "4.17.15"
-  resolved "https://registry.npm.taobao.org/lodash/download/lodash-4.17.15.tgz?cache=0&sync_timestamp=1571657272199&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Flodash%2Fdownload%2Flodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
-  integrity sha1-tEf2ZwoEVbv+7dETku/zMOoJdUg=
+  version "4.17.19"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
+  integrity sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
 
 log-symbols@^2.2.0:
   version "2.2.0"
@@ -8706,6 +8718,11 @@ prettier@^1.18.2:
   resolved "https://registry.npm.taobao.org/prettier/download/prettier-1.19.1.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fprettier%2Fdownload%2Fprettier-1.19.1.tgz#f7d7f5ff8a9cd872a7be4ca142095956a60797cb"
   integrity sha1-99f1/4qc2HKnvkyhQglZVqYHl8s=
 
+pretty-bytes@^5.3.0:
+  version "5.3.0"
+  resolved "https://registry.npm.taobao.org/pretty-bytes/download/pretty-bytes-5.3.0.tgz#f2849e27db79fb4d6cfe24764fc4134f165989f2"
+  integrity sha1-8oSeJ9t5+01s/iR2T8QTTxZZifI=
+
 pretty-error@^2.0.2:
   version "2.1.1"
   resolved "https://registry.npm.taobao.org/pretty-error/download/pretty-error-2.1.1.tgz#5f4f87c8f91e5ae3f3ba87ab4cf5e03b1a17f1a3"
@@ -9670,6 +9687,21 @@ simple-swizzle@^0.2.2:
   integrity sha1-pNprY1/8zMoz9w0Xy5JZLeleVXo=
   dependencies:
     is-arrayish "^0.3.1"
+
+size-plugin@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.npm.taobao.org/size-plugin/download/size-plugin-2.0.1.tgz#21f8ebc67275605caddea4fbcc72b6178aa62e55"
+  integrity sha1-IfjrxnJ1YFyt3qT7zHK2F4qmLlU=
+  dependencies:
+    axios "^0.19.0"
+    chalk "^2.4.2"
+    ci-env "^1.9.0"
+    escape-string-regexp "^1.0.5"
+    glob "^7.1.4"
+    gzip-size "^5.1.1"
+    minimatch "^3.0.4"
+    pretty-bytes "^5.3.0"
+    util.promisify "^1.0.0"
 
 slash@^1.0.0:
   version "1.0.0"
@@ -10977,7 +11009,7 @@ util.promisify@1.0.0:
     define-properties "^1.1.2"
     object.getownpropertydescriptors "^2.0.3"
 
-util.promisify@~1.0.0:
+util.promisify@^1.0.0, util.promisify@~1.0.0:
   version "1.0.1"
   resolved "https://registry.npm.taobao.org/util.promisify/download/util.promisify-1.0.1.tgz#6baf7774b80eeb0f7520d8b81d07982a59abbaee"
   integrity sha1-a693dLgO6w91INi4HQeYKlmruu4=
