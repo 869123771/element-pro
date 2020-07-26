@@ -17,12 +17,12 @@
                             <el-form-item label-width="0px">
                                 <el-col :span = "6">
                                     <el-select v-model = "item.field" clearable filterable class = "w-full" placeholder="选择查询字段">
-                                        <template v-for = "{prop,label} in highSearch.type">
+                                        <template v-for = "{prop,label,type,selectData} in highSearch.type">
                                             <el-option :value = "prop" :label = "label"></el-option>
                                         </template>
                                     </el-select>
                                 </el-col>
-                                <el-col :span = "4" class = "px-4">
+                                <el-col :span = "6" class = "px-4">
                                     <el-select v-model = "item.rule" clearable filterable class = "w-full" placeholder="匹配规则">
                                         <template v-for = "{value,label} in select.rule">
                                             <el-option :value = "value" :label = "label"></el-option>
@@ -30,7 +30,16 @@
                                     </el-select>
                                 </el-col>
                                 <el-col :span = "6">
-                                    <el-input-number v-model = "item.val" placeholder = "请输入数值" class = "w-full"></el-input-number>
+                                    <template v-if = "isSelect(item.field,highSearch.type)">
+                                        <el-select v-model = "item.val" clearable filterable class = "w-full">
+                                            <template v-for = "{itemValue,itemText} in highSearch[item.field]">
+                                                <el-option :value = "itemValue" :label = "itemText"></el-option>
+                                            </template>
+                                        </el-select>
+                                    </template>
+                                    <template v-else>
+                                        <el-input v-model = "item.val" placeholder = "请输入值" class = "w-full"></el-input>
+                                    </template>
                                 </el-col>
                                 <el-col :span = "4" class = "pl-4 handle-btn">
                                     <el-button plain class = "el-icon-plus" @click = "plus"></el-button>
@@ -125,7 +134,7 @@
                         {value : 'or' , label : 'OR（条件中的任意一个匹配）'}
                     ],
                     rule : [
-                        {value : '=',label : '等于'},
+                        {value : 'eq',label : '等于'},
                         {value : '><',label : '不等于'},
                         {value : '>',label : '大于'},
                         {value : '>=',label : '大于等于'},
@@ -154,6 +163,9 @@
             }
         },
         methods : {
+            isSelect(field,data){
+                return field ? data.find(item=>item.prop === field).type === 'select' : false
+            },
             plus(){
                 this.conditions.push({
                     val : '',
@@ -218,7 +230,12 @@
                 this.$modal.hide(name)
             },
             confirm(){
-
+                let {superQueryMatchType} = this.form
+                let params = {
+                    superQueryMatchType,
+                    superQueryParams : encodeURIComponent(JSON.stringify(this.conditions))
+                }
+                this.$emit('superQuery',params)
             }
         }
     }

@@ -295,15 +295,13 @@
             stopCall() {
                 clearInterval(this.call)
             },
-        }
-        ,
+        },
         mounted() {
             this.cycleCall()
             this.getLoginInfo()
             this.getTopCardInfo()
             this.initCharts()
-        }
-        ,
+        },
         destroyed() {
             this.stopCall()
         }

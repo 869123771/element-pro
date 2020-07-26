@@ -77,7 +77,7 @@
                     orderNum : '',                  //排序
                     buttonIcon : 'icon-edit',       //按钮图标
                     exp : '',                       //表达式
-                    buttonStatus : '0',              //按钮状态
+                    buttonStatus : '1',              //按钮状态
                 },
                 rules : {
 

@@ -68,14 +68,30 @@
                 let params = {
                     ...this.form
                 }
-                let {success, message} = await http.post(`${apiList.online_form_head_js_enhance}/${id}`, params)
+                let {success, message} = await http.put(`${apiList.online_form_head_js_enhance}/${id}`, params)
                 if (success) {
                     sweetAlert.successWithTimer(message)
                     this.$emit('modifySuccess')
                 } else {
                     sweetAlert.error(message)
                 }
+            },
+            async getData() {
+                let {id} = this.data
+                let params = {
+                    type : 'list'
+                }
+                let {success, result} = await http.get(`${apiList.online_form_head_js_enhance}/${id}`,params)
+                if (success) {
+                   debugger
+                    this.form = {
+                       ...result
+                    }
+                }
             }
+        },
+        mounted(){
+            this.getData()
         },
     }
 </script>

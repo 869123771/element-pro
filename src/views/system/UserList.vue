@@ -60,6 +60,7 @@
                 </el-button>
                 <el-button plain icon="iconfont icon-wy-upload" @click="fileImport">{{$t('common_import')}}</el-button>
                 <el-button plain icon="iconfont icon-wy-download" @click="fileExport">{{$t('common_export')}}</el-button>
+                <el-button plain icon="el-icon-search" @click="handleHighSearch">高级查询</el-button>
                 <el-dropdown placement="bottom" class="dropdown" v-show="show.batch">
                     <el-button plain>
                         {{$t('common_batch_operate')}}<i class="el-icon-arrow-down el-icon--right"></i>
@@ -143,6 +144,7 @@
             ></proxy-man-config>
         </drag-dialog>
         <file-upload ref="fileUpload" :file-upload="fileUpload" @uploadSuccess="uploadSuccess"></file-upload>
+        <high-search ref="highSearch" :high-search="highSearch" @superQuery = "superQuery"></high-search>
     </div>
 </template>
 
@@ -154,6 +156,7 @@
     import {mapState, mapMutations,mapActions} from 'vuex'
     import {http, apiList, constant, sweetAlert} from '@/utils'
     import list from '@/utils/modules/mixins/list'
+    import HighSearch from "@/components/highSearch";
     import {downloadFile} from '@/utils/modules/tools'
     import foxTable from '@/components/fox-table'
     import Collapse from '@/components/collapse/Collapse'
@@ -168,6 +171,7 @@
     export default {
         name: "UserList",
         components: {
+            HighSearch,
             OperMenu,
             DragDrawer,
             DragDialog,
@@ -203,6 +207,9 @@
                 },
                 collapse : {
                     name : 'userInfo'
+                },
+                highSearch: {
+                    type: []
                 },
                 drawer: {
                     show: false,
@@ -308,6 +315,43 @@
                     ...this.show,
                     resetPwd: false
                 }
+            },
+            handleHighSearch() {
+                let {dialog: {name},getQueryConditions} = this.$refs.highSearch
+                this.$nextTick(() => {
+                    this.$modal.show(name)
+                })
+                this.highSearch = {
+                    ...this.highSearch,
+                    type: [
+                        {
+                            label: this.$t('sys_user_account'),
+                            prop: 'username',
+                            type : 'input'
+                        },
+                        {
+                            label: this.$t('sys_user_name'),
+                            prop: 'realname',
+                            type : 'input'
+                        },
+                        {
+                            label: this.$t('sys_user_sex'),
+                            prop: 'sex',
+                            type : 'select',
+                        },
+                    ],
+                    sex : this.sex
+                }
+                getQueryConditions()
+            },
+            superQuery({superQueryMatchType,superQueryParams}){
+                debugger
+                this.form = {
+                    ...this.form,
+                    superQueryMatchType,
+                    superQueryParams
+                }
+                this.queryList()
             },
             addUser() {
                 this.drawer = {
@@ -590,7 +634,7 @@
                     {type: 'selection', fixed: true},
                     {
                         label: this.$t('common_operate'),
-                        prop: 'oper',
+                        prop: '',
                         width: '100',
                         fixed : true,
                         render: (h, scope) => {
