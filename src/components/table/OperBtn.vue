@@ -87,7 +87,6 @@
                 <div>
                     {
                         btnInfo.map(({type, dropDownItems, popover, popText, content, className, permission, event}, index) => {
-                            debugger;
                             return (
                                 type === 'dropDown' && this.hasAnyOnePermission() ?
                                     <el-dropdown placement="bottom">
@@ -150,7 +149,6 @@
                 this.$refs[index].doClose();
             },
             hasHandlePermission(permission) {
-                debugger;
                 let findPermission = this.allAuth.find(item => item.action === permission)
                 return findPermission && findPermission.type === '1'          //权限策略  1有权限  2无权限
             },

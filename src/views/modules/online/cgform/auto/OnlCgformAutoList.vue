@@ -1,29 +1,34 @@
 <template>
-    <div class = "m-3 p-3 bg-white">
+    <div class="m-3 p-3 bg-white">
         <el-row>
             <el-form ref="form" label-width="90px">
                 <form-query @search="search" @reset="reset">
-                    <template v-for = "(item,index) in formList">
-                        <template slot = "show" v-if = "index < 2">
-                            <el-col  :xs = "24" :sm = "24" :md="12" :lg = "8" :xl = "8">
-                                <form-item-query :item = "item" :form = "form" :dict-options = "table.dictOptions"></form-item-query>
+                    <template v-for="(item,index) in formList">
+                        <template slot="show" v-if="index < 2">
+                            <el-col :xs="24" :sm="24" :md="12" :lg="8" :xl="8">
+                                <form-item-query :item="item" :form="form"
+                                                 :dict-options="table.dictOptions"></form-item-query>
                             </el-col>
                         </template>
-                        <template slot = "hide" v-else>
-                            <el-col  :xs = "24" :sm = "24" :md="12" :lg = "8" :xl = "8">
-                                <form-item-query :item = "item" :form = "form" :dict-options = "table.dictOptions"></form-item-query>
+                        <template slot="hide" v-else>
+                            <el-col :xs="24" :sm="24" :md="12" :lg="8" :xl="8">
+                                <form-item-query :item="item" :form="form"
+                                                 :dict-options="table.dictOptions"></form-item-query>
                             </el-col>
                         </template>
                     </template>
                 </form-query>
             </el-form>
         </el-row>
-        <el-row class = "mb-3">
+        <el-row class="mb-3">
             <el-button plain type="primary" icon="el-icon-plus" @click="add">
                 {{$t('common_add')}}
             </el-button>
             <el-button plain icon="iconfont icon-wy-upload" @click="fileImport">{{$t('common_import')}}</el-button>
             <el-button plain icon="iconfont icon-wy-download" @click="fileExport">{{$t('common_export')}}</el-button>
+            <template v-for = "{buttonIcon,buttonName,buttonCode} in btn.list.filter(item=>item.buttonStyle === 'button')">
+                <el-button plain :icon="buttonIcon" @click="enJs(buttonCode)">{{buttonName}}</el-button>
+            </template>
             <el-button plain icon="el-icon-search" @click="handleHighSearch">高级查询</el-button>
         </el-row>
         <el-row>
@@ -46,7 +51,7 @@
             >
             </fox-table>
         </el-row>
-        <high-search ref = "highSearch" :high-search = "highSearch"></high-search>
+        <high-search ref="highSearch" :high-search="highSearch"></high-search>
         <drag-dialog :drag-dialog="dialog" @confirm="">
             <component :is="component.is" :data="component.data" :ref="component.ref" @modifySuccess=""></component>
         </drag-dialog>
@@ -66,19 +71,20 @@
 
     export default {
         name: "OnlCgformAutoList",
-        components : {
+        components: {
             FormQuery,
             FormItemQuery,
             foxTable,
             HighSearch,
             DragDialog
         },
-        data(){
+        data() {
             let operate = [
                 {
-                    label : '操作',
-                    prop : 'oper',
+                    label: '操作',
+                    prop: 'oper',
                     render: (h, {row, $index}) => {
+                        let linkBtns = this.btn.list.filter(item=>item.buttonStyle === 'link')
                         let btnInfo = [
                             {
                                 content: '修改',
@@ -96,7 +102,7 @@
                                         content: '详情',
                                         className: '',
                                         popover: false,
-                                        permission : 'menu:detail',
+                                        permission: 'menu:detail',
                                         event: () => {
                                             this.handleDetail(row)
                                         }
@@ -105,7 +111,7 @@
                                         content: '提交流程',
                                         className: '',
                                         popover: false,
-                                        permission : 'menu:dataRule',
+                                        permission: 'menu:dataRule',
                                         event: () => {
                                             this.handleDataRule(row)
                                         }
@@ -115,14 +121,31 @@
                                         className: '',
                                         popover: true,
                                         popText: '确定要删除吗',
-                                        permission : 'menu:delete',
+                                        permission: 'menu:delete',
                                         event: () => {
                                             this.handleDel(row)
                                         }
-                                    }
+                                    },
+                                    ...linkBtns.map(({buttonIcon,buttonName,buttonCode})=>{
+                                        return (
+                                            {
+                                                content: buttonName,
+                                                className: buttonIcon,
+                                                popover: false,
+                                                permission: 'menu:detail',
+                                                event: () => {
+                                                    this.enJs(buttonCode)
+                                                }
+                                            }
+                                        )
+                                    }),
                                 ],
                             },
                         ]
+
+
+                        debugger;
+                        console.log('xx',btnInfo)
                         return (
                             <OperBtn btnInfo={btnInfo}></OperBtn>
                         )
@@ -130,8 +153,12 @@
                 }
             ]
             return {
-                form : {},
-                formList : [],
+                form: {},
+                formList: [],
+                btn: {
+                    list: [],
+                    exeJs: ''
+                },
                 table: {
                     column: [
                         ...operate,
@@ -140,15 +167,15 @@
                     selection: [],
                     loading: false,
                     show: true,
-                    dictOptions : {}
+                    dictOptions: {}
                 },
                 page: {
-                    pageNum : 1,
+                    pageNum: 1,
                     pageSize: 10,
                     total: 0
                 },
-                highSearch : {
-                    type : []
+                highSearch: {
+                    type: []
                 },
                 dialog: {
                     width: 18,
@@ -159,7 +186,7 @@
                 component: {
                     data: {},
                     ref: '',
-                    is : Modify
+                    is: Modify
                 }
             }
         },
@@ -169,7 +196,7 @@
                 this.getColumns()
             }
         },
-        methods : {
+        methods: {
             search() {
                 this.page = {
                     ...this.page,
@@ -180,11 +207,11 @@
             reset() {
                 this.$refs.form.resetFields()
             },
-            add(){
+            add() {
 
             },
-            edit(row){
-                let {schema,column,dictOptions,head} = this.table
+            edit(row) {
+                let {schema, column, dictOptions, head} = this.table
                 this.dialog = {
                     ...this.dialog,
                     title: '编辑',
@@ -210,20 +237,26 @@
                     this.$modal.show(name)
                 })
             },
-            fileImport(){
+            enJs(code){
+                let {exeJs} = this.btn
+                let func = eval("("+ exeJs.replace(/↵/g,"") +")");
+                debugger;
+                func()[code]()
+            },
+            fileImport() {
 
             },
-            fileExport(){
+            fileExport() {
 
             },
-            handleHighSearch(){
-                let {dialog:{name},getQueryConditions} = this.$refs.highSearch
+            handleHighSearch() {
+                let {dialog: {name}, getQueryConditions} = this.$refs.highSearch
                 this.$nextTick(() => {
                     this.$modal.show(name)
                 })
                 getQueryConditions()
             },
-            getAvatarView({row},prop) {
+            getAvatarView({row}, prop) {
                 let {config: {baseUrl: {staticDomainURL}}} = constant
                 return `${staticDomainURL}/${row[prop]}`
             },
@@ -258,26 +291,26 @@
                 }
                 this.getDatas()
             },
-            async getFormQuery(){
+            async getFormQuery() {
                 let {code} = this.$route.params
-                let {success,result} = await http.get(`${apiList.online_form_auto_online_form_get_query_info}/${code}`)
+                let {success, result} = await http.get(`${apiList.online_form_auto_online_form_get_query_info}/${code}`)
                 debugger
-                result.forEach(({field,mode})=>{
-                    if(mode === 'group'){
-                        this.$set(this.form,field + '_begin',undefined)
-                        this.$set(this.form,field + '_end',undefined)
-                    }else if (mode === 'single'){
-                        this.$set(this.form,field,undefined)
+                result.forEach(({field, mode}) => {
+                    if (mode === 'group') {
+                        this.$set(this.form, field + '_begin', undefined)
+                        this.$set(this.form, field + '_end', undefined)
+                    } else if (mode === 'single') {
+                        this.$set(this.form, field, undefined)
                     }
                 })
-                if(success){
+                if (success) {
                     this.formList = result
                 }
             },
-            async getFormItem(){
+            async getFormItem() {
                 let {code} = this.$route.params
-                let {success,result:{schema,head}} = await http.get(`${apiList.online_form_auto_online_get_form_item}/${code}`)
-                if(success){
+                let {success, result: {schema, head}} = await http.get(`${apiList.online_form_auto_online_get_form_item}/${code}`)
+                if (success) {
                     this.table = {
                         ...this.table,
                         schema,
@@ -294,27 +327,27 @@
                 let {success, result} = await http.get(`${apiList.online_form_auto_online_form_get_columns}/${code}`)
                 if (success) {
                     let {column} = this.table
-                    let {columns,dictOptions} = result
-                    columns.forEach(item=>{
-                        let {title:label,dataIndex:prop,align,sorter,customRender,scopedSlots = {}} = item
+                    let {columns, dictOptions, cgButtonList, enhanceJs} = result
+                    columns.forEach(item => {
+                        let {title: label, dataIndex: prop, align, sorter, customRender, scopedSlots = {}} = item
                         let columnItem = {
                             align,
                             label,
                             prop,
                         };
-                        if(sorter){
+                        if (sorter) {
                             columnItem = {
                                 ...columnItem,
-                                sortable : true
+                                sortable: true
                             }
                         }
-                        if(customRender){
+                        if (customRender) {
                             columnItem = {
                                 ...columnItem,
-                                render : (h,{row})=>{
+                                render: (h, {row}) => {
                                     let currentValueList = row[prop] ? row[prop].split(',') : []
-                                    let currentValueMapList = dictOptions[customRender].filter(item=> currentValueList.includes(item.value))
-                                    return <span>{currentValueMapList.map(item=>item.text).join(',')}</span>
+                                    let currentValueMapList = dictOptions[customRender].filter(item => currentValueList.includes(item.value))
+                                    return <span>{currentValueMapList.map(item => item.text).join(',')}</span>
                                 }
                             }
                         }
@@ -327,13 +360,13 @@
                                 }
                             }
                         }*/
-                        if(scopedSlots && scopedSlots.customRender === 'imgSlot'){
+                        if (scopedSlots && scopedSlots.customRender === 'imgSlot') {
                             columnItem = {
                                 ...columnItem,
                                 render: (h, scope) => {
                                     //let imgPath = this.getAvatarView(scope,prop)
                                     return (
-                                        <el-image class = "w-8" src={scope.row[prop]}
+                                        <el-image class="w-8" src={scope.row[prop]}
                                                   preview-src-list={[scope.row[prop]]}
                                         >
                                             <div slot="error" class="cursor-pointer">
@@ -350,24 +383,29 @@
                         ...this.table,
                         dictOptions
                     }
+                    this.btn = {
+                        ...this.btn,
+                        list: cgButtonList,
+                        exeJs: enhanceJs
+                    }
                     this.highSearch = {
                         ...this.highSearch,
-                        type : column
+                        type: column
                     }
                     return result
                 }
                 this.table = {
                     ...this.table,
-                    loading : false
+                    loading: false
                 }
             },
-            async getDatas(){
+            async getDatas() {
                 this.table = {
                     ...this.table,
                     loading: true
                 }
-                let {pageNum:pageNo,pageSize} = this.page
-                let {form:{superQueryMatchType}} = this.$refs.highSearch
+                let {pageNum: pageNo, pageSize} = this.page
+                let {form: {superQueryMatchType}} = this.$refs.highSearch
                 let {code} = this.$route.params
 
                 let params = {
@@ -378,12 +416,12 @@
                     ...this.form,
                     superQueryMatchType
                 }
-                let {success, result} = await http.get(`${apiList. online_form_auto_online_form_get_datas}/${code}`,params)
+                let {success, result} = await http.get(`${apiList.online_form_auto_online_form_get_datas}/${code}`, params)
                 if (success) {
-                    let {records,total} = result ? result : {}
+                    let {records, total} = result ? result : {}
                     this.table = {
                         ...this.table,
-                        data : records
+                        data: records
                     }
                     this.page = {
                         ...this.page,
@@ -392,15 +430,15 @@
                 }
                 this.table = {
                     ...this.table,
-                    loading : false
+                    loading: false
                 }
             },
 
         },
-        created(){
+        created() {
 
         },
-        mounted(){
+        mounted() {
             this.getColumns()
             this.getDatas()
             this.getFormQuery()
