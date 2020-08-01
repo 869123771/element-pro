@@ -346,6 +346,11 @@
             },
             superQuery({superQueryMatchType,superQueryParams}){
                 debugger
+                if(!superQueryParams.every(item=>item.field)){
+                    sweetAlert.errorWithTimer('不能查询空条件')
+                    return
+                }
+                superQueryParams = encodeURIComponent(JSON.stringify(superQueryParams))
                 this.form = {
                     ...this.form,
                     superQueryMatchType,

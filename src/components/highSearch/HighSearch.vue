@@ -13,10 +13,11 @@
                 </el-col>
                 <el-col :span = "18">
                     <template v-if = "conditions.length">
-                        <el-row v-for = "(item,index) in conditions" :key = "index">
+                        <el-row v-for = "(item,index) in conditions" :key = "item.field">
                             <el-form-item label-width="0px">
                                 <el-col :span = "6">
-                                    <el-select v-model = "item.field" clearable filterable class = "w-full" placeholder="选择查询字段">
+                                    <el-select v-model = "item.field" clearable filterable class = "w-full" placeholder="选择查询字段"
+                                               @change = "fieldsChange(index)">
                                         <template v-for = "{prop,label,type,selectData} in highSearch.type">
                                             <el-option :value = "prop" :label = "label"></el-option>
                                         </template>
@@ -92,7 +93,7 @@
                     trigger="click"
                     v-model = "show.save"
                 >
-                    <el-input v-model = "form.title" placeholder = "请输入保存的名称"></el-input>
+                    <el-input v-model = "form.title" placeholder = "请输入保存的名称" clearable></el-input>
                     <div class = "pt-3 text-right">
                         <el-button size="mini" type="text" @click="show.save = false">取消</el-button>
                         <el-button type="primary" size="mini" @click="saveQueryConditions">确定</el-button>
@@ -135,22 +136,22 @@
                     ],
                     rule : [
                         {value : 'eq',label : '等于'},
-                        {value : '><',label : '不等于'},
-                        {value : '>',label : '大于'},
-                        {value : '>=',label : '大于等于'},
-                        {value : '<',label : '小于'},
-                        {value : '<=',label : '小于等于'},
-                        {value : 'start',label : '以..开始'},
-                        {value : 'end',label : '以..结尾'},
-                        {value : 'include',label : '包含'},
+                        {value : 'like',label : '包含'},
+                        {value : 'right_like',label : '以..开始'},
+                        {value : 'left_like',label : '以..结尾'},
                         {value : 'in',label : '在..中'},
+                        {value : 'ne',label : '不等于'},
+                        {value : 'gt',label : '大于'},
+                        {value : 'ge',label : '大于等于'},
+                        {value : 'lt',label : '小于'},
+                        {value : 'le',label : '小于等于'},
                     ]
                 },
                 show : {
                     save : false
                 },
                 conditions : [
-                    {val : '',rule : '',field : ''}
+                    {val : '',rule : 'eq',field : ''}
                 ],
                 saveQuerys : [],
                 dialog: {
@@ -166,10 +167,13 @@
             isSelect(field,data){
                 return field ? data.find(item=>item.prop === field).type === 'select' : false
             },
+            fieldsChange(index){
+                this.conditions[index].val = ''
+            },
             plus(){
                 this.conditions.push({
                     val : '',
-                    rule : '',
+                    rule : 'eq',
                     field : ''
                 })
             },
@@ -184,9 +188,15 @@
                 })
             },
             assignRecords(records){
+                let valList = records.map(item=>item.val)
                 this.conditions = [
                     ...records
                 ]
+                this.$nextTick(()=>{
+                    this.conditions.forEach((item,index)=>{
+                        item.val = valList[index]
+                    })
+                })
             },
             removeRecords(index){
                 this.saveQuerys.splice(index)
@@ -233,7 +243,7 @@
                 let {superQueryMatchType} = this.form
                 let params = {
                     superQueryMatchType,
-                    superQueryParams : encodeURIComponent(JSON.stringify(this.conditions))
+                    superQueryParams : this.conditions
                 }
                 this.$emit('superQuery',params)
             }

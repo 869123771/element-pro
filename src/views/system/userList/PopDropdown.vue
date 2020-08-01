@@ -3,7 +3,7 @@
         <span class="text-blue-500 text-base cursor-pointer" v-has="'user:edit'">
             <i class="fa fa-fw fa-pencil" @click = "edit"></i>
         </span>
-        <el-dropdown placement="bottom" class ="dropdown">
+        <el-dropdown placement="bottom" class ="dropdown" v-if = "this.hasAnyOnePermission()">
               <span class="text-blue-500 text-base">
                   <i class="fa fa-fw fa-ellipsis-h"></i>
               </span>
@@ -89,16 +89,29 @@
             })
         },
         methods : {
-            hasPermission(permission){
-                return this.hasMenuPermission(permission) && this.hasRolePermission(permission)
-            },
-            hasMenuPermission(permission){
+            hasHandlePermission(permission) {
                 let findPermission = this.allAuth.find(item => item.action === permission)
-                return findPermission && findPermission.type !== '2'
+                return findPermission && findPermission.type === '1'          //权限策略  1有权限  2无权限
             },
-            hasRolePermission(permission){
+            hasPermission(permission) {
+                let flag
                 let findPermission = this.auth.find(item => item.action === permission)
-                return findPermission && findPermission.type !== '2'
+                let findAllPermission = this.allAuth.find(item => item.action === permission)     //状态    1有效   0无效
+                if (!findAllPermission || (findAllPermission && findAllPermission.status === '0')) {          //状态无效
+                    flag = true
+                } else {
+                    flag = Boolean(findPermission)
+                }
+                return flag
+            },
+            hasAnyOnePermission() {                             //至少有一个权限才显示...按钮
+                let flag = false
+                this.dropDownItem.forEach(({permission}) => {
+                    if (this.hasPermission(permission)) {
+                        flag = true
+                    }
+                })
+                return flag     //any(this.btnInfo,x => this.allAuth.map(item=>item.action).includes(x.permission))
             },
             edit(){
                 this.$emit('edit')
