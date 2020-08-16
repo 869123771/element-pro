@@ -4,7 +4,7 @@
                   v-bind="$attrs"
                   v-on="$listeners"
                   stripe
-                  border
+                  :border = "false"
                   :data="data"
                   :span-method="this.merge ? this.mergeMethod : this.spanMethod">
             <template v-for="(item, index) in column">

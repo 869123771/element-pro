@@ -1,0 +1,142 @@
+{
+  "id": "1239413",
+  "name": "element-pro",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "2475465",
+      "name": "word",
+      "font_class": "word",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "2706601",
+      "name": "ppt",
+      "font_class": "ppt",
+      "unicode": "e6a9",
+      "unicode_decimal": 59049
+    },
+    {
+      "icon_id": "8702287",
+      "name": "excel",
+      "font_class": "excel",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
+      "icon_id": "705686",
+      "name": "删除",
+      "font_class": "wy-delete2",
+      "unicode": "e622",
+      "unicode_decimal": 58914
+    },
+    {
+      "icon_id": "479427",
+      "name": "删除",
+      "font_class": "wy-trash",
+      "unicode": "e623",
+      "unicode_decimal": 58915
+    },
+    {
+      "icon_id": "690725",
+      "name": "删除",
+      "font_class": "wy-trash-flat",
+      "unicode": "e633",
+      "unicode_decimal": 58931
+    },
+    {
+      "icon_id": "741048",
+      "name": "登出 退出 关闭",
+      "font_class": "wy-log-out",
+      "unicode": "e846",
+      "unicode_decimal": 59462
+    },
+    {
+      "icon_id": "9230691",
+      "name": "compress",
+      "font_class": "wy-compress",
+      "unicode": "e914",
+      "unicode_decimal": 59668
+    },
+    {
+      "icon_id": "9230692",
+      "name": "expend",
+      "font_class": "wy-expend",
+      "unicode": "e915",
+      "unicode_decimal": 59669
+    },
+    {
+      "icon_id": "4688317",
+      "name": "退出全屏",
+      "font_class": "wy-half-screen",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "7563080",
+      "name": "全屏",
+      "font_class": "wy-full-screen",
+      "unicode": "e636",
+      "unicode_decimal": 58934
+    },
+    {
+      "icon_id": "1602461",
+      "name": "网商银行无线端_搜索",
+      "font_class": "wy-search",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    },
+    {
+      "icon_id": "3853142",
+      "name": "lock",
+      "font_class": "wy-lock",
+      "unicode": "e6b7",
+      "unicode_decimal": 59063
+    },
+    {
+      "icon_id": "3853242",
+      "name": "unlock",
+      "font_class": "wy-unlock",
+      "unicode": "e70e",
+      "unicode_decimal": 59150
+    },
+    {
+      "icon_id": "3853250",
+      "name": "user",
+      "font_class": "wy-user",
+      "unicode": "e715",
+      "unicode_decimal": 59157
+    },
+    {
+      "icon_id": "5643698",
+      "name": "用户管理",
+      "font_class": "wy-user-mgr",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
+      "icon_id": "7227981",
+      "name": "收缩",
+      "font_class": "wy-shrink",
+      "unicode": "e716",
+      "unicode_decimal": 59158
+    },
+    {
+      "icon_id": "4767025",
+      "name": "upload",
+      "font_class": "wy-upload",
+      "unicode": "e7ef",
+      "unicode_decimal": 59375
+    },
+    {
+      "icon_id": "4767031",
+      "name": "download",
+      "font_class": "wy-download",
+      "unicode": "e7f0",
+      "unicode_decimal": 59376
+    }
+  ]
+}
