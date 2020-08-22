@@ -35,9 +35,10 @@ module.exports = {
     //  指定对第三方依赖包进行babel-polyfill处理
     transpileDependencies: [
         'vue-echarts',
-        'resize-detector'
+        'resize-detector',
+        '30-seconds-of-code',
+        'regular-xb'
     ],
-
     /*pages: {
         index: {
             entry: './src/main.js',
@@ -273,8 +274,8 @@ module.exports = {
         proxy: {
             '/jeecg-boot': {
                 //target : 'http://localhost:8080',
-                //target: process.env.VUE_APP_BASE_API || 'http://47.107.178.235:8080/',
-                target : 'http://boot.jeecg.org',
+                target: process.env.VUE_APP_BASE_API || 'http://47.107.178.235:8080/',
+                //target : 'http://boot.jeecg.org',
                 ws: false,                   // 是否启用websockets
                 //secure: false,
                 changeOrigin: true          // 开启代理，在本地创建一个虚拟服务端
