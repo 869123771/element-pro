@@ -131,7 +131,9 @@
 <style scoped lang="less">
     .modal {
         z-index: 1200;
-
+        /deep/.v--modal{
+            border-radius: 0px;
+        }
         &-header {
             height: 56px;
             padding: 0 1rem;

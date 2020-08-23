@@ -9,7 +9,7 @@ import importDirective from '@/directive'
 
 Vue.config.productionTip = false
 import Element from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css';
+import './element-variables.scss'
 
 import VModal from 'vue-js-modal'
 
