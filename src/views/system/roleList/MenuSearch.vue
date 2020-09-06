@@ -14,7 +14,7 @@
                         :props="{children: 'children',label: 'slotTitle'}"
                         :default-checked-keys="menuSearch.defaultCheckedKeys"
                 >
-                <span class="mt-1" slot-scope="{ node, data}" @click="dataRule(node,data)">
+                <span slot-scope="{ node, data}" @click="dataRule(node,data)">
                     <span>{{ node.label }}</span>
                     <span v-if="data.ruleFlag" class="fa fa-fw fa-align-left text-red-600 pl-1"></span>
                 </span>

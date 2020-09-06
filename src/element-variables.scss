@@ -1,7 +1,14 @@
-$--border-radius-base: 0px !default;
-$--card-border-radius: 0px !default;
-$--border-radius-small: 0px !default;
-$--pagination-border-radius: 0px !default;
+$--border-radius-zero : 0px;
+$--border-radius-base: $--border-radius-zero !default;
+$--card-border-radius: $--border-radius-zero !default;
+$--border-radius-small: $--border-radius-zero !default;
+$--pagination-border-radius: $--border-radius-zero !default;
+
+.el-tooltip{
+  &__popper{
+    border-radius: $--border-radius-zero !important;
+  }
+}
 
 /* 改变 icon 字体路径变量，必需 */
 $--font-path: '~element-ui/lib/theme-chalk/fonts';
