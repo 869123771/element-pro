@@ -1,42 +1,48 @@
 <template>
     <div class = "p-3 m-3 bg-white">
         <prism-editor
-                v-model="presm.code"
+                v-model="preSm.code"
                 class="my-editor"
                 :highlight="highlighter"
-                :line-numbers="presm.lineNumbers"
+                :line-numbers="preSm.lineNumbers"
         ></prism-editor>
+
+        <TinymceEditor v-model="content" :inline="false"></TinymceEditor>
     </div>
 </template>
 
 <script>
+    import TinymceEditor from '@/components/editor/Tinymce'
+
     import {PrismEditor} from "vue-prism-editor";
     import "vue-prism-editor/dist/prismeditor.min.css"; // import the styles somewhere
 
     // import highlighting library (you can use any library you want just return html string)
     import {highlight, languages} from "prismjs/components/prism-core";
-    import loadLanguages from "prismjs/components"
+    //import loadLanguages from "prismjs/components"
     import "prismjs/components/prism-clike";
     import "prismjs/components/prism-splunk-spl";
     import "prismjs/components/prism-javascript";
+    import "prismjs/components/prism-sql";
     import "prismjs/themes/prism-dark.css"; // import syntax highlighting styles
     export default {
         name: "CodeEditor",
         components: {
             PrismEditor,
+            TinymceEditor
         },
         data() {
             return {
-                presm: {
+                preSm: {
                     code: ' source="Sampledata.zip:./apache*" action=purchase [search sourcetype=access_* action=purchase|top limit=1 clientip|table clientip] | stats count, values(product_id) as product_id by clientip |rename count AS "购买数量",product_id AS "购买产品内容" clientip AS "vip用户"',
                     lineNumbers: true
                 },
-                code: 'const a = b'
+                content: '我是富文本编辑器'
             }
         },
         methods: {
             highlighter(code) {
-                return highlight(code, languages.splunk-spl,'splunk-spl');   //returns html
+                return highlight(code, languages['splunk-spl'],'splunk-spl');   //returns html
             }
         }
     }
