@@ -9,7 +9,16 @@
 <script>
     import tinymce from 'tinymce/tinymce'
     import Editor from '@tinymce/tinymce-vue'
+
+    //样式
+    import 'tinymce/skins/content/default/content.min.css'
+    import 'tinymce/skins/ui/oxide/skin.min.css'
+    import 'tinymce/skins/ui/oxide/content.min.css'
+
+
+    //主题
     import 'tinymce/themes/silver'
+
     // 编辑器插件plugins
     // 更多插件参考：https://www.tiny.cloud/docs/plugins/
     import 'tinymce/plugins/link' // 链接
@@ -21,6 +30,11 @@
     import 'tinymce/plugins/paste' // 张贴
     import 'tinymce/plugins/autosave' // 自动保存
     import 'tinymce/plugins/imagetools' // 图片
+
+    import 'tinymce/icons/default/icons'
+
+    //本地化
+    //import './utils/tinymce/langs/zh_CN.js'
 
     export default {
         components: {
@@ -46,7 +60,7 @@
             },
             plugins: {
                 type: [String, Array],
-                default: 'link  table   wordcount  autosave imagetools paste letterspacing indent lineheight'
+                default: 'advlist anchor autolink autosave code codesample directionality emoticons fullscreen hr image imagetools insertdatetime link lists media nonbreaking noneditable pagebreak paste preview print save searchreplace spellchecker tabfocus table template textpattern visualblocks visualchars wordcount'
             },
             toolbar: {
                 type: String,
@@ -59,8 +73,8 @@
                 init: {
                     language_url: `/tinymce/langs/zh_CN.js`,
                     language: 'zh_CN',
-                    skin_url: `/tinymce/skins/ui/oxide`,
-                    content_css: `/tinymce/skins/content/default/content.css`,
+                   /* skin_url: `/tinymce/skins/ui/oxide`,
+                    content_css: `/tinymce/skins/content/default/content.css`,*/
                     height: 300,
                     plugins: this.plugins,
                     toolbar: this.toolbar,
@@ -92,7 +106,7 @@
             }
         },
         mounted() {
-            tinymce.init({})
+            tinymce.init()
         },
         methods: {},
         watch: {

@@ -8,11 +8,16 @@
         ></prism-editor>
 
         <TinymceEditor v-model="content" :inline="false"></TinymceEditor>
+        <vue-tinymce
+                v-model="content"
+                :setup="setup"
+                :setting="setting" />
     </div>
 </template>
 
 <script>
     import TinymceEditor from '@/components/editor/Tinymce'
+    import VueTinymce from "@packy-tang/vue-tinymce"
 
     import {PrismEditor} from "vue-prism-editor";
     import "vue-prism-editor/dist/prismeditor.min.css"; // import the styles somewhere
@@ -29,7 +34,8 @@
         name: "CodeEditor",
         components: {
             PrismEditor,
-            TinymceEditor
+            TinymceEditor,
+            VueTinymce
         },
         data() {
             return {
@@ -37,12 +43,19 @@
                     code: ' source="Sampledata.zip:./apache*" action=purchase [search sourcetype=access_* action=purchase|top limit=1 clientip|table clientip] | stats count, values(product_id) as product_id by clientip |rename count AS "购买数量",product_id AS "购买产品内容" clientip AS "vip用户"',
                     lineNumbers: true
                 },
-                content: '我是富文本编辑器'
+                //content: '我是富文本编辑器',
+                content: "<p>html content</p>",
+                setting: {
+                    height: 500
+                }
             }
         },
         methods: {
             highlighter(code) {
                 return highlight(code, languages['splunk-spl'],'splunk-spl');   //returns html
+            },
+            setup(editor) {
+                console.log(editor)
             }
         }
     }

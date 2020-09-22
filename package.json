@@ -12,6 +12,7 @@
     "30-seconds-of-code": "^1.2.3",
     "@hyjiacan/vue-slideout": "^2.2.1",
     "@jiaminghi/data-view": "^2.8.4",
+    "@packy-tang/vue-tinymce": "^1.1.0",
     "@tinymce/tinymce-vue": "^3.2.3",
     "animate.css": "^3.7.2",
     "axios": "^0.18.1",
