@@ -1,14 +1,25 @@
 <template>
     <div class = "p-3 m-3 bg-white">
-        <prism-editor
-                v-model="preSm.code"
-                class="my-editor"
-                :highlight="highlighter"
-                :line-numbers="preSm.lineNumbers"
-        ></prism-editor>
-
-        <TinymceEditor v-model="content" :inline="false"></TinymceEditor>
-
+        <el-row class = "my-3">
+            <prism-editor
+                    v-model="preSm.code"
+                    class="my-editor"
+                    :highlight="highlighter"
+                    :line-numbers="preSm.lineNumbers"
+            ></prism-editor>
+        </el-row>
+        <el-row class = "my-4">
+            <TinymceEditor v-model="content" :inline="false"></TinymceEditor>
+        </el-row>
+        <el-row class = "my-4">
+            <editor v-model="editor.content"
+                    @init="editorInit"
+                    :ref = "editor.ref"
+                    :lang="editor.lang"
+                    :theme="editor.theme"
+                    :options = "editor.options"
+                    :height="editor.height"></editor>
+        </el-row>
     </div>
 </template>
 
@@ -31,6 +42,7 @@
         components: {
             PrismEditor,
             TinymceEditor,
+            editor: require('vue2-ace-editor'),
         },
         data() {
             return {
@@ -39,14 +51,40 @@
                     lineNumbers: true
                 },
                 content: '我是富文本编辑器',
+                editor : {
+                    content : '',
+                    theme : 'chrome',
+                    lang : 'sql',
+                    height : '150',
+                    ref : 'editor',
+                    options : {
+                        fontSize : 20,
+                        showLineNumbers : true,
+                        showGutter : true,                     //显示行号区域
+                        displayIndentGuides : false,            //显示参考线
+
+                        enableBasicAutocompletion: true,
+                        enableSnippets: true,
+                        enableLiveAutocompletion: true,
+                        enableEmmet : true
+                    }
+                }
             }
         },
         methods: {
             highlighter(code) {
                 return highlight(code, languages['splunk-spl'],'splunk-spl');   //returns html
             },
-            setup(editor) {
-                console.log(editor)
+            editorInit(){
+                require('brace/ext/textarea')
+                require('brace/ext/emmet')
+                require('brace/ext/language_tools') //language extension prerequsite...
+                require('brace/mode/sql')
+                require('brace/mode/javascript')    //language
+                require('brace/mode/less')
+                require('brace/theme/chrome')
+                require('brace/snippets/javascript')
+                require('brace/snippets/sql')
             }
         }
     }
