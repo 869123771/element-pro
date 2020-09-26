@@ -1,5 +1,7 @@
 <template>
     <modal
+            v-bind="$attrs"
+            v-on="$listeners"
             ref="modal"
             :name="dialog.name"
             class="modal"
@@ -11,10 +13,10 @@
             :min-height="dialog.minHeight"
             :delay="100"
             :clickToClose="dialog.clickToClose"
-            :width="dialog.width"
+            :width="dialog.width || '100'"
             :height="dialog.height || 'auto'"
             :resizable="dialog.resizable"
-            v-loading = "dialogLoading"
+            v-loading="dialogLoading"
     >
         <div class="modal-header" v-if="dialog.showHeader">
             <div class="modal-header-title" v-html="dialog.title"></div>
@@ -29,12 +31,13 @@
                      @click="close"></div>
             </div>
         </div>
-        <div class="modal-body" style=" max-height: calc(100vh - 130px)">
+        <!--style=" max-height: calc(100vh - 130px)"-->
+        <div class="modal-body">
             <slot></slot>
         </div>
         <template v-if="dialog.showFooter">
             <div class="modal-footer text-center">
-                <el-button plain @click="close" v-show = "dialog.showCancelBtn">{{$t('common_cancel')}}</el-button>
+                <el-button plain @click="close" v-show="dialog.showCancelBtn">{{$t('common_cancel')}}</el-button>
                 <el-button type="primary" :loading="dialog.loading" @click="confirm">{{dialog.confirmText ||
                     $t('common_confirm')}}
                 </el-button>
@@ -58,7 +61,7 @@
         },
         computed: {
             ...mapState({
-                dialogLoading : ({app}) => app.dialogLoading
+                dialogLoading: ({app}) => app.dialogLoading
             })
         },
         watch: {
@@ -85,8 +88,8 @@
         ,
         methods: {
             full() {
-                this.$children[0].modal = {
-                    ...this.$children[0].modal,
+                this.$refs.modal.modal = {
+                    ...this.$refs.modal.modal,
                     width: 100,
                     height: 100,
                     widthType: '%',
@@ -131,9 +134,11 @@
 <style scoped lang="less">
     .modal {
         z-index: 1200;
-        /deep/.v--modal{
+
+        /deep/ .v--modal {
             border-radius: 0px;
         }
+
         &-header {
             height: 56px;
             padding: 0 1rem;
@@ -142,6 +147,7 @@
             justify-content: space-between;
             cursor: move;
             border-bottom: solid #f7fafc;
+
             &-title {
 
             }
@@ -172,6 +178,7 @@
         &-body {
             padding: 22px 1rem 0;
             overflow: auto;
+            height: calc(100% - 120px);
         }
 
         &-footer {

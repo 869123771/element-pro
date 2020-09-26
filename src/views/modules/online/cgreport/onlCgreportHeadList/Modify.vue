@@ -33,6 +33,7 @@
                                 v-model ="form.cgrSql"
                                 :language="editor.language"
                                 :theme="editor.theme"
+                                :options="editor.options"
                         />
                        <div class = "flex-shrink-0">
                            <el-popover
@@ -68,7 +69,6 @@
                                     :column="table.configDetail.column"
                                     :data="table.configDetail.data"
                                     @selection-change="selection"
-                                    max-height = "400"
                             ></fox-table>
                         </el-row>
                     </el-tab-pane>
@@ -80,7 +80,6 @@
                                 :column="table.reportParams.column"
                                 :data="table.reportParams.data"
                                 @selection-change="selection"
-                                max-height = "400"
                         ></fox-table>
                     </el-tab-pane>
                 </el-tabs>
@@ -136,7 +135,14 @@
                 editor: {
                     code: '',
                     language: 'mysql',
-                    theme : 'vs-dark'
+                    theme : 'vs-dark',
+                    options : {
+                        contextmenu : false,
+                        minimap : {
+                            enabled : false
+                        },
+                        snippetSuggestions : true
+                    }
                 },
                 table : {
                     configDetail : {

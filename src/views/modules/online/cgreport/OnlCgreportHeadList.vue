@@ -208,7 +208,7 @@
                     ...this.dialog,
                     name: 'edit',
                     width: 82,
-                    height: 90,
+                    height: 800,
                     title: this.$t('common_edit'),
                     showFooter: true,
                     confirmText : '',

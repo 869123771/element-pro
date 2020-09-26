@@ -9,7 +9,7 @@
             ></prism-editor>
         </el-row>
         <el-row class = "my-4">
-            <TinymceEditor v-model="content" :inline="false"></TinymceEditor>
+            <TinymceEditor v-model="content"></TinymceEditor>
         </el-row>
         <el-row class = "my-4">
             <editor v-model="editor.content"

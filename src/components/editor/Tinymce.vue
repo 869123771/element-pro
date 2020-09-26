@@ -21,14 +21,43 @@
 
     // 编辑器插件plugins
     // 更多插件参考：https://www.tiny.cloud/docs/plugins/
-    import 'tinymce/plugins/link' // 链接
+    import 'tinymce/plugins/advlist'
+    import 'tinymce/plugins/anchor'
+    import 'tinymce/plugins/autolink'
+    import 'tinymce/plugins/autoresize'
+    import 'tinymce/plugins/autosave'   // 自动保存
     import 'tinymce/plugins/code' // 代码
-    import 'tinymce/plugins/table' // 表单
+    import 'tinymce/plugins/codesample'
+    import 'tinymce/plugins/colorpicker'
+    import 'tinymce/plugins/directionality'
+    import 'tinymce/plugins/emoticons'
+    import 'tinymce/plugins/fullscreen'
+    import 'tinymce/plugins/hr'
+    import 'tinymce/plugins/image'
+    import 'tinymce/plugins/imagetools'
+    import 'tinymce/plugins/insertdatetime'
+    import 'tinymce/plugins/link' // 链接
     import 'tinymce/plugins/lists'
-    import 'tinymce/plugins/contextmenu'
-    import 'tinymce/plugins/wordcount'
+    import 'tinymce/plugins/media'
+    import 'tinymce/plugins/nonbreaking'
+    import 'tinymce/plugins/noneditable'
+    import 'tinymce/plugins/pagebreak'
     import 'tinymce/plugins/paste' // 张贴
-    import 'tinymce/plugins/autosave' // 自动保存
+    import 'tinymce/plugins/preview'
+    import 'tinymce/plugins/print'
+    import 'tinymce/plugins/save'
+    import 'tinymce/plugins/searchreplace'
+    import 'tinymce/plugins/spellchecker'
+    import 'tinymce/plugins/tabfocus'
+    import 'tinymce/plugins/table'
+    import 'tinymce/plugins/template'
+    import 'tinymce/plugins/textpattern'
+    import 'tinymce/plugins/visualblocks'
+    import 'tinymce/plugins/visualchars'
+    import 'tinymce/plugins/wordcount'
+
+    import 'tinymce/plugins/contextmenu'
+
     import 'tinymce/plugins/imagetools' // 图片
 
     import 'tinymce/icons/default/icons'
@@ -60,12 +89,11 @@
             },
             plugins: {
                 type: [String, Array],
-                default: 'advlist anchor autolink autosave code codesample directionality emoticons fullscreen hr image imagetools insertdatetime link lists media nonbreaking noneditable pagebreak paste preview print save searchreplace spellchecker tabfocus table template textpattern visualblocks visualchars wordcount'
+                default: 'advlist anchor autolink autosave code codesample,colorpicker directionality emoticons fullscreen hr image imagetools insertdatetime link lists media nonbreaking noneditable pagebreak paste preview print save searchreplace spellchecker tabfocus table template textpattern visualblocks visualchars wordcount'
             },
             toolbar: {
                 type: String,
-                default: `undo redo | fontsizeselect bold italic underline strikethrough  | forecolor backcolor | alignleft aligncenter alignright alignjustify |
-              | link image  table lineheight   pastetext removeformat | customBtn letterspacing indent lineheight`
+                default: `code searchreplace bold italic underline strikethrough alignleft aligncenter alignright outdent indent blockquote removeformat subscript superscript codesample hr bullist numlist link image charmap preview anchor pagebreak insertdatetime media table emoticons forecolor backcolor fullscreen`
             },
         },
         data() {

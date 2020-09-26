@@ -70,7 +70,7 @@
                                 placeholder="结束时间" class="w-full"></el-date-picker>
             </el-form-item>
             <el-form-item label="内容" prop="msgContent">
-                <wang-editor ref="wangEditor" :editorContent="form.msgContent"></wang-editor>
+                <TinymceEditor v-model="form.msgContent"></TinymceEditor>
             </el-form-item>
         </el-form>
     </div>
@@ -79,13 +79,13 @@
 <script>
     import {mapState} from 'vuex'
     import {http, apiList, constant, sweetAlert} from '@/utils'
-    import WangEditor from '@/components/editor/WangEditor'
+    import TinymceEditor from '@/components/editor/Tinymce'
     import {isEmpty} from '30-seconds-of-code'
 
     export default {
         name: "Modify",
         components: {
-            WangEditor,
+            TinymceEditor,
         },
         props: {
             data: {
@@ -165,7 +165,6 @@
                 let {msgType, userIds} = this.form
                 let params = {
                     ...this.form,
-                    msgContent: this.$refs.wangEditor.content,
                     userIds: msgType === 'USER' ? userIds.join(',') : ''
                 }
                 if (id) {
