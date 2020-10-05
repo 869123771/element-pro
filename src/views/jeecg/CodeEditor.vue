@@ -20,10 +20,19 @@
                     :options = "editor.options"
                     :height="editor.height"></editor>
         </el-row>
+        <el-row class = "my-4">
+            <vue-live
+                    class = "live-editor"
+                    :delay="2000"
+                    :code="liveEditor.code"
+                    :editorProps = "liveEditor"
+            />
+        </el-row>
     </div>
 </template>
 
 <script>
+
     import TinymceEditor from '@/components/editor/Tinymce'
 
     import {PrismEditor} from "vue-prism-editor";
@@ -37,12 +46,16 @@
     import "prismjs/components/prism-javascript";
     import "prismjs/components/prism-sql";
     import "prismjs/themes/prism-dark.css"; // import syntax highlighting styles
+
+    import { VueLive, VueLiveEditor, VueLivePreview } from "@/components/editor/liveEditor";
+
     export default {
         name: "CodeEditor",
         components: {
             PrismEditor,
             TinymceEditor,
             editor: require('vue2-ace-editor'),
+            VueLive
         },
         data() {
             return {
@@ -55,18 +68,36 @@
                     content : '',
                     theme : 'chrome',
                     lang : 'sql',
-                    height : '150',
                     ref : 'editor',
                     options : {
                         fontSize : 20,
                         showLineNumbers : true,
                         showGutter : true,                     //显示行号区域
                         displayIndentGuides : false,            //显示参考线
-
                         enableBasicAutocompletion: true,
                         enableSnippets: true,
                         enableLiveAutocompletion: true,
-                        enableEmmet : true
+                        enableEmmet : true,
+                        minLines : 6,
+                        maxLines : Infinity,
+                    }
+                },
+                liveEditor : {
+                    code : `<input type='button' value='I am Groot' />`,
+                    theme : 'twilight',
+                    lang : 'html',
+                    ref : 'editor',
+                    options : {
+                        fontSize : 18,
+                        showLineNumbers : true,
+                        showGutter : true,                     //显示行号区域
+                        displayIndentGuides : false,            //显示参考线
+                        enableBasicAutocompletion: true,
+                        enableSnippets: true,
+                        enableLiveAutocompletion: true,
+                        enableEmmet : true,
+                        //minLines : 6,
+                        //maxLines : Infinity,
                     }
                 }
             }
@@ -92,11 +123,10 @@
 
 <style scoped>
     .my-editor{
-       /* !* we dont use `language-` classes anymore so thats why we need to add background and text color manually *!
-        background: #2d2d2d;
+        /*we dont use `language-` classes anymore so thats why we need to add background and text color manually */
+       /* background: #2d2d2d;
         color: #ccc;
-
-        !* you must provide font-family font-size line-height. Example: *!
+         !*you must provide font-family font-size line-height. Example*!
         font-family: Fira code, Fira Mono, Consolas, Menlo, Courier, monospace;
         font-size: 14px;
         line-height: 1.5;
