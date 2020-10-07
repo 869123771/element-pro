@@ -1,10 +1,10 @@
 <template functional>
   <div class="vue-live-container" style="display:flex; ">
     <Split style="height: auto">
-      <SplitArea :size="50">
+      <SplitArea :size="60">
         <slot name="editor"></slot>
       </SplitArea>
-      <SplitArea :size="50" class = "p-3 bg-gray-100">
+      <SplitArea :size="40" class = "p-3 bg-gray-100">
         <slot name="preview"></slot>
       </SplitArea>
     </Split>
@@ -20,15 +20,6 @@
 </script>
 <style scoped lang = "less">
   .vue-live-container{
-      height : 400px;
-      /deep/.prism-editor-wrapper{
-        background: #2d2d2d;
-        color: #ccc;
-        /*you must provide font-family font-size line-height. Example*/
-        font-family: Fira code, Fira Mono, Consolas, Menlo, Courier, monospace;
-        font-size: 14px;
-        line-height: 1.5;
-        padding: 5px;
-      }
+
   }
 </style>

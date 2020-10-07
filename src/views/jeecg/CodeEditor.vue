@@ -11,7 +11,7 @@
         <el-row class = "my-4">
             <TinymceEditor v-model="content"></TinymceEditor>
         </el-row>
-        <el-row class = "my-4">
+        <!--<el-row class = "my-4">
             <editor v-model="editor.content"
                     @init="editorInit"
                     :ref = "editor.ref"
@@ -19,7 +19,7 @@
                     :theme="editor.theme"
                     :options = "editor.options"
                     :height="editor.height"></editor>
-        </el-row>
+        </el-row>-->
         <el-row class = "my-4">
             <vue-live
                     class = "live-editor"
@@ -87,6 +87,7 @@
                     theme : 'twilight',
                     lang : 'html',
                     ref : 'editor',
+                    height : 500,
                     options : {
                         fontSize : 18,
                         showLineNumbers : true,

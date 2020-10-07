@@ -11,7 +11,6 @@
     import Editor from '@tinymce/tinymce-vue'
 
     //样式
-    import 'tinymce/skins/content/default/content.min.css'
     import 'tinymce/skins/ui/oxide/skin.min.css'
     import 'tinymce/skins/ui/oxide/content.min.css'
 
@@ -101,7 +100,7 @@
                 init: {
                     language_url: `/tinymce/langs/zh_CN.js`,
                     language: 'zh_CN',
-                   /* skin_url: `/tinymce/skins/ui/oxide`,
+                    /*skin_url: `/tinymce/skins/ui/oxide`,
                     content_css: `/tinymce/skins/content/default/content.css`,*/
                     height: 300,
                     plugins: this.plugins,
@@ -134,7 +133,7 @@
             }
         },
         mounted() {
-            tinymce.init()
+            //tinymce.init()
         },
         methods: {},
         watch: {
@@ -147,3 +146,6 @@
         }
     }
 </script>
+<style scoped lang = "less">
+
+</style>
