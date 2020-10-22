@@ -50,6 +50,9 @@
     "vue2-org-tree": "^1.3.1",
     "vuedraggable": "^2.23.2",
     "vuex": "^3.1.3",
+    "vxe-table": "^2.9.25",
+    "vxe-table-plugin-element": "^1.9.4",
+    "xe-utils": "^2.7.15",
     "wangeditor": "^3.1.1"
   },
   "devDependencies": {
