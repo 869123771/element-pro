@@ -17,7 +17,8 @@ import SlideOut from '@hyjiacan/vue-slideout'
 import '@hyjiacan/vue-slideout/lib/slideout.css'
 
 
-//import './vxeTable'
+import './plugins/utils'
+import './plugins/table'
 
 import i18n from '@/locale'
 

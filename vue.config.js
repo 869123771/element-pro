@@ -37,7 +37,7 @@ module.exports = {
         'vue-echarts',
         'resize-detector',
         '30-seconds-of-code',
-        'regular-xb'
+        'regular-xb',
     ],
     /*pages: {
         index: {

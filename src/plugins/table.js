@@ -108,13 +108,13 @@ VXETable.setup({
        keepSource: false,
        delayHover: 250,
        showOverflow: true,
-       showHeaderOverflow: true,
+       showHeaderOverflow: false,
     //   showFooterOverflow: null,
        size: 'medium',
        resizable: true,
        autoResize: false,
        stripe: true,
-       border: true,
+       border: false,
        round: false,
        radioConfig: {
          trigger: 'default'
