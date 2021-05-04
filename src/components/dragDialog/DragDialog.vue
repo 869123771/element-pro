@@ -178,7 +178,6 @@
         &-body {
             padding: 22px 1rem 0;
             overflow: auto;
-            height: calc(100% - 120px);
         }
 
         &-footer {
